@@ -59,7 +59,7 @@ public class DungeonManiaController {
         return null;
     }
 
-    public DungeonResponse interact(String entityId) {
+    public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
         return null;
     }
 
