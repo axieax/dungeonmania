@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
@@ -38,15 +39,15 @@ public class DungeonManiaController {
         }
     }
 
-    public DungeonResponse newGame(String dungeonName, String gameMode) {
+    public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
         return null;
     }
     
-    public DungeonResponse saveGame(String name) {
+    public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         return null;
     }
 
-    public DungeonResponse loadGame(String name) {
+    public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         return null;
     }
 
@@ -54,7 +55,7 @@ public class DungeonManiaController {
         return new ArrayList<>();
     }
 
-    public DungeonResponse tick(String itemUsed, Direction movementDirection) {
+    public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         return null;
     }
 
@@ -62,7 +63,7 @@ public class DungeonManiaController {
         return null;
     }
 
-    public DungeonResponse build(String buildable) {
+    public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         return null;
     }
 }
