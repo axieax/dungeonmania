@@ -21,7 +21,7 @@ final class WebServer {
         });
     }
 
-    public void finalize() {
+    public void finalizeWebServer() {
         awaitInitialization();
     }
 

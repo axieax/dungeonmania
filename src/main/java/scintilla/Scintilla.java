@@ -76,7 +76,7 @@ public class Scintilla {
                     "ERROR: Failed to download and/or unzip (possibly updated) frontend, just using current cached version... this is probably okay, since it's probably just because you aren't connected to the internet.");
         }
 
-        INSTANCE.finalize();
+        INSTANCE.finalizeWebServer();
         PlatformUtils.openBrowserAtPath(INSTANCE.getHostUrl() + "/app/");
     }
 }
