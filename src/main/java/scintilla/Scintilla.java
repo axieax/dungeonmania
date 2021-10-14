@@ -34,8 +34,15 @@ public class Scintilla {
         ZipInputStream zis = new ZipInputStream(in);
         ZipEntry zipEntry = zis.getNextEntry();
 
+        File base;
+        try {
+            base = new File(Path.of(Scintilla.class.getResource("/.relative").toURI()).toFile().getParentFile(), "app");
+        } catch (URISyntaxException e) {
+            return;
+        }
+
         while (zipEntry != null) {
-            newFile(new File(where), zipEntry, zis);
+            newFile(base, zipEntry, zis);
             zipEntry = zis.getNextEntry();
         }
         zis.closeEntry();
@@ -48,12 +55,10 @@ public class Scintilla {
 
         byte[] buffer = new byte[1024];
 
-        File destFile;
-        try {
-            destFile = new File(Path.of(Scintilla.class.getResource(destinationDir.toPath().toString()).toURI()).toFile(), zipEntry.getName());
-        } catch (URISyntaxException e) {
-            return;
-        }
+        File destFile = new File(destinationDir, zipEntry.getName());
+        if (destFile.getAbsolutePath().contains(".DS_Store")) return;
+
+        System.err.println("Downloaded... " + destFile.getAbsolutePath());
         destFile.createNewFile();
 
         // write file content
@@ -69,7 +74,7 @@ public class Scintilla {
         // try to update frontend
         // (bit of a hard coded url but who cares)
         try {
-            downloadAndUnZip("https://project21t3comp2511.blob.core.windows.net/frontend/frontend.zip", "/app/");
+            downloadAndUnZip("https://project21t3comp2511.blob.core.windows.net/frontend/frontend.zip", "app/");
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println(
@@ -77,6 +82,7 @@ public class Scintilla {
         }
 
         INSTANCE.finalizeWebServer();
+        System.err.println("Opening browser to url " + INSTANCE.getHostUrl() + "/app/");
         PlatformUtils.openBrowserAtPath(INSTANCE.getHostUrl() + "/app/");
     }
 }
