@@ -1,13 +1,13 @@
-package dungeonmania.model.entities.enemy;
+package dungeonmania.model.entities.character;
 
 import dungeonmania.model.entities.GameEntity;
 import dungeonmania.model.entities.Movement;
-
+import dungeonmania.model.entities.character.enemy.Enemy;
+import dungeonmania.model.entities.character.player.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public abstract class Enemy extends GameEntity implements Movement {
-
+public abstract class Character extends GameEntity implements Movement {
     @Override
     public void move(Direction direction) {
         // TODO Auto-generated method stub
@@ -20,4 +20,6 @@ public abstract class Enemy extends GameEntity implements Movement {
         
     }
 
+    // The following the code can be used if we are not using a Battle interface
+    // public abstract void battle(Player player, Enemy enemy);
 }
