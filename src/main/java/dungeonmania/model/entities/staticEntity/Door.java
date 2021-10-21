@@ -1,4 +1,4 @@
-package dungeonmania.model.entities.stationary;
+package dungeonmania.model.entities.staticEntity;
 
 import dungeonmania.model.entities.GameEntity;
 
