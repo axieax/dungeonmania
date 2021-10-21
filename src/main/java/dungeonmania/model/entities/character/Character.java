@@ -1,7 +1,7 @@
 package dungeonmania.model.entities.character;
 
 import dungeonmania.model.entities.GameEntity;
-import dungeonmania.model.entities.Movement;
+import dungeonmania.model.entities.character.Movement;
 import dungeonmania.model.entities.character.enemy.Enemy;
 import dungeonmania.model.entities.character.player.Player;
 import dungeonmania.util.Direction;
