@@ -1,4 +1,4 @@
-package dungeonmania.model.entities.character;
+package dungeonmania.model.entities.movingEntity;
 
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
