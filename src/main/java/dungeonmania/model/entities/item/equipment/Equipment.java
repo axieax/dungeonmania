@@ -1,5 +1,5 @@
 package dungeonmania.model.entities.item.equipment;
 
-import dungeonmania.model.entities.GameEntity;
+import dungeonmania.model.entities.Entity;
 
-public abstract class Equipment extends GameEntity {}
+public abstract class Equipment extends Entity {}

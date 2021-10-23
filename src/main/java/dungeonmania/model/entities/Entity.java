@@ -1,3 +1,3 @@
 package dungeonmania.model.entities;
 
-public class GameEntity {}
+public class Entity {}
