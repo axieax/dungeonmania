@@ -1,3 +1,10 @@
 package dungeonmania.model.entities.item.potion;
 
-public class HealthPotion extends Potion {}
+import dungeonmania.util.Position;
+
+public class HealthPotion extends Potion {
+
+    public HealthPotion(String entityId, Position position) {
+        super(entityId, position);
+        //TODO Auto-generated constructor stub
+    }}

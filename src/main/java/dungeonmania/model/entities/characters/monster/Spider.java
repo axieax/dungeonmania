@@ -6,6 +6,11 @@ import dungeonmania.util.Position;
 
 public class Spider extends Monster implements Movement {
 
+    public Spider(String entityId, Position position) {
+        super(entityId, position);
+        //TODO Auto-generated constructor stub
+    }
+
     @Override
     public void move(Direction direction) {
         // TODO Auto-generated method stub
