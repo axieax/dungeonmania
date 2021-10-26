@@ -1,10 +1,9 @@
-package dungeonmania;
+package dungeonmania.statics;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.characters.Player;
 import dungeonmania.model.entities.staticEntity.ZombieToastSpawner;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;

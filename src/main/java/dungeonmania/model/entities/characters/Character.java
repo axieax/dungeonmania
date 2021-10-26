@@ -9,5 +9,10 @@ public abstract class Character extends Entity {
         super(entityId, position);
         //TODO Auto-generated constructor stub
     }
+
+    public Character(String entityId, Position position, boolean isInteractable) {
+        super(entityId, position, isInteractable);
+        //TODO Auto-generated constructor stub
+    }
     // Health & Attack attributes are common between the player and the enemies
 }

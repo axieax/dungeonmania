@@ -6,18 +6,14 @@ import dungeonmania.util.Position;
 public class Key extends Entity implements Collectable {
     public static final int MAX_COLLECTABLE_LIMIT = 1;
 
-    private String doorId;
+    private int key;
 
-    public Key(String entityId, Position position, String doorId) {
+    public Key(String entityId, Position position, int key) {
         super(entityId, position);
-        this.doorId = doorId;
+        this.key = key;
     }
 
-    public String getDoorId() {
-        return doorId;
-    }
-
-    public void setDoorId(String doorId) {
-        this.doorId = doorId;
+    public int getKey() {
+        return key;
     }
 }

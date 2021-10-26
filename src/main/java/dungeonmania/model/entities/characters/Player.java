@@ -5,6 +5,7 @@ import java.util.List;
 
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.characters.monster.Monster;
+import dungeonmania.model.entities.item.Collectable;
 import dungeonmania.model.entities.item.Storable;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -36,8 +37,12 @@ public class Player extends Character implements Movement {
 
     // Collects a Collectable entity and put it in the player's inventory if exists 
     // on the current player position
-    public void collect() {
+    public void collect(Dungeon dungeon) {
         
+    }
+
+    public Collectable getItem(String entityId) {
+        return null;
     }
 
 }

@@ -6,7 +6,7 @@ import dungeonmania.util.Position;
 public abstract class Monster extends Character {
 
     public Monster(String entityId, Position position) {
-        super(entityId, position);
+        super(entityId, position, true);
         //TODO Auto-generated constructor stub
     }
     
