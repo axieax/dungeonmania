@@ -455,8 +455,18 @@ public class CharacterTest {
         assertEquals(new Position(13, 13).toString(), characterPos.toString());
     }
     
-    // @Test
-    // public void testMovementDoesNotAffectHealth() {
+    @Test
+    public void testCharacterBribesMercenary() {
+        
+    }
+
+    @Test
+    public void testCharacterCannotPickUpBombsItPlaced() {
+        // https://edstem.org/au/courses/7065/discussion/645812
+    }
+    
+    @Test
+    public void testMovementDoesNotAffectHealth() {
         // // Create a new controller
         // DungeonManiaController controller = new DungeonManiaController();
         // controller.newGame(DUNGEON_NAME, GAME_MODE);
@@ -470,7 +480,7 @@ public class CharacterTest {
         // Position characterPos = getCharacterPosition(entities);
         // assertNotNull(characterPos);
         // assertEquals(new Position(1, 1).toString(), characterPos.toString());
-    // }
+    }
 
 
     public Position getCharacterPosition(List<EntityResponse> entities) throws IllegalArgumentException, InvalidActionException {

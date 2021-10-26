@@ -149,6 +149,12 @@ public class SpiderTest {
     @Test
     public void testMaxSpiderSpawn() {}
 
+    @Test
+    public void testSpawnOnEdgeAndMoveOutsideMap() {
+        // https://edstem.org/au/courses/7065/discussion/645072
+        // #4
+    }
+
     public DungeonResponse tickGameUntilSpiderSpawns(
         DungeonManiaController controller,
         DungeonResponse response
