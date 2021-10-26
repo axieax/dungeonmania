@@ -20,7 +20,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 @TestInstance(value = Lifecycle.PER_CLASS)
-public class CharacterMovementTest {
+public class CharacterTest {
     final static String CHARACTER_TYPE = "player";
     final static String DUNGEON_NAME = "advanced";
     final static String GAME_MODE = "peaceful";
@@ -454,7 +454,7 @@ public class CharacterMovementTest {
         // position after building should be the same
         assertEquals(new Position(13, 13).toString(), characterPos.toString());
     }
-
+    
     // @Test
     // public void testMovementDoesNotAffectHealth() {
         // // Create a new controller
@@ -471,6 +471,7 @@ public class CharacterMovementTest {
         // assertNotNull(characterPos);
         // assertEquals(new Position(1, 1).toString(), characterPos.toString());
     // }
+
 
     public Position getCharacterPosition(List<EntityResponse> entities) throws IllegalArgumentException, InvalidActionException {
         for(EntityResponse e: entities) {
