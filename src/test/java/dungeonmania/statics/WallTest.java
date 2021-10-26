@@ -3,10 +3,10 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.characters.Player;
-import dungeonmania.model.entities.characters.monster.ZombieToast;
-import dungeonmania.model.entities.staticEntity.Boulder;
-import dungeonmania.model.entities.staticEntity.Wall;
+import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.statics.Boulder;
+import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;

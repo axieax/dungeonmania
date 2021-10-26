@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.characters.monster.ZombieToast;
+import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 

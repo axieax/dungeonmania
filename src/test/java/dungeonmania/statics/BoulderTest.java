@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.staticEntity.Boulder;
+import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 

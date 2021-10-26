@@ -5,23 +5,23 @@ import dungeonmania.util.Position;
 
 public abstract class Entity {
 
-    private String entityId;
+    private String id;
     private Position position;
     private boolean isInteractable;
 
-    public Entity(String entityId, Position position) {
-        this.entityId = entityId;
+    public Entity(String id, Position position) {
+        this.id = id;
         this.position = position;
         this.isInteractable = false;
     }
 
-    public Entity(String entityId, Position position, boolean isInteractable) {
-        this(entityId, position);
+    public Entity(String id, Position position, boolean isInteractable) {
+        this(id, position);
         this.isInteractable = isInteractable;
     }
 
-    public String getEntityId() {
-        return entityId;
+    public String getId() {
+        return id;
     }
 
     public Position getPosition() {
@@ -42,7 +42,7 @@ public abstract class Entity {
 
     public EntityResponse getInfo() {
         return new EntityResponse(
-            entityId,
+            id,
             this.getClass().getSimpleName(),
             position,
             isInteractable

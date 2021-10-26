@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.characters.Player;
-import dungeonmania.model.entities.staticEntity.Door;
+import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.statics.Door;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;

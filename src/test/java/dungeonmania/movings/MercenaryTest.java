@@ -3,7 +3,7 @@ package dungeonmania.movings;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.characters.monster.Mercenary;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 

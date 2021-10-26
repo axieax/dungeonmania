@@ -3,8 +3,8 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.characters.Player;
-import dungeonmania.model.entities.item.Treasure;
+import dungeonmania.model.entities.collectables.Treasure;
+import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
