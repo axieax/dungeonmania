@@ -14,6 +14,7 @@ import java.util.List;
 
 public class DungeonManiaController {
 
+
     public DungeonManiaController() {}
 
     public String getSkin() {
@@ -54,6 +55,9 @@ public class DungeonManiaController {
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
         throws IllegalArgumentException {
+        if (!getGameModes().contains(gameMode)) throw new IllegalArgumentException();
+
+
         /* Stub from FRONTEND.md */
 
         List<EntityResponse> entities = new ArrayList<>();

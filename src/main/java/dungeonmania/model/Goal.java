@@ -1,3 +1,5 @@
 package dungeonmania.model;
 
-public class Dungeon {}
+public interface Goal {
+
+}
