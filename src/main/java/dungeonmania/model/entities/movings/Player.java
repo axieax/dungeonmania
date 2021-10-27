@@ -12,15 +12,29 @@ public class Player extends MovingEntity {
     final static int MAX_CHARACTER_HEALTH = 100;
     final static int CHARACTER_ATTACK_DMG = 10;
 
-    public Player(String entityId, Position position) {
-        super(entityId, position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
-    }
+    private PlayerState defaultState = new DefaultState(this);
+    private PlayerState invisibleState = new InvisibleState(this);
+    private PlayerState invincibleState = new InvincibleState(this);
+    private PlayerState armouredState = new ArmouredState(this);
+
+    private PlayerState state;
+    
+    private List<Item> inventory = new ArrayList<>();
 
     public Player(String entityId, Position position, int health, int attackDamage) {
         super(entityId, position, health, attackDamage);
+
+        defaultState = new DefaultState(this);
+        invisibleState = new InvisibleState(this);
+        invincibleState = new InvincibleState(this);
+        armouredState = new ArmouredState(this);
+
+        state = defaultState;
     }
 
-    private List<Item> inventory = new ArrayList<>();
+    public Player(String entityId, Position position) {
+        this(entityId, position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
+    }
 
     /**
      * A battle takes place when the character and the enemy are in the same cell, within a single tick.
@@ -30,13 +44,7 @@ public class Player extends MovingEntity {
      * @param opponent entity the character is fighting
      */
     public void battle(MovingEntity opponent) {
-        setHealth(
-            getHealth() - opponent.getHealth() * opponent.getAttackDamage() / 10 
-        );
-
-        opponent.setHealth(
-            opponent.getHealth() - getHealth() * getAttackDamage() / 5
-        );
+        state.battle(opponent);
     }
 
     @Override
@@ -73,4 +81,43 @@ public class Player extends MovingEntity {
         return null;
     }
 
+    /**
+     * Determines if the player has armour.
+     * Note that the armour must be used although it is stored in the inventory.
+     * @return true if player is wearing armour, otherwise false
+     */
+    public boolean hasArmour() {
+        Item armour = getItem("armour");
+        return armour == null ? false : true;
+    }
+
+    public int getInvincibilityPotionUses() {
+        return getItem("invincibility_potion").getUsesLeft();
+    }
+
+    public void reduceInvincibilityPotionUses(Item potion) {
+
+    }
+
+    public void reduceArmourDurability() {
+        
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////
+    public void setState(PlayerState state) {
+        this.state = state;
+    }
+    
+    public PlayerState getDefaultState() {
+        return defaultState;
+    }
+    public PlayerState getInvisibleState() {
+        return invisibleState;
+    }
+    public PlayerState getInvincibleState() {
+        return invincibleState;
+    }
+    public PlayerState getArmouredState() {
+        return armouredState;
+    }
 }

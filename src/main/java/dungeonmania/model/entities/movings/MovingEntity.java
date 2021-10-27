@@ -34,4 +34,8 @@ public abstract class MovingEntity extends Entity {
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = attackDamage;
     }
+
+    public void kill() {
+        this.health = 0;
+    }
 }
