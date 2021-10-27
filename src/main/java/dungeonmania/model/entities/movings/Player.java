@@ -24,18 +24,14 @@ public class Player extends MovingEntity {
     @Override
     public void move(Direction direction) {
         // TODO Auto-generated method stub
-        
+
+        // Collects a Collectable entity and put it in the player's inventory if exists 
+        // on the new current player position
     }
 
     @Override
     public void moveTo(Position position) {
         // TODO Auto-generated method stub
-        
-    }
-
-    // Collects a Collectable entity and put it in the player's inventory if exists 
-    // on the current player position
-    public void collect(Dungeon dungeon) {
         
     }
 

@@ -27,6 +27,10 @@ public class BoulderTest {
      */
     @Test
     public void boulderMoveByPlayer() {
+        Dungeon dungeon = new Dungeon(3, 3);
+        dungeon.addEntity(new Boulder("boulder1", new Position(1, 1)));
+
+        // dungeon.getEntity("boulder1").move(new Position(2, 2));
         fail();
     }
 
