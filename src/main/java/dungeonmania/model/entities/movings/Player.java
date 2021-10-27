@@ -22,10 +22,13 @@ public class Player extends MovingEntity {
 
     private List<Item> inventory = new ArrayList<>();
 
-    // A battle takes place when the character and the enemy are in the same cell, within a single tick.
-    // A round of a battle occurs as follows:
-    //      Character Health = Character Health - ((Enemy Health * Enemy Attack Damage) / 10)
-    //      Enemy Health = Enemy Health - ((Character Health * Character Attack Damage) / 5)
+    /**
+     * A battle takes place when the character and the enemy are in the same cell, within a single tick.
+     * A round of a battle occurs as follows:
+     *      Character Health = Character Health - ((Enemy Health * Enemy Attack Damage) / 10)
+     *      Enemy Health = Enemy Health - ((Character Health * Character Attack Damage) / 5)
+     * @param opponent entity the character is fighting
+     */
     public void battle(MovingEntity opponent) {
         setHealth(
             getHealth() - opponent.getHealth() * opponent.getAttackDamage() / 10 
@@ -43,15 +46,23 @@ public class Player extends MovingEntity {
 
     @Override
     public void moveTo(Position position) {
-        // TODO Auto-generated method stub
+        this.setPosition(position);
     }
 
-    // Collects a Collectable entity and put it in the player's inventory if exists 
-    // on the current player position
+    /**
+     * Collects a Collectable entity and put it in the player's inventory if exists 
+     * on the current player position
+     * @param dungeon dungeon that player is in
+     */
     public void collect(Dungeon dungeon) {
-        
+        // currently not possible as dungeon not implemented
     }
 
+    /**
+     * Given an entity id, returns the item if it exists in the player's inventory
+     * @param entityId unique identifier of an entity
+     * @return Item if found, else null
+     */
     public Item getItem(String entityId) {
         for(Item i: inventory) {
             if(i.getId() == entityId) {
