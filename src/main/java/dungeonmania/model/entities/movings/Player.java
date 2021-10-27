@@ -74,7 +74,14 @@ public class Player extends MovingEntity {
     public void collect(Dungeon dungeon) {
         // currently not possible as dungeon not implemented
         // use the dungeon class to see what item player is standing on (if any)
-        // and call interact on that item
+        // and call 'interact' on that item
+    }
+
+    // TODO: state precedence can take place here?
+    //       e.g. if a player is invincible potion and drinks an invisible potion
+    //            it stays invincible
+    public void consume(Item item) {
+        
     }
 
     /**
@@ -102,6 +109,10 @@ public class Player extends MovingEntity {
         return armour == null ? false : true;
     }
 
+    public void reduceArmourDurability() {
+        
+    }
+
     public int getInvincibilityPotionUses() {
         return getItem("invincibility_potion").getUsesLeft();
     }
@@ -110,9 +121,14 @@ public class Player extends MovingEntity {
 
     }
 
-    public void reduceArmourDurability() {
-        
+    public int getInvisibilityPotionUses() {
+        return getItem("invisibility_potion").getUsesLeft();
     }
+
+    public void reduceInvisibilityPotionUses(Item potion) {
+
+    }
+
     
     ////////////////////////////////////////////////////////////////////////////////
     public void setState(PlayerState state) {
