@@ -64,6 +64,8 @@ public class Player extends MovingEntity {
      */
     public void collect(Dungeon dungeon) {
         // currently not possible as dungeon not implemented
+        // use the dungeon class to see what item player is standing on (if any)
+        // and call interact on that item
     }
 
     /**
