@@ -1,14 +1,16 @@
 package dungeonmania.model.entities.movings;
 
-public class ArmouredState implements PlayerState {
+public class DefensiveState implements PlayerState {
     Player player;
 
-    public ArmouredState(Player player) {
+    public DefensiveState(Player player) {
         this.player = player;
     }
 
-    // TODO: What if a player also has a shield?
-    //       Possible implementation: add health to player to simulate shield
+    // TODO: This class should handle any "Defensive" items a player
+    //       has during battle e.g. armour and shield
+    //       look through inventory and use any/all by computing total defence damange reduced
+    //       Player switches to this class when it collects items?
     
     /**
      * Body armour provides defence and halves enemy attack

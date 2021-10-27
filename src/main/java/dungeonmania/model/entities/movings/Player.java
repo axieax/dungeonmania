@@ -15,7 +15,7 @@ public class Player extends MovingEntity {
     private PlayerState defaultState = new DefaultState(this);
     private PlayerState invisibleState = new InvisibleState(this);
     private PlayerState invincibleState = new InvincibleState(this);
-    private PlayerState armouredState = new ArmouredState(this);
+    private PlayerState armouredState = new DefensiveState(this);
 
     private PlayerState state;
     
@@ -27,7 +27,7 @@ public class Player extends MovingEntity {
         defaultState = new DefaultState(this);
         invisibleState = new InvisibleState(this);
         invincibleState = new InvincibleState(this);
-        armouredState = new ArmouredState(this);
+        armouredState = new DefensiveState(this);
 
         state = defaultState;
     }
