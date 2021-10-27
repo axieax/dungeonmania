@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.statics.Door;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,6 @@ public class KeyTest {
         Dungeon dungeon = new Dungeon(3, 3);
 
         String collectableId = "key1";
-
         Key item = new Key(collectableId, new Position(1, 1), 1);
 
         dungeon.addEntity(item);
@@ -41,14 +41,12 @@ public class KeyTest {
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        player.collect(dungeon);
-
         assertTrue(dungeon.getEntity(collectableId) == null);
         assertTrue(player.getItem(collectableId).equals(item));
     }
 
     /**
-     * Test if player can only carry one key.
+     * Test that player can only carry one key.
      */
     @Test
     public void carryLimit() {
@@ -64,21 +62,19 @@ public class KeyTest {
 
         Player player = new Player("player1", new Position(0, 1)); 
 
-        // collect the first key
+        // Collect the first key
         player.move(Direction.RIGHT);
         assertTrue(new Position(1, 1).equals(player.getPosition()));       
-        player.collect(dungeon);
 
         assertTrue(dungeon.getEntity(collectableId1) == null);
         assertTrue(dungeon.getEntity(collectableId2) == key2);
         assertTrue(player.getItem(collectableId1).equals(key1));
 
-        // attempt to collect the second key
+        // Attempt to collect the second key
         player.move(Direction.RIGHT);
         assertTrue(new Position(2, 1).equals(player.getPosition()));       
-        player.collect(dungeon);
 
-        // check if the second key is still in the dungeon
+        // Check if the second key is still in the dungeon
         assertTrue(dungeon.getEntity(collectableId2) == key2);
         assertTrue(player.getItem(collectableId2) == null);
     }
@@ -88,6 +84,22 @@ public class KeyTest {
      */
     @Test
     public void keyDisappears() {
-        fail();
+        Dungeon dungeon = new Dungeon(3, 3);
+        Door door = new Door("door1", new Position(1, 1), 1);
+        dungeon.addEntity(door);
+
+        Player player = new Player("player1", new Position(1, 3));
+
+        String collectableId = "key1";
+        Key key = new Key(collectableId, new Position(1, 2), 1);
+        
+        // Player moves onto the position of the key and will pick it up
+        player.move(Direction.UP);
+        assertTrue(player.getItem(collectableId).equals(key));
+
+        // Player opens the door
+        player.move(Direction.UP);
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
+        assertTrue(door.isOpen());
     }
 }
