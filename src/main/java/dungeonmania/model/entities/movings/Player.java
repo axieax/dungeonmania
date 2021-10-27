@@ -43,8 +43,17 @@ public class Player extends MovingEntity {
      *      Enemy Health = Enemy Health - ((Character Health * Character Attack Damage) / 5)
      * @param opponent entity the character is fighting
      */
-    public void battle(MovingEntity opponent) {
+    public void battle(Dungeon dungeon, MovingEntity opponent) {
         state.battle(opponent);
+
+        // if either character or entity is dead, remove it
+        if(this.getHealth() <= 0) {
+            dungeon.hide(this);
+        }
+
+        if(opponent.getHealth() <= 0) {
+            dungeon.hide(opponent);
+        }
     }
 
     @Override
