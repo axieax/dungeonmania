@@ -81,7 +81,12 @@ public class Player extends MovingEntity {
     //       e.g. if a player is invincible potion and drinks an invisible potion
     //            it stays invincible
     public void consume(Item item) {
-        
+        // allow each potion to change the state of a player? through item.consume(this)?
+        // (pass player object to item)
+        // that way we don't need if/else statements in this function
+        // this way we can also add precedence for states (e.g. we can look at the current
+        // state in the invisbility consume function and decide if it needs to be changed
+        // - i.e. don't change if player in invincible state).
     }
 
     /**
