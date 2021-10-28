@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 public class DoorTest {
 
     /**
-     * Test whether the entity instance has been created with the correct positions
+     * Test whether the entity instance has been created with the correct positions.
      */
     @Test
     public void instanceTest() {
@@ -26,7 +26,7 @@ public class DoorTest {
     }
 
     /**
-     * If character does not have key, check if the door blocks movement
+     * If character does not have key, check if the door blocks movement.
      */
     @Test
     public void doorBlockWithoutKey() {
@@ -43,7 +43,7 @@ public class DoorTest {
     }
 
     /**
-     * If the player has the correct key, test that the door will unlock
+     * If the player has the correct key, test that the door will unlock.
     */
     @Test
     public void doorUnlockWithKey() {
@@ -67,7 +67,7 @@ public class DoorTest {
     }
 
     /**
-     * If the player has the wrong key, test that the door will remain locked
+     * If the player has the wrong key, test that the door will remain locked.
      */
     @Test
     public void doorLockWithIncorrectKey() {
@@ -91,7 +91,7 @@ public class DoorTest {
     }
 
     /**
-     * If the player has the correct key, test that the door will unlock
+     * If the player has the correct key, test that the door will unlock.
     */
     @Test
     public void multipleDoorUnlocking() {
@@ -109,9 +109,10 @@ public class DoorTest {
 
         Player player = new Player("player1", new Position(3, 3));
 
-        // D1  D2  __
-        // __  __  __
-        // K2  K1  P
+        // __  __  __  __
+        // __  D1  D2  __
+        // __  __  __  __
+        // __  K2  K1  P
         
         // Player moves onto the position of key1 and will pick it up
         player.move(Direction.LEFT);
