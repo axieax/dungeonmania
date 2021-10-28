@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dungeonmania.model.Dungeon;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class Player extends MovingEntity {
+public class Player extends MovingEntity implements Character, SubjectCharacer {
     final static int MAX_CHARACTER_HEALTH = 100;
     final static int CHARACTER_ATTACK_DMG = 10;
 
@@ -16,10 +17,11 @@ public class Player extends MovingEntity {
     private PlayerState invisibleState = new InvisibleState(this);
     private PlayerState invincibleState = new InvincibleState(this);
     private PlayerState armouredState = new DefensiveState(this);
-
     private PlayerState state;
-    
+
     private List<Item> inventory = new ArrayList<>();
+    boolean inBattle = false;
+    private List<Observer> observers = new ArrayList<>();
 
     public Player(String entityId, Position position, int health, int attackDamage) {
         super(entityId, position, health, attackDamage);
@@ -36,6 +38,11 @@ public class Player extends MovingEntity {
         this(entityId, position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
     }
 
+    @Override
+    public void tick(Dungeon dungeon) {
+        
+    }
+
     /**
      * A battle takes place when the character and the enemy are in the same cell, within a single tick.
      * A round of a battle occurs as follows:
@@ -43,7 +50,9 @@ public class Player extends MovingEntity {
      *      Enemy Health = Enemy Health - ((Character Health * Character Attack Damage) / 5)
      * @param opponent entity the character is fighting
      */
+    @Override
     public void battle(Dungeon dungeon, MovingEntity opponent) {
+        
         state.battle(opponent);
 
         // if either character or entity is dead, remove it
@@ -53,33 +62,30 @@ public class Player extends MovingEntity {
 
         if(opponent.getHealth() <= 0) {
             dungeon.hide(opponent);
+            this.inBattle = false;
         }
-    }
-
-    @Override
-    public void move(Direction direction) {
-        this.setPosition(this.getPosition().translateBy(direction));
-    }
-
-    @Override
-    public void moveTo(Position position) {
-        this.setPosition(position);
     }
 
     /**
      * Collects a Collectable entity and put it in the player's inventory if exists 
      * on the current player position
-     * @param dungeon dungeon that player is in
      */
-    public void collect(Dungeon dungeon) {
+    @Override
+    public void collect() {
         // currently not possible as dungeon not implemented
         // use the dungeon class to see what item player is standing on (if any)
         // and call 'interact' on that item
     }
 
+    @Override
+    public void build(String itemId) {
+
+    }
+
     // TODO: state precedence can take place here?
     //       e.g. if a player is invincible potion and drinks an invisible potion
     //            it stays invincible
+    @Override
     public void consume(Item item) {
         // allow each potion to change the state of a player? through item.consume(this)?
         // (pass player object to item)
@@ -91,10 +97,11 @@ public class Player extends MovingEntity {
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
-     * @param entityId unique identifier of an entity
+     * @param itemId unique identifier of an entity
      * @return Item if found, else null
      */
-    public Item getItem(String entityId) {
+    @Override
+    public Item getInventoryItem(String itemId) {
         for(Item i: inventory) {
             if(i.getId() == entityId) {
                 return i;
@@ -103,6 +110,54 @@ public class Player extends MovingEntity {
 
         return null;
     }
+    
+    /**
+     * Interacts with any entity that is on the tile the character is about to move into.
+     * If it cannot move onto that tile, it does not move at all.
+     * @param dungeon
+     * @param direction
+     */
+    @Override
+    public void move(Dungeon dungeon, Direction direction) {
+        Position newPlayerPos = this.getPosition().translateBy(direction);
+        
+        // determine entity that exists in tile that the player will (possibly) move into
+        List<Entity> entities = dungeon.getEntitiesAtPosition();
+        if(entities == null) { 
+            this.setPosition(newPlayerPos);
+            return;
+        }
+
+        boolean canMove = true;
+        for(Entity e: entities) {
+            e.interact(dungeon, this);
+            if(!e.isPassable()) {
+                canMove = false;
+            }
+        }
+
+        if(canMove) {
+            this.setPosition(newPlayerPos);
+        }
+    }
+
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer o: observers) {
+            o.update(this);
+        }
+    }
 
     /**
      * Determines if the player has armour.
@@ -110,7 +165,7 @@ public class Player extends MovingEntity {
      * @return true if player is wearing armour, otherwise false
      */
     public boolean hasArmour() {
-        Item armour = getItem("armour");
+        Item armour = getInventoryItem("armour");
         return armour == null ? false : true;
     }
 
@@ -119,7 +174,7 @@ public class Player extends MovingEntity {
     }
 
     public int getInvincibilityPotionUses() {
-        return getItem("invincibility_potion").getUsesLeft();
+        return getInventoryItem("invincibility_potion").getUsesLeft();
     }
 
     public void reduceInvincibilityPotionUses(Item potion) {
@@ -127,7 +182,7 @@ public class Player extends MovingEntity {
     }
 
     public int getInvisibilityPotionUses() {
-        return getItem("invisibility_potion").getUsesLeft();
+        return getInventoryItem("invisibility_potion").getUsesLeft();
     }
 
     public void reduceInvisibilityPotionUses(Item potion) {
@@ -152,4 +207,5 @@ public class Player extends MovingEntity {
     public PlayerState getArmouredState() {
         return armouredState;
     }
+
 }

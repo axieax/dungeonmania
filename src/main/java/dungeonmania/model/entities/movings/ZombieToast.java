@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.movings;
 
+import dungeonmania.model.Dungeon;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -16,13 +17,7 @@ public class ZombieToast extends MovingEntity {
     }
 
     @Override
-    public void move(Direction direction) {
-        // TODO Auto-generated method stub
+    public void tick(Dungeon dungeon) {
         
     }
-
-    @Override
-    public void moveTo(Position position) {
-        // TODO Auto-generated method stub
-        
-    }}
+}
