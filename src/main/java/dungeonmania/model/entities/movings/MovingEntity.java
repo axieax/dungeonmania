@@ -5,13 +5,33 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public abstract class MovingEntity extends Entity {
-
-    public MovingEntity(String entityId, Position position) {
+    private int health;
+    private int attackDamage;
+    
+    public MovingEntity(String entityId, Position position, int health, int attackDamage) {
         super(entityId, position, true, true);
-        //TODO Auto-generated constructor stub
+        this.health = health;
+        this.attackDamage = attackDamage;
     }
     
     public abstract void move(Direction direction);
 
     public abstract void moveTo(Position position);
+
+    //////////////////////////////////////////////////////////////////////////////////
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getAttackDamage() {
+        return attackDamage;
+    }
+
+    public void setAttackDamage(int attackDamage) {
+        this.attackDamage = attackDamage;
+    }
 }
