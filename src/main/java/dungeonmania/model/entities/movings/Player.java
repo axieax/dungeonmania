@@ -1,12 +1,12 @@
 package dungeonmania.model.entities.movings;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends MovingEntity {
     final static int MAX_CHARACTER_HEALTH = 100;
@@ -54,7 +54,7 @@ public class Player extends MovingEntity {
      * on the current player position
      * @param dungeon dungeon that player is in
      */
-    public void collect(Dungeon dungeon) {
+    public void collect(Item item) {
         // currently not possible as dungeon not implemented
     }
 
@@ -73,4 +73,29 @@ public class Player extends MovingEntity {
         return null;
     }
 
+    public boolean hasKey() {
+        return false;
+    }
+
+    public Direction getDirection() {
+        return null;
+    }
+
+    public Key getKey() {
+        return null;
+    }
+
+    public void consume(String itemId) {
+        return;
+    }
+
+    public boolean hasWeapon() {
+        return false;
+    }
+
+    @Override
+    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+        // TODO Auto-generated method stub
+        
+    }
 }

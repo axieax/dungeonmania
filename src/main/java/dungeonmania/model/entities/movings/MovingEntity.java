@@ -9,7 +9,7 @@ public abstract class MovingEntity extends Entity {
     private int attackDamage;
     
     public MovingEntity(String entityId, Position position, int health, int attackDamage) {
-        super(entityId, position, true);
+        super(entityId, position, true, true);
         this.health = health;
         this.attackDamage = attackDamage;
     }

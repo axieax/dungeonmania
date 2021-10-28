@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.collectables.potion;
 
+import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Position;
 
 public class InvincibilityPotion extends Potion {
@@ -14,6 +15,12 @@ public class InvincibilityPotion extends Potion {
     public InvincibilityPotion(String entityId, Position position, int maxPotionUses) {
         this(entityId, position);
         this.usesLeft = maxPotionUses;
+    }
+
+    @Override
+    public void consume(Player player) {
+        // TODO Auto-generated method stub
+
     }
 
     /**
