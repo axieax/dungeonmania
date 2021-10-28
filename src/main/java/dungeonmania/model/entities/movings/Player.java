@@ -2,25 +2,27 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends MovingEntity implements Character, SubjectCharacer {
+public class Player extends MovingEntity implements Character, SubjectPlayer {
     final static int MAX_CHARACTER_HEALTH = 100;
     final static int CHARACTER_ATTACK_DMG = 10;
 
-    private PlayerState defaultState = new DefaultState(this);
-    private PlayerState invisibleState = new InvisibleState(this);
-    private PlayerState invincibleState = new InvincibleState(this);
-    private PlayerState armouredState = new DefensiveState(this);
+    private PlayerState defaultState;
+    private PlayerState invisibleState;
+    private PlayerState invincibleState;
     private PlayerState state;
 
     private List<Item> inventory = new ArrayList<>();
     boolean inBattle = false;
+    List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
     public Player(String entityId, Position position, int health, int attackDamage) {
@@ -29,7 +31,6 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
         defaultState = new DefaultState(this);
         invisibleState = new InvisibleState(this);
         invincibleState = new InvincibleState(this);
-        armouredState = new DefensiveState(this);
 
         state = defaultState;
     }
@@ -38,9 +39,20 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
         this(entityId, position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
     }
 
+    /**
+     * Conduct any required tasks for a player after it has moved into its new position
+     */
     @Override
     public void tick(Dungeon dungeon) {
-        
+        List<Entity> entities = dungeon.getEntitiesAtPosition(this.getPosition());
+        for(Entity e: entities) {
+            if(!(e instanceof MovingEntity)) {
+               continue;
+            }
+
+            MovingEntity opponent = (MovingEntity) e;
+            this.battle(dungeon, opponent);
+        }
     }
 
     /**
@@ -67,14 +79,12 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
     }
 
     /**
-     * Collects a Collectable entity and put it in the player's inventory if exists 
-     * on the current player position
+     * Given an item, places it in the player's inventory
+     * @param item that is able to placed in the player's inventory
      */
     @Override
-    public void collect() {
-        // currently not possible as dungeon not implemented
-        // use the dungeon class to see what item player is standing on (if any)
-        // and call 'interact' on that item
+    public void collect(Item item) {
+        this.inventory.add(item);
     }
 
     @Override
@@ -82,17 +92,16 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
 
     }
 
-    // TODO: state precedence can take place here?
-    //       e.g. if a player is invincible potion and drinks an invisible potion
-    //            it stays invincible
+    /**
+     * Apply any effects of any consumable item 
+     * @param item that is consumable
+     */
     @Override
     public void consume(Item item) {
-        // allow each potion to change the state of a player? through item.consume(this)?
-        // (pass player object to item)
-        // that way we don't need if/else statements in this function
-        // this way we can also add precedence for states (e.g. we can look at the current
-        // state in the invisbility consume function and decide if it needs to be changed
-        // - i.e. don't change if player in invincible state).
+        if(item instanceof Consumable) {
+            Consumable consumableItem = (Consumable) item;
+            consumableItem.consume(this);
+        }
     }
 
     /**
@@ -103,12 +112,66 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
     @Override
     public Item getInventoryItem(String itemId) {
         for(Item i: inventory) {
-            if(i.getId() == entityId) {
+            if(i.getId() == itemId) {
                 return i;
             }
         }
 
         return null;
+    }
+
+    @Override
+    public List<Equipment> getEquipment() {
+        ArrayList<Equipment> equipment = new ArrayList<>();
+        
+        for(Item i: this.inventory) {
+            if(i instanceof Equipment) {
+                equipment.add((Equipment) i);
+            }
+        }
+
+        return equipment;
+    }
+
+    @Override
+    public List<AttackEquipment> getAttackEquipment() {
+        ArrayList<AttackEquipment> attackEquip = new AttackEquipment();
+
+        for(Equipment e: getEquipment()) {
+            if(e instanceof AttackEquipment) {
+                attackEquip.add(e);
+            }
+        }
+        return attackEquip;
+    }
+
+    @Override
+    public List<DefenceEquipment> getDefenceEquipment() {
+        ArrayList<DefenceEquipment> defenceEquip = new DefenceEquipment();
+
+        for(Equipment e: getEquipment()) {
+            if(e instanceof DefenceEquipment) {
+                defenceEquip.add(e);
+            }
+        }
+        return defenceEquip;
+    }
+    
+    @Override
+    public void addAlly(MovingEntity ally) {
+        for(MovingEntity m: allies) {
+            if(m.getId() == ally.getId()) {
+                // entity is already ally
+                return;
+            }
+        }
+
+        allies.add(ally);
+    }
+    
+    @Override
+    public List<MovingEntity> getAllies() {
+        return this.allies;
     }
     
     /**
@@ -120,27 +183,39 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
     @Override
     public void move(Dungeon dungeon, Direction direction) {
         Position newPlayerPos = this.getPosition().translateBy(direction);
-        
-        // determine entity that exists in tile that the player will (possibly) move into
-        List<Entity> entities = dungeon.getEntitiesAtPosition();
-        if(entities == null) { 
+        List<Entity> entities = dungeon.getEntitiesAtPosition(newPlayerPos);
+
+        if(entities == null) { // no entities at new position
             this.setPosition(newPlayerPos);
             return;
-        }
+        } else { 
+            // interact with any non-moving entities and determine if player can move onto this tile
+            boolean canMove = true;
+            for(Entity e: entities) {
+                if(e instanceof MovingEntity) {
+                    continue;
+                }
 
-        boolean canMove = true;
-        for(Entity e: entities) {
-            e.interact(dungeon, this);
-            if(!e.isPassable()) {
-                canMove = false;
+                e.interact(dungeon, this);
+                if(!e.isPassable()) {
+                    canMove = false;
+                }
+            }
+    
+            // battle with any moving entities
+            if(canMove) {
+                this.setPosition(newPlayerPos);
+                this.tick(dungeon);
             }
         }
 
-        if(canMove) {
-            this.setPosition(newPlayerPos);
-        }
     }
 
+    @Override
+    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+        // TODO Auto-generated method stub
+        
+    }
 
     @Override
     public void attach(Observer observer) {
@@ -204,9 +279,6 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
     public PlayerState getInvincibleState() {
         return invincibleState;
     }
-    public PlayerState getArmouredState() {
-        return armouredState;
-    }
 
     public boolean hasKey() {
         return false;
@@ -226,11 +298,5 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
 
     public boolean hasWeapon() {
         return false;
-    }
-
-    @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
-        // TODO Auto-generated method stub
-        
     }
 }

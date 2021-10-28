@@ -16,6 +16,8 @@ public abstract class MovingEntity extends Entity implements MovingEntityBehavio
     }
     
     public abstract void tick(Dungeon dungeon);
+
+    public void interact(Dungeon dungeon, MovingEntityBehaviour character) { return; }
     
     /**
      * Returns true if the player has positive health, else false

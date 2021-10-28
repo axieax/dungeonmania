@@ -15,7 +15,7 @@ public class InvisibleState implements PlayerState {
      */
     @Override
     public void battle(MovingEntity opponent) {
-        Item potion = player.getItem("invisibility_potion");
+        Item potion = player.getInventoryItem("invisibility_potion");
         int potionUsesLeft = player.getInvisibilityPotionUses();
 
         // potion effects have vanished

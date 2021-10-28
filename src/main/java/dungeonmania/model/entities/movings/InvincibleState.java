@@ -19,7 +19,7 @@ public class InvincibleState implements PlayerState {
      */
     @Override
     public void battle(MovingEntity opponent) {
-        Item potion = player.getItem("invincibility_potion");
+        Item potion = player.getInventoryItem("invincibility_potion");
         int potionUsesLeft = player.getInvincibilityPotionUses();
 
         // potion effects have vanished

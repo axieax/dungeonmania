@@ -4,7 +4,7 @@ import dungeonmania.model.Dungeon;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class ZombieToast extends MovingEntity {
+public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_HEALTH = 20;
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
 
@@ -18,6 +18,12 @@ public class ZombieToast extends MovingEntity {
 
     @Override
     public void tick(Dungeon dungeon) {
+        
+    }
+
+    @Override
+    public void update(SubjectPlayer player) {
+        // TODO Auto-generated method stub
         
     }
 }

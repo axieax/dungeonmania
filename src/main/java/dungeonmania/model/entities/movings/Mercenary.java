@@ -4,7 +4,7 @@ import dungeonmania.model.Dungeon;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class Mercenary extends MovingEntity {
+public class Mercenary extends MovingEntity implements Observer {
     final static int MAX_MERCENARY_HEALTH = 50;
     final static int MAX_MERCENARY_ATTACK_DMG = 5;
 
@@ -18,6 +18,12 @@ public class Mercenary extends MovingEntity {
 
     @Override
     public void tick(Dungeon dungeon) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void update(SubjectPlayer player) {
         // TODO Auto-generated method stub
         
     }

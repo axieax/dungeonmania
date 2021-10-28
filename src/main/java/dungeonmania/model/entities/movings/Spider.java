@@ -4,7 +4,7 @@ import dungeonmania.model.Dungeon;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class Spider extends MovingEntity {
+public class Spider extends MovingEntity implements Observer {
     final static int MAX_SPIDER_HEALTH = 20;
     final static int MAX_SPIDER_ATTACK_DMG = 2;
 
@@ -21,5 +21,15 @@ public class Spider extends MovingEntity {
         // TODO Auto-generated method stub
         
     }
-    
+
+    @Override
+    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void update(SubjectPlayer player) {
+        
+    }
 }
