@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends MovingEntity {
-    final static int MAX_CHARACTER_HEALTH = 100;
-    final static int CHARACTER_ATTACK_DMG = 10;
+    public final static int MAX_CHARACTER_HEALTH = 100;
+    public final static int CHARACTER_ATTACK_DMG = 10;
 
     public Player(String entityId, Position position) {
         super(entityId, position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
@@ -65,23 +65,20 @@ public class Player extends MovingEntity {
      * @return Item if found, else null
      */
     public Item getItem(String entityId) {
-        for (Item i : inventory) {
-            if (i.getId() == entityId) {
-                return i;
-            }
-        }
-
-        return null;
+        return inventory
+                .stream()
+                .filter(i -> i.getId() == entityId)
+                .findFirst()
+                .orElse(null);
     }
 
     public Equipment getWeapon() {
-        for (Item i : inventory) {
-            if (i instanceof Equipment) {
-                return (Equipment) i;
-            }
-        }
-        
-        return null;
+        return inventory
+                .stream()
+                .filter(i -> i instanceof Equipment)
+                .map(i -> (Equipment) i)
+                .findFirst()
+                .orElse(null);
     }
 
     public boolean hasKey() {
@@ -101,7 +98,7 @@ public class Player extends MovingEntity {
     }
 
     public boolean hasWeapon() {
-        return false;
+        return this.getWeapon() != null;
     }
 
     @Override
