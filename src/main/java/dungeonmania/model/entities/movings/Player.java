@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Dungeon;
+import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.util.Direction;
@@ -64,12 +65,22 @@ public class Player extends MovingEntity {
      * @return Item if found, else null
      */
     public Item getItem(String entityId) {
-        for(Item i: inventory) {
-            if(i.getId() == entityId) {
+        for (Item i : inventory) {
+            if (i.getId() == entityId) {
                 return i;
             }
         }
 
+        return null;
+    }
+
+    public Equipment getWeapon() {
+        for (Item i : inventory) {
+            if (i instanceof Equipment) {
+                return (Equipment) i;
+            }
+        }
+        
         return null;
     }
 

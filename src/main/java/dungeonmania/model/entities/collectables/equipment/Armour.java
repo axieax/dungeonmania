@@ -7,13 +7,6 @@ public class Armour extends CollectableEquipment {
     public Armour(String entityId, Position position) {
         super(entityId, position);
     }
-
-    /**
-     * Reduces the durability by the required amount
-     */
-    public void use() {
-        
-    }
     
     /**
      * Each sword has a specific durability that dictates the number of 
