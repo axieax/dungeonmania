@@ -8,4 +8,5 @@ public class Treasure extends Item {
     public Treasure(String entityId, Position position) {
         super(entityId, position);
     }
+
 }

@@ -7,7 +7,7 @@ import dungeonmania.util.Position;
 public abstract class MovingEntity extends Entity {
 
     public MovingEntity(String entityId, Position position) {
-        super(entityId, position, true);
+        super(entityId, position, true, true);
         //TODO Auto-generated constructor stub
     }
     

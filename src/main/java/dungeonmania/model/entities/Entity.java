@@ -1,23 +1,45 @@
 package dungeonmania.model.entities;
 
+import dungeonmania.model.Dungeon;
+import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.entities.movings.Player;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public abstract class Entity {
 
     private String id;
     private Position position;
-    private boolean isInteractable;
+    private boolean interactable;
+    private boolean passable;
+
+    public boolean isInteractable() {
+        return interactable;
+    }
+
+    public void setInteractable(boolean interactable) {
+        this.interactable = interactable;
+    }
+
+    public boolean isPassable() {
+        return passable;
+    }
+
+    public void setPassable(boolean passable) {
+        this.passable = passable;
+    }
 
     public Entity(String id, Position position) {
         this.id = id;
         this.position = position;
-        this.isInteractable = false;
+        this.interactable = false;
+        this.passable = false;
     }
 
-    public Entity(String id, Position position, boolean isInteractable) {
+    public Entity(String id, Position position, boolean interactable, boolean passable) {
         this(id, position);
-        this.isInteractable = isInteractable;
+        this.interactable = interactable;
     }
 
     public String getId() {
@@ -26,6 +48,10 @@ public abstract class Entity {
 
     public Position getPosition() {
         return position;
+    }
+
+    public Position getOffsetPosition(Direction direction) {
+        return this.position.translateBy(direction);
     }
 
     public void setPosition(Position position) {
@@ -45,7 +71,9 @@ public abstract class Entity {
             id,
             this.getClass().getSimpleName(),
             position,
-            isInteractable
+            interactable
         );
     }
+
+    public abstract void interact(Dungeon dungeon, MovingEntityBehaviour character);
 }
