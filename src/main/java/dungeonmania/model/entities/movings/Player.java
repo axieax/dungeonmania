@@ -1,13 +1,13 @@
 package dungeonmania.model.entities.movings;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends MovingEntity implements Character, SubjectCharacer {
     final static int MAX_CHARACTER_HEALTH = 100;
@@ -208,4 +208,29 @@ public class Player extends MovingEntity implements Character, SubjectCharacer {
         return armouredState;
     }
 
+    public boolean hasKey() {
+        return false;
+    }
+
+    public Direction getDirection() {
+        return null;
+    }
+
+    public Key getKey() {
+        return null;
+    }
+
+    public void consume(String itemId) {
+        return;
+    }
+
+    public boolean hasWeapon() {
+        return false;
+    }
+
+    @Override
+    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+        // TODO Auto-generated method stub
+        
+    }
 }
