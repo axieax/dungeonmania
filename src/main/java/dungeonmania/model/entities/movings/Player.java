@@ -54,7 +54,7 @@ public class Player extends MovingEntity {
      * on the current player position
      * @param dungeon dungeon that player is in
      */
-    public void collect(Dungeon dungeon) {
+    public void collect(Item item) {
         // currently not possible as dungeon not implemented
     }
 
@@ -91,5 +91,11 @@ public class Player extends MovingEntity {
 
     public boolean hasWeapon() {
         return false;
+    }
+
+    @Override
+    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+        // TODO Auto-generated method stub
+        
     }
 }
