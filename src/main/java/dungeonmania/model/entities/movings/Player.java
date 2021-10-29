@@ -215,7 +215,8 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     
     /**
      * Interacts with any entity that is on the tile the character is about to move into.
-     * If it cannot move onto that tile, it does not move at all.
+     * Upon movement, any observers are notified. If an entity blocks the player, then the
+     * player does not move at all.
      * @param dungeon
      * @param direction
      */
@@ -226,6 +227,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
         if(entities == null) { // no entities at new position
             this.setPosition(newPlayerPos);
+            this.notifyObservers();
             return;
         } else { 
             // interact with any non-moving entities and determine if player can move onto this tile
@@ -245,6 +247,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             if(canMove) {
                 this.setPosition(newPlayerPos);
                 this.tick(dungeon);
+                this.notifyObservers();
             }
         }
 
