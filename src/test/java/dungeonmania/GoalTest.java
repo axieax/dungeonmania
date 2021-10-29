@@ -43,7 +43,7 @@ public class GoalTest {
     }
 
     /**
-     * Tests goal (exit behaviour for the maze dungeon
+     * Tests goal (exit) behaviour for the maze dungeon
      */
     @Test
     public final void mazeExitTest() {
@@ -69,7 +69,7 @@ public class GoalTest {
     }
 
     /**
-     * Tests goal (exit behaviour for the maze dungeon
+     * Tests goal (exit) behaviour for the maze dungeon
      */
     @Test
     public final void bouldersSwitchTest() {
@@ -107,13 +107,20 @@ public class GoalTest {
         // TODO: test quantity as well?
     }
 
+    /**
+     * Tests goal (exit) behaviour for the bombs dungeon
+     */
     @Test
     public final void bombsSwitchTest() {
         DungeonManiaController dmc = new DungeonManiaController();
         dmc.newGame("bombs", "standard");
         // navigate the maze
         String switchGoal = ":switch";
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 3).getGoals());
+        // pick up the bomb
+        DungeonResponse resp = move(dmc, Direction.RIGHT, 1);
+        assertEquals(switchGoal, resp.getGoals());
+        assertEquals("bomb", resp.getInventory().get(0).getType());
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 3).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
@@ -140,9 +147,17 @@ public class GoalTest {
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 3).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
+
+        // place the bomb
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 3).getGoals());
-        // NOTE: implementation: bomb explodes even though no bomb on nearby switch
-        assertEquals("", move(dmc, Direction.LEFT, 1).getGoals());
+        resp = move(dmc, Direction.LEFT, "bomb", 1);
+        assertEquals(switchGoal, resp.getGoals());
+        assertEquals(0, resp.getInventory().size());
+
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        assertEquals("", move(dmc, Direction.RIGHT, 1).getGoals());
         // TODO: test quantity as well?
     }
 }
