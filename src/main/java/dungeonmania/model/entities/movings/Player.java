@@ -4,6 +4,7 @@ import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.util.Direction;
@@ -304,8 +305,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void reduceInvisibilityPotionUses(Item potion) {
 
     }
-
-
+    
+    public boolean checkBuildable(BuildableEquipment equipment) {
+        return equipment.isBuildable();
+    }
     
     ////////////////////////////////////////////////////////////////////////////////
     public void setState(PlayerState state) {
