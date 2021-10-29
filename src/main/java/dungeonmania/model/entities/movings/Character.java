@@ -24,6 +24,10 @@ public interface Character {
 
     public List<DefenceEquipment> getDefenceEquipment();
 
+    public int getCurrentAttackDamage(int opponentAttackDamag);
+
+    public int applyDefenceToOpponentAttack();
+
     public void addAlly(MovingEntity ally);
 
     public List<MovingEntity> getAllies();

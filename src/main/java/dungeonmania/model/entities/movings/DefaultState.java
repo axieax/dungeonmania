@@ -13,27 +13,9 @@ public class DefaultState implements PlayerState {
 
     @Override
     public void battle(MovingEntity opponent) {
-        int damageToOpponent = player.getHealth() * player.getAttackDamage() / 5;
-        int damageToPlayer = opponent.getHealth() * opponent.getAttackDamage() / 10;
+        int damageToOpponent = player.getCurrentAttackDamage();
+        int damageToPlayer = opponent.getDefaultBattleDamange() + player.applyDefenceToOpponentAttack(opponent.getAttackDamage());
                 
-        List<AttackEquipment> attackEquip = player.getEquipment();
-        List<DefenceEquipment> defenceEquip = player.getEquipment();
-        
-        // any extra attack damage provided by equipment
-        for(AttackEquipment e: attackEquip) {
-            damageToOpponent = e.setAttackMultiplier(damageToOpponent);
-        }
-        
-        // any extra attack damage provided by allies
-        List<MovingEntity> allies = player.getAllies();
-        for(MovingEntity a: allies) {
-            damageToOpponent += (a.getHealth() *  a.getAttackDamage() / 5);
-        }
-        
-        // any extra defence provided by equipment
-        for(DefenceEquipment e: defenceEquip) {
-            damageToPlayer = e.setDefenceMultiplier(damageToPlayer);
-        }
 
         int playerHealth = player.getHealth();
         int opponentHealth = opponent.getHealth();

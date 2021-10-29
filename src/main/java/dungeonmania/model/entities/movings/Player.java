@@ -26,7 +26,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     private List<Observer> observers = new ArrayList<>();
 
     public Player(String entityId, Position position, int health, int attackDamage) {
-        super(entityId, position, health, attackDamage);
+        super(entityId, position, health, attackDamage, health *  attackDamage / 5);
 
         defaultState = new DefaultState(this);
         invisibleState = new InvisibleState(this);
@@ -156,6 +156,45 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         }
         return defenceEquip;
     }
+
+      /**
+     * Returns the total attack damage a player is able to inflict upon an opponent .
+     * This includes any attack damage provided by equipment e.g. sword
+     * @return a positive integer indicating the amount of attack
+     */
+    @Override
+    public int getCurrentAttackDamage() {
+        // Normal damange inflicted by player
+        int damageToOpponent = this.getDefaultBattleDamange();
+
+        // any extra attack damage provided by equipment
+        for(AttackEquipment e: getAttackEquipment()) {
+            damageToOpponent = e.setAttackMultiplier(damageToOpponent);
+        }
+
+        // any extra attack damage provided by allies
+        for(MovingEntity a: this.getAllies()) {
+            damageToOpponent += a.getDefaultBattleDamange();
+        }
+    }
+
+    /**
+     * Given an attack damage inflicted to the player by an opponent,
+     * reduce the attack by applying defensive tactics
+     * @param opponentAttackDamage positive integer indicating attack amount to player
+     * @return reduced opponentAttackDamage corressponding to defence amount
+     */
+    @Override
+    public int applyDefenceToOpponentAttack(int opponentAttackDamage) {
+        int newOpponentAttackDamage = opponentAttackDamage;
+        
+        // any extra defence provided by equipment
+        for(DefenceEquipment e: getDefenceEquipment()) {
+            newOpponentAttackDamage = e.setDefenceMultiplier(newOpponentAttackDamage);
+        }
+
+        return newOpponentAttackDamage;
+    }
     
     @Override
     public void addAlly(MovingEntity ally) {
@@ -263,6 +302,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void reduceInvisibilityPotionUses(Item potion) {
 
     }
+
 
     
     ////////////////////////////////////////////////////////////////////////////////
