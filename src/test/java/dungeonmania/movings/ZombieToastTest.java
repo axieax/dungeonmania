@@ -1,29 +1,60 @@
-package dungeonmania.movings;
+package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.movings.ZombieToast;
-import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+
+import dungeonmania.response.models.DungeonResponse;
+
+@TestInstance(value = Lifecycle.PER_CLASS)
 public class ZombieToastTest {
-
-    /**
-     * Test whether the entity instance has been created with the correct positions
-     */
+    final static String SPIDER_1 = "spider_1";
+    final static String DUNGEON_NAME = "standard";
+    final static String GAME_MODE = "peaceful";
+    
     @Test
-    public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new ZombieToast("zombietoast1", new Position(1, 1)));
+    public void testZombieSpawnRateNormalModes() {
+        // zombies spawn every 20 ticks
+    }
+    
+    @Test
+    public void testBasicMovement() {
+        // at least one spider must always spawn
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("zombietoast1").getPosition()));
+        // Create a new controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse response = controller.newGame(DUNGEON_NAME, GAME_MODE);
     }
 
-    /**
-     * Test case:
-     * - test movement? still bound by walls, etc same as player.
-     * - test portals have no effect.
-     */
+    @Test
+    public void testWallBlockingMovement() {
+        // zombies can't move through walls
+    }
+
+    @Test
+    public void testEdgeCornerMovement() {
+
+    }
+   
+    @Test
+    public void testZombieCannotWalkThroughClosedDoor() {
+        
+    }
+    
+    @Test
+    public void testZombieCanWalkThroughOpenDoor() {
+        // since zombie has same constraints as character
+    }
+
+    @Test
+    public void testPortalNoEffect() {
+        // portals have no effect on zombies
+    }
+
+    @Test
+    public void testMovementIntoSpaceWithEntity() {
+
+    }
+
 }
