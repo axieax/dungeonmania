@@ -270,13 +270,10 @@ public class ControllerTest {
     @Test
     public void testTooFarFromMercenary() {
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse gameResponse = controller.newGame ("advanced", "Standard"); 
-        String mercenaryId = "";
-        for (EntityResponse entity : gameResponse.getEntities()) {
-            if (entity.getType().equals("mercenary")) mercenaryId = entity.getId();
-        } 
-        assertThrows (InvalidActionException.class, (mercenaryId)->controller.interact(mercenaryId));
-
+        DungeonResponse gameResponse = controller.newGame ("advanced", "Standard");
+        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getType().equals("mercenary")).findFirst().orElse(null);
+        String mercenaryId = mercenary != null ?  mercenary.getId() : "";
+        assertThrows (InvalidActionException.class, ()->controller.interact(mercenaryId));
     }
 
     /**
@@ -285,8 +282,11 @@ public class ControllerTest {
     @Test
     public void testNoGoldBribe() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
-        assertThrows (InvalidActionException.class, () ->controller.interact("1"));            
+        DungeonResponse gameResponse = controller.newGame ("advanced", "Standard");  
+        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getType().equals("mercenary")).findFirst().orElse(null);
+        String mercenaryId = mercenary != null ?  mercenary.getId() : "";
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        assertThrows (InvalidActionException.class, ()->controller.interact(mercenaryId));           
     }
-
 }
