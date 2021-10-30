@@ -42,7 +42,7 @@ public class DungeonManiaController {
     }
 
     /**
-     * Creates a new game, where dungeonName is the name of the game map
+     * Creates a new game, where dungeonName is the name of the dungeon map
      * (corresponding to a JSON file stored in the model) and gameMode is one of
      * "standard", "peaceful" or "hard".
      *
@@ -50,7 +50,7 @@ public class DungeonManiaController {
      * @param gameMode
      * @return
      * @throws IllegalArgumentException If gameMode is not a valid game mode. If
-     *                                  dungeonName is not a game that exists
+     *                                  dungeonName is not a dungeon that exists
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
         throws IllegalArgumentException {

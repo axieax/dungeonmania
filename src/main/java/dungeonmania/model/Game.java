@@ -91,9 +91,9 @@ public final class Game {
     }
 
     /**
-     * Returns a starter DungeonResponse object for the Game
+     * Returns a starter DungeonResponse object for the Dungeon
      *
-     * @return DungeonResponse for the Game
+     * @return DungeonResponse for the Dungeon
      */
     public final DungeonResponse getDungeonResponse() {
         return new DungeonResponse(

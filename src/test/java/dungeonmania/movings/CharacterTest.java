@@ -151,7 +151,7 @@ public class CharacterTest {
         assertNotNull(characterPos);
         assertEquals(new Position(1, 8).toString(), characterPos.toString());
 
-        // Ensure character cannot move left into game wall
+        // Ensure character cannot move left into dungeon wall
         response = controller.tick(null, Direction.LEFT);
 
         entities = response.getEntities();
@@ -161,7 +161,7 @@ public class CharacterTest {
         assertNotNull(characterPos);
         assertEquals(new Position(1, 8).toString(), characterPos.toString());
 
-        // Ensure character cannot move into game wall placed in middle of map
+        // Ensure character cannot move into dungeon wall placed in middle of map
         response = controller.tick(null, Direction.RIGHT);
         entities = response.getEntities();
         assertTrue(entities.size() > 0);
@@ -241,7 +241,7 @@ public class CharacterTest {
         assertEquals(new Position(1, 1).toString(), characterPos.toString());
 
         // Check that as the character moves without interacting with any entities,
-        // the game response stays the same (except the position of the character)
+        // the dungeon response stays the same (except the position of the character)
 
         // character moves down - a new response is created
         DungeonResponse updatedResponse = controller.tick(null, Direction.DOWN);
@@ -254,7 +254,7 @@ public class CharacterTest {
         assertEquals(new Position(2, 1).toString(), characterPos.toString());
 
         // compares two DungeonResponses and returns true if they are the same
-        // NOTE: Comparison is only done on the actual state of the game, and not
+        // NOTE: Comparison is only done on the actual state of the dungeon, and not
         //       on fields like dungeonId, dungeonName etc. The player position is also disregarded.
 
         // ensure entities are equal (except player)

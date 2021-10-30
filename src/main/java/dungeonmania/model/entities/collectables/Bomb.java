@@ -15,7 +15,7 @@ public class Bomb extends Item {
     }
 
     /**
-     * Place a bomb at the specified position on the game.
+     * Place a bomb at the specified position on the dungeon.
      * @param position
      */
     public void place(Game game, Position position) {

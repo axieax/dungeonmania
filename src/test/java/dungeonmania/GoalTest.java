@@ -43,7 +43,7 @@ public class GoalTest {
     }
 
     /**
-     * Tests goal (exit) behaviour for the maze game
+     * Tests goal (exit) behaviour for the maze dungeon
      */
     @Test
     public final void mazeExitTest() {
@@ -69,7 +69,7 @@ public class GoalTest {
     }
 
     /**
-     * Tests goal (exit) behaviour for the maze game
+     * Tests goal (exit) behaviour for the maze dungeon
      */
     @Test
     public final void bouldersSwitchTest() {
@@ -108,7 +108,7 @@ public class GoalTest {
     }
 
     /**
-     * Tests goal (exit) behaviour for the bombs game
+     * Tests goal (exit) behaviour for the bombs dungeon
      */
     @Test
     public final void bombsSwitchTest() {
