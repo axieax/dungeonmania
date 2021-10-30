@@ -297,6 +297,12 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return this.getAttackEquipmentList().size() != 0;
     }
 
+    public Equipment getWeapon() {
+        Item weapon = inventory.findItem("Sword");
+        if (weapon == null) weapon = inventory.findItem("Bow");
+        return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
+    }
+
     public void craft(Game game, String className) {
         if (className.equals(Bow.class.getSimpleName())) {
             Bow.craft(game, inventory);

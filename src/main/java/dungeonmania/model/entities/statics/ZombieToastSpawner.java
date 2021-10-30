@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.statics;
 
 import dungeonmania.model.Dungeon;
+import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.movings.MovingEntityBehaviour;
