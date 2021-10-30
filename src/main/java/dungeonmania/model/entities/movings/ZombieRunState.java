@@ -7,10 +7,10 @@ import dungeonmania.model.Dungeon;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class RunZombieState implements ZombieState {
+public class ZombieRunState implements ZombieState {
     private ZombieToast zombie;
 
-    public RunZombieState(ZombieToast zombie) {
+    public ZombieRunState(ZombieToast zombie) {
         this.zombie = zombie;
     }
 
@@ -23,7 +23,6 @@ public class RunZombieState implements ZombieState {
         );
 
         // TODO:
-        // either keep the same distance or increase the distance
-        // from the player (always preferring to increase distance)
+        // use BFS with destination as position of player where the x and y coordinates are swapped
     }
 }

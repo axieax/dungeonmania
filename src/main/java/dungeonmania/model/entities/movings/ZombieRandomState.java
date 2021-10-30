@@ -10,10 +10,10 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class RandomZombieState implements ZombieState {
+public class ZombieRandomState implements ZombieState {
     private ZombieToast zombie;
 
-    public RandomZombieState(ZombieToast zombie) {
+    public ZombieRandomState(ZombieToast zombie) {
         this.zombie = zombie;
     }
 
