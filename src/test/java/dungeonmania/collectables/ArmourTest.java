@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.collectables.equipment.Armour;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -50,7 +51,27 @@ public class ArmourTest {
      */
     @Test
     public void durabilityTest() {
-        fail();
+        Dungeon dungeon = new Dungeon(3, 3);
+
+        String collectableId = "armour1";
+
+        Armour item = new Armour(collectableId, new Position(1, 1));
+
+        dungeon.addEntity(item);
+
+        Player player = new Player("player1", new Position(0, 1));
+        player.move(dungeon, Direction.RIGHT);
+
+        // Durability of armour when picked up should be 5
+        assertTrue(item.getDurability() == 5);
+
+        Mercenary mercenary = new Mercenary("mercenary1", new Position(2, 1));
+        dungeon.addEntity(mercenary);
+
+        // Player moves to attack (interact with) the mercenary
+        // This will cause the durability of the armour to decrease by 1
+        player.move(dungeon, Direction.RIGHT);
+        assertTrue(item.getDurability() == 4);
     }
 
     /**
@@ -58,7 +79,7 @@ public class ArmourTest {
      */
     @Test
     public void monsterArmourTest() {
-        fail();
+        
     }
 
     /**
