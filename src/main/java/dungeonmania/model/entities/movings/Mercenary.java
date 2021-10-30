@@ -37,7 +37,7 @@ public class Mercenary extends MovingEntity implements Observer {
      */
     @Override
     public void update(SubjectPlayer player) { 
-        
+        // TODO: If a player is fighting an enemy, mercenary moves twice as fast to take advantage
     }
 
     /** 
