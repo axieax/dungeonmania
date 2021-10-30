@@ -1,13 +1,13 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
+import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.response.models.ItemResponse;
@@ -43,7 +43,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      */
     @Override
     public void tick(Game game) {
-        List<Entity> entities = game.getEntitiesAtPosition(this.getPosition());
+        List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
             if (!(e instanceof MovingEntity)) {
                 continue;
@@ -86,8 +86,15 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.addInventoryItem(item);
     }
 
+    /**
+     * Given a buildableItem, builds it if it is craftable
+     */
     @Override
-    public void build(String itemId) {}
+    public void craft(BuildableEquipment item) {
+        if(item.isBuildable(inventory)) {
+            item.craft(inventory);
+        }
+    }
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
@@ -129,15 +136,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             .filter(equipment -> equipment instanceof AttackEquipment)
             .map(equipment -> (DefenceEquipment) equipment)
             .collect(Collectors.toList());
-    }
-
-    public boolean canCraft(String className) {
-        if (className.equals(Bow.class.getSimpleName())) {
-            return Bow.isBuildable(inventory);
-        } else if (className.equals(Shield.class.getSimpleName())) {
-            return Shield.isBuildable(inventory);
-        }
-        return false;
     }
 
     @Override
@@ -214,7 +212,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     @Override
     public void move(Game game, Direction direction) {
         Position newPlayerPos = this.getPosition().translateBy(direction);
-        List<Entity> entities = game.getEntitiesAtPosition(newPlayerPos);
+        List<Entity> entities = game.getEntities(newPlayerPos);
 
         if (entities == null) { // no entities at new position
             this.setPosition(newPlayerPos);
@@ -307,14 +305,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         Item weapon = inventory.findItem("Sword");
         if (weapon == null) weapon = inventory.findItem("Bow");
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
-    }
-
-    public void craft(Game game, String className) {
-        if (className.equals(Bow.class.getSimpleName())) {
-            Bow.craft(inventory);
-        } else if (className.equals(Shield.class.getSimpleName())) {
-            Shield.craft(inventory);
-        }
     }
 
     public Direction getDirection() {
