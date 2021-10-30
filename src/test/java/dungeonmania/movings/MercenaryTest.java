@@ -32,12 +32,6 @@ public class MercenaryTest {
     static final String GAME_MODE = "peaceful";
 
     @Test
-    public void testSpawnPosition() {
-        // mercenaries spawn at the entry location periodically with at least one enemy
-        // https://edstem.org/au/courses/7065/discussion/656701
-    }
-
-    @Test
     public void testDoesNotSpawnWithNoEnemies() {
         // mercenaries only spawn in dungeons with at least one enemy
         Game game = new Game("game", sevenBySevenWallBoundary(), new Goal(), new Peaceful());
