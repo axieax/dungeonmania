@@ -8,12 +8,12 @@ public class Mercenary extends MovingEntity {
     public final static int MAX_MERCENARY_HEALTH = 50;
     public final static int MAX_MERCENARY_ATTACK_DMG = 5;
 
-    public Mercenary(String entityId, Position position) {
-        super(entityId, position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
+    public Mercenary(Position position) {
+        super(position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
     }
 
-    public Mercenary(String entityId, Position position, int health, int attackDamage) {
-        super(entityId, position, health, attackDamage);
+    public Mercenary(Position position, int health, int attackDamage) {
+        super(position, health, attackDamage);
     }
 
     @Override

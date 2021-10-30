@@ -12,8 +12,8 @@ public class Door extends Entity {
     private boolean open = false;
     private int key;
 
-    public Door(String entityId, Position position, int key) {
-        super(entityId, position);
+    public Door(Position position, int key) {
+        super(position);
         this.key = key;
     }
 

@@ -18,13 +18,12 @@ public class ZombieToast extends MovingEntity implements Observer {
     private ZombieState runZombieState;
     private ZombieState state;
 
-    public ZombieToast(String entityId, Position position) {
-        this(entityId, position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG);
+    public ZombieToast(Position position) {
+        super(position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG);
     }
-
-    public ZombieToast(String entityId, Position position, int health, int attackDamage) {
-        super(entityId, position, health, attackDamage);
-
+    
+    public ZombieToast(Position position, int health, int attackDamage) {
+        super(position, health, attackDamage);
         this.randomZombieState = new ZombieRandomState(this);
         this.runZombieState = new ZombieRunState(this);
     }
@@ -65,7 +64,7 @@ public class ZombieToast extends MovingEntity implements Observer {
         }
 
         Player character = (Player) player; 
-        if(character.getState() instanceof InvincibleState) {
+        if(character.getState() instanceof PlayerInvincibleState) {
             this.setState(getRunZombieState());
         } else {
              this.setState(randomZombieState);

@@ -29,13 +29,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
-    public Player(String entityId, Position position, int health, int attackDamage) {
-        super(entityId, position, health, attackDamage, health * attackDamage / 5);
+    public Player(Position position, int health, int attackDamage) {
+        super(position, health, attackDamage, health * attackDamage / 5);
         this.state = new PlayerDefaultState(this);
     }
 
-    public Player(String entityId, Position position) {
-        this(entityId, position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
+    public Player(Position position) {
+        this(position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
     }
 
     /**
@@ -206,7 +206,8 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     /**
      * Interacts with any entity that is on the tile the character is about to move into.
-     * If it cannot move onto that tile, it does not move at all.
+     * Upon movement, any observers are notified. If an entity blocks the player, then the
+     * player does not move at all.
      * @param dungeon
      * @param direction
      */
@@ -235,6 +236,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             if (canMove) {
                 this.setPosition(newPlayerPos);
                 this.tick(dungeon);
+                this.notifyObservers();
             }
         }
         this.notifyObservers();
@@ -281,6 +283,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.state = state;
     }
 
+    public PlayerState getState() {
+        return state;
+    }
+
     public boolean hasKey() {
         return false;
     }
@@ -305,9 +311,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public void craft(Game game, String className) {
         if (className.equals(Bow.class.getSimpleName())) {
-            Bow.craft(game, inventory);
+            Bow.craft(inventory);
         } else if (className.equals(Shield.class.getSimpleName())) {
-            Shield.craft(game, inventory);
+            Shield.craft(inventory);
         }
     }
 }

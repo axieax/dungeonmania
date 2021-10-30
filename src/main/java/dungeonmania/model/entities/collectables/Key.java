@@ -2,7 +2,6 @@ package dungeonmania.model.entities.collectables;
 
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.MovingEntityBehaviour;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Consumable;
@@ -12,8 +11,8 @@ public class Key extends Item implements Consumable {
 
     private int key;
 
-    public Key(String entityId, Position position, int key) {
-        super(entityId, position);
+    public Key(Position position, int key) {
+        super(position);
         this.key = key;
     }
 
