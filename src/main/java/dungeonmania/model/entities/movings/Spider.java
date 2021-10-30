@@ -10,8 +10,8 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Spider extends MovingEntity {
-    final static int MAX_SPIDER_HEALTH = 20;
-    final static int MAX_SPIDER_ATTACK_DMG = 2;
+    public final static int MAX_SPIDER_HEALTH = 20;
+    public final static int MAX_SPIDER_ATTACK_DMG = 2;
     private boolean isInitialMove;
     private List<Direction> spiderMovementPath;
     private Direction nextMoveInPath;

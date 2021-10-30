@@ -2,10 +2,10 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.entities.Item;
 
-public class InvincibleState implements PlayerState {
+public class PlayerInvincibleState implements PlayerState {
     Player player;
 
-    public InvincibleState(Player player) {
+    public PlayerInvincibleState(Player player) {
         this.player = player;
     }
 

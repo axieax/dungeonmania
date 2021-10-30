@@ -4,15 +4,20 @@ import java.util.List;
 
 import dungeonmania.model.entities.Equipment;
 
-public class DefaultState implements PlayerState {
+public class PlayerDefaultState implements PlayerState {
     Player player;
 
-    public DefaultState(Player player) {
+    public PlayerDefaultState(Player player) {
         this.player = player;
     }
 
     @Override
     public void battle(MovingEntity opponent) {
+        List<MovingEntity> allies = player.getAllies();
+        if(allies.contains(opponent)) {
+            return;
+        }
+        
         int damageToOpponent = player.getCurrentAttackDamage();
         int damageToPlayer = opponent.getDefaultBattleDamange() + player.applyDefenceToOpponentAttack(opponent.getAttackDamage());
                 
