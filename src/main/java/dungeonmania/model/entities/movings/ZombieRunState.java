@@ -22,6 +22,7 @@ public class RunZombieState implements ZombieState {
             Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT
         );
 
+        // TODO:
         // either keep the same distance or increase the distance
         // from the player (always preferring to increase distance)
     }

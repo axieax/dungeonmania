@@ -40,8 +40,6 @@ public class ArrowsTest {
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        player.collect(dungeon);
-
         assertTrue(dungeon.getEntity(collectableId) == null);
         assertTrue(player.getItem(collectableId).equals(item));
     }

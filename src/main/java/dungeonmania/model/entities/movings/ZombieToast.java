@@ -25,8 +25,8 @@ public class ZombieToast extends MovingEntity implements Observer {
     public ZombieToast(String entityId, Position position, int health, int attackDamage) {
         super(entityId, position, health, attackDamage);
 
-        this.randomZombieState = new RandomZombieState(this);
-        this.runZombieState = new RunZombieState(this);
+        this.randomZombieState = new ZombieRandomState(this);
+        this.runZombieState = new ZombieRunState(this);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
 
     /**
-     * If a player drinks an invincible potion, change the state
+     * If a player drinks an invincibility potion, change the state
      * of the zombie to make sure it runs away
      */
     @Override
