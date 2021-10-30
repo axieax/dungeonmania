@@ -1,27 +1,46 @@
-package dungeonmania.movings;
+package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.util.Position;
+import dungeonmania.response.models.DungeonResponse;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+@TestInstance(value = Lifecycle.PER_CLASS)
 public class MercenaryTest {
 
-    /**
-     * Test whether the entity instance has been created with the correct positions
-     */
-    @Test
-    public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Mercenary("mercenary1", new Position(1, 1)));
+    static final String CHARACTER_TYPE = "player";
+    static final String DUNGEON_NAME = "advanced";
+    static final String GAME_MODE = "peaceful";
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("mercenary1").getPosition()));
+    @Test
+    public void testSpawnPosition() {
+        // mercenaries spawn at the entry location periodically with at least one enemy
+        // https://edstem.org/au/courses/7065/discussion/656701
+        // although note that mercenaries can pre-exist in the world
+        // and after this they periodically spawn
     }
 
-    /**
-     * Test case:
-     * - ???
-     */
+    @Test
+    public void testDoesNotSpawnWithNoEnemies() {
+        // mercenaries only spawn in dungeons with at least one enemy
+    }
+
+    @Test
+    public void testSimpleHostility() {
+        // mercenaries constantly move towards the character
+    }
+
+    @Test
+    public void testMercenaryStopIfCannotMoveCloserToCharacter() {
+        // e.g. blocked by wall etc.
+    }
+
+    @Test
+    public void testBribedMercenaryMovement() {}
+
+    @Test
+    public void testCannotMoveThroughExit() {}
+
+    @Test
+    public void testCannotMoveThroughClosedDoor() {}
 }

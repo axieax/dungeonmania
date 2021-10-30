@@ -3,9 +3,10 @@ package dungeonmania.model.entities.movings;
 import java.util.List;
 
 import dungeonmania.model.Dungeon;
+import dungeonmania.model.entities.AttackEquipment;
+import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
@@ -16,17 +17,17 @@ public interface Character {
 
     public void build(String itemId);
 
-    public void consume(Item item);
-
     public Item getInventoryItem(String itemId);
-    
-    public List<Equipment> getEquipment();
 
-    public List<AttackEquipment> getAttackEquipment();
+    public void removeInventoryItem(String itemId);
     
-    public List<DefenceEquipment> getDefenceEquipment();
+    public List<Equipment> getEquipmentList();
+
+    public List<AttackEquipment> getAttackEquipmentList();
     
-    public boolean checkBuildable(BuildableEquipment equipment);
+    public List<DefenceEquipment> getDefenceEquipmentList();
+    
+    public boolean canCraft(String className);
 
     public List<ItemResponse> getInventoryResponses();
 
