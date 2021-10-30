@@ -17,7 +17,7 @@ public class Bow extends BuildableEquipment {
     }
 
     public static void craft(Game game, Inventory inventory) {
-        if (Bow.isBuildable(inventory)) {
+        if (isBuildable(inventory)) {
             inventory.removeItemQuantity("Wood", WOOD_NEEDED);
             inventory.removeItemQuantity("Arrows", ARROWS_NEEDED);
             inventory.addItem(new Bow(game.generateEntityId(), null));

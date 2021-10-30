@@ -37,12 +37,12 @@ public class KeyTest {
         dungeon.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
         assertTrue(dungeon.getEntity(collectableId) == null);
-        assertTrue(player.getItem(collectableId).equals(item));
+        assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 
     /**
@@ -63,20 +63,20 @@ public class KeyTest {
         Player player = new Player("player1", new Position(0, 1)); 
 
         // Collect the first key
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(1, 1).equals(player.getPosition()));       
 
         assertTrue(dungeon.getEntity(collectableId1) == null);
         assertTrue(dungeon.getEntity(collectableId2) == key2);
-        assertTrue(player.getItem(collectableId1).equals(key1));
+        assertTrue(player.getInventoryItem(collectableId1).equals(key1));
 
         // Attempt to collect the second key
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(2, 1).equals(player.getPosition()));       
 
         // Check if the second key is still in the dungeon
         assertTrue(dungeon.getEntity(collectableId2) == key2);
-        assertTrue(player.getItem(collectableId2) == null);
+        assertTrue(player.getInventoryItem(collectableId2) == null);
     }
 
     /**
@@ -94,11 +94,11 @@ public class KeyTest {
         Key key = new Key(collectableId, new Position(1, 2), 1);
         
         // Player moves onto the position of the key and will pick it up
-        player.move(Direction.UP);
-        assertTrue(player.getItem(collectableId).equals(key));
+        player.move(dungeon, Direction.UP);
+        assertTrue(player.getInventoryItem(collectableId).equals(key));
 
         // Player opens the door
-        player.move(Direction.UP);
+        player.move(dungeon, Direction.UP);
         assertTrue(new Position(1, 1).equals(player.getPosition()));
         assertTrue(door.isOpen());
     }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.movings.Player;
@@ -33,12 +34,13 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastSpawnEveryCycle() {
+        Game game = new Game();
         Dungeon dungeon = new Dungeon(3, 3);
         dungeon.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
         
-        // Ticks the game 20 times (Please note that this will need to be changed if we are ticking inside the Game class)
+        // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
-            dungeon.tick();
+            game.tick();
         }
 
         // Check that only one zombie toast has spawned
@@ -116,11 +118,11 @@ public class ZombieToastSpawnerTest {
         Player player = new Player("player1", new Position(3, 2));
         
         // Player picks up sword
-        player.move(Direction.UP);
+        player.move(dungeon, Direction.UP);
 
         // Player moves to the right of the zombie toast spawner
         // They will interact with it, destroying the zombie toast spawner with the sword
-        player.move(Direction.LEFT);
+        player.move(dungeon, Direction.LEFT);
         
         // Check that the zombie toast spawner has been destroyed
         assertTrue(dungeon.getEntity("zombietoastspawner1") == null);

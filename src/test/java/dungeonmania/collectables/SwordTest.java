@@ -38,12 +38,12 @@ public class SwordTest {
         dungeon.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
         assertTrue(dungeon.getEntity(collectableId) == null);
-        assertTrue(player.getItem(collectableId).equals(item));
+        assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 
     /**
@@ -60,7 +60,7 @@ public class SwordTest {
         dungeon.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
 
         // Durability of sword when picked up should be 5
         assertTrue(item.getDurability() == 5);
@@ -68,7 +68,7 @@ public class SwordTest {
         ZombieToastSpawner zombie = new ZombieToastSpawner("zombie1", new Position(3, 1));
         dungeon.addEntity(zombie);
 
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the sword
         // This will cause the durability of the sword to decrease by 1

@@ -37,16 +37,16 @@ public class FloorSwitchTest {
         Player player = new Player("player1", new Position(0, 1));
         dungeon.addEntity(player);
 
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(1, 1).equals(player.getPosition()));
         assertTrue(new Position(1, 1).equals(floorSwitch.getPosition()));
 
-        player.move(Direction.UP);
+        player.move(dungeon, Direction.UP);
 
         ZombieToast zombie = new ZombieToast("zombie1", new Position(2, 1));
         dungeon.addEntity(zombie);
 
-        zombie.move(Direction.LEFT);
+        zombie.move(dungeon, Direction.LEFT);
         assertTrue(new Position(1, 1).equals(zombie.getPosition()));
         assertTrue(new Position(1, 1).equals(floorSwitch.getPosition()));
     }
@@ -67,7 +67,7 @@ public class FloorSwitchTest {
         dungeon.addEntity(boulder);
 
         // Move boulder on top of switch
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
         assertTrue(new Position(2, 0).equals(floorSwitch.getPosition()));
         assertTrue(new Position(2, 0).equals(boulder.getPosition()));
@@ -75,7 +75,7 @@ public class FloorSwitchTest {
         assertTrue(floorSwitch.isTriggered(dungeon));
 
         // Untrigger the floor switch
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(2, 0).equals(player.getPosition()));
         assertTrue(new Position(2, 0).equals(floorSwitch.getPosition()));
         assertTrue(new Position(3, 0).equals(boulder.getPosition()));

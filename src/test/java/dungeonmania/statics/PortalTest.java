@@ -46,12 +46,12 @@ public class PortalTest {
 
         // Player should teleport by moving into the portal
         // Note that since they are travelling to the left, they will end up to the left of the portal
-        player.move(Direction.LEFT);
+        player.move(dungeon, Direction.LEFT);
         assertTrue(new Position(1, 2).equals(player.getPosition()));
 
         // Return back to the portal
         // Note that since they are travelling to the right, they will end up to the right of the portal
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
     }
 
@@ -83,11 +83,11 @@ public class PortalTest {
 
         // Player teleports by moving into the blue portals (P1 -> P2)
         assertTrue(new Position(1, 0).equals(player.getPosition()));
-        player.move(Direction.LEFT);
+        player.move(dungeon, Direction.LEFT);
         assertTrue(new Position(1, 2).equals(player.getPosition()));
 
         // Player teleports by moving into the red portals (P3 -> P4)
-        player.move(Direction.DOWN);
+        player.move(dungeon, Direction.DOWN);
 
         assertTrue(new Position(3, 2).equals(player.getPosition()));
     }

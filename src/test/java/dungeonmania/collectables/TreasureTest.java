@@ -36,11 +36,11 @@ public class TreasureTest {
         dungeon.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
         assertTrue(dungeon.getEntity(collectableId) == null);
-        assertTrue(player.getItem(collectableId).equals(item));
+        assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 }

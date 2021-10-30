@@ -44,16 +44,16 @@ public class WallTest {
 
         // If movement is blocked by wall, the player should remain in the same position
 
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(1, 1).equals(player.getPosition()));
 
-        player.move(Direction.LEFT);
+        player.move(dungeon, Direction.LEFT);
         assertTrue(new Position(1, 1).equals(player.getPosition()));
 
-        player.move(Direction.UP);
+        player.move(dungeon, Direction.UP);
         assertTrue(new Position(1, 1).equals(player.getPosition()));
 
-        player.move(Direction.DOWN);
+        player.move(dungeon, Direction.DOWN);
         assertTrue(new Position(1, 1).equals(player.getPosition()));
     }
 
@@ -101,12 +101,12 @@ public class WallTest {
         Player player = new Player("player1", new Position(0, 0));
         dungeon.addEntity(player);
 
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
         assertTrue(new Position(2, 0).equals(boulder.getPosition()));
 
         // Wall blocks movement of boulder
-        player.move(Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
         assertTrue(new Position(2, 0).equals(boulder.getPosition()));
     }
