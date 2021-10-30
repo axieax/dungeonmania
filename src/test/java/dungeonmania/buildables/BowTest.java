@@ -55,13 +55,12 @@ public class BowTest {
     }
 
     /**
-     * Test durability of Bow
+     * Test durability of Bow.
      */
     public void durabilityTest() {
         Game game = new Game();
         Dungeon dungeon = new Dungeon(3, 3);
 
-        // To craft a bow, we need 1 wood and 3 arrows
         Wood wood = new Wood("wood1", new Position(1, 0));
         Arrow arrow1 = new Arrow("arrow1", new Position(1, 1));
         Arrow arrow2 = new Arrow("arrow2", new Position(1, 2));
@@ -72,15 +71,12 @@ public class BowTest {
         dungeon.addEntity(arrow2);
         dungeon.addEntity(arrow3);
 
-        // Player picks up the wood and arrows
         Player player = new Player("player", new Position(0, 0));
         player.move(dungeon, Direction.RIGHT);
         player.move(dungeon, Direction.DOWN);
         player.move(dungeon, Direction.DOWN);
         player.move(dungeon, Direction.DOWN);
 
-        // Player crafts a bow
-        // This needs to be changed according to how we are integrating game with the dungeon
         player.craft(game, "Bow");
 
         // Durability of bow when picked up should be 5
@@ -98,7 +94,7 @@ public class BowTest {
     }
 
     /**
-     * Test if Sword can be used in battles
+     * Test if Bow can be used in battles.
      */
     @Test
     public void battleTest() {
