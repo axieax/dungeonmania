@@ -5,7 +5,7 @@ import java.util.List;
 import dungeonmania.model.entities.Equipment;
 
 public class PlayerDefaultState implements PlayerState {
-    Player player;
+    private Player player;
 
     public PlayerDefaultState(Player player) {
         this.player = player;
