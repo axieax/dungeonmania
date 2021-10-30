@@ -2,7 +2,7 @@ package dungeonmania.model.entities.statics;
 
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -18,7 +18,7 @@ public class Boulder extends Entity {
      * tile.
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Dungeon dungeon, MovingEntity character) {
         if (character instanceof Player) {
             this.moveBoulder(dungeon, character.getDirection());
         }

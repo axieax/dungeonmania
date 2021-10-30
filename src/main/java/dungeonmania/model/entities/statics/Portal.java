@@ -2,7 +2,7 @@ package dungeonmania.model.entities.statics;
 
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
 
 public class Portal extends Entity {
@@ -24,7 +24,7 @@ public class Portal extends Entity {
      * the entity to go through by.
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Dungeon dungeon, MovingEntity character) {
         this.teleport(dungeon, character);
     }
 
@@ -43,7 +43,7 @@ public class Portal extends Entity {
      * Teleports the entity exactly to the tile where the corresponding portal is
      * located at.
      */
-    public void teleport(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void teleport(Dungeon dungeon, MovingEntity character) {
         Portal portal = this.findPortal(dungeon);
         Position teleportedPosition = portal.getPosition().translateBy(character.getDirection());
         Entity entityAtPortal = dungeon.getEntityAtPosition(teleportedPosition);

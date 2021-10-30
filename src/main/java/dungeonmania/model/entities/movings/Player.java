@@ -242,9 +242,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.notifyObservers();
     }
 
-    @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
-        // TODO Auto-generated method stub
+    public void interact(Dungeon dungeon, MovingEntity character) {
 
     }
 
@@ -287,10 +285,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return false;
     }
 
-    public Direction getDirection() {
-        return null;
-    }
-
     public Key getKey() {
         return null;
     }
@@ -311,6 +305,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         } else if (className.equals(Shield.class.getSimpleName())) {
             Shield.craft(inventory);
         }
+    }
+
+    public Direction getDirection() {
+        return null;
     }
 
     @Override

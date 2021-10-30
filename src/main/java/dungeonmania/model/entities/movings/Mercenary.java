@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Dungeon;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -29,7 +30,25 @@ public class Mercenary extends MovingEntity {
     }
 
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Dungeon dungeon, MovingEntity character) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Direction getDirection() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean isCollidable(Entity entity) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void moveTo(Position position) {
         // TODO Auto-generated method stub
         
     }

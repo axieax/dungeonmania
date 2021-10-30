@@ -1,12 +1,10 @@
 package dungeonmania.model.entities.buildables;
 
-import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Inventory;
-import dungeonmania.util.Position;
 
 public class Shield extends BuildableEquipment {
 
-    private static final int WOOD_NEEDED = 1;
+    private static final int WOOD_NEEDED = 2;
     private static final int TREASURE_NEEDED = 1;
     private static final int KEY_NEEDED = 1;
 
@@ -25,7 +23,7 @@ public class Shield extends BuildableEquipment {
     }
 
     public static void craft(Inventory inventory) {
-        if (Bow.isBuildable(inventory)) {
+        if (isBuildable(inventory)) {
             inventory.removeItemQuantity("Wood", WOOD_NEEDED);
             if (inventory.hasItemQuantity("Treasure", TREASURE_NEEDED)) {
                 inventory.removeItemQuantity("Treasure", TREASURE_NEEDED);

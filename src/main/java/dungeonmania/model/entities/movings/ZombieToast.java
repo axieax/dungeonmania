@@ -29,7 +29,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
 
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Dungeon dungeon, MovingEntity character) {
         // TODO Auto-generated method stub
         
     }

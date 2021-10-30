@@ -24,7 +24,7 @@ public abstract class MovingEntity extends Entity implements MovingEntityBehavio
     
     public abstract void tick(Dungeon dungeon);
 
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) { return; }
+    public void interact(Dungeon dungeon, MovingEntity character) { return; }
     
     /**
      * Returns true if the player has positive health, else false
@@ -62,4 +62,9 @@ public abstract class MovingEntity extends Entity implements MovingEntityBehavio
         this.defaultBattleDamage = defaultBattleDamage;
     }
     
+    public abstract Direction getDirection();
+
+    public abstract boolean isCollidable(Entity entity);
+
+    public abstract void moveTo(Position position);
 }

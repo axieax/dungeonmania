@@ -3,7 +3,7 @@ package dungeonmania.model.entities;
 import java.util.UUID;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -77,5 +77,5 @@ public abstract class Entity {
         );
     }
 
-    public abstract void interact(Dungeon dungeon, MovingEntityBehaviour character);
+    public abstract void interact(Dungeon dungeon, MovingEntity character);
 }

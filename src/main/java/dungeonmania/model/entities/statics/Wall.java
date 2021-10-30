@@ -2,7 +2,7 @@ package dungeonmania.model.entities.statics;
 
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
 
 public class Wall extends Entity {
@@ -12,7 +12,7 @@ public class Wall extends Entity {
     }
 
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Dungeon dungeon, MovingEntity character) {
         // TODO Auto-generated method stub
         
     }
