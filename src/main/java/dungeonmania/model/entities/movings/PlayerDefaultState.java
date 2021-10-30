@@ -1,10 +1,14 @@
 package dungeonmania.model.entities.movings;
 
 import java.util.List;
+import java.util.Random;
+
+import dungeonmania.model.entities.collectables.equipment.Armour;
 
 public class PlayerDefaultState implements PlayerState {
     
     private Player player;
+    public final static int ARMOUR_DROP_CHANCE = 10;
 
     public PlayerDefaultState(Player player) {
         this.player = player;
@@ -31,6 +35,16 @@ public class PlayerDefaultState implements PlayerState {
 
             playerHealth = player.getHealth();
             opponentHealth = opponent.getHealth();
+        }
+
+        // if the player wins against a zombie or mercenary, there is a small chance
+        // that armour is dropped (and placed into the player's inventory)
+        Random random = new Random();
+        int num = random.nextInt(100);
+        
+        if(num <= ARMOUR_DROP_CHANCE) {
+            Armour armour = new Armour(null);
+            player.addInventoryItem(armour);
         }
     }
 

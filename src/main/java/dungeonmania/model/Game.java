@@ -4,6 +4,7 @@ import dungeonmania.EntityFactory;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.movings.Character;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.response.models.DungeonResponse;
@@ -79,13 +80,16 @@ public final class Game {
             .stream()
             .filter(e -> {
                 // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                // NOTE: can use & to extract last bit and ensure number is 0 or 1
-                // then return x XOR y
                 Position difference = Position.calculatePositionBetween(e.getPosition(), position);
                 int xDiff = Math.abs(difference.getX());
                 int yDiff = Math.abs(difference.getY());
-                if ((xDiff == 0 && yDiff == 1) || (yDiff == 0 && xDiff == 1)) return true;
-                return false;
+                return (
+                    // ensure both xDiff and yDiff are either 0 or 1
+                    (xDiff == (xDiff & 1)) &&
+                    (yDiff == (yDiff & 1)) &&
+                    // logical XOR to check x and y are different
+                    ((xDiff == 1) ^ (yDiff == 1))
+                );
             })
             .collect(Collectors.toList());
     }
@@ -102,7 +106,7 @@ public final class Game {
             entities.stream().map(Entity::getEntityResponse),
             getCharacter().getInventoryResponse(),
             getBuildables(),
-            ""
+            goal.toString()
         );
     }
 
@@ -112,18 +116,24 @@ public final class Game {
     }
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection) {
-        // TODO
-        // entities.forEach(MovingEntity::tick);
+        entities
+            .stream()
+            .filter(e -> e instanceof MovingEntity)
+            .forEach(e -> ((MovingEntity) e).tick(this));
         return getDungeonResponse();
     }
 
     public final DungeonResponse build(String buildable) {
-        // TODO
+        Character player = (Character) getCharacter();
+        BuildableEquipment item = EntityFactory.getBuildable(buildable);
+        player.craft(item);
         return getDungeonResponse();
     }
 
     public final DungeonResponse interact(String entityId) {
-        // TODO
+        Entity player = getCharacter();
+        Entity entity = getEntity(entityId);
+        player.interact(this, (MovingEntity) entity);
         return getDungeonResponse();
     }
 }
