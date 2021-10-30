@@ -245,8 +245,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
         if(entities == null) { // no entities at new position
             this.setPosition(newPlayerPos);
-            this.notifyObservers();
-            return;
         } else { 
             // interact with any non-moving entities and determine if player can move onto this tile
             boolean canMove = true;
@@ -265,10 +263,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             if(canMove) {
                 this.setPosition(newPlayerPos);
                 this.tick(dungeon);
-                this.notifyObservers();
             }
         }
-
+        this.notifyObservers();
     }
 
     @Override
