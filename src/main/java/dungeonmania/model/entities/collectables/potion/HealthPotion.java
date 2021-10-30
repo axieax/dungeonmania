@@ -7,12 +7,11 @@ public class HealthPotion extends Potion {
 
     public HealthPotion(String entityId, Position position) {
         super(entityId, position);
-        //TODO Auto-generated constructor stub
     }
 
     @Override
     public void consume(Player player) {
-        // TODO Auto-generated method stub
-
+        player.setHealth(Player.MAX_CHARACTER_HEALTH);
+        player.removeInventoryItem(this.getId());
     }
 }

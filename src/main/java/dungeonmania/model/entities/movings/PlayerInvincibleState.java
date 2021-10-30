@@ -1,9 +1,9 @@
 package dungeonmania.model.entities.movings;
 
-import dungeonmania.model.entities.Item;
-
 public class PlayerInvincibleState implements PlayerState {
     Player player;
+    
+    private int timeLimit = 2;
 
     public PlayerInvincibleState(Player player) {
         this.player = player;
@@ -19,21 +19,14 @@ public class PlayerInvincibleState implements PlayerState {
      */
     @Override
     public void battle(MovingEntity opponent) {
-        Item potion = player.getInventoryItem("invincibility_potion");
-        int potionUsesLeft = player.getInvincibilityPotionUses();
-
-        // potion effects have vanished
-        if(potionUsesLeft == 0) {
-            player.setState(player.getDefaultState());
-            return;
-        }
-        
         opponent.kill();
-        player.reduceInvincibilityPotionUses(potion);
+    }
 
-        // if after fighting no uses of potion left
-        if(potionUsesLeft == 0) {
-            player.setState(player.getDefaultState());
+    @Override
+    public void updateState(Player player) {
+        timeLimit--;
+        if (timeLimit == 0) {
+            this.player.setState(new PlayerDefaultState(player));
         }
     }
     
