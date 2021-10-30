@@ -8,48 +8,49 @@ public class Mercenary extends MovingEntity implements Observer {
     public final static int MAX_MERCENARY_HEALTH = 50;
     public final static int MAX_MERCENARY_ATTACK_DMG = 5;
 
-    private MercenaryState enemyState;
-    private MercenaryState allyState;
+    private MercenaryState defaultState;
+    private MercenaryState runState;
     private MercenaryState state;
 
-    
     public Mercenary(String entityId, Position position) {
         this(entityId, position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
     }
 
     public Mercenary(String entityId, Position position, int health, int attackDamage) {
         super(entityId, position, health, attackDamage);
-        this.enemyState = new MercenaryEnemyState(this);
-        this.allyState = new MercenaryAllyState(this);
+        this.defaultState = new MercenaryDefaultState(this);
+        this.runState = new MercenaryRunState(this);
 
-        this.state = enemyState;
+        this.state = defaultState;
     }
 
     @Override
     public void tick(Dungeon dungeon) {
         Position playerPos = dungeon.getCharacterPosition();
+        state.move(dungeon, playerPos);
     }
 
     @Override
-    public void update(SubjectPlayer player) {
-        // TODO: follow player
+    public void update(SubjectPlayer player) { }
+
+    /** 
+     * Character attempts to bribe mercenary
+     */
+    @Override
+    public void interact(Dungeon dungeon, MovingEntityBehaviour character) { 
         
-        // TODO:: If bribed (exists in player ally list) switch to Ally state
     }
-
-    @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) { }
 
     ////////////////////////////////////////////////////////////////////////////////////
     public void setState(MercenaryState state) {
         this.state = state;
     }
 
-    public MercenaryState getEnemyState() {
-        return enemyState;
+    public MercenaryState getDefaultState() {
+        return defaultState;
     }
 
-    public MercenaryState getAllyState() {
-        return allyState;
+    public MercenaryState getRunState() {
+        return runState;
     }
 }
