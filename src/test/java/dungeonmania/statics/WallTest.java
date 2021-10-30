@@ -25,7 +25,7 @@ public class WallTest {
     }
 
     /**
-     * Test if Wall blocks movement of a player.
+     * Test if wall blocks movement of a player.
      */
     @Test
     public void wallBlockPlayer() {
@@ -42,6 +42,8 @@ public class WallTest {
         Player player = new Player("player1", new Position(1, 1));
         dungeon.addEntity(player);
 
+        // If movement is blocked by wall, the player should remain in the same position
+
         player.move(Direction.RIGHT);
         assertTrue(new Position(1, 1).equals(player.getPosition()));
 
@@ -56,7 +58,7 @@ public class WallTest {
     }
 
     /**
-     * Test if Wall blocks movement of enemies.
+     * Test if wall blocks movement of enemies.
      */
     @Test
     public void wallBlockEnemies() {
@@ -87,7 +89,7 @@ public class WallTest {
     }
 
     /**
-     * Test if Wall blocks movement of moving boulders.
+     * Test if wall blocks movement of moving boulders.
      */
     public void wallBlockBoulder() {
         Dungeon dungeon = new Dungeon(5, 5);
@@ -103,7 +105,7 @@ public class WallTest {
         assertTrue(new Position(1, 0).equals(player.getPosition()));
         assertTrue(new Position(2, 0).equals(boulder.getPosition()));
 
-        // the wall blocks movement of boulder
+        // Wall blocks movement of boulder
         player.move(Direction.RIGHT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
         assertTrue(new Position(2, 0).equals(boulder.getPosition()));
