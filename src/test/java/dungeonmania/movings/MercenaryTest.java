@@ -1,4 +1,4 @@
-package dungeonmania;
+package dungeonmania.movings;
 
 import dungeonmania.response.models.DungeonResponse;
 import org.junit.jupiter.api.Test;
