@@ -1,8 +1,11 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.buildables.Bow;
+import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -12,6 +15,7 @@ import java.util.List;
 public class Player extends MovingEntity {
     public final static int MAX_CHARACTER_HEALTH = 100;
     public final static int CHARACTER_ATTACK_DMG = 10;
+    private Inventory inventory = new Inventory();
 
     public Player(String entityId, Position position) {
         super(entityId, position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
@@ -21,7 +25,6 @@ public class Player extends MovingEntity {
         super(entityId, position, health, attackDamage);
     }
 
-    private List<Item> inventory = new ArrayList<>();
 
     /**
      * A battle takes place when the character and the enemy are in the same cell, within a single tick.
@@ -105,5 +108,13 @@ public class Player extends MovingEntity {
     public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
         // TODO Auto-generated method stub
         
+    }
+
+    public void craft(Game game, String className) {
+        if (className.equals(Bow.class.getSimpleName())) {
+            Bow.craft(game, inventory);
+        } else if (className.equals(Shield.class.getSimpleName())) {
+            Shield.craft(game, inventory);
+        }
     }
 }
