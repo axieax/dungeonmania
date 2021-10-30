@@ -43,11 +43,7 @@ public class FloorSwitchTest {
 
         player.move(dungeon, Direction.UP);
 
-        ZombieToast zombie = new ZombieToast("zombie1", new Position(2, 1));
-        dungeon.addEntity(zombie);
-
-        zombie.move(dungeon, Direction.LEFT);
-        assertTrue(new Position(1, 1).equals(zombie.getPosition()));
+        assertTrue(new Position(1, 0).equals(player.getPosition()));
         assertTrue(new Position(1, 1).equals(floorSwitch.getPosition()));
     }
 

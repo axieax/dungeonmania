@@ -75,16 +75,16 @@ public class WallTest {
         ZombieToast zombie = new ZombieToast("zombie1", new Position(1, 1));
         dungeon.addEntity(zombie);
 
-        zombie.move(Direction.RIGHT);
+        zombie.tick(dungeon);
         assertTrue(new Position(1, 1).equals(zombie.getPosition()));
 
-        zombie.move(Direction.LEFT);
+        zombie.tick(dungeon);
         assertTrue(new Position(1, 1).equals(zombie.getPosition()));
 
-        zombie.move(Direction.UP);
+        zombie.tick(dungeon);
         assertTrue(new Position(1, 1).equals(zombie.getPosition()));
 
-        zombie.move(Direction.DOWN);
+        zombie.tick(dungeon);
         assertTrue(new Position(1, 1).equals(zombie.getPosition()));
     }
 
