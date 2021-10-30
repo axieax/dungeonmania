@@ -53,10 +53,7 @@ public class Spider extends MovingEntity {
     }
 
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
-        // TODO Auto-generated method stub
-        
-    }
+    public void interact(Dungeon dungeon, MovingEntityBehaviour character) { }
 
     /**
      * Determines if a spider can move onto a position that contains the given entities
