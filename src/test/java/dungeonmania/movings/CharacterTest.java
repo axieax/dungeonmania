@@ -433,7 +433,7 @@ public class CharacterTest {
             response = controller.tick(null, Direction.DOWN);
         }
 
-        assertEquals(new Position(13, 1).toString(), characterPos.toString());
+        assertEquals(new Position(11, 13).toString(), characterPos.toString());
         
         for(int i = 0; i < 10; i++) {
             response = controller.tick(null, Direction.DOWN);
