@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,15 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.collectables.Arrow;
+import dungeonmania.model.entities.collectables.Bomb;
+import dungeonmania.model.entities.collectables.Wood;
+import dungeonmania.model.entities.movings.Mercenary;
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.response.models.DungeonResponse;
 
 import dungeonmania.response.models.EntityResponse;
@@ -456,30 +466,104 @@ public class CharacterTest {
     }
     
     @Test
-    public void testCharacterBribesMercenary() {
+    public void testItemsUsedToCraftRemoved() {
+        // any items that are used to craft another a buildable entity should be
+        // removed from the player's inventory, and are replaced with the built item
+        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
         
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        game.addEntity(new Wood(new Position(2, 1)));
+        game.addEntity(new Arrow(new Position(2, 1)));
+        game.addEntity(new Arrow(new Position(3, 1)));
+        game.addEntity(new Arrow(new Position(4, 1)));
+
+        assertTrue(player.getInventoryResponses().size() == 0);
+        
+        // player collects items
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getInventoryResponses().size() == 1);
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getInventoryResponses().size() == 2);
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getInventoryResponses().size() == 3);
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getInventoryResponses().size() == 4);
+
+        // items should be used up
+        game.build("bow");
+        assertTrue(player.getInventoryResponses().size() == 1);
     }
 
     @Test
     public void testCharacterCannotPickUpBombsItPlaced() {
-        // https://edstem.org/au/courses/7065/discussion/645812
+        // removed from the player's inventory, and are replaced with the built item
+        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        game.addEntity(new Bomb(new Position(2, 1)));
+        game.tick(null, Direction.RIGHT); // player picks up bomb
+
+        game.tick(null, Direction.DOWN); 
+        Position updatedPlayerPos = new Position(2, 2);
+
+        game.tick("bomb", Direction.NONE); // place bomb
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 2); // bomb + player
+
+        game.tick(null, Direction.UP);
+        updatedPlayerPos = new Position(2, 1);
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1); // player position
+        
+        assertTrue(game.getEntities(new Position(2, 2)).size() == 1); // bomb position
+        
+        // any attempt to move onto the block with the bomb fials
+        game.tick(null, Direction.DOWN);
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1); // player position
+        assertTrue(game.getEntities(new Position(2, 2)).size() == 1); // bomb position
     }
     
     @Test
     public void testMovementDoesNotAffectHealth() {
-        // // Create a new controller
-        // DungeonManiaController controller = new DungeonManiaController();
-        // controller.newGame(DUNGEON_NAME, GAME_MODE);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
 
-        // // initial position 1, 1
-        // DungeonResponse response = controller.tick(null, Direction.NONE);
+        int playerHealth = player.getHealth();
 
-        // List<EntityResponse> entities = response.getEntities();
-        // assertTrue(entities.size() > 0);
+        // move player
+        game.tick(null, Direction.DOWN);
+        assertTrue(player.getHealth() == playerHealth);
+    }
 
-        // Position characterPos = getCharacterPosition(entities);
-        // assertNotNull(characterPos);
-        // assertEquals(new Position(1, 1).toString(), characterPos.toString());
+    @Test
+    public void testBattleReducesPlayerHealth() {
+        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        
+        Position playerPos = new Position(1, 1);
+        Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
+        game.addEntity(player);
+
+        Position mercenaryPos = new Position(2, 1);
+        Mercenary mercenary = new Mercenary(mercenaryPos);
+
+        game.tick(null, Direction.NONE);
+
+        // mercenary should move towards player and the two should fight,
+        // with the player winning & its health reduced
+
+        assertTrue(player.getHealth() < initialPlayerHealth);
+        assertTrue(game.getEntities(playerPos).size() == 1);
+        assertTrue(game.getEntities(mercenaryPos).size() == 0);
+    }
+
+    @Test
+    public void testInvisibleState() {
+
     }
 
 
@@ -492,4 +576,35 @@ public class CharacterTest {
 
         return null;
     }
+
+    private List<Entity> SevenBySevenWallBoundary() {
+        ArrayList<Entity> wallBorder = new ArrayList<>();
+        
+        // left border
+        for(int i = 0; i < 7; i ++) {
+            Wall wall = new Wall(new Position(0, i));
+            wallBorder.add(wall);
+        }
+        
+        // right border
+        for(int i = 0; i < 7; i ++) {
+            Wall wall = new Wall(new Position(6, i));
+            wallBorder.add(wall);
+        }
+
+        // top border
+        for(int i = 1; i < 6; i ++) {
+            Wall wall = new Wall(new Position(i, 0));
+            wallBorder.add(wall);
+        }
+
+        // bottom border
+        for(int i = 1; i < 6; i ++) {
+            Wall wall = new Wall(new Position(i, 6));
+            wallBorder.add(wall);
+        }
+
+        return wallBorder;
+    }
+
 }
