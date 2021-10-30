@@ -4,8 +4,8 @@ import dungeonmania.util.Position;
 
 public class Armour extends CollectableEquipment {
 
-    public Armour(String entityId, Position position) {
-        super(entityId, position);
+    public Armour(Position position) {
+        super(position);
     }
     
 }

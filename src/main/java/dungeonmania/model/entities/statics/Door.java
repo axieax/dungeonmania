@@ -12,8 +12,8 @@ public class Door extends Entity {
     private boolean open = false;
     private int key;
 
-    public Door(String entityId, Position position, int key) {
-        super(entityId, position);
+    public Door(Position position, int key) {
+        super(position);
         this.key = key;
     }
 
@@ -48,7 +48,7 @@ public class Door extends Entity {
         if (character instanceof Player) {
             Player player = (Player) character;
             Key key = player.getKey();
-            if (this.unlockDoor(key)) player.consume(key.getId());
+            if (this.unlockDoor(key)) key.consume(player);
         }
     }
 }

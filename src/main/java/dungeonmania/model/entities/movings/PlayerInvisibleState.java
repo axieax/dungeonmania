@@ -1,9 +1,9 @@
 package dungeonmania.model.entities.movings;
 
-import dungeonmania.model.entities.Item;
-
 public class PlayerInvisibleState implements PlayerState {
-    Player player;
+    
+    private Player player;
+    private int timeLimit = 6;
 
     public PlayerInvisibleState(Player player) {
         this.player = player;
@@ -14,17 +14,13 @@ public class PlayerInvisibleState implements PlayerState {
      * This is implemented by simulating attacks from both parties as having no effect.
      */
     @Override
-    public void battle(MovingEntity opponent) {
-        Item potion = player.getInventoryItem("invisibility_potion");
-        int potionUsesLeft = player.getInvisibilityPotionUses();
+    public void battle(MovingEntity opponent) {}
 
-        // potion effects have vanished
-        if(potionUsesLeft == 0) {
-            player.setState(player.getDefaultState());
-            return;
+    @Override
+    public void updateState(Player player) {
+        timeLimit--;
+        if (timeLimit == 0) {
+            this.player.setState(new PlayerDefaultState(player));
         }
-        
-        player.reduceInvisibilityPotionUses(potion);
     }
-    
 }
