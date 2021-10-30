@@ -13,6 +13,11 @@ public class DefaultState implements PlayerState {
 
     @Override
     public void battle(MovingEntity opponent) {
+        List<MovingEntity> allies = player.getAllies();
+        if(allies.contains(opponent)) {
+            return;
+        }
+        
         int damageToOpponent = player.getCurrentAttackDamage();
         int damageToPlayer = opponent.getDefaultBattleDamange() + player.applyDefenceToOpponentAttack(opponent.getAttackDamage());
                 
