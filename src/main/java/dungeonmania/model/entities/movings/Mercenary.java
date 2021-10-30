@@ -17,15 +17,15 @@ public class Mercenary extends MovingEntity {
     }
 
     @Override
-    public void move(Direction direction) {
+    public void tick(Dungeon dungeon) {
         // TODO Auto-generated method stub
-
+        
     }
 
     @Override
-    public void moveTo(Position position) {
+    public void update(SubjectPlayer player) {
         // TODO Auto-generated method stub
-
+        
     }
 
     @Override

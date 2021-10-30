@@ -17,13 +17,7 @@ public class Spider extends MovingEntity {
     }
 
     @Override
-    public void move(Direction direction) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void moveTo(Position position) {
+    public void tick(Dungeon dungeon) {
         // TODO Auto-generated method stub
         
     }
@@ -33,5 +27,4 @@ public class Spider extends MovingEntity {
         // TODO Auto-generated method stub
         
     }
-    
 }
