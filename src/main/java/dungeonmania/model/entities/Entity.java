@@ -2,7 +2,6 @@ package dungeonmania.model.entities;
 
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.movings.MovingEntityBehaviour;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;

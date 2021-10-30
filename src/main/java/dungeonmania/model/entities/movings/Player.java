@@ -371,4 +371,16 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             Shield.craft(game, inventory);
         }
     }
+
+    @Override
+    public boolean isCollidable(Entity entity) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void moveTo(Position position) {
+        // TODO Auto-generated method stub
+        
+    }
 }

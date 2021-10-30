@@ -3,8 +3,8 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import dungeonmania.DungeonManiaController;
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.movings.Player;
@@ -34,13 +34,14 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastSpawnEveryCycle() {
-        Game game = new Game();
+      
+        DungeonManiaController controller = new DungeonManiaController();
         Dungeon dungeon = new Dungeon(3, 3);
         dungeon.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
         
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
-            game.tick();
+            controller.tick(null, Direction.NONE);
         }
 
         // Check that only one zombie toast has spawned
