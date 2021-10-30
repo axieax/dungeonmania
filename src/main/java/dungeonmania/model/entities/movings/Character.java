@@ -2,7 +2,7 @@ package dungeonmania.model.entities.movings;
 
 import java.util.List;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Equipment;
@@ -11,7 +11,7 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
 public interface Character {
-    public void battle(Dungeon dungeon, MovingEntity opponent);
+    public void battle(Game game, MovingEntity opponent);
 
     public void collect(Item item);
 
@@ -39,6 +39,6 @@ public interface Character {
 
     public List<MovingEntity> getAllies();
     
-    public void move(Dungeon dungeon, Direction direction);
+    public void move(Game game, Direction direction);
 
 }

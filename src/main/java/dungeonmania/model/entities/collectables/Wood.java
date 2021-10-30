@@ -6,6 +6,6 @@ import dungeonmania.util.Position;
 public class Wood extends Item {
 
     public Wood(Position position) {
-        super(position);
+        super("wood", position);
     }
 }

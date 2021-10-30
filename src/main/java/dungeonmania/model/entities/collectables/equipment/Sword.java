@@ -5,7 +5,7 @@ import dungeonmania.util.Position;
 public class Sword extends CollectableEquipment {
 
     public Sword(Position position) {
-        super(position);
+        super("sword", position);
     }
 
 }

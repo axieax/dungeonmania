@@ -1,15 +1,14 @@
 package dungeonmania.model.entities.buildables;
 
-import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Inventory;
-import dungeonmania.util.Position;
+
 public class Bow extends BuildableEquipment {
 
     private static final int WOOD_NEEDED = 1;
     private static final int ARROWS_NEEDED = 3;
 
     public Bow() {
-        super(null);
+        super("bow", null);
     }
 
     public static boolean isBuildable(Inventory inventory) {
@@ -17,7 +16,7 @@ public class Bow extends BuildableEquipment {
     }
 
     public static void craft(Inventory inventory) {
-        if (Bow.isBuildable(inventory)) {
+        if (isBuildable(inventory)) {
             inventory.removeItemQuantity("Wood", WOOD_NEEDED);
             inventory.removeItemQuantity("Arrows", ARROWS_NEEDED);
             inventory.addItem(new Bow());
