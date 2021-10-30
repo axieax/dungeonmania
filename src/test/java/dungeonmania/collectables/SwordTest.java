@@ -3,7 +3,7 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
@@ -18,10 +18,10 @@ public class SwordTest {
      */
     @Test
     public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Sword("sword1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new Sword("sword1", new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("sword1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("sword1").getPosition()));
     }
 
     /**
@@ -29,21 +29,21 @@ public class SwordTest {
      */
     @Test
     public void collectTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         String collectableId = "sword1";
 
         Sword item = new Sword(collectableId, new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(dungeon.getEntity(collectableId) == null);
-        assertTrue(player.getItem(collectableId).equals(item));
+        assertTrue(game.getEntity(collectableId) == null);
+        assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 
     /**
@@ -51,24 +51,24 @@ public class SwordTest {
      */
     @Test
     public void durabilityTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         String collectableId = "sword1";
 
         Sword item = new Sword(collectableId, new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         // Durability of sword when picked up should be 5
         assertTrue(item.getDurability() == 5);
 
         ZombieToastSpawner zombie = new ZombieToastSpawner("zombie1", new Position(3, 1));
-        dungeon.addEntity(zombie);
+        game.addEntity(zombie);
 
-        player.move(Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the sword
         // This will cause the durability of the sword to decrease by 1

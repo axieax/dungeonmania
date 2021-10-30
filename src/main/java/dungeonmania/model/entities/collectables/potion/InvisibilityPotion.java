@@ -6,8 +6,8 @@ import dungeonmania.util.Position;
 
 public class InvisibilityPotion extends Potion {
 
-    public InvisibilityPotion(String entityId, Position position) {
-        super(entityId, position);
+    public InvisibilityPotion(Position position) {
+        super("invisibility_potion", position);
     }
 
     @Override

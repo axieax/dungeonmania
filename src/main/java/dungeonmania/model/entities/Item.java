@@ -1,19 +1,15 @@
 package dungeonmania.model.entities;
 
-import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public abstract class Item extends Entity {
 
-    public Item(String id) {
-        super(id, null);
-    }
-
-    public Item(String id, Position position) {
-        super(id, position, false, true);
+    public Item(String prefix, Position position) {
+        super(prefix, position, false, true);
     }
 
     public ItemResponse getItemInfo() {
@@ -25,10 +21,10 @@ public abstract class Item extends Entity {
      * inventory.
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Game game, MovingEntity character) {
         if (character instanceof Player) {
             ((Player) character).collect(this);
-            dungeon.removeEntity(this);
+            game.removeEntity(this);
         }
     }
 }

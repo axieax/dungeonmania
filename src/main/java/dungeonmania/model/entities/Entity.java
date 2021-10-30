@@ -1,8 +1,9 @@
 package dungeonmania.model.entities;
 
-import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
-import dungeonmania.model.entities.movings.Player;
+import java.util.UUID;
+
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -13,6 +14,25 @@ public abstract class Entity {
     private Position position;
     private boolean interactable;
     private boolean passable;
+    private String prefix;
+
+    public Entity(String prefix, Position position) {
+        this.prefix = prefix;
+        this.id = UUID.randomUUID().toString();
+        this.position = position;
+        this.interactable = false;
+        this.passable = false;
+    }
+
+    public Entity(String prefix, Position position, boolean interactable, boolean passable) {
+        this(prefix, position);
+        this.interactable = interactable;
+        this.passable = passable;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
 
     public boolean isInteractable() {
         return interactable;
@@ -28,18 +48,6 @@ public abstract class Entity {
 
     public void setPassable(boolean passable) {
         this.passable = passable;
-    }
-
-    public Entity(String id, Position position) {
-        this.id = id;
-        this.position = position;
-        this.interactable = false;
-        this.passable = false;
-    }
-
-    public Entity(String id, Position position, boolean interactable, boolean passable) {
-        this(id, position);
-        this.interactable = interactable;
     }
 
     public String getId() {
@@ -75,5 +83,5 @@ public abstract class Entity {
         );
     }
 
-    public abstract void interact(Dungeon dungeon, MovingEntityBehaviour character);
+    public abstract void interact(Game game, MovingEntity character);
 }

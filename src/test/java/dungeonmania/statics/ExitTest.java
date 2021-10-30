@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.DungeonManiaController;
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Position;
@@ -17,10 +17,10 @@ public class ExitTest {
      */
     @Test
     public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Exit("exit1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new Exit("exit1", new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("exit1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("exit1").getPosition()));
     }
 
     /**

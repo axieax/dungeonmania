@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -13,12 +14,12 @@ public class Mercenary extends MovingEntity implements Observer {
     private MercenaryState runState;
     private MercenaryState state;
 
-    public Mercenary(String entityId, Position position) {
-        this(entityId, position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
+    public Mercenary(Position position) {
+        this(position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
     }
 
-    public Mercenary(String entityId, Position position, int health, int attackDamage) {
-        super(entityId, position, health, attackDamage);
+    public Mercenary(Position position, int health, int attackDamage) {
+        super("mercenary", position, health, attackDamage);
         this.defaultState = new MercenaryDefaultState(this);
         this.runState = new MercenaryRunState(this);
 
@@ -26,9 +27,9 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     @Override
-    public void tick(Dungeon dungeon) {
-        Position playerPos = dungeon.getCharacterPosition();
-        state.move(dungeon, playerPos);
+    public void tick(Game game) {
+        Position playerPos = game.getCharacterPosition();
+        state.move(game, playerPos);
     }
 
     /**
@@ -43,12 +44,28 @@ public class Mercenary extends MovingEntity implements Observer {
      * Character attempts to bribe mercenary
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) { 
+    public void interact(Game game, MovingEntity character) { 
         Player player = (Player) character;
 
         if(player.getTreasure() >= TREASURE_REQUIRED_TO_BRIBE) {
             player.addAlly(this);
         }
+    }
+
+    @Override
+    public Direction getDirection() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean isCollidable(Entity entity) {
+        return true;
+    }
+
+    @Override
+    public void moveTo(Position position) {
+        this.setPosition(position);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////

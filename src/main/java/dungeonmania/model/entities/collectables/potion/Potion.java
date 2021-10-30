@@ -5,7 +5,7 @@ import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.util.Position;
 
 public abstract class Potion extends Item implements Consumable {
-    public Potion(String entityId, Position position) {
-        super(entityId, position);
+    public Potion(String prefix, Position position) {
+        super(prefix, position);
     }
 }

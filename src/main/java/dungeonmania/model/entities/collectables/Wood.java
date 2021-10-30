@@ -5,7 +5,7 @@ import dungeonmania.util.Position;
 
 public class Wood extends Item {
 
-    public Wood(String entityId, Position position) {
-        super(entityId, position);
+    public Wood(Position position) {
+        super("wood", position);
     }
 }

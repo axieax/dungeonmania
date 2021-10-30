@@ -4,8 +4,8 @@ import dungeonmania.util.Position;
 
 public class Sword extends CollectableEquipment {
 
-    public Sword(String entityId, Position position) {
-        super(entityId, position);
+    public Sword(Position position) {
+        super("sword", position);
     }
 
 }

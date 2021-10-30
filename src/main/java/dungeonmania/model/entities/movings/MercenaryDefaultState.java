@@ -1,6 +1,6 @@
 package dungeonmania.model.entities.movings;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.util.Position;
 
 public class MercenaryDefaultState implements MercenaryState {
@@ -14,7 +14,7 @@ public class MercenaryDefaultState implements MercenaryState {
      * Follows the player
      */
     @Override
-    public void move(Dungeon dungeon, Position playerPos) {
+    public void move(Game game, Position playerPos) {
         // TODO Auto-generated method stub
         
     }
