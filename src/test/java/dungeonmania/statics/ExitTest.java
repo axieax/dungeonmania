@@ -3,8 +3,10 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import dungeonmania.DungeonManiaController;
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.statics.Exit;
+import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 

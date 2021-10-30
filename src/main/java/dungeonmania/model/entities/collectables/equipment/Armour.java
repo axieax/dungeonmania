@@ -9,7 +9,7 @@ public class Armour extends CollectableEquipment {
     }
     
     /**
-     * Each sword has a specific durability that dictates the number of 
+     * Each armour has a specific durability that dictates the number of 
      * times it can be used before it deteriorates.
      * @return durability level
      */

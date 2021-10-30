@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,28 @@ public class SwordTest {
      */
     @Test
     public void durabilityTest() {
-        fail();
+        Dungeon dungeon = new Dungeon(3, 3);
+
+        String collectableId = "sword1";
+
+        Sword item = new Sword(collectableId, new Position(1, 1));
+
+        dungeon.addEntity(item);
+
+        Player player = new Player("player1", new Position(0, 1));
+        player.move(Direction.RIGHT);
+
+        // Durability of sword when picked up should be 5
+        assertTrue(item.getDurability() == 5);
+
+        ZombieToastSpawner zombie = new ZombieToastSpawner("zombie1", new Position(3, 1));
+        dungeon.addEntity(zombie);
+
+        player.move(Direction.RIGHT);
+
+        // Player is now next to the zombie toast spawner and will proceed to destroy it with the sword
+        // This will cause the durability of the sword to decrease by 1
+        assertTrue(item.getDurability() == 4);
     }
 
     /**
