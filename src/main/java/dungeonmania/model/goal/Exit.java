@@ -1,6 +1,6 @@
 package dungeonmania.model.goal;
 
-public class Exit {
+public class ExitCondition {
 
     @Override
     public boolean evaluate() {

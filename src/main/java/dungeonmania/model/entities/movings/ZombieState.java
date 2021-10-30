@@ -1,7 +1,7 @@
 package dungeonmania.model.entities.movings;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 
 public interface ZombieState {
-    public void move(Dungeon dungeon);
+    public void move(Game game);
 }

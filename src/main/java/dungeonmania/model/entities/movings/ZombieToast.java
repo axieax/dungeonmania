@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -23,7 +23,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
     
     public ZombieToast(Position position, int health, int attackDamage, SubjectPlayer player) {
-        super(position, health, attackDamage);
+        super("zombie_toast", position, health, attackDamage);
         this.randomZombieState = new ZombieRandomState(this);
         this.runZombieState = new ZombieRunState(this);
 
@@ -31,8 +31,8 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
 
     @Override
-    public void tick(Dungeon dungeon) {
-        state.move(dungeon);
+    public void tick(Game game) {
+        state.move(game);
     }
 
     /**
@@ -73,6 +73,25 @@ public class ZombieToast extends MovingEntity implements Observer {
         }
     }
 
+    @Override
+    public void interact(Game game, MovingEntity character) { }
+
+    @Override
+    public Direction getDirection() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean isCollidable(Entity entity) {
+        return false;
+    }
+
+    @Override
+    public void moveTo(Position position) {
+        this.setPosition(position);
+    }
+    
     //////////////////////////////////////////////////////////////////
     public void setState(ZombieState state) {
         this.state = state;

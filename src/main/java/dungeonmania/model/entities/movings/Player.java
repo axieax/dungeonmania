@@ -30,7 +30,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     private List<Observer> observers = new ArrayList<>();
 
     public Player(Position position, int health, int attackDamage) {
-        super(position, health, attackDamage, health * attackDamage / 5);
+        super("player", position, health, attackDamage, health * attackDamage / 5);
         this.state = new PlayerDefaultState(this);
     }
 
@@ -242,9 +242,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.notifyObservers();
     }
 
+<<<<<<< HEAD
     @Override
     public void interact(Game game, MovingEntityBehaviour character) {
         // TODO Auto-generated method stub
+=======
+    public void interact(Game game, MovingEntity character) {
+>>>>>>> master
 
     }
 
@@ -291,10 +295,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return false;
     }
 
-    public Direction getDirection() {
-        return null;
-    }
-
     public Key getKey() {
         return null;
     }
@@ -315,5 +315,21 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         } else if (className.equals(Shield.class.getSimpleName())) {
             Shield.craft(inventory);
         }
+    }
+
+    public Direction getDirection() {
+        return null;
+    }
+
+    @Override
+    public boolean isCollidable(Entity entity) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void moveTo(Position position) {
+        // TODO Auto-generated method stub
+        
     }
 }

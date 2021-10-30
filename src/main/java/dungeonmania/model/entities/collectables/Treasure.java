@@ -6,7 +6,7 @@ import dungeonmania.util.Position;
 public class Treasure extends Item {
 
     public Treasure(Position position) {
-        super(position);
+        super("treasure", position);
     }
 
 }

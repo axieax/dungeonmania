@@ -1,8 +1,8 @@
 package dungeonmania.model.entities.collectables;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.util.Position;
@@ -12,7 +12,7 @@ public class Key extends Item implements Consumable {
     private int key;
 
     public Key(Position position, int key) {
-        super(position);
+        super("key", position);
         this.key = key;
     }
 
@@ -26,10 +26,10 @@ public class Key extends Item implements Consumable {
      * a time.
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Game game, MovingEntity character) {
         if (character instanceof Player && !((Player) character).hasKey()) {
             ((Player) character).collect(this);
-            dungeon.removeEntity(this);
+            game.removeEntity(this);
         }
     }
 

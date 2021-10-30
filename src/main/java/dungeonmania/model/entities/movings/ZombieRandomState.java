@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -18,7 +18,7 @@ public class ZombieRandomState implements ZombieState {
     }
 
     @Override
-    public void move(Dungeon dungeon) {
+    public void move(Game game) {
         Position currPos = zombie.getPosition();
         Set<Direction> chosen = new HashSet<>();
         
@@ -33,7 +33,7 @@ public class ZombieRandomState implements ZombieState {
             chosen.add(direction);
             
             Position newPos = currPos.translateBy(direction);
-            List<Entity> entitiesNewPos = dungeon.getEntitiesAtPosition(newPos);
+            List<Entity> entitiesNewPos = game.getEntities(newPos);
 
             if(entitiesNewPos == null || zombie.canZombieMoveOntoPosition(entitiesNewPos)) {
                 zombie.setPosition(newPos);

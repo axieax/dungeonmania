@@ -3,7 +3,7 @@ package dungeonmania.model.entities.movings;
 import java.util.Arrays;
 import java.util.List;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -15,7 +15,7 @@ public class ZombieRunState implements ZombieState {
     }
 
     @Override
-    public void move(Dungeon dungeon) {
+    public void move(Game game) {
         Position currPos = zombie.getPosition();
 
         List<Direction> possibleDirections = Arrays.asList(
