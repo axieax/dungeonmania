@@ -219,7 +219,7 @@ public class ZombieToastTest {
         
         // left border
         for(int i = 0; i < 7; i ++) {
-            Wall wall = new Wall(new Position(1, i));
+            Wall wall = new Wall(new Position(0, i));
             wallBorder.add(wall);
         }
         
@@ -231,13 +231,13 @@ public class ZombieToastTest {
 
         // top border
         for(int i = 1; i < 6; i ++) {
-            Wall wall = new Wall(new Position(i + 1, 0));
+            Wall wall = new Wall(new Position(i, 0));
             wallBorder.add(wall);
         }
 
         // bottom border
         for(int i = 1; i < 6; i ++) {
-            Wall wall = new Wall(new Position(i + 1, 6));
+            Wall wall = new Wall(new Position(i, 6));
             wallBorder.add(wall);
         }
 
