@@ -5,7 +5,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class Mercenary extends MovingEntity {
+public class Mercenary extends MovingEntity implements Observer {
     public final static int MAX_MERCENARY_HEALTH = 50;
     public final static int MAX_MERCENARY_ATTACK_DMG = 5;
 
