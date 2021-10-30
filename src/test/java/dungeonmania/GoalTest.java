@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
@@ -160,4 +161,32 @@ public class GoalTest {
         assertEquals("", move(dmc, Direction.RIGHT, 1).getGoals());
         // TODO: test quantity as well?
     }
+
+
+    /**
+     * Test that Portals does not have a goal
+     */
+    @Test
+    public void testPortalsGoal() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame ("portals", "Standard"));
+        DungeonResponse stateOne = controller.tick (null, Direction.NONE);
+        assertEquals(stateOne.getGoals(), "");  
+    }
+
+        /**
+     * This tests the completion of goals in the advanced dungeon
+     */
+    @Test
+    public void testAdvancedGoal() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));
+        String treasureGoal = ":treasure";
+
+        assertEquals(treasureGoal, move(controller, Direction.DOWN, 3).getGoals());
+        assertEquals(treasureGoal, move(controller, Direction.RIGHT, 6).getGoals());
+        assertEquals(treasureGoal, move(controller, Direction.RIGHT, 5).getGoals());
+        assertEquals("", move(controller, Direction.RIGHT, 1).getGoals());
+    }
+
 }
