@@ -27,7 +27,7 @@ public interface Character {
     
     public List<DefenceEquipment> getDefenceEquipmentList();
     
-    public boolean canCraft(String className);
+    public boolean canCraft(String prefix);
 
     public List<ItemResponse> getInventoryResponses();
 

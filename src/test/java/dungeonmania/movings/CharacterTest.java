@@ -265,7 +265,7 @@ public class CharacterTest {
 
         for(int i = 0; i < updatedEntities.size(); i++) {
             // don't compare players as their position is different
-            if(updatedEntities.get(i).getType() == CHARACTER_TYPE) {
+            if(updatedEntities.get(i).getPrefix() == CHARACTER_TYPE) {
                 continue;
             }
             
@@ -340,7 +340,7 @@ public class CharacterTest {
             assertTrue(loadedEntities.size() > 0);
             assertEquals(responseEntities.size(), loadedEntities.size());
             for(int i = 0; i < loadedEntities.size(); i++) {
-                if(loadedEntities.get(i).getType() == CHARACTER_TYPE) {
+                if(loadedEntities.get(i).getPrefix() == CHARACTER_TYPE) {
                     // ensure player position has not changed
                     assertTrue(responseEntities.get(i).equals(loadedEntities.get(i)));
                     break;
@@ -485,7 +485,7 @@ public class CharacterTest {
 
     public Position getCharacterPosition(List<EntityResponse> entities) throws IllegalArgumentException, InvalidActionException {
         for(EntityResponse e: entities) {
-            if(e.getType() == CHARACTER_TYPE) {
+            if(e.getPrefix() == CHARACTER_TYPE) {
                 return e.getPosition();
             }
         }

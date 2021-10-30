@@ -10,6 +10,7 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -66,11 +67,18 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void battle(Dungeon dungeon, MovingEntity opponent) {
         state.battle(opponent);
 
-        // if either character or entity is dead, remove it
         if (this.getHealth() <= 0) {
-            dungeon.removeEntity(this);
+            Item item = this.findInventoryItem("one_ring");
+            if (item != null && item instanceof Consumable) {
+                // use one ring if it is in inventory
+                ((Consumable)item).consume(this);
+            } else {
+                // entity is dead, remove it
+                dungeon.removeEntity(this);
+            }
         }
 
+        // if either entity is dead, remove it
         if (opponent.getHealth() <= 0) {
             dungeon.removeEntity(opponent);
             this.inBattle = false;
@@ -98,8 +106,8 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return inventory.getItem(itemId);
     }
 
-    public Item findInventoryItem(String className) {
-        return inventory.findItem(className);
+    public Item findInventoryItem(String prefix) {
+        return inventory.findItem(prefix);
     }
 
     public void addInventoryItem(Item item) {
@@ -131,10 +139,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             .collect(Collectors.toList());
     }
 
-    public boolean canCraft(String className) {
-        if (className.equals(Bow.class.getSimpleName())) {
+    public boolean canCraft(String prefix) {
+        if (prefix.equals(Bow.getPrefix())) {
             return Bow.isBuildable(inventory);
-        } else if (className.equals(Shield.class.getSimpleName())) {
+        } else if (prefix.equals(Shield.getPrefix())) {
             return Shield.isBuildable(inventory);
         }
         return false;
@@ -271,8 +279,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @return true if player is wearing armour, otherwise false
      */
     public boolean hasArmour() {
-        Item armour = findInventoryItem("Armour");
-        return armour == null ? false : true;
+        return findInventoryItem("armour") != null;
     }
 
     public void reduceArmourDurability() {}
@@ -305,10 +312,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 
-    public void craft(Game game, String className) {
-        if (className.equals(Bow.class.getSimpleName())) {
+    public void craft(Game game, String prefix) {
+        if (prefix.equals(Bow.getPrefix())) {
             Bow.craft(inventory);
-        } else if (className.equals(Shield.class.getSimpleName())) {
+        } else if (prefix.equals(Shield.getPrefix())) {
             Shield.craft(inventory);
         }
     }

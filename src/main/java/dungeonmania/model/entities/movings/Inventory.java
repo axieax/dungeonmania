@@ -37,16 +37,16 @@ public class Inventory {
     }
 
     /**
-     * Find the first instance of the item that has the specified className in the 
+     * Find the first instance of the item that has the specified prefix in the 
      * inventory.
      * 
-     * @param className
+     * @param prefix
      * @return
      */
-    public Item findItem(String className) {
+    public Item findItem(String prefix) {
         return items
             .stream()
-            .filter(i -> i.getClass().getSimpleName().equals(className))
+            .filter(i -> i.getPrefix().equals(prefix))
             .findFirst()
             .orElse(null);
     }
@@ -54,14 +54,14 @@ public class Inventory {
     /**
      * Checks if the inventory has the specified quantity of the item.
      *
-     * @param className
+     * @param prefix
      * @param quantity
      * @return
      */
-    public boolean hasItemQuantity(String className, int quantity) {
+    public boolean hasItemQuantity(String prefix, int quantity) {
         int itemQuantity = 0;
         for (Item item : items) {
-            if (item.getClass().getSimpleName().equals(className)) itemQuantity++;
+            if (item.getPrefix().equals(prefix)) itemQuantity++;
         }
         return itemQuantity >= quantity;
     }
@@ -69,14 +69,14 @@ public class Inventory {
     /**
      * Remove the specified item type from the inventory upto the quantity amount.
      *
-     * @param className
+     * @param prefix
      * @param quantity
      */
-    public void removeItemQuantity(String className, int quantity) {
-        if (this.hasItemQuantity(className, quantity)) {
+    public void removeItemQuantity(String prefix, int quantity) {
+        if (this.hasItemQuantity(prefix, quantity)) {
             items
                 .stream()
-                .filter(item -> item.getClass().getSimpleName().equals(className))
+                .filter(item -> item.getPrefix().equals(prefix))
                 .limit(quantity)
                 .forEach(item -> items.remove(item));
         }
