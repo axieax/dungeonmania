@@ -5,7 +5,7 @@ import dungeonmania.util.Position;
 
 public class TheOneRing extends Item {
 
-    public TheOneRing(String entityId, Position position) {
-        super(entityId, position);
+    public TheOneRing(Position position) {
+        super(position);
     }
 }
