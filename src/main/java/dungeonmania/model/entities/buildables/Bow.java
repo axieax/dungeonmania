@@ -10,7 +10,7 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
     private static final int ARROWS_NEEDED = 3;
 
     public Bow() {
-        super(null);
+        super("bow", null);
     }
 
     public static boolean isBuildable(Inventory inventory) {
@@ -18,9 +18,9 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
     }
 
     public static void craft(Inventory inventory) {
-        if (Bow.isBuildable(inventory)) {
-            inventory.removeItemQuantity("wood", WOOD_NEEDED);
-            inventory.removeItemQuantity("arrow", ARROWS_NEEDED);
+        if (isBuildable(inventory)) {
+            inventory.removeItemQuantity("Wood", WOOD_NEEDED);
+            inventory.removeItemQuantity("Arrows", ARROWS_NEEDED);
             inventory.addItem(new Bow());
         }
     }

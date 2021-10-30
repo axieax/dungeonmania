@@ -5,8 +5,8 @@ import dungeonmania.util.Position;
 
 public abstract class BuildableEquipment extends Equipment {
 
-    public BuildableEquipment(Position position) {
-        super(position);
+    public BuildableEquipment(String prefix, Position position) {
+        super(prefix, position);
     }
     
 }

@@ -1,9 +1,9 @@
 package dungeonmania.model.entities.statics;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Position;
 
@@ -13,7 +13,7 @@ public class Door extends Entity {
     private int key;
 
     public Door(Position position, int key) {
-        super(position);
+        super("door", position);
         this.key = key;
     }
 
@@ -40,11 +40,11 @@ public class Door extends Entity {
 
     /**
      * If the Player interacts the Door with the correct key, it unlocks the door.
-     * @param dungeon
+     * @param game
      * @param character
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Game game, MovingEntity character) {
         if (character instanceof Player) {
             Player player = (Player) character;
             Key key = player.getKey();

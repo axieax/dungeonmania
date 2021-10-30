@@ -6,7 +6,7 @@ import dungeonmania.util.Position;
 public class Armour extends CollectableEquipment implements DefenceEquipment {
 
     public Armour(Position position) {
-        super(position);
+        super("armour", position);
     }
     
 }
