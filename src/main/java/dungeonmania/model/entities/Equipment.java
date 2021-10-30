@@ -6,9 +6,8 @@ public abstract class Equipment extends Item {
 
     private int durability = 5;
 
-    public Equipment(String entityId, Position position) {
-        super(entityId, position);
-        //TODO Auto-generated constructor stub
+    public Equipment(Position position) {
+        super(position);
     }
 
     /**

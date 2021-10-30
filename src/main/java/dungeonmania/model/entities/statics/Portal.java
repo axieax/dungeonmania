@@ -13,8 +13,8 @@ public class Portal extends Entity {
         return colour;
     }
 
-    public Portal(String entityId, Position position, String colour) {
-        super(entityId, position);
+    public Portal(Position position, String colour) {
+        super(position);
         this.colour = colour;
     }
 

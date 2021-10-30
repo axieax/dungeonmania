@@ -5,8 +5,8 @@ import dungeonmania.util.Position;
 
 public class HealthPotion extends Potion {
 
-    public HealthPotion(String entityId, Position position) {
-        super(entityId, position);
+    public HealthPotion(Position position) {
+        super(position);
     }
 
     @Override

@@ -10,8 +10,8 @@ import dungeonmania.util.Position;
 
 public class Bomb extends Item {
 
-    public Bomb(String entityId, Position position) {
-        super(entityId, position);
+    public Bomb(Position position) {
+        super(position);
     }
 
     /**

@@ -7,8 +7,8 @@ import dungeonmania.util.Position;
 
 public class Wall extends Entity {
 
-    public Wall(String entityId, Position position) {
-        super(entityId, position);
+    public Wall(Position position) {
+        super(position);
     }
 
     @Override
