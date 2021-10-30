@@ -48,7 +48,7 @@ public class Door extends Entity {
         if (character instanceof Player) {
             Player player = (Player) character;
             Key key = player.getKey();
-            if (this.unlockDoor(key)) player.consume(key.getId());
+            if (this.unlockDoor(key)) key.consume(player);
         }
     }
 }
