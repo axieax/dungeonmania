@@ -79,7 +79,7 @@ public class Spider extends MovingEntity {
     private void doInitialSpiderMove(Game game, Position currentPos) {
         // initially always move up if possible, else stay in spot
         Position newPos = currentPos.translateBy(Direction.UP);
-        List<Entity> entitiesNewPos = game.getEntitiesAtPosition(newPos);
+        List<Entity> entitiesNewPos = game.getEntities(newPos);
         if(entitiesNewPos == null || canSpiderMoveOntoPosition(entitiesNewPos)) {
             this.setPosition(newPos);
             setIsInitialMove(false);
@@ -97,7 +97,7 @@ public class Spider extends MovingEntity {
         int indexOf = spiderMovementPath.indexOf(nextMoveInPath);
         
         Position newPos = currentPos.translateBy(nextMoveInPath);
-        List<Entity> entitiesNewPos = game.getEntitiesAtPosition(newPos);
+        List<Entity> entitiesNewPos = game.getEntities(newPos);
         if(entitiesNewPos == null || canSpiderMoveOntoPosition(entitiesNewPos)) {
             this.setPosition(newPos);
         } else { // reverse direction
