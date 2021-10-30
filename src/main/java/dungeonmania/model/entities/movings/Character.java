@@ -28,8 +28,6 @@ public interface Character {
     
     public List<DefenceEquipment> getDefenceEquipmentList();
     
-    public boolean canCraft(String className);
-
     public List<ItemResponse> getInventoryResponses();
 
     public int getCurrentAttackDamage();
