@@ -12,9 +12,9 @@ import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends MovingEntity implements Character, SubjectPlayer {
-    final static int MAX_CHARACTER_HEALTH = 100;
-    final static int CHARACTER_ATTACK_DMG = 10;
+public class Player extends MovingEntity {
+    public final static int MAX_CHARACTER_HEALTH = 100;
+    public final static int CHARACTER_ATTACK_DMG = 10;
 
     private PlayerState defaultState;
     private PlayerState invisibleState;
@@ -110,15 +110,21 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @param itemId unique identifier of an entity
      * @return Item if found, else null
      */
-    @Override
     public Item getInventoryItem(String itemId) {
-        for(Item i: inventory) {
-            if(i.getId() == itemId) {
-                return i;
-            }
-        }
+        return inventory
+                .stream()
+                .filter(i -> i.getId() == itemId)
+                .findFirst()
+                .orElse(null);
+    }
 
-        return null;
+    public Equipment getWeapon() {
+        return inventory
+                .stream()
+                .filter(i -> i instanceof Equipment)
+                .map(i -> (Equipment) i)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -342,6 +348,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     public boolean hasWeapon() {
-        return false;
+        return this.getWeapon() != null;
     }
 }

@@ -66,6 +66,7 @@ public class FloorSwitchTest {
         Boulder boulder = new Boulder("boulder1", new Position(1, 0));
         dungeon.addEntity(boulder);
 
+        // Move boulder on top of switch
         player.move(Direction.RIGHT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
         assertTrue(new Position(2, 0).equals(floorSwitch.getPosition()));
@@ -73,7 +74,7 @@ public class FloorSwitchTest {
 
         assertTrue(floorSwitch.isTriggered(dungeon));
 
-        // untrigger the floor switch
+        // Untrigger the floor switch
         player.move(Direction.RIGHT);
         assertTrue(new Position(2, 0).equals(player.getPosition()));
         assertTrue(new Position(2, 0).equals(floorSwitch.getPosition()));
