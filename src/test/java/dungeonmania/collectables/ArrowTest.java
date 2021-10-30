@@ -3,13 +3,13 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.collectables.Arrows;
+import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 
-public class ArrowsTest {
+public class ArrowTest {
 
     /**
      * Test whether the entity instance has been created with the correct positions
@@ -17,7 +17,7 @@ public class ArrowsTest {
     @Test
     public void instanceTest() {
         Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Arrows("arrows1", new Position(1, 1)));
+        dungeon.addEntity(new Arrow("arrows1", new Position(1, 1)));
 
         assertTrue(new Position(1, 1).equals(dungeon.getEntity("arrows1").getPosition()));
     }
@@ -31,7 +31,7 @@ public class ArrowsTest {
 
         String collectableId = "arrows1";
 
-        Arrows item = new Arrows(collectableId, new Position(1, 1));
+        Arrow item = new Arrow(collectableId, new Position(1, 1));
 
         dungeon.addEntity(item);
 
