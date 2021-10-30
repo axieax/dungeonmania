@@ -3,7 +3,7 @@ package dungeonmania.model.entities.movings;
 import dungeonmania.model.entities.Item;
 
 public class PlayerInvisibleState implements PlayerState {
-    Player player;
+    private Player player;
 
     public PlayerInvisibleState(Player player) {
         this.player = player;
