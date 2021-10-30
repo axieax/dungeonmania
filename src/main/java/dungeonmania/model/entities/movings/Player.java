@@ -31,9 +31,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public Player(String entityId, Position position, int health, int attackDamage) {
         super(entityId, position, health, attackDamage, health *  attackDamage / 5);
 
-        defaultState = new DefaultState(this);
-        invisibleState = new InvisibleState(this);
-        invincibleState = new InvincibleState(this);
+        defaultState = new PlayerDefaultState(this);
+        invisibleState = new PlayerInvisibleState(this);
+        invincibleState = new PlayerInvincibleState(this);
 
         state = defaultState;
     }
