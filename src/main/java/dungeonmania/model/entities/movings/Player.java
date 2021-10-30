@@ -1,6 +1,6 @@
-package dungeonmania.model.entities.movings;
+package gamemania.model.entities.movings;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
@@ -42,15 +42,15 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * Conduct any required tasks for a player after it has moved into its new position
      */
     @Override
-    public void tick(Dungeon dungeon) {
-        List<Entity> entities = dungeon.getEntitiesAtPosition(this.getPosition());
+    public void tick(Game game) {
+        List<Entity> entities = game.getEntitiesAtPosition(this.getPosition());
         for (Entity e : entities) {
             if (!(e instanceof MovingEntity)) {
                 continue;
             }
 
             MovingEntity opponent = (MovingEntity) e;
-            this.battle(dungeon, opponent);
+            this.battle(game, opponent);
         }
         this.state.updateState(this);
     }
@@ -63,16 +63,16 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @param opponent entity the character is fighting
      */
     @Override
-    public void battle(Dungeon dungeon, MovingEntity opponent) {
+    public void battle(Game game, MovingEntity opponent) {
         state.battle(opponent);
 
         // if either character or entity is dead, remove it
         if (this.getHealth() <= 0) {
-            dungeon.removeEntity(this);
+            game.removeEntity(this);
         }
 
         if (opponent.getHealth() <= 0) {
-            dungeon.removeEntity(opponent);
+            game.removeEntity(opponent);
             this.inBattle = false;
         }
     }
@@ -208,13 +208,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * Interacts with any entity that is on the tile the character is about to move into.
      * Upon movement, any observers are notified. If an entity blocks the player, then the
      * player does not move at all.
-     * @param dungeon
+     * @param game
      * @param direction
      */
     @Override
-    public void move(Dungeon dungeon, Direction direction) {
+    public void move(Game game, Direction direction) {
         Position newPlayerPos = this.getPosition().translateBy(direction);
-        List<Entity> entities = dungeon.getEntitiesAtPosition(newPlayerPos);
+        List<Entity> entities = game.getEntitiesAtPosition(newPlayerPos);
 
         if (entities == null) { // no entities at new position
             this.setPosition(newPlayerPos);
@@ -226,7 +226,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
                     continue;
                 }
 
-                e.interact(dungeon, this);
+                e.interact(game, this);
                 if (!e.isPassable()) {
                     canMove = false;
                 }
@@ -235,7 +235,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             // battle with any moving entities
             if (canMove) {
                 this.setPosition(newPlayerPos);
-                this.tick(dungeon);
+                this.tick(game);
                 this.notifyObservers();
             }
         }
@@ -243,7 +243,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
+    public void interact(Game game, MovingEntityBehaviour character) {
         // TODO Auto-generated method stub
 
     }

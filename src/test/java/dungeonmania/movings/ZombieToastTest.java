@@ -21,6 +21,7 @@ import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
+import dungeonmania.model.goal.Goal;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -33,23 +34,22 @@ public class ZombieToastTest {
     
     @Test
     public void testZombieSpawnRateNormalModes() {
+        Game game = new Game("dungeon", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
 
-        
-        Game game = new Game(7, 7);
         Player player = new Player(new Position(1, 1));
-        dungeon.addEntity(player);
+        game.addEntity(player);
         
         ZombieToastSpawner spawner = new ZombieToastSpawner("spawner", new Position(5, 5));
-        dungeon.addEntity(spawner);
+        game.addEntity(spawner);
         
-        int numEntities = dungeon.getAllEntities().size();
+        int numEntities = game.getEntities().size();
 
         // Zombie should spawn
         for(int i = 0; i < 20; i++) {
-            player.move(dungeon, Direction.NONE);
+            player.move(game, Direction.NONE);
         }
 
-        assertTrue(dungeon.getAllEntities().size() > numEntities);
+        assertTrue(game.getEntities().size() > numEntities);
     }
     
     @Test
@@ -210,9 +210,31 @@ public class ZombieToastTest {
     private List<Entity> SevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
         
+        // left border
         for(int i = 0; i < 7; i ++) {
-            Wall wall = new Wall(new Position(0, y))
+            Wall wall = new Wall(new Position(1, i));
+            wallBorder.add(wall);
         }
+        
+        // right border
+        for(int i = 0; i < 7; i ++) {
+            Wall wall = new Wall(new Position(6, i));
+            wallBorder.add(wall);
+        }
+
+        // top border
+        for(int i = 1; i < 6; i ++) {
+            Wall wall = new Wall(new Position(i + 1, 0));
+            wallBorder.add(wall);
+        }
+
+        // bottom border
+        for(int i = 1; i < 6; i ++) {
+            Wall wall = new Wall(new Position(i + 1, 6));
+            wallBorder.add(wall);
+        }
+
+        return wallBorder;
     }
 
 }
