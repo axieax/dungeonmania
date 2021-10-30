@@ -7,12 +7,13 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends MovingEntity {
+public class Player extends MovingEntity implements Character, SubjectPlayer {
     public final static int MAX_CHARACTER_HEALTH = 100;
     public final static int CHARACTER_ATTACK_DMG = 10;
 
@@ -164,6 +165,17 @@ public class Player extends MovingEntity {
         return defenceEquip;
     }
 
+    @Override
+    public boolean checkBuildable(BuildableEquipment equipment) {
+        return equipment.isBuildable();
+    }
+
+    @Override
+    public List<ItemResponse> getInventoryResponses() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
       /**
      * Returns the total attack damage a player is able to inflict upon an opponent .
      * This includes any attack damage provided by equipment e.g. sword
@@ -312,11 +324,10 @@ public class Player extends MovingEntity {
 
     }
     
-    public boolean checkBuildable(BuildableEquipment equipment) {
-        return equipment.isBuildable();
-    }
-    
+
     ////////////////////////////////////////////////////////////////////////////////
+
+
     public void setState(PlayerState state) {
         this.state = state;
     }
