@@ -27,17 +27,4 @@ public class Spider extends MovingEntity {
         // TODO Auto-generated method stub
         
     }
-
-    @Override
-<<<<<<< HEAD
-    public void update(SubjectPlayer player) {
-        
-    }
-=======
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
-        // TODO Auto-generated method stub
-        
-    }
-    
->>>>>>> master
 }
