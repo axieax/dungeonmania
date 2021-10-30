@@ -11,11 +11,13 @@ public class Bow extends BuildableEquipment {
         super("bow", null);
     }
 
-    public static boolean isBuildable(Inventory inventory) {
+    @Override
+    public boolean isBuildable(Inventory inventory) {
         return inventory.hasItemQuantity("Wood", WOOD_NEEDED) && inventory.hasItemQuantity("Arrows", ARROWS_NEEDED);
     }
 
-    public static void craft(Inventory inventory) {
+    @Override
+    public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
             inventory.removeItemQuantity("Wood", WOOD_NEEDED);
             inventory.removeItemQuantity("Arrows", ARROWS_NEEDED);

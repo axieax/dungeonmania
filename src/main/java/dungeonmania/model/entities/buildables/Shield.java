@@ -12,7 +12,8 @@ public class Shield extends BuildableEquipment {
         super("shield", null);
     }
 
-    public static boolean isBuildable(Inventory inventory) {
+    @Override
+    public boolean isBuildable(Inventory inventory) {
         return (
             inventory.hasItemQuantity("Wood", WOOD_NEEDED) &&
             (
@@ -22,7 +23,8 @@ public class Shield extends BuildableEquipment {
         );
     }
 
-    public static void craft(Inventory inventory) {
+    @Override
+    public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
             inventory.removeItemQuantity("Wood", WOOD_NEEDED);
             if (inventory.hasItemQuantity("Treasure", TREASURE_NEEDED)) {
