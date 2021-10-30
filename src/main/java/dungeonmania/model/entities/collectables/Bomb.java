@@ -11,7 +11,7 @@ import dungeonmania.util.Position;
 public class Bomb extends Item {
 
     public Bomb(Position position) {
-        super(position);
+        super("bomb", position);
     }
 
     /**

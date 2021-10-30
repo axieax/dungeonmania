@@ -14,19 +14,25 @@ public abstract class Entity {
     private Position position;
     private boolean interactable;
     private boolean passable;
+    private String prefix;
 
-    public Entity(Position position) {
+    public Entity(String prefix, Position position) {
+        this.prefix = prefix;
         this.id = UUID.randomUUID().toString();
         this.position = position;
         this.interactable = false;
         this.passable = false;
     }
 
-    public Entity(Position position, boolean interactable, boolean passable) {
-        this(position);
+    public Entity(String prefix, Position position, boolean interactable, boolean passable) {
+        this(prefix, position);
         this.interactable = interactable;
+        this.passable = passable;
     }
 
+    public String getPrefix() {
+        return prefix;
+    }
 
     public boolean isInteractable() {
         return interactable;

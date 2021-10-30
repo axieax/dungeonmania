@@ -13,7 +13,7 @@ public class Door extends Entity {
     private int key;
 
     public Door(Position position, int key) {
-        super(position);
+        super("door", position);
         this.key = key;
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 public class FloorSwitch extends Entity {
 
     public FloorSwitch(Position position) {
-        super(position, false, true);
+        super("switch", position, false, true);
     }
 
     /**

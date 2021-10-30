@@ -9,7 +9,7 @@ import dungeonmania.util.Position;
 public class Exit extends Entity {
 
     public Exit(Position position) {
-        super(position, false, true);
+        super("exit", position, false, true);
     }
 
     @Override

@@ -9,7 +9,7 @@ public class Shield extends BuildableEquipment {
     private static final int KEY_NEEDED = 1;
 
     public Shield() {
-        super(null);
+        super("shield", null);
     }
 
     public static boolean isBuildable(Inventory inventory) {

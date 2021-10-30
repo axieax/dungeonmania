@@ -10,15 +10,15 @@ public abstract class MovingEntity extends Entity implements MovingEntityBehavio
     private int attackDamage;
     private int defaultBattleDamage;
     
-    public MovingEntity(Position position, int health, int attackDamage) {
-        super(position, true, true);
+    public MovingEntity(String prefix, Position position, int health, int attackDamage) {
+        super(prefix, position, true, true);
         this.health = health;
         this.attackDamage = attackDamage;
         this.defaultBattleDamage = this.getHealth() *  this.getAttackDamage() / 10;
     }
 
-    public MovingEntity(Position position, int health, int attackDamage, int defaultBattleDamage) {
-        this(position, health, attackDamage);
+    public MovingEntity(String prefix, Position position, int health, int attackDamage, int defaultBattleDamage) {
+        this(prefix, position, health, attackDamage);
         this.defaultBattleDamage = defaultBattleDamage;
     }
     

@@ -6,6 +6,6 @@ import dungeonmania.util.Position;
 public class TheOneRing extends Item {
 
     public TheOneRing(Position position) {
-        super(position);
+        super("one_ring", position);
     }
 }

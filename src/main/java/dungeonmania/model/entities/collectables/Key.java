@@ -12,7 +12,7 @@ public class Key extends Item implements Consumable {
     private int key;
 
     public Key(Position position, int key) {
-        super(position);
+        super("key", position);
         this.key = key;
     }
 

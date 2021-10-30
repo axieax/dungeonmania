@@ -10,11 +10,11 @@ public class Mercenary extends MovingEntity {
     public final static int MAX_MERCENARY_ATTACK_DMG = 5;
 
     public Mercenary(Position position) {
-        super(position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
+        super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
     }
 
     public Mercenary(Position position, int health, int attackDamage) {
-        super(position, health, attackDamage);
+        super("mercenary", position, health, attackDamage);
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Portal extends Entity {
     }
 
     public Portal(Position position, String colour) {
-        super(position);
+        super("portal", position);
         this.colour = colour;
     }
 

@@ -31,19 +31,17 @@ public class ArmourTest {
     public void collectTest() {
         Dungeon dungeon = new Dungeon(3, 3);
 
-        String collectableId = "armour1";
-
-        Armour item = new Armour(collectableId, new Position(1, 1));
+        Armour item = new Armour(new Position(1, 1));
 
         dungeon.addEntity(item);
 
-        Player player = new Player("player1", new Position(0, 1));
+        Player player = new Player(new Position(0, 1));
         player.move(dungeon, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(dungeon.getEntity(collectableId) == null);
-        assertTrue(player.getInventoryItem(collectableId).equals(item));
+        assertTrue(dungeon.getEntity(item.getId()) == null);
+        assertTrue(player.getInventoryItem(item.getId()).equals(item));
     }
 
     /**
@@ -55,17 +53,17 @@ public class ArmourTest {
 
         String collectableId = "armour1";
 
-        Armour item = new Armour(collectableId, new Position(1, 1));
+        Armour item = new Armour(new Position(1, 1));
 
         dungeon.addEntity(item);
 
-        Player player = new Player("player1", new Position(0, 1));
+        Player player = new Player(new Position(0, 1));
         player.move(dungeon, Direction.RIGHT);
 
         // Durability of armour when picked up should be 5
         assertTrue(item.getDurability() == 5);
 
-        Mercenary mercenary = new Mercenary("mercenary1", new Position(2, 1));
+        Mercenary mercenary = new Mercenary(new Position(2, 1));
         dungeon.addEntity(mercenary);
 
         // Player moves to attack (interact with) the mercenary
@@ -79,7 +77,7 @@ public class ArmourTest {
      */
     @Test
     public void monsterArmourTest() {
-        
+        fail();
     }
 
     /**

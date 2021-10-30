@@ -8,7 +8,7 @@ public class Bow extends BuildableEquipment {
     private static final int ARROWS_NEEDED = 3;
 
     public Bow() {
-        super(null);
+        super("bow", null);
     }
 
     public static boolean isBuildable(Inventory inventory) {

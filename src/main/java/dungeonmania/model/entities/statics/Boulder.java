@@ -10,7 +10,7 @@ import dungeonmania.util.Position;
 public class Boulder extends Entity {
 
     public Boulder(Position position) {
-        super(position);
+        super("boulder", position);
     }
 
     /**

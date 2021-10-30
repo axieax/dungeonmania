@@ -8,8 +8,8 @@ import dungeonmania.util.Position;
 
 public abstract class Item extends Entity {
 
-    public Item(Position position) {
-        super(position, false, true);
+    public Item(String prefix, Position position) {
+        super(prefix, position, false, true);
     }
 
     public ItemResponse getItemInfo() {

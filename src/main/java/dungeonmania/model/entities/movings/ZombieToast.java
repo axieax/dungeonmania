@@ -10,11 +10,11 @@ public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
 
     public ZombieToast(Position position) {
-        super(position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG);
+        super("zombie_toast", position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG);
     }
 
     public ZombieToast(Position position, int health, int attackDamage) {
-        super(position, health, attackDamage);
+        super("zombie_toast", position, health, attackDamage);
     }
 
     @Override
