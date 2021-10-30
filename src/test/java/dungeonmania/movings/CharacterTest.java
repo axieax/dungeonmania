@@ -18,6 +18,8 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Wood;
+import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
+import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
@@ -563,9 +565,116 @@ public class CharacterTest {
 
     @Test
     public void testInvisibleState() {
+        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        
+        Position playerPos = new Position(1, 2);
+        Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
 
+        game.addEntity(player);
+
+        Position mercenaryPos = new Position(1, 4);
+        Mercenary mercenary = new Mercenary(mercenaryPos);
+        
+        Position potionPos = new Position(2, 2);
+        game.addEntity(new InvisibilityPotion(potionPos));
+        game.tick(null, Direction.RIGHT); // player picks up potion
+
+        game.tick("invisibility_potion", Direction.NONE); // drink potion
+        
+        // at this point, the mercenary should be adjacent to the player
+        assertTrue(game.getAdjacentEntities(potionPos).size() > 0);
+        assertTrue(player.getHealth() == initialPlayerHealth);
+        
+        // any further ticks (for a limited time) should not result in battle
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == initialPlayerHealth);
+
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == initialPlayerHealth);
     }
 
+    @Test
+    public void testInvincibleState() {
+        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        
+        Position playerPos = new Position(1, 2);
+        Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
+
+        game.addEntity(player);
+
+        Position mercenaryPos = new Position(1, 4);
+        Mercenary mercenary = new Mercenary(mercenaryPos);
+        
+        Position potionPos = new Position(2, 2);
+        game.addEntity(new InvincibilityPotion(potionPos));
+        game.tick(null, Direction.RIGHT); // player picks up potion
+
+        game.tick("invisibility_potion", Direction.NONE); // drink potion
+        
+        // at this point, the mercenary should be adjacent to the player
+        assertTrue(game.getAdjacentEntities(potionPos).size() > 0);
+        assertTrue(player.getHealth() == initialPlayerHealth);
+        
+        // any further ticks (for a limited time) should not result in battle
+        // as the mercenary should run away
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == initialPlayerHealth);
+        
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == initialPlayerHealth);
+        
+        assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
+    }
+
+    @Test
+    public void testCanPickUpMultiplePotions() {
+        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        
+        Position playerPos = new Position(1, 2);
+        Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
+
+        game.addEntity(player);
+
+        Position invisPotionPos = new Position(2, 2);
+        game.addEntity(new InvisibilityPotion(invisPotionPos));
+        Position invincPotionPos = new Position(3, 2);
+        game.addEntity(new InvincibilityPotion(invincPotionPos));
+
+        assertTrue(player.getInventoryResponses().size() == 0);
+        
+        assertDoesNotThrow(() -> {
+            game.tick(null, Direction.RIGHT);
+            game.tick(null, Direction.RIGHT);
+        });
+
+        assertTrue(player.getInventoryResponses().size() > 0);
+    }
+    
+    @Test
+    public void testCanDrinkTwoPotions() {
+        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        
+        Position playerPos = new Position(1, 2);
+        Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
+
+        game.addEntity(player);
+
+        Position invisPotionPos = new Position(2, 2);
+        game.addEntity(new InvisibilityPotion(invisPotionPos));
+        Position invincPotionPos = new Position(3, 2);
+        game.addEntity(new InvincibilityPotion(invincPotionPos));
+
+        game.tick(null, Direction.RIGHT); // player picks up invis potion
+        game.tick("invisibility_potion", Direction.NONE); // drinks poitoin
+
+        game.tick(null, Direction.RIGHT); // player picks up invinc potion
+        // player can drink two potions while still having the effect of another
+        assertDoesNotThrow(() ->  game.tick("invincibility_potion", Direction.NONE));
+    }
 
     public Position getCharacterPosition(List<EntityResponse> entities) throws IllegalArgumentException, InvalidActionException {
         for(EntityResponse e: entities) {
