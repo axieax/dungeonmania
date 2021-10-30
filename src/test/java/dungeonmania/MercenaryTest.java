@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import dungeonmania.model.Dungeon;
+import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
@@ -43,11 +44,11 @@ public class MercenaryTest {
         Player player = new Player("player", new Position(1, 1));
         dungeon.addEntity(new Player("player", player.getPosition()));
 
-        Mercenary mercenary = new Mercenary("mercenary", new Position(4, 4));
+        Mercenary mercenary = new Mercenary("mercenary", new Position(3, 3));
         dungeon.addEntity(new Mercenary("mercenary", mercenary.getPosition()));
 
         assertTrue(dungeon.getEntity("player").getPosition().equals(new Position(1, 1)));
-        assertTrue(dungeon.getEntity("mercenary").getPosition().equals(new Position(4, 4)));
+        assertTrue(dungeon.getEntity("mercenary").getPosition().equals(new Position(3, 3)));
 
         player.move(dungeon, Direction.RIGHT);
 
@@ -58,7 +59,7 @@ public class MercenaryTest {
     @Test
     public void testMercenarySimpleWall() {
         // Wall exists between player and mercenary and so mercenary should go around the wall
-        Dungeon dungeon = new Dungeon(5, 5);
+        Dungeon dungeon = new Dungeon(7, 7);
 
         Player player = new Player("player", new Position(1, 1));
         dungeon.addEntity(new Player("player", player.getPosition()));
@@ -68,28 +69,63 @@ public class MercenaryTest {
             dungeon.addEntity(new Wall("wall" + i, new Position(i + 1, 2)));
         }
 
-        Mercenary mercenary = new Mercenary("mercenary", new Position(1, 3));
+        Mercenary mercenary = new Mercenary("mercenary", new Position(3, 1));
         dungeon.addEntity(new Mercenary("mercenary", mercenary.getPosition()));
 
         player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getX() == 2);
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getX() == 3);
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getX() == 4);
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getX() == 5);
+
+        // mercenary now below wall gap
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getY() == 2);
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getY() == 1);
+
+        // mercenary now at same horizontal level as player and any further ticks reduce the horizontal distance
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getX() == 4);
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getX() == 3);
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getX() == 2);
+        player.move(dungeon, Direction.NONE);
+        assertTrue(mercenary.getX() == 1); // same position as player
+    }
+
+    @Test
+    public void testBribedMercenaryMovement() {
+        Dungeon dungeon = new Dungeon(7, 7);
+
+        Player player = new Player("player", new Position(1, 1));
+        dungeon.addEntity(new Player("player", player.getPosition()));
+
+        Mercenary mercenary = new Mercenary("mercenary", new Position(5, 1));
+        dungeon.addEntity(new Mercenary("mercenary", mercenary.getPosition()));
+
+        dungeon.addEntity(new Treasure("treasure_1", new Position(1, 2)));
+        dungeon.addEntity(new Treasure("treasure_1", new Position(1, 3)));
+        dungeon.addEntity(new Treasure("treasure_1", new Position(1, 4)));
+
+        // make player collect all 3 coins
+        player.move(dungeon, Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
+        player.move(dungeon, Direction.RIGHT);
+
+
+        // TODO: Dungeon currently has no way to "interact" with an item
+        // dungeon.interact("mercenary");
+    }
+
+    @Test
+    public void testCannotMoveThroughExit() {
 
     }
-    
-    @Test
-    public void testSimpleHostility() {
-        // mercenaries constantly move towards the character
-    }
-
-    @Test
-    public void testMercenaryStopIfCannotMoveCloserToCharacter() {
-        // e.g. blocked by wall etc.
-    }
-
-    @Test
-    public void testBribedMercenaryMovement() {}
-
-    @Test
-    public void testCannotMoveThroughExit() {}
 
     @Test
     public void testCannotMoveThroughClosedDoor() {}

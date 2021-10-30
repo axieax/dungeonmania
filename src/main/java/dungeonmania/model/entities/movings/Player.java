@@ -321,7 +321,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     public void reduceInvisibilityPotionUses(Item potion) {
-
+        
     }
     
 
