@@ -242,14 +242,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.notifyObservers();
     }
 
-<<<<<<< HEAD
     @Override
     public void interact(Game game, MovingEntityBehaviour character) {
         // TODO Auto-generated method stub
-=======
-    public void interact(Game game, MovingEntity character) {
->>>>>>> master
-
     }
 
     @Override

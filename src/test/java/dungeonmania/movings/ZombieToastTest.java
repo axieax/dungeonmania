@@ -25,10 +25,6 @@ import dungeonmania.util.Position;
 
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class ZombieToastTest {
-    final static String SPIDER_1 = "spider_1";
-    final static String game_NAME = "standard";
-    final static String GAME_MODE = "peaceful";
-    
     @Test
     public void testZombieSpawnRateNormalModes() {
         Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
