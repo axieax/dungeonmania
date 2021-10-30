@@ -5,6 +5,8 @@ import java.util.List;
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.buildables.BuildableEquipment;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
 public interface Character {
@@ -21,8 +23,12 @@ public interface Character {
     public List<Equipment> getEquipment();
 
     public List<AttackEquipment> getAttackEquipment();
-
+    
     public List<DefenceEquipment> getDefenceEquipment();
+    
+    public boolean checkBuildable(BuildableEquipment equipment);
+
+    public List<ItemResponse> getInventoryResponses();
 
     public int getCurrentAttackDamage();
 
@@ -31,7 +37,7 @@ public interface Character {
     public void addAlly(MovingEntity ally);
 
     public List<MovingEntity> getAllies();
-
+    
     public void move(Dungeon dungeon, Direction direction);
 
 }

@@ -8,7 +8,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class RunZombieState implements ZombieState {
-    ZombieToast zombie;
+    private ZombieToast zombie;
 
     public RunZombieState(ZombieToast zombie) {
         this.zombie = zombie;

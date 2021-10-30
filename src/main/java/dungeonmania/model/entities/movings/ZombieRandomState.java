@@ -11,7 +11,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class RandomZombieState implements ZombieState {
-    ZombieToast zombie;
+    private ZombieToast zombie;
 
     public RandomZombieState(ZombieToast zombie) {
         this.zombie = zombie;

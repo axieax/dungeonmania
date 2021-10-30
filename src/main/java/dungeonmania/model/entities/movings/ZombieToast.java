@@ -14,9 +14,9 @@ public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_HEALTH = 20;
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
 
-    ZombieState randomZombieState;
-    ZombieState runZombieState;
-    ZombieState state;
+    private ZombieState randomZombieState;
+    private ZombieState runZombieState;
+    private ZombieState state;
 
     public ZombieToast(String entityId, Position position) {
         this(entityId, position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG);
