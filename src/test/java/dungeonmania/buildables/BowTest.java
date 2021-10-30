@@ -3,7 +3,7 @@ package dungeonmania.buildables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
@@ -22,7 +22,7 @@ public class BowTest {
     @Test
     public void buildTest() {
         Game game = new Game();
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         // To craft a bow, we need 1 wood and 3 arrows
         Wood wood = new Wood("wood1", new Position(1, 0));
@@ -30,20 +30,20 @@ public class BowTest {
         Arrow arrow2 = new Arrow("arrow2", new Position(1, 2));
         Arrow arrow3 = new Arrow("arrow3", new Position(1, 3));
 
-        dungeon.addEntity(wood);
-        dungeon.addEntity(arrow1);
-        dungeon.addEntity(arrow2);
-        dungeon.addEntity(arrow3);
+        game.addEntity(wood);
+        game.addEntity(arrow1);
+        game.addEntity(arrow2);
+        game.addEntity(arrow3);
 
         // Player picks up the wood and arrows
         Player player = new Player("player", new Position(0, 0));
-        player.move(dungeon, Direction.RIGHT);
-        player.move(dungeon, Direction.DOWN);
-        player.move(dungeon, Direction.DOWN);
-        player.move(dungeon, Direction.DOWN);
+        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
 
         // Player crafts a bow
-        // This needs to be changed according to how we are integrating game with the dungeon
+        // This needs to be changed according to how we are integrating game with the game
         player.craft(game, "Bow");
 
         // Check that the player has a bow
@@ -59,23 +59,23 @@ public class BowTest {
      */
     public void durabilityTest() {
         Game game = new Game();
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         Wood wood = new Wood("wood1", new Position(1, 0));
         Arrow arrow1 = new Arrow("arrow1", new Position(1, 1));
         Arrow arrow2 = new Arrow("arrow2", new Position(1, 2));
         Arrow arrow3 = new Arrow("arrow3", new Position(1, 3));
 
-        dungeon.addEntity(wood);
-        dungeon.addEntity(arrow1);
-        dungeon.addEntity(arrow2);
-        dungeon.addEntity(arrow3);
+        game.addEntity(wood);
+        game.addEntity(arrow1);
+        game.addEntity(arrow2);
+        game.addEntity(arrow3);
 
         Player player = new Player("player", new Position(0, 0));
-        player.move(dungeon, Direction.RIGHT);
-        player.move(dungeon, Direction.DOWN);
-        player.move(dungeon, Direction.DOWN);
-        player.move(dungeon, Direction.DOWN);
+        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
 
         player.craft(game, "Bow");
 
@@ -84,11 +84,11 @@ public class BowTest {
         assertTrue(((Bow) item).getDurability() == 5);
 
         Mercenary mercenary = new Mercenary("mercenary1", new Position(2, 3));
-        dungeon.addEntity(mercenary);
+        game.addEntity(mercenary);
 
         // Player moves to attack (interact with) the mercenary with the bow
         // This will cause the durability of the bow to decrease by 1
-        player.move(dungeon, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         assertTrue(((Bow) item).getDurability() == 4);
     }

@@ -3,7 +3,7 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
@@ -18,10 +18,10 @@ public class ArmourTest {
      */
     @Test
     public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Armour(new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new Armour(new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("armour1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("armour1").getPosition()));
     }
 
     /**
@@ -29,18 +29,18 @@ public class ArmourTest {
      */
     @Test
     public void collectTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         Armour item = new Armour(new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player(new Position(0, 1));
-        player.move(dungeon, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(dungeon.getEntity(item.getId()) == null);
+        assertTrue(game.getEntity(item.getId()) == null);
         assertTrue(player.getInventoryItem(item.getId()).equals(item));
     }
 
@@ -49,26 +49,26 @@ public class ArmourTest {
      */
     @Test
     public void durabilityTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         String collectableId = "armour1";
 
         Armour item = new Armour(new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player(new Position(0, 1));
-        player.move(dungeon, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         // Durability of armour when picked up should be 5
         assertTrue(item.getDurability() == 5);
 
         Mercenary mercenary = new Mercenary(new Position(2, 1));
-        dungeon.addEntity(mercenary);
+        game.addEntity(mercenary);
 
         // Player moves to attack (interact with) the mercenary
         // This will cause the durability of the armour to decrease by 1
-        player.move(dungeon, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
         assertTrue(item.getDurability() == 4);
     }
 

@@ -2,7 +2,7 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Direction;
@@ -16,10 +16,10 @@ public class ArrowTest {
      */
     @Test
     public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Arrow("arrows1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new Arrow("arrows1", new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("arrows1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("arrows1").getPosition()));
     }
 
     /**
@@ -27,20 +27,20 @@ public class ArrowTest {
      */
     @Test
     public void collectTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         String collectableId = "arrows1";
 
         Arrow item = new Arrow(collectableId, new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(dungeon, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(dungeon.getEntity(collectableId) == null);
+        assertTrue(game.getEntity(collectableId) == null);
         assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 }

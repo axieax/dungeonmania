@@ -1,6 +1,6 @@
 package dungeonmania.model.entities.movings;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -18,7 +18,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
 
     @Override
-    public void tick(Dungeon dungeon) {
+    public void tick(Game game) {
         
     }
 
@@ -29,7 +29,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
 
     @Override
-    public void interact(Dungeon dungeon, MovingEntity character) {
+    public void interact(Game game, MovingEntity character) {
         // TODO Auto-generated method stub
         
     }

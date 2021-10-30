@@ -1,6 +1,6 @@
 package dungeonmania.model.entities.statics;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
@@ -18,9 +18,9 @@ public class Boulder extends Entity {
      * tile.
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntity character) {
+    public void interact(Game game, MovingEntity character) {
         if (character instanceof Player) {
-            this.moveBoulder(dungeon, character.getDirection());
+            this.moveBoulder(game, character.getDirection());
         }
     }
 
@@ -28,16 +28,16 @@ public class Boulder extends Entity {
      * Moves the boulder to the specified direction if it is an empty tile or the
      * entity in the directed position is a floor switch.
      *
-     * @param dungeon
+     * @param game
      * @param direction
      */
-    public void moveBoulder(Dungeon dungeon, Direction direction) {
+    public void moveBoulder(Game game, Direction direction) {
         Position newPosition = this.getOffsetPosition(direction);
-        Entity entityAtPosition = dungeon.getEntityAtPosition(newPosition);
+        Entity entityAtPosition = game.getEntityAtPosition(newPosition);
         if (entityAtPosition == null || entityAtPosition instanceof FloorSwitch) {
             this.setPosition(newPosition);
         }
         if (entityAtPosition instanceof FloorSwitch)
-            ((FloorSwitch) entityAtPosition).triggerSwitch(dungeon);
+            ((FloorSwitch) entityAtPosition).triggerSwitch(game);
     }
 }

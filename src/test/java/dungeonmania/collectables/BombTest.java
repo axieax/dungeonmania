@@ -3,7 +3,7 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Direction;
@@ -17,10 +17,10 @@ public class BombTest {
      */
     @Test
     public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Bomb("bomb1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new Bomb("bomb1", new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("bomb1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("bomb1").getPosition()));
     }
 
     /**
@@ -28,20 +28,20 @@ public class BombTest {
      */
     @Test
     public void collectTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         String collectableId = "bomb1";
 
         Bomb item = new Bomb(collectableId, new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(dungeon, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(dungeon.getEntity(collectableId) == null);
+        assertTrue(game.getEntity(collectableId) == null);
         assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 

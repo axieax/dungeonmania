@@ -1,6 +1,6 @@
 package dungeonmania.model.entities.statics;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
@@ -13,7 +13,7 @@ public class Exit extends Entity {
     }
 
     @Override
-    public void interact(Dungeon dungeon, MovingEntity character) {
-        if (character instanceof Player) dungeon.reachedExit();
+    public void interact(Game game, MovingEntity character) {
+        if (character instanceof Player) game.reachedExit();
     }
 }

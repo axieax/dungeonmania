@@ -3,7 +3,7 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Direction;
@@ -17,10 +17,10 @@ public class PortalTest {
      */
     @Test
     public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Portal("portal1", new Position(1, 1), "BLUE"));
+        Game game = new Game(3, 3);
+        game.addEntity(new Portal("portal1", new Position(1, 1), "BLUE"));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("portal1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("portal1").getPosition()));
     }
 
     /**
@@ -28,16 +28,16 @@ public class PortalTest {
      */
     @Test
     public void teleportSuccess() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         Player player = new Player("player1", new Position(1, 0));
 
         Portal portalStart = new Portal("portal1", new Position(0,0), "BLUE");
         Portal portalEnd = new Portal("portal2", new Position(2,2), "BLUE");
 
-        dungeon.addEntity(player);
-        dungeon.addEntity(portalStart);
-        dungeon.addEntity(portalEnd);
+        game.addEntity(player);
+        game.addEntity(portalStart);
+        game.addEntity(portalEnd);
 
         assertTrue(new Position(1, 0).equals(player.getPosition()));
         assertTrue(new Position(0, 0).equals(portalStart.getPosition()));
@@ -46,12 +46,12 @@ public class PortalTest {
 
         // Player should teleport by moving into the portal
         // Note that since they are travelling to the left, they will end up to the left of the portal
-        player.move(dungeon, Direction.LEFT);
+        player.move(game, Direction.LEFT);
         assertTrue(new Position(1, 2).equals(player.getPosition()));
 
         // Return back to the portal
         // Note that since they are travelling to the right, they will end up to the right of the portal
-        player.move(dungeon, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
     }
 
@@ -60,7 +60,7 @@ public class PortalTest {
      */
     @Test
     public void teleportMultiplePortals() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         Player player = new Player("player1", new Position(1, 0));
 
@@ -69,11 +69,11 @@ public class PortalTest {
         Portal portal3 = new Portal("portal2", new Position(1,3), "RED");
         Portal portal4 = new Portal("portal2", new Position(3,1), "RED");
 
-        dungeon.addEntity(player);
-        dungeon.addEntity(portal1);
-        dungeon.addEntity(portal2);
-        dungeon.addEntity(portal3);
-        dungeon.addEntity(portal4);
+        game.addEntity(player);
+        game.addEntity(portal1);
+        game.addEntity(portal2);
+        game.addEntity(portal3);
+        game.addEntity(portal4);
 
         // P1  P   __  __
         // __  __  __  P4
@@ -83,11 +83,11 @@ public class PortalTest {
 
         // Player teleports by moving into the blue portals (P1 -> P2)
         assertTrue(new Position(1, 0).equals(player.getPosition()));
-        player.move(dungeon, Direction.LEFT);
+        player.move(game, Direction.LEFT);
         assertTrue(new Position(1, 2).equals(player.getPosition()));
 
         // Player teleports by moving into the red portals (P3 -> P4)
-        player.move(dungeon, Direction.DOWN);
+        player.move(game, Direction.DOWN);
 
         assertTrue(new Position(3, 2).equals(player.getPosition()));
     }

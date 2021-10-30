@@ -1,6 +1,6 @@
 package dungeonmania.model.entities.movings;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -18,7 +18,7 @@ public class Mercenary extends MovingEntity {
     }
 
     @Override
-    public void tick(Dungeon dungeon) {
+    public void tick(Game game) {
         // TODO Auto-generated method stub
         
     }
@@ -30,7 +30,7 @@ public class Mercenary extends MovingEntity {
     }
 
     @Override
-    public void interact(Dungeon dungeon, MovingEntity character) {
+    public void interact(Game game, MovingEntity character) {
         // TODO Auto-generated method stub
         
     }

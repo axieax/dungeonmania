@@ -1,6 +1,6 @@
 package dungeonmania.model.entities;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.response.models.ItemResponse;
@@ -21,10 +21,10 @@ public abstract class Item extends Entity {
      * inventory.
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntity character) {
+    public void interact(Game game, MovingEntity character) {
         if (character instanceof Player) {
             ((Player) character).collect(this);
-            dungeon.removeEntity(this);
+            game.removeEntity(this);
         }
     }
 }

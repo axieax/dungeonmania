@@ -2,7 +2,7 @@ package dungeonmania.model.entities;
 
 import java.util.UUID;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
@@ -83,5 +83,5 @@ public abstract class Entity {
         );
     }
 
-    public abstract void interact(Dungeon dungeon, MovingEntity character);
+    public abstract void interact(Game game, MovingEntity character);
 }
