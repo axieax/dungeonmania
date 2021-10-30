@@ -112,7 +112,6 @@ public class GameTest {
         controller.tick (null, Direction.DOWN);
         controller.tick (null, Direction.DOWN);
         controller.tick (null, Direction.DOWN);
-        controller.tick (null, Direction.DOWN);
         controller.tick (null, Direction.DOWN); //Got treasure
     
         DungeonResponse thirdState = controller.tick (null, Direction.DOWN);
