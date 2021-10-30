@@ -2,6 +2,7 @@ package dungeonmania.movings;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -32,8 +33,10 @@ public class ZombieToastTest {
     
     @Test
     public void testZombieSpawnRateNormalModes() {
-        Dungeon dungeon = new Dungeon(7, 7);
-        Player player = new Player("player", new Position(1, 1));
+
+        
+        Game game = new Game(7, 7);
+        Player player = new Player(new Position(1, 1));
         dungeon.addEntity(player);
         
         ZombieToastSpawner spawner = new ZombieToastSpawner("spawner", new Position(5, 5));
@@ -52,7 +55,7 @@ public class ZombieToastTest {
     @Test
     public void testBasicMovement() {
         Dungeon dungeon = new Dungeon(7, 7);
-        Player player = new Player("player", new Position(1, 1));
+        Player player = new Player(new Position(1, 1));
         dungeon.addEntity(player);
 
         Position zombiePos =  new Position(5, 5);
@@ -69,7 +72,7 @@ public class ZombieToastTest {
 
     @Test
     public void testWallBlockingMovement() {
-        Dungeon dungeon = new Dungeon(7, 7);
+        Dungeon gae = new Dungeon(7, 7);
         Player player = new Player("player", new Position(1, 1));
         dungeon.addEntity(player);
         
@@ -202,6 +205,14 @@ public class ZombieToastTest {
         zombie.tick(dungeon);
         assertTrue(dungeon.getEntitiesAtPosition(boulderPos).size() == 0); // portal has no effect
         assertTrue(dungeon.getEntitiesAtPosition(zombiePos).size() == 1);
+    }
+
+    private List<Entity> SevenBySevenWallBoundary() {
+        ArrayList<Entity> wallBorder = new ArrayList<>();
+        
+        for(int i = 0; i < 7; i ++) {
+            Wall wall = new Wall(new Position(0, y))
+        }
     }
 
 }
