@@ -9,8 +9,8 @@ import java.util.List;
 
 public class FloorSwitch extends Entity {
 
-    public FloorSwitch(String entityId, Position position) {
-        super(entityId, position, false, true);
+    public FloorSwitch(Position position) {
+        super(position, false, true);
     }
 
     /**
