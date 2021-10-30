@@ -1,9 +1,8 @@
 package dungeonmania.model.entities.movings;
 
 public class PlayerInvisibleState implements PlayerState {
-
-    Player player;
-
+    
+    private Player player;
     private int timeLimit = 6;
 
     public PlayerInvisibleState(Player player) {

@@ -3,8 +3,8 @@ package dungeonmania.model.entities.movings;
 import java.util.List;
 
 public class PlayerDefaultState implements PlayerState {
-
-    Player player;
+    
+    private Player player;
 
     public PlayerDefaultState(Player player) {
         this.player = player;

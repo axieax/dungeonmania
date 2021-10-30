@@ -1,8 +1,8 @@
 package dungeonmania.model.entities.movings;
 
 public class PlayerInvincibleState implements PlayerState {
-    Player player;
     
+    private Player player;
     private int timeLimit = 2;
 
     public PlayerInvincibleState(Player player) {
