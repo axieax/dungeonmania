@@ -8,6 +8,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
+import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.response.models.ItemResponse;
@@ -86,8 +87,15 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.addInventoryItem(item);
     }
 
+    /**
+     * Given a buildableItem, builds it if it is craftable
+     */
     @Override
-    public void build(String itemId) {}
+    public void craft(BuildableEquipment item) {
+        if(item.isBuildable(inventory)) {
+            item.craft(inventory);
+        }
+    }
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
