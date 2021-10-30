@@ -5,7 +5,7 @@ import dungeonmania.util.Position;
 
 public class Arrow extends Item {
 
-    public Arrow(String entityId, Position position) {
-        super(entityId, position);
+    public Arrows(Position position) {
+        super(position);
     }
 }

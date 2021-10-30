@@ -19,7 +19,7 @@ public class ArmourTest {
     @Test
     public void instanceTest() {
         Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new Armour("armour1", new Position(1, 1)));
+        dungeon.addEntity(new Armour(new Position(1, 1)));
 
         assertTrue(new Position(1, 1).equals(dungeon.getEntity("armour1").getPosition()));
     }

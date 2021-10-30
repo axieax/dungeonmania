@@ -1,5 +1,7 @@
 package dungeonmania.model.entities;
 
+import java.util.UUID;
+
 import dungeonmania.model.Dungeon;
 import dungeonmania.model.entities.movings.MovingEntityBehaviour;
 import dungeonmania.response.models.EntityResponse;
@@ -12,6 +14,19 @@ public abstract class Entity {
     private Position position;
     private boolean interactable;
     private boolean passable;
+
+    public Entity(Position position) {
+        this.id = UUID.randomUUID().toString();
+        this.position = position;
+        this.interactable = false;
+        this.passable = false;
+    }
+
+    public Entity(Position position, boolean interactable, boolean passable) {
+        this(position);
+        this.interactable = interactable;
+    }
+
 
     public boolean isInteractable() {
         return interactable;
@@ -27,18 +42,6 @@ public abstract class Entity {
 
     public void setPassable(boolean passable) {
         this.passable = passable;
-    }
-
-    public Entity(String id, Position position) {
-        this.id = id;
-        this.position = position;
-        this.interactable = false;
-        this.passable = false;
-    }
-
-    public Entity(String id, Position position, boolean interactable, boolean passable) {
-        this(id, position);
-        this.interactable = interactable;
     }
 
     public String getId() {
