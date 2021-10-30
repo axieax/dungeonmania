@@ -8,12 +8,4 @@ public class Armour extends CollectableEquipment {
         super(entityId, position);
     }
     
-    /**
-     * Each armour has a specific durability that dictates the number of 
-     * times it can be used before it deteriorates.
-     * @return durability level
-     */
-    public int getDurability() {
-        return 0;
-    }
 }

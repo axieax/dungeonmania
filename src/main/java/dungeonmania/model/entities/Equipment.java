@@ -12,7 +12,9 @@ public abstract class Equipment extends Item {
     }
 
     /**
-     * @return durability of the equipment
+     * Each equipment has a specific durability that dictates the
+     * number of times it can be used before it deteriorates.
+     * @return durability level of the equipment
      */
     public int getDurability() {
         return durability;
