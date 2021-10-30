@@ -1,9 +1,12 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Dungeon;
-import dungeonmania.model.entities.Entity;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.buildables.Bow;
+import dungeonmania.model.entities.buildables.Shield;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
@@ -17,13 +20,13 @@ import java.util.List;
 public class Player extends MovingEntity implements Character, SubjectPlayer {
     public final static int MAX_CHARACTER_HEALTH = 100;
     public final static int CHARACTER_ATTACK_DMG = 10;
+    private Inventory inventory = new Inventory();
 
     private PlayerState defaultState;
     private PlayerState invisibleState;
     private PlayerState invincibleState;
     private PlayerState state;
 
-    private List<Item> inventory = new ArrayList<>();
     boolean inBattle = false;
     List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
@@ -87,7 +90,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      */
     @Override
     public void collect(Item item) {
-        this.inventory.add(item);
+        this.inventory.addItem(item);
     }
 
     @Override
@@ -360,5 +363,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public boolean hasWeapon() {
         return this.getWeapon() != null;
+    }
+
+    public void craft(Game game, String className) {
+        if (className.equals(Bow.class.getSimpleName())) {
+            Bow.craft(game, inventory);
+        } else if (className.equals(Shield.class.getSimpleName())) {
+            Shield.craft(game, inventory);
+        }
     }
 }
