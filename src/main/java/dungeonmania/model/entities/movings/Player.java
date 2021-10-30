@@ -6,6 +6,7 @@ import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -71,11 +72,11 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
         // if either character or entity is dead, remove it
         if(this.getHealth() <= 0) {
-            dungeon.hide(this);
+            dungeon.removeEntity(this);
         }
 
         if(opponent.getHealth() <= 0) {
-            dungeon.hide(opponent);
+            dungeon.removeEntity(opponent);
             this.inBattle = false;
         }
     }
@@ -119,6 +120,14 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
                 .orElse(null);
     }
 
+    public Item findInventoryItem(String className) {
+        return inventory
+                .stream()
+                .filter(i -> i.getClass().getSimpleName().equals(className))
+                .findFirst()
+                .orElse(null);
+    }
+
     public Equipment getWeapon() {
         return inventory
                 .stream()
@@ -142,8 +151,8 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     @Override
-    public List<AttackEquipment> getAttackEquipment() {
-        ArrayList<AttackEquipment> attackEquip = new AttackEquipment();
+    public List<AttackEquipment> getAttackEquipmentList() {
+        List<AttackEquipment> attackEquip = new ArrayList<>();
 
         for(Equipment e: getEquipment()) {
             if(e instanceof AttackEquipment) {
@@ -154,8 +163,8 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     @Override
-    public List<DefenceEquipment> getDefenceEquipment() {
-        ArrayList<DefenceEquipment> defenceEquip = new DefenceEquipment();
+    public List<DefenceEquipment> getDefenceEquipmentList() {
+        List<DefenceEquipment> defenceEquip = new ArrayList<>();
 
         for(Equipment e: getEquipment()) {
             if(e instanceof DefenceEquipment) {
@@ -297,7 +306,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @return true if player is wearing armour, otherwise false
      */
     public boolean hasArmour() {
-        Item armour = getInventoryItem("armour");
+        Item armour = findInventoryItem("Armour");
         return armour == null ? false : true;
     }
 
@@ -305,20 +314,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         
     }
 
-    public int getInvincibilityPotionUses() {
-        return getInventoryItem("invincibility_potion").getUsesLeft();
+    public int getPotionUses(String className) {
+        return findInventoryItem(className).getUsesLeft();
     }
 
-    public void reduceInvincibilityPotionUses(Item potion) {
-
-    }
-
-    public int getInvisibilityPotionUses() {
-        return getInventoryItem("invisibility_potion").getUsesLeft();
-    }
-
-    public void reduceInvisibilityPotionUses(Item potion) {
-
+    public int reducePotionUses(String className) {
+        int uses = getPotionUses(className);
+        return uses--;
     }
     
 
