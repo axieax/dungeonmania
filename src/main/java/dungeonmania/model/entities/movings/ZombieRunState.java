@@ -9,7 +9,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class ZombieRunState implements ZombieState {
+public class ZombieRunState implements EnemyMovementState {
     private ZombieToast zombie;
 
     public ZombieRunState(ZombieToast zombie) {
@@ -17,12 +17,8 @@ public class ZombieRunState implements ZombieState {
     }
 
     @Override
-    public void move(Game game) {
+    public void move(Game game, Position playerPos) {
         Position currPos = zombie.getPosition();
-
-        List<Direction> possibleDirections = Arrays.asList(
-            Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT
-        );
 
         List<Position> possiblePositionsToMove = game.getMoveablePositions(this.zombie);
 
@@ -32,7 +28,7 @@ public class ZombieRunState implements ZombieState {
         PositionGraph positionGraph = new PositionGraph(game, this.zombie);
 
         for (Position position: possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(this.zombie.getPosition(), game.getCharacter().getPosition());
+            int pathLen = positionGraph.BFS(this.zombie.getPosition(), playerPos);
             if (pathLen > optimalPathLength) {
                 optimalPathLength = pathLen;
                 optimalPathPosition = position;

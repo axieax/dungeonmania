@@ -14,9 +14,9 @@ public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_HEALTH = 20;
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
 
-    private ZombieState randomZombieState;
-    private ZombieState runZombieState;
-    private ZombieState state;
+    private EnemyMovementState randomZombieState;
+    private EnemyMovementState runZombieState;
+    private EnemyMovementState state;
 
     public ZombieToast(Position position, SubjectPlayer player) {
         this(position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG, player);
@@ -32,7 +32,8 @@ public class ZombieToast extends MovingEntity implements Observer {
 
     @Override
     public void tick(Game game) {
-        state.move(game);
+        Position playerPos = game.getCharacter().getPosition();
+        state.move(game, playerPos);
     }
 
     /**
@@ -41,17 +42,12 @@ public class ZombieToast extends MovingEntity implements Observer {
      * @return true if Zombie can move onto that tile, else false
      */
     public boolean canZombieMoveOntoPosition(List<Entity> entitiesNewPos) {
-        for(Entity e: entitiesNewPos) {
-            if(e.getId() == "portal") {
-                // Portals have no effect on zombies
-                continue;
-            }
+        for(Entity entity: entitiesNewPos) {
+            // Portals have no effect on zombies
+            if (entity.getId().equals("portal")) continue;
             
-            if(!e.isPassable()) {
-                return false;
-            }
+            if (!entity.isPassable()) return false;
         }
-        
         return true;
     }
 
@@ -61,12 +57,12 @@ public class ZombieToast extends MovingEntity implements Observer {
      */
     @Override
     public void update(SubjectPlayer player) {
-        if(!(player instanceof Player)) {
+        if (!(player instanceof Player)) {
             return;
         }
 
         Player character = (Player) player; 
-        if(character.getState() instanceof PlayerInvincibleState) {
+        if (character.getState() instanceof PlayerInvincibleState) {
             this.setState(getRunZombieState());
         } else {
              this.setState(randomZombieState);
@@ -99,19 +95,19 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
     
     //////////////////////////////////////////////////////////////////
-    public void setState(ZombieState state) {
+    public void setState(EnemyMovementState state) {
         this.state = state;
     }
 
-    public ZombieState getState() {
+    public EnemyMovementState getState() {
         return state;
     }
 
-    public ZombieState getRandomZombieState() {
+    public EnemyMovementState getRandomZombieState() {
         return randomZombieState;
     }
 
-    public ZombieState getRunZombieState() {
+    public EnemyMovementState getRunZombieState() {
         return runZombieState;
     }
 }

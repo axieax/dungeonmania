@@ -6,9 +6,7 @@ import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
-import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
@@ -106,7 +104,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public boolean checkBuildable(BuildableEquipment equipment) {
         return equipment.isBuildable(this.inventory);
-    } 
+    }
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
@@ -289,6 +287,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public PlayerState getState() {
         return state;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 
     public boolean hasKey() {

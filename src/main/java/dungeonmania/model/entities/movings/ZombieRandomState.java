@@ -10,7 +10,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class ZombieRandomState implements ZombieState {
+public class ZombieRandomState implements EnemyMovementState {
     private ZombieToast zombie;
 
     public ZombieRandomState(ZombieToast zombie) {
@@ -18,7 +18,7 @@ public class ZombieRandomState implements ZombieState {
     }
 
     @Override
-    public void move(Game game) {
+    public void move(Game game, Position playerPosition) {
         Position currPos = zombie.getPosition();
         Set<Direction> chosen = new HashSet<>();
         

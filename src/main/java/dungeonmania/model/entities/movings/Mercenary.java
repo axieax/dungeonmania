@@ -9,10 +9,10 @@ public class Mercenary extends MovingEntity implements Observer {
     public final static int MAX_MERCENARY_HEALTH = 50;
     public final static int MAX_MERCENARY_ATTACK_DMG = 5;
     public final static int TREASURE_REQUIRED_TO_BRIBE = 1;
-
-    private MercenaryState defaultState;
-    private MercenaryState runState;
-    private MercenaryState state;
+    
+    private EnemyMovementState defaultState;
+    private EnemyMovementState runState;
+    private EnemyMovementState state;
 
     public Mercenary(Position position) {
         this(position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
@@ -28,7 +28,7 @@ public class Mercenary extends MovingEntity implements Observer {
 
     @Override
     public void tick(Game game) {
-        Position playerPos = game.getCharacterPosition();
+        Position playerPos = game.getCharacter().getPosition();
         state.move(game, playerPos);
     }
 
@@ -46,8 +46,7 @@ public class Mercenary extends MovingEntity implements Observer {
     @Override
     public void interact(Game game, MovingEntity character) { 
         Player player = (Player) character;
-
-        if(player.getTreasure() >= TREASURE_REQUIRED_TO_BRIBE) {
+        if (player.getInventory().hasItemQuantity("treasure", TREASURE_REQUIRED_TO_BRIBE)) {
             player.addAlly(this);
         }
     }
@@ -75,15 +74,15 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
-    public void setState(MercenaryState state) {
+    public void setState(EnemyMovementState state) {
         this.state = state;
     }
 
-    public MercenaryState getDefaultState() {
+    public EnemyMovementState getDefaultState() {
         return defaultState;
     }
 
-    public MercenaryState getRunState() {
+    public EnemyMovementState getRunState() {
         return runState;
     }
 }
