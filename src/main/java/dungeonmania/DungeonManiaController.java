@@ -1,21 +1,5 @@
 package dungeonmania;
 
-import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
-import dungeonmania.model.goal.Goal;
-import dungeonmania.model.mode.Hard;
-import dungeonmania.model.mode.Mode;
-import dungeonmania.model.mode.Peaceful;
-import dungeonmania.model.mode.Standard;
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
-import dungeonmania.util.Direction;
-import dungeonmania.util.FileLoader;
-import dungeonmania.util.Position;
-
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -35,11 +19,22 @@ import com.google.gson.JsonParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class DungeonManiaController {
-    private List<Game> games = new ArrayList <>();
-    private Game currentGame;
+import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
+import dungeonmania.model.goal.Goal;
+import dungeonmania.model.mode.Hard;
+import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Peaceful;
+import dungeonmania.model.mode.Standard;
+import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.util.Direction;
+import dungeonmania.util.FileLoader;
 
-    public DungeonManiaController() {}
+public class DungeonManiaController {
+
+    private List<Game> games = new ArrayList<>();
+    private Game currentGame;
 
     public String getSkin() {
         return "default";
@@ -83,15 +78,14 @@ public class DungeonManiaController {
         if (!getGameModes().contains(gameMode)) throw new IllegalArgumentException();
 
         Mode mode = null;
-        if (gameMode.equals ("Hard")) mode  = new Hard ();
-        else if (gameMode.equals ("Standard")) mode = new Standard ();
-        else if (gameMode.equals ("Peaceful")) mode = new Peaceful ();
+        if (gameMode.equals("Hard")) mode = new Hard(); else if (gameMode.equals("Standard")) mode =
+            new Standard(); else if (gameMode.equals("Peaceful")) mode = new Peaceful();
 
         List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
-        Goal goal = EntityFactory.extractGoal (dungeonName);
+        Goal goal = EntityFactory.extractGoal(dungeonName);
 
-        Game newGame = new Game (dungeonName, entities, goal, mode);
-        games.add (newGame);
+        Game newGame = new Game(dungeonName, entities, goal, mode);
+        games.add(newGame);
         currentGame = newGame;
         return newGame.getDungeonResponse();
     }
@@ -109,20 +103,20 @@ public class DungeonManiaController {
         JSONObject currGame = new JSONObject();
 
         JSONArray entities = new JSONArray();
-        for (Entity entity: currentGame.getEntities()) {
-            entities.put (entity.toJSON());
+        for (Entity entity : currentGame.getEntities()) {
+            entities.put(entity.toJSON());
         }
         currGame.put("entities", entities);
         currGame.put("mode", currentGame.getMode().getClass().getSimpleName());
-        currGame.put ("goal-condition", currentGame.getGoal().toJSON());
-        currGame.put ("dungeonName", currentGame.getDungeonName());
-        
+        currGame.put("goal-condition", currentGame.getGoal().toJSON());
+        currGame.put("dungeonName", currentGame.getDungeonName());
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
 
         String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
-        FileWriter myFileWriter = new FileWriter (path, false);
+        FileWriter myFileWriter = new FileWriter(path, false);
         myFileWriter.write(prettyString);
         myFileWriter.close();
 
@@ -144,9 +138,9 @@ public class DungeonManiaController {
         String dungeonName = GameLoader.extractDungeonName(name);
 
         Game newGame = new Game(dungeonName, entities, goal, mode);
-        games.add (newGame);
+        games.add(newGame);
         currentGame = newGame;
-        return newGame.getDungeonResponse();        
+        return newGame.getDungeonResponse();
     }
 
     /**
@@ -158,16 +152,20 @@ public class DungeonManiaController {
         try { // adapted from given code
             String directory = "/savedGames";
             Path root = Paths.get(getClass().getResource(directory).toURI());
-            return Files.walk(root).filter(Files::isRegularFile).map(x -> {
-                String nameAndExt = x.toFile().getName();
-                int extIndex = nameAndExt.lastIndexOf('.');
-                return nameAndExt.substring(0, extIndex > -1 ? extIndex : nameAndExt.length());
-            }).collect(Collectors.toList());
+            return Files
+                .walk(root)
+                .filter(Files::isRegularFile)
+                .map(x -> {
+                    String nameAndExt = x.toFile().getName();
+                    int extIndex = nameAndExt.lastIndexOf('.');
+                    return nameAndExt.substring(0, extIndex > -1 ? extIndex : nameAndExt.length());
+                })
+                .collect(Collectors.toList());
         } catch (IOException e) {
             return new ArrayList<>();
         } catch (URISyntaxException a) {
             return new ArrayList<>();
-        } 
+        }
     }
 
     /**
@@ -185,13 +183,18 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-            if (itemUsed!= null && !(itemUsed.equals("bomb")|| 
-                itemUsed.equals("invincibility_potion")|| 
-                itemUsed.equals("invisibility_potion")|| 
-                itemUsed.equals("health_potion"))) {
-                throw new IllegalArgumentException ();
-            }
-        
+        if (
+            itemUsed != null &&
+            !(
+                itemUsed.equals("bomb") ||
+                itemUsed.equals("invincibility_potion") ||
+                itemUsed.equals("invisibility_potion") ||
+                itemUsed.equals("health_potion")
+            )
+        ) {
+            throw new IllegalArgumentException();
+        }
+
         return currentGame.tick(itemUsed, movementDirection);
     }
 

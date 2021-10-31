@@ -13,8 +13,5 @@ public class Exit extends Entity {
     }
 
     @Override
-    public void interact(Game game, MovingEntity character) {
-        // TODO Auto-generated method stub
-        
-    }
+    public void interact(Game game, MovingEntity character) {}
 }

@@ -107,28 +107,4 @@ public class PotionTest {
         assertTrue(game.getEntity(invisibilityPotion.getId()) == null);
         assertTrue(player.getInventoryItem(invisibilityPotion.getId()).equals(invisibilityPotion));
     }
-
-    /**
-     * Test the effects of a HealthPotion and if it can only be used once.
-     */
-    @Test
-    public void effectHealthPotionTest() {
-        fail();
-    }
-
-    /**
-     * Test the effects of a InvincibilityPotion and if it lasts for a limited time.
-     */
-    @Test
-    public void effectInvincibilityPotionTest() {
-        fail();
-    }
-
-    /**
-     * Test the effects of a InvisibilityPotion.
-     */
-    @Test
-    public void effectInvisibilityPotionTest() {
-        fail();
-    }
 }

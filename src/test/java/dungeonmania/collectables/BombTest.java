@@ -45,20 +45,4 @@ public class BombTest {
         assertTrue(game.getEntity(bomb.getId()) == null);
         assertTrue(player.getInventoryItem(bomb.getId()).equals(bomb));
     }
-
-    /**
-     * Test if Bomb cannot destroy entities if it is not cardinally adjacent to a switch
-     */
-    @Test
-    public void notDestroyTest() {
-        fail();
-    }
-
-    /**
-     * Test if Bomb destroys entities in the radius
-     */
-    @Test
-    public void destroyRadius() {
-        fail();
-    }
 }

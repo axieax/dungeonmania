@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings;
 
 import java.util.List;
+import java.util.Random;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
@@ -32,7 +33,7 @@ public class Mercenary extends MovingEntity implements Observer {
         Position playerPos = player.getPosition();
         state.move(game, playerPos);
 
-        // If a player is fighting an enemy within the battle radius, mercenary moves twice as fast to take advantage
+        // If a player is fighting an enemy within the battle radius, mercenary moves twice as fast
         if (moveTwice && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
             state.move(game, playerPos);
             moveTwice = false;
@@ -136,13 +137,21 @@ public class Mercenary extends MovingEntity implements Observer {
 
         // Move the mercenary to the closest possible position to the player
         for (Position position : possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(this.getPosition(), playerPos);
+            int pathLen = positionGraph.BFS(currPos, playerPos);
             if (pathLen < optimalPathLength) {
                 optimalPathLength = pathLen;
                 optimalPathPosition = position;
             }
         }
 
-        if (optimalPathPosition != null) this.setPosition(optimalPathPosition);
+        // If the player is invisible, move the mercenary randomly (will not follow player)
+        Player player = (Player) game.getCharacter();
+        if (player.getState() instanceof PlayerInvisibleState) {
+            Random rand = new Random();
+            int randomIndex = rand.nextInt(possiblePositionsToMove.size());
+            optimalPathPosition = possiblePositionsToMove.get(randomIndex);
+        }
+
+        this.setPosition(optimalPathPosition);
     }
 }

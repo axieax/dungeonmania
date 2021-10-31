@@ -47,7 +47,7 @@ public class GoalTest {
         int ticks
     ) {
         DungeonResponse resp = null;
-        for (int i = 0; i < ticks; ++i) resp = dmc.tick(itemUsed, direction);
+        for (int i = 0; i < ticks; i++) resp = dmc.tick(itemUsed, direction);
         return resp;
     }
 

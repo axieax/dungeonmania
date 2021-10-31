@@ -36,7 +36,7 @@ public class SpiderTest {
 
     public static final String SPIDER = "spider";
     public static final String DUNGEON_NAME = "advanced";
-    public static final String GAME_MODE = "peaceful";
+    public static final String GAME_MODE = "Peaceful";
 
     @Test
     public void testEnsureSpiderSpawns() {
