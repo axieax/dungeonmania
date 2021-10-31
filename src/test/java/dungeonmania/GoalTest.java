@@ -1,7 +1,7 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
@@ -12,6 +12,7 @@ import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
+import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Exit;
@@ -23,6 +24,8 @@ import dungeonmania.model.goal.DestroyEnemies;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.goal.GoalComposite;
 import dungeonmania.model.goal.ToggleSwitch;
+import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -211,9 +214,10 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesMercenaryKilled() {
+        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
-            new Mercenary(new Position(0, 3))
+            new Mercenary(new Position(0, 3), mode.damageMultiplier())
         );
         Game game = new Game("test", entities, new DestroyEnemies(), null);
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
@@ -222,7 +226,8 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesMercenaryBribed() {
-        Entity mercenary = new Mercenary(new Position(0, 4));
+        Mode mode = new Standard();
+        Entity mercenary = new Mercenary(new Position(0, 4), mode.damageMultiplier());
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
             new Treasure(new Position(0, 1)),
@@ -237,9 +242,10 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesSpider() {
+        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
-            new Spider(new Position(0, -2))
+            new Spider(new Position(0, -2), mode.damageMultiplier())
         );
         Game game = new Game("test", entities, new DestroyEnemies(), null);
         assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
@@ -249,10 +255,11 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesZombie() {
-        Entity player = new Player(new Position(0, 0));
+        Mode mode = new Standard();
+        Player player = new Player(new Position(0, 0));
         List<Entity> entities = Arrays.asList(
             player,
-            new ZombieToast(new Position(0, -2), (Character) player),
+            new ZombieToast(new Position(0, -2), mode.damageMultiplier(), player),
             // walls to force direction
             new Wall(new Position(-1, 0)),
             new Wall(new Position(-1, -1)),
@@ -272,7 +279,8 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesZombieSpawner() {
-        Entity spawner = new ZombieToastSpawner(new Position(0, 2));
+        Mode mode = new Standard();
+        Entity spawner = new ZombieToastSpawner(new Position(0, 2), mode.damageMultiplier());
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
             new Sword(new Position(0, 1)),
@@ -361,25 +369,24 @@ public class GoalTest {
         assertEquals("", game.tick("", Direction.RIGHT).getGoals());
     }
 
-
     /**
      * Test that Portals does not have a goal
      */
     @Test
     public void testPortalsGoal() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("portals", "Standard"));
-        DungeonResponse stateOne = controller.tick (null, Direction.NONE);
-        assertEquals(stateOne.getGoals(), "");  
+        assertDoesNotThrow(() -> controller.newGame("portals", "Standard"));
+        DungeonResponse stateOne = controller.tick(null, Direction.NONE);
+        assertEquals(stateOne.getGoals(), "");
     }
 
-        /**
+    /**
      * This tests the completion of goals in the advanced dungeon
      */
     @Test
     public void testAdvancedGoal() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));
+        assertDoesNotThrow(() -> controller.newGame("advanced", "Standard"));
         String treasureGoal = ":treasure";
 
         assertEquals(treasureGoal, move(controller, Direction.DOWN, 3).getGoals());
@@ -387,5 +394,4 @@ public class GoalTest {
         assertEquals(treasureGoal, move(controller, Direction.RIGHT, 5).getGoals());
         assertEquals("", move(controller, Direction.RIGHT, 1).getGoals());
     }
-
 }

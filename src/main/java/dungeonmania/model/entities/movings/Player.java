@@ -188,6 +188,17 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     /**
+     * Checks if the inventory has the specified quantity of the item.
+     * 
+     * @param prefix
+     * @param quantity
+     * @return
+     */
+    public boolean hasItemQuantity(String prefix, int quantity) {
+        return inventory.hasItemQuantity(prefix, quantity);
+    }
+
+    /**
      * Returns a list of ItemResponse objects that contains information on the
      * player's inventory.
      *
