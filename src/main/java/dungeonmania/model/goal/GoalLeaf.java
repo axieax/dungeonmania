@@ -1,6 +1,7 @@
 package dungeonmania.model.goal;
 
 import dungeonmania.model.Game;
+import org.json.JSONObject;
 
 public abstract class GoalLeaf implements Goal {
 
@@ -30,5 +31,11 @@ public abstract class GoalLeaf implements Goal {
     @Override
     public String toString(Game game) {
         return String.format(":%s(%d)", getOperator(), numRemaining(game));
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("goal", getOperator());
+        return json;
     }
 }

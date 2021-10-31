@@ -5,14 +5,17 @@ import dungeonmania.util.Position;
 
 public class Sword extends CollectableEquipment implements AttackEquipment {
 
+    public final int ATTACK_DAMAGE = 50;
+
     public Sword(Position position) {
         super("sword", position);
     }
 
     @Override
-    public int setAttackMultiplier(int attackDamage) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int getAttackDamage() {
+        return ATTACK_DAMAGE;
     }
+
+    
 
 }

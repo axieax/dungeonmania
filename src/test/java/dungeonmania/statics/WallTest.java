@@ -19,9 +19,10 @@ public class WallTest {
     @Test
     public void instanceTest() {
         Game game = new Game(3, 3);
-        game.addEntity(new Wall("wall1", new Position(1, 1)));
+        Wall wall = new Wall(new Position(1, 1));
+        game.addEntity(wall);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("wall1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(wall.getId()).getPosition()));
     }
 
     /**
@@ -30,16 +31,16 @@ public class WallTest {
     @Test
     public void wallBlockPlayer() {
         Game game = new Game(5, 5);
-        game.addEntity(new Wall("wall1", new Position(0, 0)));
-        game.addEntity(new Wall("wall2", new Position(0, 1)));
-        game.addEntity(new Wall("wall3", new Position(0, 2)));
-        game.addEntity(new Wall("wall4", new Position(1, 0)));
-        game.addEntity(new Wall("wall5", new Position(1, 2)));
-        game.addEntity(new Wall("wall6", new Position(2, 0)));
-        game.addEntity(new Wall("wall7", new Position(2, 1)));
-        game.addEntity(new Wall("wall8", new Position(2, 2)));
+        game.addEntity(new Wall(new Position(0, 0)));
+        game.addEntity(new Wall(new Position(0, 1)));
+        game.addEntity(new Wall(new Position(0, 2)));
+        game.addEntity(new Wall(new Position(1, 0)));
+        game.addEntity(new Wall(new Position(1, 2)));
+        game.addEntity(new Wall(new Position(2, 0)));
+        game.addEntity(new Wall(new Position(2, 1)));
+        game.addEntity(new Wall(new Position(2, 2)));
 
-        Player player = new Player("player1", new Position(1, 1));
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         // If movement is blocked by wall, the player should remain in the same position
@@ -63,16 +64,16 @@ public class WallTest {
     @Test
     public void wallBlockEnemies() {
         Game game = new Game(5, 5);
-        game.addEntity(new Wall("wall1", new Position(0, 0)));
-        game.addEntity(new Wall("wall2", new Position(0, 1)));
-        game.addEntity(new Wall("wall3", new Position(0, 2)));
-        game.addEntity(new Wall("wall4", new Position(1, 0)));
-        game.addEntity(new Wall("wall5", new Position(1, 2)));
-        game.addEntity(new Wall("wall6", new Position(2, 0)));
-        game.addEntity(new Wall("wall7", new Position(2, 1)));
-        game.addEntity(new Wall("wall8", new Position(2, 2)));
+        game.addEntity(new Wall(new Position(0, 0)));
+        game.addEntity(new Wall(new Position(0, 1)));
+        game.addEntity(new Wall(new Position(0, 2)));
+        game.addEntity(new Wall(new Position(1, 0)));
+        game.addEntity(new Wall(new Position(1, 2)));
+        game.addEntity(new Wall(new Position(2, 0)));
+        game.addEntity(new Wall(new Position(2, 1)));
+        game.addEntity(new Wall(new Position(2, 2)));
 
-        ZombieToast zombie = new ZombieToast("zombie1", new Position(1, 1));
+        ZombieToast zombie = new ZombieToast(new Position(1, 1));
         game.addEntity(zombie);
 
         zombie.tick(game);
@@ -93,12 +94,12 @@ public class WallTest {
      */
     public void wallBlockBoulder() {
         Game game = new Game(5, 5);
-        game.addEntity(new Wall("wall1", new Position(3, 0)));
+        game.addEntity(new Wall(new Position(3, 0)));
 
-        Boulder boulder = new Boulder("boulder1", new Position(1, 0));
+        Boulder boulder = new Boulder(new Position(1, 0));
         game.addEntity(boulder);
 
-        Player player = new Player("player1", new Position(0, 0));
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);

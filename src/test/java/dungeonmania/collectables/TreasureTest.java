@@ -17,9 +17,10 @@ public class TreasureTest {
     @Test
     public void instanceTest() {
         Game game = new Game(3, 3);
-        game.addEntity(new Treasure("treasure1", new Position(1, 1)));
+        Treasure treasure = new Treasure(new Position(1, 1));
+        game.addEntity(treasure);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("treasure1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(treasure.getId()).getPosition()));
     }
 
     /**
@@ -28,19 +29,15 @@ public class TreasureTest {
     @Test
     public void collectTest() {
         Game game = new Game(3, 3);
+        Treasure treasure = new Treasure(new Position(1, 1));
+        game.addEntity(treasure);
 
-        String collectableId = "treasure1";
-
-        Treasure item = new Treasure(collectableId, new Position(1, 1));
-
-        game.addEntity(item);
-
-        Player player = new Player("player1", new Position(0, 1));
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(game.getEntity(collectableId) == null);
-        assertTrue(player.getInventoryItem(collectableId).equals(item));
+        assertTrue(game.getEntity(treasure.getId()) == null);
+        assertTrue(player.getInventoryItem(treasure.getId()).equals(treasure));
     }
 }

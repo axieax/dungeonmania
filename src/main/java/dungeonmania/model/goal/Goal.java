@@ -1,6 +1,7 @@
 package dungeonmania.model.goal;
 
 import dungeonmania.model.Game;
+import org.json.JSONObject;
 
 public interface Goal {
     /**
@@ -27,4 +28,11 @@ public interface Goal {
      * @return string representation of a Goal
      */
     public String toString(Game game);
+
+    /**
+     * Returns the original JSONObject representation for a Goal
+     *
+     * @return JSONObject for a Goal
+     */
+    public JSONObject toJSON();
 }

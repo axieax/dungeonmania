@@ -18,9 +18,10 @@ public class BombTest {
     @Test
     public void instanceTest() {
         Game game = new Game(3, 3);
-        game.addEntity(new Bomb("bomb1", new Position(1, 1)));
-
-        assertTrue(new Position(1, 1).equals(game.getEntity("bomb1").getPosition()));
+        Bomb bomb = new Bomb(new Position(1, 1));
+        game.addEntity(bomb);
+        
+        assertTrue(new Position(1, 1).equals(game.getEntity(bomb.getId()).getPosition()));
     }
 
     /**
@@ -29,20 +30,16 @@ public class BombTest {
     @Test
     public void collectTest() {
         Game game = new Game(3, 3);
+        Bomb bomb = new Bomb(new Position(1, 1));
+        game.addEntity(bomb);
 
-        String collectableId = "bomb1";
-
-        Bomb item = new Bomb(collectableId, new Position(1, 1));
-
-        game.addEntity(item);
-
-        Player player = new Player("player1", new Position(0, 1));
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(game.getEntity(collectableId) == null);
-        assertTrue(player.getInventoryItem(collectableId).equals(item));
+        assertTrue(game.getEntity(bomb.getId()) == null);
+        assertTrue(player.getInventoryItem(bomb.getId()).equals(bomb));
     }
 
     /**

@@ -19,9 +19,10 @@ public class ArmourTest {
     @Test
     public void instanceTest() {
         Game game = new Game(3, 3);
-        game.addEntity(new Armour(new Position(1, 1)));
+        Armour armour = new Armour(new Position(1, 1));
+        game.addEntity(armour);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("armour1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(armour.getId()).getPosition()));
     }
 
     /**
@@ -30,9 +31,7 @@ public class ArmourTest {
     @Test
     public void collectTest() {
         Game game = new Game(3, 3);
-
         Armour item = new Armour(new Position(1, 1));
-
         game.addEntity(item);
 
         Player player = new Player(new Position(0, 1));
@@ -50,11 +49,7 @@ public class ArmourTest {
     @Test
     public void durabilityTest() {
         Game game = new Game(3, 3);
-
-        String collectableId = "armour1";
-
         Armour item = new Armour(new Position(1, 1));
-
         game.addEntity(item);
 
         Player player = new Player(new Position(0, 1));

@@ -11,6 +11,10 @@ public abstract class Item extends Entity {
     public Item(String prefix, Position position) {
         super(prefix, position, false, true);
     }
+    
+    public Item(String prefix) {
+        this(prefix, null);
+    }
 
     public ItemResponse getItemInfo() {
         return new ItemResponse(this.getId(), this.getClass().getSimpleName());
