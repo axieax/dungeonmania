@@ -1,10 +1,12 @@
 package dungeonmania.model.entities;
 
+import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Position;
 
 public abstract class Equipment extends Item {
 
     private int durability = 5;
+    private final double MULTIPLIER = 1;
 
     public Equipment(String prefix, Position position) {
         super(prefix, position);
@@ -23,7 +25,12 @@ public abstract class Equipment extends Item {
      * @param durability
      * Reduces the durability of the equipment
      */
-    public void useEquipment() {
+    public void useEquipment(Player player) {
         this.durability--;
+        if (this.durability == 0) player.removeInventoryItem(this.getId());
+    }
+
+    public double getMultiplier() {
+        return this.MULTIPLIER;
     }
 }

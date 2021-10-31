@@ -30,7 +30,7 @@ public interface Character {
     
     public List<ItemResponse> getInventoryResponses();
 
-    public int getCurrentAttackDamage();
+    public int getAttackStat();
 
     public int applyDefenceToOpponentAttack(int opponentAttackDamag);
 

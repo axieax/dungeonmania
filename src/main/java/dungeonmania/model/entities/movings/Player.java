@@ -6,9 +6,7 @@ import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
-import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
@@ -22,11 +20,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public static final int MAX_CHARACTER_HEALTH = 100;
     public static final int CHARACTER_ATTACK_DMG = 10;
-    private Inventory inventory = new Inventory();
 
     private PlayerState state;
-
-    boolean inBattle = false;
+    private Inventory inventory = new Inventory();
     List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
@@ -46,12 +42,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void tick(Game game) {
         List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
-            if (!(e instanceof MovingEntity)) {
-                continue;
+            if (e instanceof MovingEntity) {
+                MovingEntity opponent = (MovingEntity) e;
+                if (opponent.isEnemy()) this.battle(game, opponent);
             }
-
-            MovingEntity opponent = (MovingEntity) e;
-            this.battle(game, opponent);
         }
         this.state.updateState(this);
     }
@@ -65,7 +59,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      */
     @Override
     public void battle(Game game, MovingEntity opponent) {
-        state.battle(opponent);
+        state.battle(game, opponent);
 
         if (this.getHealth() <= 0) {
             Item item = this.findInventoryItem("one_ring");
@@ -81,7 +75,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         // if either entity is dead, remove it
         if (opponent.getHealth() <= 0) {
             game.removeEntity(opponent);
-            this.inBattle = false;
         }
     }
 
@@ -99,14 +92,12 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      */
     @Override
     public void craft(BuildableEquipment equipment) {
-        if (equipment.isBuildable(inventory)) {
-            equipment.craft(inventory);
-        }
+        if (equipment.isBuildable(inventory)) equipment.craft(inventory);
     }
 
     public boolean checkBuildable(BuildableEquipment equipment) {
         return equipment.isBuildable(this.inventory);
-    } 
+    }
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
@@ -134,19 +125,17 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return inventory.getEquipmentList();
     }
 
-    public List<AttackEquipment> getAttackEquipmentList() {
+    public List<Equipment> getAttackEquipmentList() {
         return this.getEquipmentList()
             .stream()
             .filter(equipment -> equipment instanceof AttackEquipment)
-            .map(equipment -> (AttackEquipment) equipment)
             .collect(Collectors.toList());
     }
 
-    public List<DefenceEquipment> getDefenceEquipmentList() {
+    public List<Equipment> getDefenceEquipmentList() {
         return this.getEquipmentList()
             .stream()
-            .filter(equipment -> equipment instanceof AttackEquipment)
-            .map(equipment -> (DefenceEquipment) equipment)
+            .filter(equipment -> equipment instanceof DefenceEquipment)
             .collect(Collectors.toList());
     }
 
@@ -156,18 +145,19 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     /**
-     * Returns the total attack damage a player is able to inflict upon an opponent .
+     * Returns the total attack damage a player is able to inflict upon an opponent.
      * This includes any attack damage provided by equipment e.g. sword
      * @return a positive integer indicating the amount of attack
      */
     @Override
-    public int getCurrentAttackDamage() {
-        // Normal damange inflicted by player
+    public int getAttackStat() {
+        // Normal damage inflicted by player
         int damageToOpponent = this.getDefaultBattleDamange();
 
         // any extra attack damage provided by equipment
-        for (AttackEquipment e : getAttackEquipmentList()) {
-            damageToOpponent = e.setAttackMultiplier(damageToOpponent);
+        for (Equipment e : getAttackEquipmentList()) {
+            if (e instanceof AttackEquipment) damageToOpponent +=
+                e.getMultiplier() * ((AttackEquipment) e).getAttackDamage();
         }
 
         // any extra attack damage provided by allies
@@ -184,16 +174,12 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @param opponentAttackDamage positive integer indicating attack amount to player
      * @return reduced opponentAttackDamage corresponding to defence amount
      */
-    @Override
     public int applyDefenceToOpponentAttack(int opponentAttackDamage) {
-        int newOpponentAttackDamage = opponentAttackDamage;
-
-        // any extra defence provided by equipment
-        for (DefenceEquipment e : getDefenceEquipmentList()) {
-            newOpponentAttackDamage = e.setDefenceMultiplier(newOpponentAttackDamage);
+        int finalAttackDamage = opponentAttackDamage;
+        for (Equipment e : this.getDefenceEquipmentList()) {
+            finalAttackDamage = (int) (finalAttackDamage * e.getMultiplier());
         }
-
-        return newOpponentAttackDamage;
+        return finalAttackDamage;
     }
 
     @Override
@@ -224,31 +210,23 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void move(Game game, Direction direction) {
         Position newPlayerPos = this.getPosition().translateBy(direction);
         List<Entity> entities = game.getEntities(newPlayerPos);
+        entities.forEach(entity -> entity.interact(game, this));
 
-        if (entities == null) { // no entities at new position
-            this.setPosition(newPlayerPos);
-        } else {
-            // interact with any non-moving entities and determine if player can move onto this tile
-            boolean canMove = true;
-            for (Entity e : entities) {
-                if (e instanceof MovingEntity) {
-                    continue;
-                }
+        // after interacting enemies on the newPlayerPos, get the updated state of
+        // dungeon
 
-                e.interact(game, this);
-                if (!e.isPassable()) {
-                    canMove = false;
-                }
-            }
-
-            // battle with any moving entities
-            if (canMove) {
-                this.setPosition(newPlayerPos);
-                this.tick(game);
-                this.notifyObservers();
-            }
+        List<Entity> updatedEntities = game.getEntities(newPlayerPos);
+        boolean canMove = true;
+        for (Entity e : updatedEntities) {
+            if (this.collision(e)) canMove = false;
         }
-        this.notifyObservers();
+
+        if (canMove) {
+            this.setPosition(newPlayerPos);
+            // TODO: should we tick first or move first?
+            this.tick(game);
+            this.notifyObservers();
+        }
     }
 
     public void interact(Game game, MovingEntity character) {}
@@ -304,19 +282,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     public Equipment getWeapon() {
-        Item weapon = inventory.findItem("Sword");
-        if (weapon == null) weapon = inventory.findItem("Bow");
+        Item weapon = inventory.findItem("sword");
+        if (weapon == null) weapon = inventory.findItem("bow");
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 
     public Direction getDirection() {
         return null;
-    }
-
-    @Override
-    public boolean collision(Entity entity) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     @Override

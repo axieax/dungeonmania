@@ -6,6 +6,7 @@ import java.util.List;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -34,7 +35,9 @@ public class Spider extends MovingEntity {
             Direction.UP,
             Direction.RIGHT
         );
-        this.nextMoveInPath = spiderMovementPath.get(0); // index of spiderMovementPath
+
+        // index of spiderMovementPath
+        this.nextMoveInPath = spiderMovementPath.get(0);
     }
 
     /**
@@ -127,8 +130,8 @@ public class Spider extends MovingEntity {
 
     @Override
     public boolean collision(Entity entity) {
-        // TODO Auto-generated method stub
-        return false;
+        if (entity instanceof Wall) return false;
+        return !entity.isPassable();
     }
 
     @Override

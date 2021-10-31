@@ -59,12 +59,6 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     @Override
-    public boolean collision(Entity entity) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public void moveTo(Position position) {
         this.setPosition(position);
     }

@@ -9,12 +9,15 @@ public abstract class MovingEntity extends Entity {
     private int health;
     private int attackDamage;
     private int defaultBattleDamage;
+
+    public final double ARMOUR_DROP_RATE = 0;
+    public final double THE_ONE_RING_DROP_RATE = 0.1; // 10% of dropping one_ring
     
     public MovingEntity(String prefix, Position position, int health, int attackDamage) {
         super(prefix, position, true, true);
         this.health = health;
         this.attackDamage = attackDamage;
-        this.defaultBattleDamage = this.getHealth() *  this.getAttackDamage() / 10;
+        this.defaultBattleDamage = this.getHealth() *  this.getAttackStat() / 10;
     }
 
     public MovingEntity(String prefix, Position position, int health, int attackDamage, int defaultBattleDamage) {
@@ -46,7 +49,7 @@ public abstract class MovingEntity extends Entity {
         this.health = health;
     }
     
-    public int getAttackDamage() {
+    public int getAttackStat() {
         return attackDamage;
     }
     
@@ -55,7 +58,7 @@ public abstract class MovingEntity extends Entity {
     }
     
     public int getDefaultBattleDamange() {
-        return this.getHealth() *  this.getAttackDamage() / 5;
+        return this.getHealth() *  this.getAttackStat() / 5;
     }
 
     public void setDefaultBattleDamage(int defaultBattleDamage) {
@@ -64,7 +67,9 @@ public abstract class MovingEntity extends Entity {
     
     public abstract Direction getDirection();
 
-    public abstract boolean collision(Entity entity);
+    public boolean collision(Entity entity) {
+        return !entity.isPassable();
+    };
 
     public abstract void moveTo(Position position);
 

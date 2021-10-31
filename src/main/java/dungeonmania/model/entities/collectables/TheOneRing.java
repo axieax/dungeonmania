@@ -11,6 +11,10 @@ public class TheOneRing extends Item implements Consumable {
         super("one_ring", position);
     }
 
+    public TheOneRing() {
+        super("one_ring", null);
+    }
+
     @Override
     public void consume(Player player) {
         player.removeInventoryItem(this.getId());
