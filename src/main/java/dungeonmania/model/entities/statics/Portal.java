@@ -34,8 +34,8 @@ public class Portal extends Entity {
         return game
             .getAllPortals()
             .stream()
-            .filter(
-                portal -> portal.getColour().equals(this.colour) && portal.getId() != this.getId()
+            .filter(portal ->
+                portal.getColour().equals(this.colour) && portal.getId() != this.getId()
             )
             .findFirst()
             .orElse(null);

@@ -40,7 +40,7 @@ public class Boulder extends Entity {
         if (entities.isEmpty()) {
             this.setPosition(newPosition);
         } else {
-            for(Entity entity: entities) {
+            for (Entity entity : entities) {
                 if (entity instanceof FloorSwitch) {
                     this.setPosition(newPosition);
                     ((FloorSwitch) entity).triggerSwitch(game);
