@@ -79,7 +79,7 @@ public abstract class Entity {
     public EntityResponse getEntityResponse() {
         return new EntityResponse(
             id,
-            this.getClass().getSimpleName(),
+            this.getPrefix(),
             position,
             interactable
         );
@@ -89,7 +89,7 @@ public abstract class Entity {
         JSONObject entity = new JSONObject();
         entity.put ("x", getX());
         entity.put ("y", getY());
-        entity.put ("type", getClass().getSimpleName().toLowerCase());
+        entity.put ("type", getPrefix());
         return entity;
     }
 
