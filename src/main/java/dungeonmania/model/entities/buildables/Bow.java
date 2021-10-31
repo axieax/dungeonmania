@@ -34,5 +34,8 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
         return this.ATTACK_DAMAGE;
     }
 
-
+    @Override
+    public BuildableEquipment clone() {
+        return new Bow();
+    }
 }

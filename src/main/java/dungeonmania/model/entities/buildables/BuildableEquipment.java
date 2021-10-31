@@ -14,5 +14,7 @@ public abstract class BuildableEquipment extends Equipment {
     public abstract boolean isBuildable(Inventory inventory);
 
     public abstract void craft(Inventory inventory);
+
+    public abstract BuildableEquipment clone();
     
 }
