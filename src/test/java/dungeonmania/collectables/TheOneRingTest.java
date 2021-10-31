@@ -18,9 +18,10 @@ public class TheOneRingTest {
     @Test
     public void instanceTest() {
         Game game = new Game(3, 3);
-        game.addEntity(new TheOneRing("onering1", new Position(1, 1)));
+        TheOneRing ring = new TheOneRing(new Position(1, 1));
+        game.addEntity(ring);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("onering1").getPosition()));
+        assertTrue(ring.getPosition().equals(new Position(1, 1)));
     }
 
     /**
@@ -29,20 +30,16 @@ public class TheOneRingTest {
     @Test
     public void collectTest() {
         Game game = new Game(3, 3);
+        TheOneRing ring = new TheOneRing(new Position(1, 1));
+        game.addEntity(ring);
 
-        String collectableId = "onering1";
-
-        TheOneRing item = new TheOneRing(collectableId, new Position(1, 1));
-
-        game.addEntity(item);
-
-        Player player = new Player("player1", new Position(0, 1));
+        Player player = new Player(, new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(game.getEntity(collectableId) == null);
-        assertTrue(player.getInventoryItem(collectableId).equals(item));
+        assertTrue(game.getEntity(ring.getId()) == null);
+        assertTrue(player.getInventoryItem(ring.getId()).equals(ring));
     }
 
     /**

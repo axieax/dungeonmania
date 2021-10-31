@@ -18,9 +18,10 @@ public class PortalTest {
     @Test
     public void instanceTest() {
         Game game = new Game(3, 3);
-        game.addEntity(new Portal("portal1", new Position(1, 1), "BLUE"));
+        Portal portal = new Portal(new Position(1, 1), "BLUE");
+        game.addEntity(portal);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("portal1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(portal.getId()).getPosition()));
     }
 
     /**
@@ -30,10 +31,10 @@ public class PortalTest {
     public void teleportSuccess() {
         Game game = new Game(3, 3);
 
-        Player player = new Player("player1", new Position(1, 0));
+        Player player = new Player(new Position(1, 0));
 
-        Portal portalStart = new Portal("portal1", new Position(0,0), "BLUE");
-        Portal portalEnd = new Portal("portal2", new Position(2,2), "BLUE");
+        Portal portalStart = new Portal(new Position(0,0), "BLUE");
+        Portal portalEnd = new Portal(new Position(2,2), "BLUE");
 
         game.addEntity(player);
         game.addEntity(portalStart);
@@ -62,12 +63,12 @@ public class PortalTest {
     public void teleportMultiplePortals() {
         Game game = new Game(3, 3);
 
-        Player player = new Player("player1", new Position(1, 0));
+        Player player = new Player(new Position(1, 0));
 
-        Portal portal1 = new Portal("portal1", new Position(0,0), "BLUE");
-        Portal portal2 = new Portal("portal1", new Position(2,2), "BLUE");
-        Portal portal3 = new Portal("portal2", new Position(1,3), "RED");
-        Portal portal4 = new Portal("portal2", new Position(3,1), "RED");
+        Portal portal1 = new Portal(new Position(0,0), "BLUE");
+        Portal portal2 = new Portal(new Position(2,2), "BLUE");
+        Portal portal3 = new Portal(new Position(1,3), "RED");
+        Portal portal4 = new Portal(new Position(3,1), "RED");
 
         game.addEntity(player);
         game.addEntity(portal1);
