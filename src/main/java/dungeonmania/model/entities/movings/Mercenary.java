@@ -1,7 +1,6 @@
 package dungeonmania.model.entities.movings;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dungeonmania.model.Game;
 import dungeonmania.util.Direction;
@@ -15,6 +14,7 @@ public class Mercenary extends MovingEntity implements Observer {
     public final double ARMOUR_DROP_RATE = 0.2;
     
     private MovementState state;
+    private boolean moveTwice;
 
     public Mercenary(Position position) {
         this(position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
@@ -23,6 +23,7 @@ public class Mercenary extends MovingEntity implements Observer {
     public Mercenary(Position position, int health, int attackDamage) {
         super("mercenary", position, health, attackDamage, true);
         this.state = new DefaultState(this);
+        this.moveTwice = false;
     }
 
     @Override
@@ -31,16 +32,10 @@ public class Mercenary extends MovingEntity implements Observer {
         Position playerPos = player.getPosition();
         state.move(game, playerPos);
 
-        // Check the cardinally adjacent entities to the player (this denotes they are fighting an enemy)
         // If a player is fighting an enemy within the battle radius, mercenary moves twice as fast to take advantage
-        game.getCardinallyAdjacentEntities(playerPos)
-            .stream()
-            .filter(e -> e instanceof MovingEntity)
-            .collect(Collectors.toList())
-            .size();
-
-        if (player.numEnemiesCardinallyAdjacent(game) > 0 && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
+        if (moveTwice && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
             state.move(game, playerPos);
+            moveTwice = false;
         }
     }
 
@@ -55,6 +50,7 @@ public class Mercenary extends MovingEntity implements Observer {
         }
 
         Player character = (Player) player; 
+        if (character.getInBattle()) moveTwice = true;
         if (character.getState() instanceof PlayerInvincibleState && character.getAllies() == null) {
             this.setState(new RunState(this));
         } else {
