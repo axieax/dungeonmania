@@ -5,7 +5,9 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.response.models.DungeonResponse;
@@ -176,9 +178,14 @@ public final class Game {
     }
 
     public final DungeonResponse interact(String entityId) {
-        Entity player = getCharacter();
+        MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
-        player.interact(this, (MovingEntity) entity);
+        if(entity instanceof MovingEntity) {
+            player.interact(this, (MovingEntity) entity);
+        } else if(entity instanceof ZombieToastSpawner) {
+            ZombieToastSpawner spawner =  (ZombieToastSpawner) entity;
+            spawner.interact(this, player);
+        }
         return getDungeonResponse();
     }
 }
