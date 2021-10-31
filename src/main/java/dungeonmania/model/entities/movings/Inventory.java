@@ -2,6 +2,8 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
+import dungeonmania.response.models.ItemResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,5 +94,20 @@ public class Inventory {
             .filter(equipment -> equipment instanceof Equipment)
             .map(equipment -> (Equipment) equipment)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns all items from the inventory in the ItemResponse format
+     * @return
+     */
+    public List<ItemResponse> getInventoryResponses() {
+        List<ItemResponse> response = new ArrayList<>();
+
+        for(Item i: items) {
+            ItemResponse itemResponse = new ItemResponse(i.getId(), i.getPrefix());
+            response.add(itemResponse);
+        }
+
+        return response;
     }
 }

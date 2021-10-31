@@ -7,6 +7,7 @@ import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
@@ -15,7 +16,7 @@ public interface Character {
 
     public void collect(Item item);
 
-    public void build(String itemId);
+    public void craft(BuildableEquipment item);
 
     public Item getInventoryItem(String itemId);
 
@@ -27,8 +28,6 @@ public interface Character {
     
     public List<DefenceEquipment> getDefenceEquipmentList();
     
-    public boolean canCraft(String prefix);
-
     public List<ItemResponse> getInventoryResponses();
 
     public int getCurrentAttackDamage();

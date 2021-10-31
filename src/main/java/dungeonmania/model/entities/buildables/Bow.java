@@ -13,11 +13,13 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
         super("bow", null);
     }
 
-    public static boolean isBuildable(Inventory inventory) {
+    @Override
+    public boolean isBuildable(Inventory inventory) {
         return inventory.hasItemQuantity("wood", WOOD_NEEDED) && inventory.hasItemQuantity("arrow", ARROWS_NEEDED);
     }
 
-    public static void craft(Inventory inventory) {
+    @Override
+    public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
             inventory.removeItemQuantity("Wood", WOOD_NEEDED);
             inventory.removeItemQuantity("Arrows", ARROWS_NEEDED);

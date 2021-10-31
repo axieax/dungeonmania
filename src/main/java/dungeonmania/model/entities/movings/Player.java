@@ -1,13 +1,13 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
+import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.statics.Consumable;
@@ -44,7 +44,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      */
     @Override
     public void tick(Game game) {
-        List<Entity> entities = game.getEntitiesAtPosition(this.getPosition());
+        List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
             if (!(e instanceof MovingEntity)) {
                 continue;
@@ -68,18 +68,14 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         state.battle(opponent);
 
         if (this.getHealth() <= 0) {
-<<<<<<< HEAD
             Item item = this.findInventoryItem("one_ring");
             if (item != null && item instanceof Consumable) {
                 // use one ring if it is in inventory
-                ((Consumable)item).consume(this);
+                ((Consumable) item).consume(this);
             } else {
                 // entity is dead, remove it
-                dungeon.removeEntity(this);
+                game.removeEntity(this);
             }
-=======
-            game.removeEntity(this);
->>>>>>> master
         }
 
         // if either entity is dead, remove it
@@ -98,8 +94,19 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.addInventoryItem(item);
     }
 
+    /**
+     * Given a buildableItem, builds it if it is craftable
+     */
     @Override
-    public void build(String itemId) {}
+    public void craft(BuildableEquipment equipment) {
+        if (equipment.isBuildable(inventory)) {
+            equipment.craft(inventory);
+        }
+    }
+
+    public boolean checkBuildable(BuildableEquipment equipment) {
+        return equipment.isBuildable(this.inventory);
+    } 
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
@@ -143,19 +150,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             .collect(Collectors.toList());
     }
 
-    public boolean canCraft(String prefix) {
-        if (prefix.equals(Bow.getPrefix())) {
-            return Bow.isBuildable(inventory);
-        } else if (prefix.equals(Shield.getPrefix())) {
-            return Shield.isBuildable(inventory);
-        }
-        return false;
-    }
-
     @Override
     public List<ItemResponse> getInventoryResponses() {
-        // TODO Auto-generated method stub
-        return null;
+        return inventory.getInventoryResponses();
     }
 
     /**
@@ -226,7 +223,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     @Override
     public void move(Game game, Direction direction) {
         Position newPlayerPos = this.getPosition().translateBy(direction);
-        List<Entity> entities = game.getEntitiesAtPosition(newPlayerPos);
+        List<Entity> entities = game.getEntities(newPlayerPos);
 
         if (entities == null) { // no entities at new position
             this.setPosition(newPlayerPos);
@@ -254,9 +251,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.notifyObservers();
     }
 
-    public void interact(Game game, MovingEntity character) {
-
-    }
+    public void interact(Game game, MovingEntity character) {}
 
     @Override
     public void attach(Observer observer) {
@@ -310,20 +305,12 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 
-    public void craft(Game game, String prefix) {
-        if (prefix.equals(Bow.getPrefix())) {
-            Bow.craft(inventory);
-        } else if (prefix.equals(Shield.getPrefix())) {
-            Shield.craft(inventory);
-        }
-    }
-
     public Direction getDirection() {
         return null;
     }
 
     @Override
-    public boolean isCollidable(Entity entity) {
+    public boolean collision(Entity entity) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -331,6 +318,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     @Override
     public void moveTo(Position position) {
         // TODO Auto-generated method stub
-        
+
     }
 }

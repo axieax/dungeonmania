@@ -9,4 +9,10 @@ public class Sword extends CollectableEquipment implements AttackEquipment {
         super("sword", position);
     }
 
+    @Override
+    public int setAttackMultiplier(int attackDamage) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

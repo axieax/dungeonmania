@@ -5,7 +5,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public abstract class MovingEntity extends Entity implements MovingEntityBehaviour  {
+public abstract class MovingEntity extends Entity {
     private int health;
     private int attackDamage;
     private int defaultBattleDamage;
@@ -64,7 +64,7 @@ public abstract class MovingEntity extends Entity implements MovingEntityBehavio
     
     public abstract Direction getDirection();
 
-    public abstract boolean isCollidable(Entity entity);
+    public abstract boolean collision(Entity entity);
 
     public abstract void moveTo(Position position);
 }

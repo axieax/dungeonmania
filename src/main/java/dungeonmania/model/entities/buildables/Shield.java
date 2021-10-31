@@ -2,6 +2,7 @@ package dungeonmania.model.entities.buildables;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.DefenceEquipment;
+import dungeonmania.model.entities.movings.Inventory;
 
 public class Shield extends BuildableEquipment implements DefenceEquipment {
 
@@ -13,7 +14,8 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
         super("shield", null);
     }
 
-    public static boolean isBuildable(Inventory inventory) {
+    @Override
+    public boolean isBuildable(Inventory inventory) {
         return (
             inventory.hasItemQuantity("wood", WOOD_NEEDED) &&
             (
@@ -23,7 +25,8 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
         );
     }
 
-    public static void craft(Inventory inventory) {
+    @Override
+    public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
             inventory.removeItemQuantity("Wood", WOOD_NEEDED);
             if (inventory.hasItemQuantity("Treasure", TREASURE_NEEDED)) {
@@ -33,5 +36,11 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
             }
             inventory.addItem(new Shield());
         }
+    }
+
+    @Override
+    public int setDefenceMultiplier(int defendAmount) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }
