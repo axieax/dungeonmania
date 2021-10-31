@@ -241,7 +241,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
         if (canMove) {
             this.setPosition(newPlayerPos);
-            // TODO: should we tick first or move first?
             this.tick(game);
             this.notifyObservers();
         }

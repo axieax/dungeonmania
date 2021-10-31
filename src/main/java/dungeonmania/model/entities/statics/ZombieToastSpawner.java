@@ -9,7 +9,6 @@ import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.util.Position;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,17 +44,21 @@ public class ZombieToastSpawner extends Entity implements Tickable {
             new Position(x, y + 1),
             new Position(x - 1, y),
             new Position(x + 1, y),
-            new Position(x, y - 1),
+            new Position(x, y - 1)
         );
         List<Position> openSquares = new ArrayList<>();
-        positions.stream().forEach(position -> {
-            if (game.getEntities(position) == null) openSquares.add(position);
-        });
+        positions
+            .stream()
+            .forEach(
+                position -> {
+                    if (game.getEntities(position) == null) openSquares.add(position);
+                }
+            );
 
         if (!openSquares.isEmpty()) {
             Random rand = new Random();
             Position randPosition = openSquares.get(rand.nextInt(openSquares.size()));
-            game.addEntity(new ZombieToast(randPosition, (SubjectPlayer)game.getCharacter()));
-        } 
+            game.addEntity(new ZombieToast(randPosition, (SubjectPlayer) game.getCharacter()));
+        }
     }
 }

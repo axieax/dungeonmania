@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Shield;
@@ -13,6 +15,8 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Door;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -23,7 +27,7 @@ public class ShieldTest {
      */
     @Test
     public void buildTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
         // To craft a shield, we need 2 wood and 1 treasure
         Wood wood1 = new Wood(new Position(1, 0));
@@ -57,7 +61,7 @@ public class ShieldTest {
      */
     @Test
     public void buildTestAlternate() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
         // To craft a shield, we need 2 wood and 1 key
         Wood wood1 = new Wood(new Position(1, 0));
@@ -98,7 +102,7 @@ public class ShieldTest {
      * Test durability of Shield.
      */
     public void durabilityTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
         Wood wood1 = new Wood(new Position(1, 0));
         Wood wood2 = new Wood(new Position(2, 0));

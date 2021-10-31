@@ -74,7 +74,7 @@ public abstract class Entity {
         return this.position.getY();
     }
 
-    public EntityResponse getInfo() {
+    public EntityResponse getEntityResponse() {
         return new EntityResponse(
             id,
             this.getClass().getSimpleName(),

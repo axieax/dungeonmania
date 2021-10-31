@@ -3,9 +3,13 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -17,7 +21,7 @@ public class TheOneRingTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         TheOneRing ring = new TheOneRing(new Position(1, 1));
         game.addEntity(ring);
 
@@ -29,11 +33,11 @@ public class TheOneRingTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         TheOneRing ring = new TheOneRing(new Position(1, 1));
         game.addEntity(ring);
 
-        Player player = new Player(, new Position(0, 1));
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        

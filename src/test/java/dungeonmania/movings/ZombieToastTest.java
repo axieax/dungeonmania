@@ -19,7 +19,8 @@ import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
-import dungeonmania.model.goal.Goal;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Peaceful;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -27,7 +28,7 @@ import dungeonmania.util.Position;
 public class ZombieToastTest {
     @Test
     public void testZombieSpawnRateNormalModes() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -47,7 +48,7 @@ public class ZombieToastTest {
     
     @Test
     public void testBasicMovement() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -66,7 +67,7 @@ public class ZombieToastTest {
 
     @Test
     public void testWallBlockingMovement() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -93,7 +94,7 @@ public class ZombieToastTest {
 
     @Test
     public void testEdgeCornerMovement() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -117,13 +118,13 @@ public class ZombieToastTest {
    
     @Test
     public void testZombieCannotWalkThroughClosedDoor() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, player)
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
         
@@ -155,13 +156,13 @@ public class ZombieToastTest {
     @Test
     public void testPortalNoEffect() {
         // portals have no effect on zombies
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, player)
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
         
@@ -185,7 +186,7 @@ public class ZombieToastTest {
 
     @Test
     public void testZombmieCannotMoveBoulder() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);

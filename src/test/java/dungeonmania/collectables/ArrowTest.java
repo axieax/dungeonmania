@@ -2,9 +2,13 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -16,7 +20,7 @@ public class ArrowTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Arrow arrow = new Arrow(new Position(1, 1));
         game.addEntity(arrow);
 
@@ -28,7 +32,7 @@ public class ArrowTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Arrow arrow = new Arrow(new Position(1, 1));
         game.addEntity(arrow);
 

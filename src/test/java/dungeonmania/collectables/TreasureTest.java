@@ -2,9 +2,13 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -16,7 +20,7 @@ public class TreasureTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Treasure treasure = new Treasure(new Position(1, 1));
         game.addEntity(treasure);
 
@@ -28,7 +32,7 @@ public class TreasureTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Treasure treasure = new Treasure(new Position(1, 1));
         game.addEntity(treasure);
 
