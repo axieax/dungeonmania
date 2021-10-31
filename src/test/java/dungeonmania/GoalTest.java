@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -16,8 +17,10 @@ import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
+import dungeonmania.model.goal.AndComposite;
 import dungeonmania.model.goal.DestroyEnemies;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.goal.GoalComposite;
 import dungeonmania.model.goal.ToggleSwitch;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
@@ -278,5 +281,82 @@ public class GoalTest {
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
         // destroy spawner
         assertEquals("", game.interact(spawner.getId()).getGoals());
+    }
+
+    @Test
+    public final void testAndComposite() {
+        // setup entities
+        List<Entity> entities = Arrays.asList(
+            new Player(new Position(0, 0)),
+            // boulder can be pushed onto the switch
+            new Boulder(new Position(0, 4)),
+            new FloorSwitch(new Position(0, 5)),
+            // exit is nearby
+            new Exit(new Position(0, 2))
+        );
+        // setup goals
+        GoalComposite and = new AndComposite();
+        and.addGoal(new ExitCondition());
+        and.addGoal(new ToggleSwitch());
+        // check goal reached first
+        Game game = new Game("test", entities, and, null);
+        List<String> expected = Arrays.asList(":exit(1) AND :switch(1)", ":switch(1) AND :exit(1)");
+        assertTrue(expected.contains(game.tick("", Direction.UP).getGoals()));
+        // move onto exit
+        assertEquals(":switch(1)", game.tick("", Direction.UP).getGoals());
+        // move off exit
+        assertTrue(expected.contains(game.tick("", Direction.UP).getGoals()));
+        // push boulder onto switch
+        assertEquals(":exit(1)", game.tick("", Direction.UP).getGoals());
+        // move down
+        assertEquals(":exit(1)", game.tick("", Direction.DOWN).getGoals());
+        // all goals satisfied
+        assertEquals("", game.tick("", Direction.DOWN).getGoals());
+    }
+
+    @Test
+    public final void testOrComposite1() {
+        // setup entities
+        List<Entity> entities = Arrays.asList(
+            new Player(new Position(0, 0)),
+            new Treasure(new Position(-1, 1)), // go left to get Treasure
+            new Exit(new Position(1, -1))
+        );
+        // setup goals
+        GoalComposite and = new AndComposite();
+        and.addGoal(new ExitCondition());
+        and.addGoal(new ToggleSwitch());
+        // check goal reached first
+        Game game = new Game("test", entities, and, null);
+        List<String> expected = Arrays.asList(
+            ":treasure(1) AND :exit(1)",
+            ":exit(1) AND :treasure(1)"
+        );
+        assertTrue(expected.contains(game.tick("", Direction.UP).getGoals()));
+        // take treasure
+        assertEquals("", game.tick("", Direction.LEFT).getGoals());
+    }
+
+    @Test
+    public final void testOrComposite2() {
+        // setup entities
+        List<Entity> entities = Arrays.asList(
+            new Player(new Position(0, 0)),
+            new Treasure(new Position(-1, 1)),
+            new Exit(new Position(1, -1)) // go right to reach exit
+        );
+        // setup goals
+        GoalComposite and = new AndComposite();
+        and.addGoal(new ExitCondition());
+        and.addGoal(new ToggleSwitch());
+        // check goal reached first
+        Game game = new Game("test", entities, and, null);
+        List<String> expected = Arrays.asList(
+            ":treasure(1) AND :exit(1)",
+            ":exit(1) AND :treasure(1)"
+        );
+        assertTrue(expected.contains(game.tick("", Direction.UP).getGoals()));
+        // reach exit
+        assertEquals("", game.tick("", Direction.RIGHT).getGoals());
     }
 }
