@@ -242,18 +242,17 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void move(Game game, Direction direction) {
         this.setDirection(direction);
 
-        Position newPlayerPos = this.getPosition().translateBy(direction);
-        List<Entity> entities = game.getEntities(newPlayerPos);
+        List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(entity -> entity.interact(game, this));
 
-        List<Entity> updatedEntities = game.getEntities(newPlayerPos);
+        List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
         boolean canMove = true;
         for (Entity e : updatedEntities) {
             if (this.collision(e)) canMove = false;
         }
 
         if (canMove) {
-            this.setPosition(newPlayerPos);
+            this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
             this.notifyObservers();
         }
