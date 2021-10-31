@@ -89,8 +89,8 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     @Override
     public void addAlly(MovingEntity ally) {
         for (MovingEntity m : allies) {
-            // entity is already ally
-            if (m.getId() == ally.getId()) return;
+            // Entity is already ally
+            if (m.getId().equals(ally.getId())) return;
         }
         allies.add(ally);
     }
