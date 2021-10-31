@@ -230,6 +230,6 @@ public class DungeonManiaController {
         if (!(buildable.equals("bow") || buildable.equals("shield"))) {
             throw new IllegalArgumentException();
         }
-        return build(buildable);
+        return currentGame.build(buildable);
     }
 }
