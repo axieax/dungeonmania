@@ -42,11 +42,4 @@ public class ZombieRunState implements ZombieState {
         if (optimalPathPosition != null) this.zombie.setPosition(optimalPathPosition);
     }
 
-    public List<Position> getShortestPath(Game game, Entity fromEntity, Entity toEntity) {
-        // Get a list of node positions
-        List<Position> positionNodes = this.getAllFreePositions(game, fromEntity);
-
-
-    }
-
 }
