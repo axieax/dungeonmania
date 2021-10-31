@@ -138,9 +138,8 @@ public class DungeonManiaController {
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         if (!allGames().contains(name)) throw new IllegalArgumentException();
-        String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
         Mode mode = GameLoader.extractMode(name);
-        List<Entity> entities = GameLoader.extractEntities(name);
+        List<Entity> entities = GameLoader.extractEntities(name, mode);
         Goal goal = GameLoader.extractGoal(name);
         String dungeonName = GameLoader.extractDungeonName(name);
 
