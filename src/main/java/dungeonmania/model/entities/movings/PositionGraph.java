@@ -76,7 +76,7 @@ public class PositionGraph {
         // Breadth First Search Algorithm to find shortest path length
         while (!queue.isEmpty()) {
             Position vertex = queue.remove();
-            List<Position> adjacentPositions = game.getCardinallyAdjacentMoveablePositions(this.entity, vertex);
+            List<Position> adjacentPositions = game.getMoveablePositions(this.entity, vertex);
 
             for (Position currNode: adjacentPositions) {
                 if (visited.get(currNode)) {
