@@ -49,8 +49,6 @@ import org.json.JSONObject;
 
 public class EntityFactory {
 
-    private static final List<String> entityLayers = Arrays.asList("wall");
-
     private static final JSONObject loadDungeon(String dungeonName)
         throws IllegalArgumentException {
         try {
