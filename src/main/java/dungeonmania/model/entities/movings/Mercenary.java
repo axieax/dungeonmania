@@ -12,12 +12,9 @@ public class Mercenary extends MovingEntity implements Observer {
     public static final int MAX_MERCENARY_ATTACK_DMG = 5;
     public static final int TREASURE_REQUIRED_TO_BRIBE = 1;
     private static final int BATTLE_RADIUS = 5;
-
     public final double ARMOUR_DROP_RATE = 0.2;
     
-    private EnemyMovementState defaultState;
-    private EnemyMovementState runState;
-    private EnemyMovementState state;
+    private MovementState state;
 
     public Mercenary(Position position) {
         this(position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
@@ -25,10 +22,7 @@ public class Mercenary extends MovingEntity implements Observer {
 
     public Mercenary(Position position, int health, int attackDamage) {
         super("mercenary", position, health, attackDamage, true);
-        this.defaultState = new DefaultState(this);
-        this.runState = new RunState(this);
-
-        this.state = defaultState;
+        this.state = new DefaultState(this);
     }
 
     @Override
@@ -62,9 +56,9 @@ public class Mercenary extends MovingEntity implements Observer {
 
         Player character = (Player) player; 
         if (character.getState() instanceof PlayerInvincibleState && character.getAllies() == null) {
-            this.setState(getRunState());
+            this.setState(new RunState(this));
         } else {
-            this.setState(getDefaultState());
+            this.setState(new DefaultState(this));
         }
     }
 
@@ -96,16 +90,8 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
-    public void setState(EnemyMovementState state) {
+    public void setState(MovementState state) {
         this.state = state;
-    }
-
-    public EnemyMovementState getDefaultState() {
-        return defaultState;
-    }
-
-    public EnemyMovementState getRunState() {
-        return runState;
     }
 
     public int getDistanceToPlayer(Game game, Position playerPos) {

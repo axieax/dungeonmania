@@ -5,7 +5,7 @@ import java.util.List;
 import dungeonmania.model.Game;
 import dungeonmania.util.Position;
 
-public class RunState implements EnemyMovementState {
+public class RunState implements MovementState {
     private MovingEntity enemy;
 
     public RunState(MovingEntity enemy) {

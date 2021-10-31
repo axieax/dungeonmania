@@ -13,22 +13,18 @@ import dungeonmania.util.Position;
 public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_HEALTH = 20;
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
-
-    private EnemyMovementState defaultState;
-    private EnemyMovementState runState;
-    private EnemyMovementState state;
     public final double ARMOUR_DROP_RATE = 0.2;
 
+    private MovementState state;
+    
     public ZombieToast(Position position, SubjectPlayer player) {
         this(position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG, player);
     }
     
     public ZombieToast(Position position, int health, int attackDamage, SubjectPlayer player) {
         super("zombie_toast", position, health, attackDamage, true);
-        this.defaultState = new DefaultState(this);
-        this.runState = new RunState(this);
 
-        this.state = defaultState;
+        this.state = new DefaultState(this);
         player.attach(this);
     }
 
@@ -65,9 +61,9 @@ public class ZombieToast extends MovingEntity implements Observer {
 
         Player character = (Player) player; 
         if (character.getState() instanceof PlayerInvincibleState) {
-            this.setState(getRunState());
+            this.setState(new RunState(this));
         } else {
-            this.setState(getDefaultState());
+            this.setState(new DefaultState(this));
         }
     }
 
@@ -97,20 +93,12 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
     
     //////////////////////////////////////////////////////////////////
-    public void setState(EnemyMovementState state) {
+    public void setState(MovementState state) {
         this.state = state;
     }
 
-    public EnemyMovementState getState() {
+    public MovementState getState() {
         return state;
-    }
-
-    public EnemyMovementState getDefaultState() {
-        return defaultState;
-    }
-
-    public EnemyMovementState getRunState() {
-        return runState;
     }
 
     public void move(Game game, Position playerPos) {
