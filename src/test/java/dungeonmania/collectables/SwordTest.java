@@ -26,8 +26,9 @@ public class SwordTest {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Sword sword = new Sword(new Position(1, 1));
         game.addEntity(sword);
+        String swordId = sword.getId();
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("sword1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(swordId).getPosition()));
     }
 
     /**
