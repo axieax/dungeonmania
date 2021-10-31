@@ -23,8 +23,8 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
     @Override
     public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
-            inventory.removeItemQuantity("Wood", WOOD_NEEDED);
-            inventory.removeItemQuantity("Arrows", ARROWS_NEEDED);
+            inventory.removeItemQuantity("wood", WOOD_NEEDED);
+            inventory.removeItemQuantity("arrow", ARROWS_NEEDED);
             inventory.addItem(new Bow());
         }
     }

@@ -13,28 +13,25 @@ import dungeonmania.util.Position;
 public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_HEALTH = 20;
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
-
     public final double ARMOUR_DROP_RATE = 0.2;
 
-    private ZombieState randomZombieState;
-    private ZombieState runZombieState;
-    private ZombieState state;
-
+    private MovementState state;
+    
     public ZombieToast(Position position, SubjectPlayer player) {
         this(position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG, player);
     }
     
     public ZombieToast(Position position, int health, int attackDamage, SubjectPlayer player) {
         super("zombie_toast", position, health, attackDamage, true);
-        this.randomZombieState = new ZombieRandomState(this);
-        this.runZombieState = new ZombieRunState(this);
 
+        this.state = new DefaultState(this);
         player.attach(this);
     }
 
     @Override
     public void tick(Game game) {
-        state.move(game);
+        Position playerPos = game.getCharacter().getPosition();
+        state.move(game, playerPos);
     }
 
     /**
@@ -43,17 +40,12 @@ public class ZombieToast extends MovingEntity implements Observer {
      * @return true if Zombie can move onto that tile, else false
      */
     public boolean canZombieMoveOntoPosition(List<Entity> entitiesNewPos) {
-        for(Entity e: entitiesNewPos) {
-            if(e.getId() == "portal") {
-                // Portals have no effect on zombies
-                continue;
-            }
+        for(Entity entity: entitiesNewPos) {
+            // Portals have no effect on zombies
+            if (entity.getId().equals("portal")) continue;
             
-            if(!e.isPassable()) {
-                return false;
-            }
+            if (!entity.isPassable()) return false;
         }
-        
         return true;
     }
 
@@ -63,15 +55,15 @@ public class ZombieToast extends MovingEntity implements Observer {
      */
     @Override
     public void update(SubjectPlayer player) {
-        if(!(player instanceof Player)) {
+        if (!(player instanceof Player)) {
             return;
         }
 
         Player character = (Player) player; 
-        if(character.getState() instanceof PlayerInvincibleState) {
-            this.setState(getRunZombieState());
+        if (character.getState() instanceof PlayerInvincibleState) {
+            this.setState(new RunState(this));
         } else {
-             this.setState(randomZombieState);
+            this.setState(new DefaultState(this));
         }
     }
 
@@ -101,19 +93,37 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
     
     //////////////////////////////////////////////////////////////////
-    public void setState(ZombieState state) {
+    public void setState(MovementState state) {
         this.state = state;
     }
 
-    public ZombieState getState() {
+    public MovementState getState() {
         return state;
     }
 
-    public ZombieState getRandomZombieState() {
-        return randomZombieState;
-    }
+    public void move(Game game, Position playerPos) {
+        Position currPos = this.getPosition();
+        Set<Direction> chosen = new HashSet<>();
+        
+        // Choose a direction (other than none)
+        List<Direction> possibleDirections = Arrays.asList(
+            Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT
+        );
+        
+        // Choose a random direction
+        while(chosen.size() != possibleDirections.size()) {
+            Direction direction = possibleDirections.get((int) Math.random() % 4);
+            chosen.add(direction);
+            
+            Position newPos = currPos.translateBy(direction);
+            List<Entity> entitiesNewPos = game.getEntities(newPos);
 
-    public ZombieState getRunZombieState() {
-        return runZombieState;
+            if(entitiesNewPos == null || this.canZombieMoveOntoPosition(entitiesNewPos)) {
+                this.setPosition(newPos);
+                return;
+            }
+        }
+
+        // All 4 directions are blocked, do not move anywhere
     }
 }

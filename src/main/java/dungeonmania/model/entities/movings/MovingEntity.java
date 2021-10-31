@@ -31,13 +31,13 @@ public abstract class MovingEntity extends Entity implements Tickable {
 
     public void interact(Game game, MovingEntity character) { return; }
     
-    /**
-     * Returns true if the player has positive health, else false
-    */
     public void kill() {
         this.health = 0;
     }
 
+    /**
+     * Returns true if the player has positive health, else false
+    */
     public boolean isAlive() {
         return getHealth() > 0 ? true : false;
     }
