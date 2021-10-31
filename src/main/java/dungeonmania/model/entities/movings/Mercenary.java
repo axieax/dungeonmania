@@ -30,7 +30,7 @@ public class Mercenary extends MovingEntity implements Observer {
 
     @Override
     public void tick(Game game) {
-        Position playerPos = game.getCharacterPosition();
+        Position playerPos = game.getCharacter().getPosition();
         state.move(game, playerPos);
     }
 

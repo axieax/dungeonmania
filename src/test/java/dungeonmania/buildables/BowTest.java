@@ -3,6 +3,8 @@ package dungeonmania.buildables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
@@ -10,6 +12,8 @@ import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -20,7 +24,7 @@ public class BowTest {
      */
     @Test
     public void buildTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
         // To craft a bow, we need 1 wood and 3 arrows
         Wood wood = new Wood(new Position(1, 0));
@@ -56,7 +60,7 @@ public class BowTest {
      * Test durability of Bow.
      */
     public void durabilityTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
         Wood wood = new Wood(new Position(1, 0));
         Arrow arrow1 = new Arrow(new Position(1, 1));

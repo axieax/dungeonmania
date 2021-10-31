@@ -24,6 +24,8 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Wall;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Peaceful;
 import dungeonmania.response.models.DungeonResponse;
 
 import dungeonmania.response.models.EntityResponse;
@@ -471,7 +473,7 @@ public class CharacterTest {
     public void testItemsUsedToCraftRemoved() {
         // any items that are used to craft another a buildable entity should be
         // removed from the player's inventory, and are replaced with the built item
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -501,7 +503,7 @@ public class CharacterTest {
     @Test
     public void testCharacterCannotPickUpBombsItPlaced() {
         // removed from the player's inventory, and are replaced with the built item
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -529,7 +531,7 @@ public class CharacterTest {
     
     @Test
     public void testMovementDoesNotAffectHealth() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -543,7 +545,7 @@ public class CharacterTest {
 
     @Test
     public void testBattleReducesPlayerHealth() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
@@ -565,7 +567,7 @@ public class CharacterTest {
 
     @Test
     public void testInvisibleState() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
@@ -596,7 +598,7 @@ public class CharacterTest {
 
     @Test
     public void testInvincibleState() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
@@ -630,7 +632,7 @@ public class CharacterTest {
 
     @Test
     public void testCanPickUpMultiplePotions() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
@@ -655,7 +657,7 @@ public class CharacterTest {
     
     @Test
     public void testCanDrinkTwoPotions() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
