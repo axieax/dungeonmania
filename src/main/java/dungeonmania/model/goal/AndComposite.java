@@ -1,9 +1,11 @@
 package dungeonmania.model.goal;
 
+import dungeonmania.model.Game;
+
 public class AndComposite extends GoalComposite {
 
     @Override
-    public boolean evaluate() {
-        return getGoals().stream().allMatch(Goal::evaluate);
+    public boolean isComplete(Game game) {
+        return getGoals().stream().allMatch(g -> g.isComplete(game));
     }
 }
