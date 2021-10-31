@@ -16,6 +16,9 @@ public class ZombieRunState implements EnemyMovementState {
         this.zombie = zombie;
     }
 
+    /**
+     * Runs away from player
+     */
     @Override
     public void move(Game game, Position playerPos) {
         Position currPos = zombie.getPosition();
@@ -27,6 +30,7 @@ public class ZombieRunState implements EnemyMovementState {
 
         PositionGraph positionGraph = new PositionGraph(game, this.zombie);
 
+        // Move the zombie to the furthest possible position to the player
         for (Position position: possiblePositionsToMove) {
             int pathLen = positionGraph.BFS(this.zombie.getPosition(), playerPos);
             if (pathLen > optimalPathLength) {

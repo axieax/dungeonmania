@@ -1,9 +1,6 @@
 package dungeonmania.model.entities.movings;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -14,8 +11,8 @@ public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_HEALTH = 20;
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
 
-    private EnemyMovementState randomZombieState;
-    private EnemyMovementState runZombieState;
+    private EnemyMovementState defaultState;
+    private EnemyMovementState runState;
     private EnemyMovementState state;
 
     public ZombieToast(Position position, SubjectPlayer player) {
@@ -24,8 +21,8 @@ public class ZombieToast extends MovingEntity implements Observer {
     
     public ZombieToast(Position position, int health, int attackDamage, SubjectPlayer player) {
         super("zombie_toast", position, health, attackDamage);
-        this.randomZombieState = new ZombieRandomState(this);
-        this.runZombieState = new ZombieRunState(this);
+        this.defaultState = new ZombieDefaultState(this);
+        this.runState = new ZombieRunState(this);
 
         player.attach(this);
     }
@@ -63,9 +60,9 @@ public class ZombieToast extends MovingEntity implements Observer {
 
         Player character = (Player) player; 
         if (character.getState() instanceof PlayerInvincibleState) {
-            this.setState(getRunZombieState());
+            this.setState(getRunState());
         } else {
-             this.setState(randomZombieState);
+            this.setState(getDefaultState());
         }
     }
 
@@ -103,11 +100,11 @@ public class ZombieToast extends MovingEntity implements Observer {
         return state;
     }
 
-    public EnemyMovementState getRandomZombieState() {
-        return randomZombieState;
+    public EnemyMovementState getDefaultState() {
+        return defaultState;
     }
 
-    public EnemyMovementState getRunZombieState() {
-        return runZombieState;
+    public EnemyMovementState getRunState() {
+        return runState;
     }
 }

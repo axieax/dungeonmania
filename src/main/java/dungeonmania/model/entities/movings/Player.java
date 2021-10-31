@@ -223,10 +223,11 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         Position newPlayerPos = this.getPosition().translateBy(direction);
         List<Entity> entities = game.getEntities(newPlayerPos);
 
-        if (entities == null) { // no entities at new position
+        if (entities == null) {
+            // No entities at new position
             this.setPosition(newPlayerPos);
         } else {
-            // interact with any non-moving entities and determine if player can move onto this tile
+            // Interact with any non-moving entities and determine if player can move onto this tile
             boolean canMove = true;
             for (Entity e : entities) {
                 if (e instanceof MovingEntity) {
@@ -239,7 +240,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
                 }
             }
 
-            // battle with any moving entities
+            // Battle with any moving entities
             if (canMove) {
                 this.setPosition(newPlayerPos);
                 this.tick(game);

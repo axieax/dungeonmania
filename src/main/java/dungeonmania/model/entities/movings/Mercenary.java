@@ -33,10 +33,22 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     /**
-     * Change state if player is invincible and mercenary not ally of player
+     * If a player drinks an invincibility potion, and mercenary is not an ally,
+     * change the state of the mercenary to make sure it runs away
      */
     @Override
     public void update(SubjectPlayer player) { 
+        if (!(player instanceof Player)) {
+            return;
+        }
+
+        Player character = (Player) player; 
+        if (character.getState() instanceof PlayerInvincibleState && character.getAllies() == null) {
+            this.setState(getRunState());
+        } else {
+            this.setState(getDefaultState());
+        }
+        
         // TODO: If a player is fighting an enemy, mercenary moves twice as fast to take advantage
     }
 

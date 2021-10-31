@@ -10,10 +10,10 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class ZombieRandomState implements EnemyMovementState {
+public class ZombieDefaultState implements EnemyMovementState {
     private ZombieToast zombie;
 
-    public ZombieRandomState(ZombieToast zombie) {
+    public ZombieDefaultState(ZombieToast zombie) {
         this.zombie = zombie;
     }
 
@@ -22,12 +22,12 @@ public class ZombieRandomState implements EnemyMovementState {
         Position currPos = zombie.getPosition();
         Set<Direction> chosen = new HashSet<>();
         
-        // choose a direction (other than none)
+        // Choose a direction (other than none)
         List<Direction> possibleDirections = Arrays.asList(
             Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT
         );
         
-        // choose a random direction
+        // Choose a random direction
         while(chosen.size() != possibleDirections.size()) {
             Direction direction = possibleDirections.get((int) Math.random() % 4);
             chosen.add(direction);
@@ -41,7 +41,7 @@ public class ZombieRandomState implements EnemyMovementState {
             }
         }
 
-        // all 4 directions are blocked, do not move anywhere
+        // All 4 directions are blocked, do not move anywhere
     }
     
 }
