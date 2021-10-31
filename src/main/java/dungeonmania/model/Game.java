@@ -96,11 +96,9 @@ public final class Game {
         positions.add(new Position(x, y - 1));
         getCardinallyAdjacentEntities(position)
             .stream()
-            .forEach(
-                e -> {
-                    if (from.collision(e)) positions.remove(e.getPosition());
-                }
-            );
+            .forEach(e -> {
+                if (from.collision(e)) positions.remove(e.getPosition());
+            });
         return positions;
     }
 
@@ -114,24 +112,19 @@ public final class Game {
     public final List<Entity> getCardinallyAdjacentEntities(Position position) {
         return getAdjacentEntities(position)
             .stream()
-            .filter(
-                e -> {
-                    // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                    Position difference = Position.calculatePositionBetween(
-                        e.getPosition(),
-                        position
-                    );
-                    int xDiff = Math.abs(difference.getX());
-                    int yDiff = Math.abs(difference.getY());
-                    return (
-                        // ensure both xDiff and yDiff are either 0 or 1
-                        (xDiff == (xDiff & 1)) &&
-                        (yDiff == (yDiff & 1)) &&
-                        // logical XOR to check x and y are different
-                        ((xDiff == 1) ^ (yDiff == 1))
-                    );
-                }
-            )
+            .filter(e -> {
+                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                Position difference = Position.calculatePositionBetween(e.getPosition(), position);
+                int xDiff = Math.abs(difference.getX());
+                int yDiff = Math.abs(difference.getY());
+                return (
+                    // ensure both xDiff and yDiff are either 0 or 1
+                    (xDiff == (xDiff & 1)) &&
+                    (yDiff == (yDiff & 1)) &&
+                    // logical XOR to check x and y are different
+                    ((xDiff == 1) ^ (yDiff == 1))
+                );
+            })
             .collect(Collectors.toList());
     }
 
@@ -147,7 +140,7 @@ public final class Game {
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
             this.getCharacter().getInventoryResponses(),
             this.getBuildables(),
-            goal.toString()
+            goal.toString(this)
         );
     }
 
@@ -170,15 +163,13 @@ public final class Game {
 
         // separate loop to avoid concurrency issues when zombie spawner adds new entity
         // to entities
-        tickables.forEach(
-            e -> {
-                if (e instanceof Player) {
-                    ((Player) e).move(this, movementDirection);
-                } else {
-                    ((Tickable) e).tick(this);
-                }
+        tickables.forEach(e -> {
+            if (e instanceof Player) {
+                ((Player) e).move(this, movementDirection);
+            } else {
+                ((Tickable) e).tick(this);
             }
-        );
+        });
         return getDungeonResponse();
     }
 
