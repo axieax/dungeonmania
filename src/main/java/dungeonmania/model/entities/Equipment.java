@@ -6,8 +6,8 @@ public abstract class Equipment extends Item {
 
     private int durability = 5;
 
-    public Equipment(Position position) {
-        super(position);
+    public Equipment(String prefix, Position position) {
+        super(prefix, position);
     }
 
     /**

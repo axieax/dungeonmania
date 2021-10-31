@@ -1,8 +1,10 @@
 package dungeonmania.model.entities.statics;
 
-import dungeonmania.model.Dungeon;
+import java.util.List;
+
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.MovingEntityBehaviour;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
 
 public class Portal extends Entity {
@@ -14,7 +16,7 @@ public class Portal extends Entity {
     }
 
     public Portal(Position position, String colour) {
-        super(position);
+        super("portal", position);
         this.colour = colour;
     }
 
@@ -24,12 +26,12 @@ public class Portal extends Entity {
      * the entity to go through by.
      */
     @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
-        this.teleport(dungeon, character);
+    public void interact(Game game, MovingEntity character) {
+        this.teleport(game, character);
     }
 
-    public Portal findPortal(Dungeon dungeon) {
-        return dungeon
+    public Portal findPortal(Game game) {
+        return game
             .getAllPortals()
             .stream()
             .filter(
@@ -43,12 +45,16 @@ public class Portal extends Entity {
      * Teleports the entity exactly to the tile where the corresponding portal is
      * located at.
      */
-    public void teleport(Dungeon dungeon, MovingEntityBehaviour character) {
-        Portal portal = this.findPortal(dungeon);
+    public void teleport(Game game, MovingEntity character) {
+        Portal portal = this.findPortal(game);
         Position teleportedPosition = portal.getPosition().translateBy(character.getDirection());
-        Entity entityAtPortal = dungeon.getEntityAtPosition(teleportedPosition);
-        if (portal != null && character.isCollidable(entityAtPortal)) {
-            character.moveTo(portal.getPosition());
+        List<Entity> entities = game.getEntities(teleportedPosition);
+        if (portal != null) {
+            boolean collision = false;
+            for (Entity entity : entities) {
+                if (!collision && character.collision(entity)) collision = true;
+            }
+            if (!collision) character.moveTo(portal.getPosition());
         }
     }
 }

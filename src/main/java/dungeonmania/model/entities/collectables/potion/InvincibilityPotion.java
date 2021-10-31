@@ -8,7 +8,7 @@ public class InvincibilityPotion extends Potion {
 
 
     public InvincibilityPotion(Position position) {
-        super(position);
+        super("invincibility_potion", position);
     }
 
     @Override

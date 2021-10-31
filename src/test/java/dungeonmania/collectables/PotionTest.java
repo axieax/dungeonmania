@@ -3,7 +3,7 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
@@ -19,10 +19,10 @@ public class PotionTest {
      */
     @Test
     public void instanceHealthPotionTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new HealthPotion("health1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new HealthPotion("health1", new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("health1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("health1").getPosition()));
     }
 
     /**
@@ -30,10 +30,10 @@ public class PotionTest {
      */
     @Test
     public void instanceInvincibilityPotionTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new InvincibilityPotion("invincibility1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new InvincibilityPotion("invincibility1", new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("invincibility1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("invincibility1").getPosition()));
     }
 
     /**
@@ -41,10 +41,10 @@ public class PotionTest {
      */
     @Test
     public void instanceInvisibilityPotionTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new InvisibilityPotion("invisibility1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new InvisibilityPotion("invisibility1", new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("invisibility1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("invisibility1").getPosition()));
     }
 
     /**
@@ -52,21 +52,21 @@ public class PotionTest {
      */
     @Test
     public void collectHealthPotionTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         String collectableId = "health1";
 
         HealthPotion item = new HealthPotion(collectableId, new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(dungeon.getEntity(collectableId) == null);
-        assertTrue(player.getItem(collectableId).equals(item));
+        assertTrue(game.getEntity(collectableId) == null);
+        assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 
     /**
@@ -74,21 +74,21 @@ public class PotionTest {
      */
     @Test
     public void collectInvincibilityPotionTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         String collectableId = "invincibility1";
 
         InvincibilityPotion item = new InvincibilityPotion(collectableId, new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(dungeon.getEntity(collectableId) == null);
-        assertTrue(player.getItem(collectableId).equals(item));
+        assertTrue(game.getEntity(collectableId) == null);
+        assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 
     /**
@@ -96,21 +96,21 @@ public class PotionTest {
      */
     @Test
     public void collectInvisibilityPotionTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
+        Game game = new Game(3, 3);
 
         String collectableId = "invisibility1";
 
         InvisibilityPotion item = new InvisibilityPotion(collectableId, new Position(1, 1));
 
-        dungeon.addEntity(item);
+        game.addEntity(item);
 
         Player player = new Player("player1", new Position(0, 1));
-        player.move(Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(dungeon.getEntity(collectableId) == null);
-        assertTrue(player.getItem(collectableId).equals(item));
+        assertTrue(game.getEntity(collectableId) == null);
+        assertTrue(player.getInventoryItem(collectableId).equals(item));
     }
 
     /**

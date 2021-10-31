@@ -3,7 +3,8 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.model.Dungeon;
+import dungeonmania.DungeonManiaController;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.movings.Player;
@@ -22,10 +23,10 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void instanceTest() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
 
-        assertTrue(new Position(1, 1).equals(dungeon.getEntity("zombietoastspawner1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity("zombietoastspawner1").getPosition()));
     }
 
     /**
@@ -33,17 +34,19 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastSpawnEveryCycle() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
+      
+        DungeonManiaController controller = new DungeonManiaController();
+        Game game = new Game(3, 3);
+        game.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
         
-        // Ticks the game 20 times (Please note that this will need to be changed if we are ticking inside the Game class)
+        // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
-            dungeon.tick();
+            controller.tick(null, Direction.NONE);
         }
 
         // Check that only one zombie toast has spawned
         int count = 0;
-        for (Entity entity : dungeon.getAllEntities()) {
+        for (Entity entity : game.getAllEntities()) {
             if (entity instanceof ZombieToast) {
                 ZombieToast zombieToast = (ZombieToast) entity;
                 if (zombieToast.getPosition().equals(new Position(1, 0))) count++;
@@ -61,21 +64,21 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastSurroundedByWalls() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
 
         // The zombie toast spawner is surrounded by either walls or boulders
-        dungeon.addEntity(new Wall("wall1", new Position(0, 0)));
-        dungeon.addEntity(new Wall("wall2", new Position(0, 1)));
-        dungeon.addEntity(new Wall("wall3", new Position(0, 2)));
-        dungeon.addEntity(new Wall("wall4", new Position(1, 0)));
-        dungeon.addEntity(new Wall("wall5", new Position(1, 2)));
-        dungeon.addEntity(new Wall("wall6", new Position(2, 0)));
-        dungeon.addEntity(new Wall("wall7", new Position(2, 1)));
-        dungeon.addEntity(new Wall("wall8", new Position(2, 2)));
+        game.addEntity(new Wall("wall1", new Position(0, 0)));
+        game.addEntity(new Wall("wall2", new Position(0, 1)));
+        game.addEntity(new Wall("wall3", new Position(0, 2)));
+        game.addEntity(new Wall("wall4", new Position(1, 0)));
+        game.addEntity(new Wall("wall5", new Position(1, 2)));
+        game.addEntity(new Wall("wall6", new Position(2, 0)));
+        game.addEntity(new Wall("wall7", new Position(2, 1)));
+        game.addEntity(new Wall("wall8", new Position(2, 2)));
 
         // Check that there are no zombie toasts spawned
-        for (Entity entity : dungeon.getAllEntities()) {
+        for (Entity entity : game.getAllEntities()) {
             if (entity instanceof ZombieToast) {
                 fail("ZombieToast spawned even though there are no open squares");
             }
@@ -87,17 +90,17 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastCannotSpawn() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
 
         // The zombie toast spawner is blocked by boulders in the four cardinal directions
-        dungeon.addEntity(new Boulder("boulder1", new Position(0, 1)));
-        dungeon.addEntity(new Boulder("boulder2", new Position(1, 0)));
-        dungeon.addEntity(new Boulder("boulder3", new Position(1, 2)));
-        dungeon.addEntity(new Boulder("boulder4", new Position(2, 1)));
+        game.addEntity(new Boulder("boulder1", new Position(0, 1)));
+        game.addEntity(new Boulder("boulder2", new Position(1, 0)));
+        game.addEntity(new Boulder("boulder3", new Position(1, 2)));
+        game.addEntity(new Boulder("boulder4", new Position(2, 1)));
 
         // Check that there are no zombie toasts spawned
-        for (Entity entity : dungeon.getAllEntities()) {
+        for (Entity entity : game.getAllEntities()) {
             if (entity instanceof ZombieToast) {
                 fail("ZombieToast spawned even though there are no open squares");
             }
@@ -109,21 +112,21 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastDestroySpawner() {
-        Dungeon dungeon = new Dungeon(3, 3);
-        dungeon.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
-        dungeon.addEntity(new Sword("sword", new Position(3, 1)));
+        Game game = new Game(3, 3);
+        game.addEntity(new ZombieToastSpawner("zombietoastspawner1", new Position(1, 1)));
+        game.addEntity(new Sword("sword", new Position(3, 1)));
 
         Player player = new Player("player1", new Position(3, 2));
         
         // Player picks up sword
-        player.move(Direction.UP);
+        player.move(game, Direction.UP);
 
         // Player moves to the right of the zombie toast spawner
         // They will interact with it, destroying the zombie toast spawner with the sword
-        player.move(Direction.LEFT);
+        player.move(game, Direction.LEFT);
         
         // Check that the zombie toast spawner has been destroyed
-        assertTrue(dungeon.getEntity("zombietoastspawner1") == null);
+        assertTrue(game.getEntity("zombietoastspawner1") == null);
     }
 
 }

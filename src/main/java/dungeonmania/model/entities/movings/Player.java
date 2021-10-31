@@ -1,6 +1,5 @@
 package dungeonmania.model.entities.movings;
 
-import dungeonmania.model.Dungeon;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
@@ -8,8 +7,10 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
+import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -30,7 +31,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     private List<Observer> observers = new ArrayList<>();
 
     public Player(Position position, int health, int attackDamage) {
-        super(position, health, attackDamage, health * attackDamage / 5);
+        super("player", position, health, attackDamage, health * attackDamage / 5);
         this.state = new PlayerDefaultState(this);
     }
 
@@ -42,15 +43,15 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * Conduct any required tasks for a player after it has moved into its new position
      */
     @Override
-    public void tick(Dungeon dungeon) {
-        List<Entity> entities = dungeon.getEntitiesAtPosition(this.getPosition());
+    public void tick(Game game) {
+        List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
             if (!(e instanceof MovingEntity)) {
                 continue;
             }
 
             MovingEntity opponent = (MovingEntity) e;
-            this.battle(dungeon, opponent);
+            this.battle(game, opponent);
         }
         this.state.updateState(this);
     }
@@ -63,16 +64,23 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @param opponent entity the character is fighting
      */
     @Override
-    public void battle(Dungeon dungeon, MovingEntity opponent) {
+    public void battle(Game game, MovingEntity opponent) {
         state.battle(opponent);
 
-        // if either character or entity is dead, remove it
         if (this.getHealth() <= 0) {
-            dungeon.removeEntity(this);
+            Item item = this.findInventoryItem("one_ring");
+            if (item != null && item instanceof Consumable) {
+                // use one ring if it is in inventory
+                ((Consumable) item).consume(this);
+            } else {
+                // entity is dead, remove it
+                game.removeEntity(this);
+            }
         }
 
+        // if either entity is dead, remove it
         if (opponent.getHealth() <= 0) {
-            dungeon.removeEntity(opponent);
+            game.removeEntity(opponent);
             this.inBattle = false;
         }
     }
@@ -86,8 +94,19 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.addInventoryItem(item);
     }
 
+    /**
+     * Given a buildableItem, builds it if it is craftable
+     */
     @Override
-    public void build(String itemId) {}
+    public void craft(BuildableEquipment equipment) {
+        if (equipment.isBuildable(inventory)) {
+            equipment.craft(inventory);
+        }
+    }
+
+    public boolean checkBuildable(BuildableEquipment equipment) {
+        return equipment.isBuildable(this.inventory);
+    } 
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
@@ -98,8 +117,8 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return inventory.getItem(itemId);
     }
 
-    public Item findInventoryItem(String className) {
-        return inventory.findItem(className);
+    public Item findInventoryItem(String prefix) {
+        return inventory.findItem(prefix);
     }
 
     public void addInventoryItem(Item item) {
@@ -131,19 +150,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             .collect(Collectors.toList());
     }
 
-    public boolean canCraft(String className) {
-        if (className.equals(Bow.class.getSimpleName())) {
-            return Bow.isBuildable(inventory);
-        } else if (className.equals(Shield.class.getSimpleName())) {
-            return Shield.isBuildable(inventory);
-        }
-        return false;
-    }
-
     @Override
     public List<ItemResponse> getInventoryResponses() {
-        // TODO Auto-generated method stub
-        return null;
+        return inventory.getInventoryResponses();
     }
 
     /**
@@ -208,13 +217,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * Interacts with any entity that is on the tile the character is about to move into.
      * Upon movement, any observers are notified. If an entity blocks the player, then the
      * player does not move at all.
-     * @param dungeon
+     * @param game
      * @param direction
      */
     @Override
-    public void move(Dungeon dungeon, Direction direction) {
+    public void move(Game game, Direction direction) {
         Position newPlayerPos = this.getPosition().translateBy(direction);
-        List<Entity> entities = dungeon.getEntitiesAtPosition(newPlayerPos);
+        List<Entity> entities = game.getEntities(newPlayerPos);
 
         if (entities == null) { // no entities at new position
             this.setPosition(newPlayerPos);
@@ -226,7 +235,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
                     continue;
                 }
 
-                e.interact(dungeon, this);
+                e.interact(game, this);
                 if (!e.isPassable()) {
                     canMove = false;
                 }
@@ -235,18 +244,14 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             // battle with any moving entities
             if (canMove) {
                 this.setPosition(newPlayerPos);
-                this.tick(dungeon);
+                this.tick(game);
                 this.notifyObservers();
             }
         }
         this.notifyObservers();
     }
 
-    @Override
-    public void interact(Dungeon dungeon, MovingEntityBehaviour character) {
-        // TODO Auto-generated method stub
-
-    }
+    public void interact(Game game, MovingEntity character) {}
 
     @Override
     public void attach(Observer observer) {
@@ -271,8 +276,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @return true if player is wearing armour, otherwise false
      */
     public boolean hasArmour() {
-        Item armour = findInventoryItem("Armour");
-        return armour == null ? false : true;
+        return findInventoryItem("armour") != null;
     }
 
     public void reduceArmourDurability() {}
@@ -283,12 +287,12 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.state = state;
     }
 
-    public boolean hasKey() {
-        return false;
+    public PlayerState getState() {
+        return state;
     }
 
-    public Direction getDirection() {
-        return null;
+    public boolean hasKey() {
+        return false;
     }
 
     public Key getKey() {
@@ -305,11 +309,19 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 
-    public void craft(Game game, String className) {
-        if (className.equals(Bow.class.getSimpleName())) {
-            Bow.craft(inventory);
-        } else if (className.equals(Shield.class.getSimpleName())) {
-            Shield.craft(inventory);
-        }
+    public Direction getDirection() {
+        return null;
+    }
+
+    @Override
+    public boolean collision(Entity entity) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void moveTo(Position position) {
+        // TODO Auto-generated method stub
+
     }
 }
