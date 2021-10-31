@@ -27,13 +27,13 @@ public class PlayerDefaultState implements PlayerState {
         // battles only last a single tick
         while (player.getHealth() >= 0 && opponent.getHealth() >= 0) {
 
-            int damageToOpponent = player.getAttackStat();
-            int damageToPlayer = player.applyDefenceToOpponentAttack(opponent.getAttackStat());
+            int playerAttackDamage = player.getTotalAttackDamage();
+            int opponentAttackDamage = player.applyDefenceToOpponentAttack(opponent.getBaseAttackDamage());
             
             // use durability of defensive equipments
             List<Equipment> defenseEquipments = player.getDefenceEquipmentList();
             defenseEquipments.forEach(defenseEquipment -> defenseEquipment.useEquipment(player));
-            player.setHealth(player.getHealth() - damageToPlayer);
+            player.setHealth(player.getHealth() - ((opponent.getHealth() * playerAttackDamage) / 10));
             
             // Use all attack equipments only when it is not enough to kill the opponent
             List<Equipment> attackEquipments = player.getAttackEquipmentList();
@@ -42,7 +42,7 @@ public class PlayerDefaultState implements PlayerState {
                 currEquipment.useEquipment(player);
                 attackEquipments.remove(currEquipment);
             }
-            opponent.setHealth(opponent.getHealth() - damageToOpponent);
+            opponent.setHealth(opponent.getHealth() - ((player.getHealth() * opponentAttackDamage) / 10));
         }
 
         // remove the entity from the game if dead after battle.

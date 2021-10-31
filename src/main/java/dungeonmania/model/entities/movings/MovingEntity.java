@@ -8,7 +8,6 @@ import dungeonmania.util.Position;
 public abstract class MovingEntity extends Entity {
     private int health;
     private int attackDamage;
-    private int defaultBattleDamage;
 
     public final double ARMOUR_DROP_RATE = 0;
     public final double THE_ONE_RING_DROP_RATE = 0.1; // 10% of dropping one_ring
@@ -17,12 +16,6 @@ public abstract class MovingEntity extends Entity {
         super(prefix, position, true, true);
         this.health = health;
         this.attackDamage = attackDamage;
-        this.defaultBattleDamage = this.getHealth() *  this.getAttackStat() / 10;
-    }
-
-    public MovingEntity(String prefix, Position position, int health, int attackDamage, int defaultBattleDamage) {
-        this(prefix, position, health, attackDamage);
-        this.defaultBattleDamage = defaultBattleDamage;
     }
     
     public abstract void tick(Game game);
@@ -49,21 +42,10 @@ public abstract class MovingEntity extends Entity {
         this.health = health;
     }
     
-    public int getAttackStat() {
+    public int getBaseAttackDamage() {
         return attackDamage;
     }
     
-    public void setAttackDamage(int attackDamage) {
-        this.attackDamage = attackDamage;
-    }
-    
-    public int getDefaultBattleDamange() {
-        return this.getHealth() *  this.getAttackStat() / 5;
-    }
-
-    public void setDefaultBattleDamage(int defaultBattleDamage) {
-        this.defaultBattleDamage = defaultBattleDamage;
-    }
     
     public abstract Direction getDirection();
 

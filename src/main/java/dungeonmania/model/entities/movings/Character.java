@@ -24,9 +24,9 @@ public interface Character {
     
     public List<Equipment> getEquipmentList();
 
-    public List<AttackEquipment> getAttackEquipmentList();
+    public List<Equipment> getAttackEquipmentList();
     
-    public List<DefenceEquipment> getDefenceEquipmentList();
+    public List<Equipment> getDefenceEquipmentList();
     
     public List<ItemResponse> getInventoryResponses();
 

@@ -27,7 +27,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     private List<Observer> observers = new ArrayList<>();
 
     public Player(Position position, int health, int attackDamage) {
-        super("player", position, health, attackDamage, health * attackDamage / 5);
+        super("player", position, health, attackDamage);
         this.state = new PlayerDefaultState(this);
     }
 
@@ -149,10 +149,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * This includes any attack damage provided by equipment e.g. sword
      * @return a positive integer indicating the amount of attack
      */
-    @Override
-    public int getAttackStat() {
+    public int getTotalAttackDamage() {
         // Normal damage inflicted by player
-        int damageToOpponent = this.getDefaultBattleDamange();
+        int damageToOpponent = this.getBaseAttackDamage();
 
         // any extra attack damage provided by equipment
         for (Equipment e : getAttackEquipmentList()) {
@@ -162,7 +161,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
         // any extra attack damage provided by allies
         for (MovingEntity a : this.getAllies()) {
-            damageToOpponent += a.getDefaultBattleDamange();
+            damageToOpponent += a.getBaseAttackDamage();
         }
 
         return damageToOpponent;
