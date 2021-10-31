@@ -140,8 +140,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     @Override
     public List<ItemResponse> getInventoryResponses() {
-        // TODO Auto-generated method stub
-        return null;
+        return inventory.getInventoryResponses();
     }
 
     /**
