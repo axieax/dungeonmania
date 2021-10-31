@@ -30,7 +30,7 @@ public class ZombieToastSpawner extends Entity implements Tickable {
      * the player destroys the spawner and the weapon loses durability.
      */
     @Override
-    public void interact(Game game, MovingEntity character){
+    public void interact(Game game, MovingEntity character) {
         if (character instanceof Player) {
             Player player = (Player) character;
             if (player.hasWeapon()) {
@@ -43,6 +43,7 @@ public class ZombieToastSpawner extends Entity implements Tickable {
 
     @Override
     public void tick(Game game) {
+        currTickRate++;
         if (currTickRate % tickRate == 0) {
             int x = this.getX();
             int y = this.getY();
@@ -57,7 +58,7 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                 .stream()
                 .forEach(
                     position -> {
-                        if (game.getEntities(position) == null) openSquares.add(position);
+                        if (game.getEntities(position).isEmpty()) openSquares.add(position);
                     }
                 );
 
@@ -73,6 +74,5 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                 );
             }
         }
-        currTickRate++;
     }
 }

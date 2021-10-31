@@ -2,6 +2,7 @@ package dungeonmania.model;
 
 import dungeonmania.EntityFactory;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
@@ -161,10 +162,15 @@ public final class Game {
     }
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection) {
-        entities
+        List<Tickable> tickables = entities
             .stream()
-            .filter(e -> e instanceof MovingEntity)
-            .forEach(e -> ((MovingEntity) e).tick(this));
+            .filter(e -> e instanceof Tickable)
+            .map(e -> (Tickable) e)
+            .collect(Collectors.toList());
+
+        // separate loop to avoid concurrency issues when zombie spawner adds new entity
+        // to entities
+        tickables.forEach(e -> ((Tickable) e).tick(this));
         return getDungeonResponse();
     }
 
