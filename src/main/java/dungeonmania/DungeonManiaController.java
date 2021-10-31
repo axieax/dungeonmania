@@ -1,18 +1,28 @@
 package dungeonmania;
 
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.model.Game;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DungeonManiaController {
+    private List<Game> games = new ArrayList <Game> ();
+    private Game currentGame;
 
     public DungeonManiaController() {}
 
@@ -54,48 +64,18 @@ public class DungeonManiaController {
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
         throws IllegalArgumentException {
-        /* Stub from FRONTEND.md */
-
-        List<EntityResponse> entities = new ArrayList<>();
-
-        // let's generate some walls
-        // all maps have to be fully surrounded by walls
-        // so the map we'll genreate is going to be
-        /**
-         *
-         * WWWWW W P W W D W WWWWW
-         *
-         * where P is the player, D is a door, and W is some walls
-         */
-
-        for (int x = 0; x < 5; x++) {
-            for (int y = 0; y < 4; y++) {
-                if (x == 0 || y == 0 || x == 4 || y == 3) {
-                    // only generate borders
-                    entities.add(
-                        new EntityResponse(
-                            "entity-" + x + " - " + y,
-                            "wall",
-                            new Position(x, y, 2),
-                            false
-                        )
-                    );
-                }
-            }
+        if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException();
+        if (!getGameModes().contains(gameMode)) throw new IllegalArgumentException();
+        String path = "/dungeons/" + dungeonName + ".java";
+        try {
+            String content = FileLoader.loadResourceFile(path);
+            Game newGame  = new Game (gameMode, content);
+            games.add (newGame);
+            currentGame = newGame;
+            return newGame.getDungeonResponse();
+        } catch (IOException e) {
+            return null;
         }
-
-        // now to add the player and coin
-        entities.add(new EntityResponse("entity-player", "player", new Position(2, 1, 2), false));
-        entities.add(new EntityResponse("entity-door", "door", new Position(2, 2, 2), false));
-
-        return new DungeonResponse(
-            "some-random-id",
-            dungeonName,
-            entities,
-            Arrays.asList(new ItemResponse("item-1", "bow"), new ItemResponse("item-2", "sword")),
-            new ArrayList<>(),
-            ""
-        );
     }
 
     /**
@@ -106,7 +86,8 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        return null;
+        if (name.length() == 0) throw new IllegalArgumentException("Invalid name");
+        return currentGame.saveGame(name);
     }
 
     /**
@@ -117,7 +98,19 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException - If id is not a valid game id
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-        return null;
+        if (!allGames().contains(name)) throw new IllegalArgumentException();
+        String path = "/savedGames" + name;
+        try {
+            String content = new String(Files.readAllBytes(Path.of(getClass().getResource(path).toURI())));
+            Game newGame  = new Game (content);
+            games.add (newGame);
+            currentGame = newGame;
+            return newGame.getDungeonResponse();        
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException();
+        } catch (IOException a) {
+            return null;
+        }
     }
 
     /**
@@ -126,7 +119,19 @@ public class DungeonManiaController {
      * @return
      */
     public List<String> allGames() {
-        return new ArrayList<>();
+        try { // adapted from given code
+            String directory = "/savedGames";
+            Path root = Paths.get(getClass().getResource(directory).toURI());
+            return Files.walk(root).filter(Files::isRegularFile).map(x -> {
+                String nameAndExt = x.toFile().getName();
+                int extIndex = nameAndExt.lastIndexOf('.');
+                return nameAndExt.substring(0, extIndex > -1 ? extIndex : nameAndExt.length());
+            }).collect(Collectors.toList());
+        } catch (IOException e) {
+            return new ArrayList<>();
+        } catch (URISyntaxException a) {
+            return new ArrayList<>();
+        } 
     }
 
     /**
@@ -144,7 +149,14 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        return null;
+            if (itemUsed!= null && !(itemUsed.equals("bomb")|| 
+                itemUsed.equals("invincibility_potion")|| 
+                itemUsed.equals("invisibility_potion")|| 
+                itemUsed.equals("health_potion"))) {
+                throw new IllegalArgumentException ();
+            }
+        
+        return currentGame.tick(itemUsed, movementDirection);
     }
 
     /**
@@ -162,7 +174,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse interact(String entityId)
         throws IllegalArgumentException, InvalidActionException {
-        return null;
+        return currentGame.interact(entityId);
     }
 
     /**
@@ -176,6 +188,9 @@ public class DungeonManiaController {
      */
     public DungeonResponse build(String buildable)
         throws IllegalArgumentException, InvalidActionException {
-        return null;
+        if (!(buildable.equals("bow") || buildable.equals("shield"))) {
+            throw new IllegalArgumentException();
+        }
+        return build(buildable);
     }
 }
