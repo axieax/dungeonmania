@@ -13,7 +13,6 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.goal.ExitCondition;
-import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -61,8 +60,7 @@ public class BowTest {
      * Test durability of Bow.
      */
     public void durabilityTest() {
-        Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
         Wood wood = new Wood(new Position(1, 0));
         Arrow arrow1 = new Arrow(new Position(1, 1));
@@ -88,7 +86,7 @@ public class BowTest {
         Item item = player.getInventoryItem(bow.getId());
         assertTrue(((Bow) item).getDurability() == 5);
 
-        Mercenary mercenary = new Mercenary(new Position(2, 3), mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(new Position(2, 3));
         game.addEntity(mercenary);
 
         // Player moves to attack (interact with) the mercenary with the bow

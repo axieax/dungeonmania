@@ -5,7 +5,6 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
@@ -47,18 +46,9 @@ public final class Game {
         return entities.stream().filter(e -> e.getId().equals(entityId)).findFirst().orElse(null);
     }
 
-    public final Player getCharacter() {
+    public final Entity getCharacter() {
         // TODO: import Character class
-        return entities
-            .stream()
-            .filter(e -> e instanceof Player)
-            .map(e -> (Player) e)
-            .findFirst()
-            .orElse(null);
-    }
-
-    public final Mode getMode() {
-        return mode;
+        return entities.stream().filter(e -> e instanceof Character).findFirst().orElse(null);
     }
 
     public final List<Entity> getEntities() {
@@ -91,11 +81,9 @@ public final class Game {
         );
         getCardinallyAdjacentEntities(position)
             .stream()
-            .forEach(
-                e -> {
-                    if (from.collision(e)) positions.remove(e.getPosition());
-                }
-            );
+            .forEach(e -> {
+                if (from.collision(e)) positions.remove(e.getPosition());
+            });
         return positions;
     }
 
@@ -109,24 +97,19 @@ public final class Game {
     public final List<Entity> getCardinallyAdjacentEntities(Position position) {
         return getAdjacentEntities(position)
             .stream()
-            .filter(
-                e -> {
-                    // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                    Position difference = Position.calculatePositionBetween(
-                        e.getPosition(),
-                        position
-                    );
-                    int xDiff = Math.abs(difference.getX());
-                    int yDiff = Math.abs(difference.getY());
-                    return (
-                        // ensure both xDiff and yDiff are either 0 or 1
-                        (xDiff == (xDiff & 1)) &&
-                        (yDiff == (yDiff & 1)) &&
-                        // logical XOR to check x and y are different
-                        ((xDiff == 1) ^ (yDiff == 1))
-                    );
-                }
-            )
+            .filter(e -> {
+                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                Position difference = Position.calculatePositionBetween(e.getPosition(), position);
+                int xDiff = Math.abs(difference.getX());
+                int yDiff = Math.abs(difference.getY());
+                return (
+                    // ensure both xDiff and yDiff are either 0 or 1
+                    (xDiff == (xDiff & 1)) &&
+                    (yDiff == (yDiff & 1)) &&
+                    // logical XOR to check x and y are different
+                    ((xDiff == 1) ^ (yDiff == 1))
+                );
+            })
             .collect(Collectors.toList());
     }
 
@@ -139,21 +122,16 @@ public final class Game {
         return new DungeonResponse(
             dungeonId,
             dungeonName,
-            entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
-            this.getCharacter().getInventoryResponses(),
-            this.getBuildables(),
+            entities.stream().map(Entity::getEntityResponse),
+            getCharacter().getInventoryResponse(),
+            getBuildables(),
             goal.toString()
         );
     }
 
-    private final List<String> getBuildables() {
+    private final List<BuildableEquipment> getBuildables() {
         Character player = (Character) getCharacter();
-        EntityFactory
-            .getBuildableEquipments()
-            .stream()
-            .filter(eq -> player.checkBuildable(eq))
-            .map(eq -> eq.getPrefix())
-            .collect(Collectors.toList());
+        EntityFactory.getBuildableEquipments().stream().filter(eq -> player.checkBuildable(eq));
     }
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection) {

@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.movings.Inventory;
 

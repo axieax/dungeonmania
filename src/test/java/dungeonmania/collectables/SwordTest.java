@@ -10,7 +10,6 @@ import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
-import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -53,9 +52,7 @@ public class SwordTest {
      */
     @Test
     public void durabilityTest() {
-        Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Sword sword = new Sword(new Position(1, 1));
         game.addEntity(sword);
 
@@ -65,7 +62,7 @@ public class SwordTest {
         // Durability of sword when picked up should be 5
         assertTrue(sword.getDurability() == 5);
 
-        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(3, 1), mode.damageMultiplier());
+        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(3, 1));
         game.addEntity(spawner);
 
         player.move(game, Direction.RIGHT);

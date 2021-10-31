@@ -16,13 +16,8 @@ import java.util.Random;
 
 public class ZombieToastSpawner extends Entity implements Tickable {
 
-    private int tickRate;
-    private int currTickRate;
-
-    public ZombieToastSpawner(Position position, int tickRate) {
+    public ZombieToastSpawner(Position position) {
         super("zombie_toast_spawner", position);
-        this.tickRate = tickRate;
-        this.currTickRate = 0;
     }
 
     /**
@@ -43,36 +38,27 @@ public class ZombieToastSpawner extends Entity implements Tickable {
 
     @Override
     public void tick(Game game) {
-        if (currTickRate % tickRate == 0) {
-            int x = this.getX();
-            int y = this.getY();
-            List<Position> positions = Arrays.asList(
-                new Position(x, y + 1),
-                new Position(x - 1, y),
-                new Position(x + 1, y),
-                new Position(x, y - 1)
+        int x = this.getX();
+        int y = this.getY();
+        List<Position> positions = Arrays.asList(
+            new Position(x, y + 1),
+            new Position(x - 1, y),
+            new Position(x + 1, y),
+            new Position(x, y - 1)
+        );
+        List<Position> openSquares = new ArrayList<>();
+        positions
+            .stream()
+            .forEach(
+                position -> {
+                    if (game.getEntities(position) == null) openSquares.add(position);
+                }
             );
-            List<Position> openSquares = new ArrayList<>();
-            positions
-                .stream()
-                .forEach(
-                    position -> {
-                        if (game.getEntities(position) == null) openSquares.add(position);
-                    }
-                );
 
-            if (!openSquares.isEmpty()) {
-                Random rand = new Random();
-                Position randPosition = openSquares.get(rand.nextInt(openSquares.size()));
-                game.addEntity(
-                    new ZombieToast(
-                        randPosition,
-                        game.getMode().damageMultiplier(),
-                        (SubjectPlayer) game.getCharacter()
-                    )
-                );
-            }
+        if (!openSquares.isEmpty()) {
+            Random rand = new Random();
+            Position randPosition = openSquares.get(rand.nextInt(openSquares.size()));
+            game.addEntity(new ZombieToast(randPosition, (SubjectPlayer) game.getCharacter()));
         }
-        currTickRate++;
     }
 }

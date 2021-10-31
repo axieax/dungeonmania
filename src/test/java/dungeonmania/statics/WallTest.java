@@ -10,7 +10,6 @@ import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
-import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -68,8 +67,7 @@ public class WallTest {
      */
     @Test
     public void wallBlockEnemies() {
-        Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         game.addEntity(new Wall(new Position(0, 0)));
         game.addEntity(new Wall(new Position(0, 1)));
         game.addEntity(new Wall(new Position(0, 2)));
@@ -79,7 +77,7 @@ public class WallTest {
         game.addEntity(new Wall(new Position(2, 1)));
         game.addEntity(new Wall(new Position(2, 2)));
 
-        ZombieToast zombie = new ZombieToast(new Position(1, 1), mode.damageMultiplier());
+        ZombieToast zombie = new ZombieToast(new Position(1, 1));
         game.addEntity(zombie);
 
         zombie.tick(game);

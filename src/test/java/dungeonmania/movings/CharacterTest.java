@@ -21,12 +21,11 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
-import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Peaceful;
-import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 
 import dungeonmania.response.models.EntityResponse;
@@ -474,7 +473,7 @@ public class CharacterTest {
     public void testItemsUsedToCraftRemoved() {
         // any items that are used to craft another a buildable entity should be
         // removed from the player's inventory, and are replaced with the built item
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -504,7 +503,7 @@ public class CharacterTest {
     @Test
     public void testCharacterCannotPickUpBombsItPlaced() {
         // removed from the player's inventory, and are replaced with the built item
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -532,7 +531,7 @@ public class CharacterTest {
     
     @Test
     public void testMovementDoesNotAffectHealth() {
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -546,8 +545,7 @@ public class CharacterTest {
 
     @Test
     public void testBattleReducesPlayerHealth() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
@@ -555,8 +553,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(2, 1);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
-        game.addEntity(mercenary);
+        Mercenary mercenary = new Mercenary(mercenaryPos);
 
         game.tick(null, Direction.NONE);
 
@@ -570,8 +567,7 @@ public class CharacterTest {
 
     @Test
     public void testInvisibleState() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
@@ -580,8 +576,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(1, 4);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
-        game.addEntity(mercenary);
+        Mercenary mercenary = new Mercenary(mercenaryPos);
         
         Position potionPos = new Position(2, 2);
         game.addEntity(new InvisibilityPotion(potionPos));
@@ -603,8 +598,7 @@ public class CharacterTest {
 
     @Test
     public void testInvincibleState() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
@@ -613,8 +607,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(1, 4);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
-        game.addEntity(mercenary);
+        Mercenary mercenary = new Mercenary(mercenaryPos);
         
         Position potionPos = new Position(2, 2);
         game.addEntity(new InvincibilityPotion(potionPos));
@@ -639,10 +632,11 @@ public class CharacterTest {
 
     @Test
     public void testCanPickUpMultiplePotions() {
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
@@ -663,10 +657,11 @@ public class CharacterTest {
     
     @Test
     public void testCanDrinkTwoPotions() {
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
@@ -693,7 +688,7 @@ public class CharacterTest {
         return null;
     }
 
-    private List<Entity> sevenBySevenWallBoundary() {
+    private List<Entity> SevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
         
         // left border

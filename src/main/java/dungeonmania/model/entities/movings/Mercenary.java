@@ -16,8 +16,12 @@ public class Mercenary extends MovingEntity implements Observer {
     
     private MovementState state;
 
-    public Mercenary(Position position, int damageMultiplier) {
-        super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, true, damageMultiplier);
+    public Mercenary(Position position) {
+        this(position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG);
+    }
+
+    public Mercenary(Position position, int health, int attackDamage) {
+        super("mercenary", position, health, attackDamage, true);
         this.state = new DefaultState(this);
     }
 
@@ -62,9 +66,9 @@ public class Mercenary extends MovingEntity implements Observer {
      * Player attempts to bribe mercenary
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
+    public void interact(Game game, MovingEntity character) { 
         Player player = (Player) character;
-        if (player.hasItemQuantity("treasure", TREASURE_REQUIRED_TO_BRIBE)) {
+        if (player.getInventory().hasItemQuantity("treasure", TREASURE_REQUIRED_TO_BRIBE)) {
             player.addAlly(this);
         }
     }

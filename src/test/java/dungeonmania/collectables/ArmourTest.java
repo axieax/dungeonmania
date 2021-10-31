@@ -10,7 +10,6 @@ import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.goal.ExitCondition;
-import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -53,9 +52,7 @@ public class ArmourTest {
      */
     @Test
     public void durabilityTest() {
-        Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Armour item = new Armour(new Position(1, 1));
         game.addEntity(item);
 
@@ -65,7 +62,7 @@ public class ArmourTest {
         // Durability of armour when picked up should be 5
         assertTrue(item.getDurability() == 5);
 
-        Mercenary mercenary = new Mercenary(new Position(2, 1), mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(new Position(2, 1));
         game.addEntity(mercenary);
 
         // Player moves to attack (interact with) the mercenary
