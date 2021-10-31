@@ -1,7 +1,6 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
-import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.List;
 import java.util.Random;
@@ -13,7 +12,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     public final double ARMOUR_DROP_RATE = 0.2;
     private MovementState state;
 
-    public ZombieToast(Position position, int damageMultiplier) {
+    public ZombieToast(Position position, int damageMultiplier, SubjectPlayer player) {
         super(
             "zombie_toast",
             position,
@@ -23,10 +22,6 @@ public class ZombieToast extends MovingEntity implements Observer {
             damageMultiplier
         );
         this.state = new DefaultState(this);
-    }
-
-    public ZombieToast(Position position, int damageMultiplier, SubjectPlayer player) {
-        this(position, damageMultiplier);
         player.attach(this);
     }
 
@@ -58,19 +53,8 @@ public class ZombieToast extends MovingEntity implements Observer {
     public void interact(Game game, MovingEntity character) {}
 
     @Override
-    public Direction getDirection() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void moveTo(Position position) {
         this.setPosition(position);
-    }
-
-    @Override
-    public boolean isEnemy() {
-        return true;
     }
 
     //////////////////////////////////////////////////////////////////

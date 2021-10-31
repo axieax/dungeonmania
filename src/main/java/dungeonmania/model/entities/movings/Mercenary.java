@@ -19,10 +19,11 @@ public class Mercenary extends MovingEntity implements Observer {
     private MovementState state;
     private boolean moveTwice;
 
-    public Mercenary(Position position, int damageMultiplier) {
+    public Mercenary(Position position, int damageMultiplier, SubjectPlayer player) {
         super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, true, damageMultiplier);
         this.state = new DefaultState(this);
         this.moveTwice = false;
+        player.attach(this);
     }
 
     @Override

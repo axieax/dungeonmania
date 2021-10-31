@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 
-public class Player extends MovingEntity implements Character, SubjectPlayer {
+public class Player extends MovingEntity implements SubjectPlayer {
 
     public static final int MAX_CHARACTER_HEALTH = 100;
     public static final int CHARACTER_ATTACK_DMG = 10;
@@ -74,7 +74,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @return List<MovingEntity>
      */
-    @Override
     public List<MovingEntity> getAllies() {
         return this.allies;
     }
@@ -88,7 +87,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @param ally
      */
-    @Override
     public void addAlly(MovingEntity ally) {
         for (MovingEntity m : allies) {
             // Entity is already ally
@@ -148,7 +146,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @return List<Equipment>
      */
-    @Override
     public List<Equipment> getEquipmentList() {
         return inventory.getEquipmentList();
     }
@@ -224,7 +221,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @return List<ItemResponse>
      */
-    @Override
     public List<ItemResponse> getInventoryResponses() {
         return inventory.getInventoryResponses();
     }
@@ -257,7 +253,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @param game
      * @param direction
      */
-    @Override
     public void move(Game game, Direction direction) {
         this.setDirection(direction);
 
@@ -285,7 +280,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @param opponent entity the character is fighting
      */
-    @Override
     public void battle(Game game, MovingEntity opponent) {
         state.battle(game, opponent);
 
@@ -318,7 +312,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @param item that is able to placed in the player's inventory
      */
-    @Override
     public void collect(Item item) {
         this.addInventoryItem(item);
     }
@@ -328,7 +321,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @param equipment
      */
-    @Override
     public void craft(BuildableEquipment equipment) {
         if (equipment.isBuildable(inventory)) equipment.craft(inventory);
     }

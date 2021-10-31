@@ -54,7 +54,7 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
 
         // the response above should be equal to a new game as no entities have moved (gamemode is peaceful)
         DungeonResponse newResponse = controller.newGame(DUNGEON_NAME, GAME_MODE);
@@ -74,7 +74,7 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
         
         // move character down
         response = controller.tick(null, Direction.DOWN);
@@ -84,7 +84,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 2).toString(), characterPos.toString());
+        assertTrue(new Position(1, 2).equals(characterPos));
 
         // move character right
         response = controller.tick(null, Direction.RIGHT);
@@ -94,7 +94,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(2, 2).toString(), characterPos.toString());
+        assertTrue(new Position(2, 2).equals(characterPos));
 
         // move character up
         response = controller.tick(null, Direction.UP);
@@ -104,7 +104,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(2, 1).toString(), characterPos.toString());
+        assertTrue(new Position(2, 1).equals(characterPos));
 
         // move character left
         response = controller.tick(null, Direction.LEFT);
@@ -114,7 +114,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
 
     }
     
@@ -132,7 +132,7 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
 
 
         response = controller.tick(null, Direction.UP);
@@ -142,7 +142,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 8).toString(), characterPos.toString());
+        assertTrue(new Position(1, 8).equals(characterPos));
 
         // Ensure character cannot move left into dungeon wall
         response = controller.tick(null, Direction.LEFT);
@@ -174,7 +174,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 8).toString(), characterPos.toString());
+        assertTrue(new Position(1, 8).equals(characterPos));
 
         // Ensure character cannot move into dungeon wall placed in middle of map
         response = controller.tick(null, Direction.RIGHT);
@@ -183,7 +183,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(2, 8).toString(), characterPos.toString());
+        assertTrue(new Position(2, 8).equals(characterPos));
 
         // further movement attempts to the right result it the character staying in
         // the same position due to a non border wall
@@ -194,7 +194,7 @@ public class CharacterTest {
 
             characterPos = getCharacterPosition(entities);
             assertNotNull(characterPos);
-            assertEquals(new Position(2, 8).toString(), characterPos.toString());
+            assertTrue(new Position(2, 8).equals(characterPos));
         }
     }
 
@@ -211,7 +211,7 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
 
         
         // move the character 4 blocks to the right
@@ -226,7 +226,7 @@ public class CharacterTest {
 
             characterPos = getCharacterPosition(entities);
             assertNotNull(characterPos);
-            assertEquals(new Position(x, 1).toString(), characterPos.toString());
+            assertTrue(new Position(x, 1).equals(characterPos));
         }
 
         // one more movement to the right will result in character being on top of/using that entity
@@ -238,7 +238,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(6, 1).toString(), characterPos.toString());
+        assertTrue(new Position(6, 1).equals(characterPos));
     }
 
     @Test
@@ -253,7 +253,7 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
 
         // Check that as the character moves without interacting with any entities,
         // the dungeon response stays the same (except the position of the character)
@@ -266,7 +266,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 2).toString(), characterPos.toString());
+        assertTrue(new Position(1, 2).equals(characterPos));
 
         // compares two DungeonResponses and returns true if they are the same
         // NOTE: Comparison is only done on the actual state of the dungeon, and not
@@ -324,7 +324,7 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
         
         // move character to 6, 4
         for(int i = 0; i < 6; i++) {
@@ -340,7 +340,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(6, 4).toString(), characterPos.toString());
+        assertTrue(new Position(6, 4).equals(characterPos));
 
         // save the game
         assertDoesNotThrow(() -> controller.saveGame("1"));
@@ -378,7 +378,7 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
 
         // save the game
         assertDoesNotThrow(() -> controller.saveGame("1"));
@@ -394,7 +394,7 @@ public class CharacterTest {
 
             Position loadedCharacterPos = getCharacterPosition(loadedEntities);
             assertNotNull(loadedCharacterPos);
-            assertEquals(new Position(1, 2).toString(), loadedCharacterPos.toString());
+            assertTrue(new Position(1, 2).equals(loadedCharacterPos));
 
             // move right
             loadedResponse = innerController.tick(null, Direction.RIGHT);
@@ -404,7 +404,7 @@ public class CharacterTest {
 
             loadedCharacterPos = getCharacterPosition(loadedEntities);
             assertNotNull(loadedCharacterPos);
-            assertEquals(new Position(2, 2).toString(), loadedCharacterPos.toString());
+            assertTrue(new Position(2, 2).equals(loadedCharacterPos));
 
             // move up
             loadedResponse = innerController.tick(null, Direction.UP);
@@ -414,7 +414,7 @@ public class CharacterTest {
 
             loadedCharacterPos = getCharacterPosition(loadedEntities);
             assertNotNull(loadedCharacterPos);
-            assertEquals(new Position(2, 1).toString(), loadedCharacterPos.toString());
+            assertTrue(new Position(2, 1).equals(loadedCharacterPos));
 
             // move left
             // move up
@@ -425,7 +425,7 @@ public class CharacterTest {
 
             loadedCharacterPos = getCharacterPosition(loadedEntities);
             assertNotNull(loadedCharacterPos);
-            assertEquals(new Position(1, 1).toString(), loadedCharacterPos.toString());
+            assertTrue(new Position(1, 1).equals(loadedCharacterPos));
         });
     }
 
@@ -441,33 +441,33 @@ public class CharacterTest {
 
         Position characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 1).toString(), characterPos.toString());
+        assertTrue(new Position(1, 1).equals(characterPos));
 
 
         for(int i = 0; i < 13; i++) {
             response = controller.tick(null, Direction.DOWN);
         }
 
-        assertEquals(new Position(1, 13).toString(), characterPos.toString());
+        assertTrue(new Position(1, 13).equals(characterPos));
         
         for(int i = 0; i < 10; i++) {
             response = controller.tick(null, Direction.RIGHT);
         }
 
-        assertEquals(new Position(11, 14).toString(), characterPos.toString());
+        assertTrue(new Position(11, 14).equals(characterPos));
 
         response = controller.tick(null, Direction.UP); // collect arrow
         response = controller.tick(null, Direction.DOWN);
         response = controller.tick(null, Direction.RIGHT); // collect arrow
         response = controller.tick(null, Direction.RIGHT); // collect wood
 
-        assertEquals(new Position(13, 14).toString(), characterPos.toString());
+        assertTrue(new Position(13, 14).equals(characterPos));
         
         // build bow - player has sufficient items
         response = assertDoesNotThrow(() -> controller.build("bow"));
         
         // position after building should be the same
-        assertEquals(new Position(13, 14).toString(), characterPos.toString());
+        assertTrue(new Position(13, 14).equals(characterPos));
     }
     
     @Test
@@ -561,7 +561,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(2, 1);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         game.tick(null, Direction.NONE);
@@ -586,7 +586,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(1, 4);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
         
         Position potionPos = new Position(2, 2);
@@ -619,7 +619,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(1, 4);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
         
         Position potionPos = new Position(2, 2);

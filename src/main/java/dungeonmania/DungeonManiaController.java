@@ -87,7 +87,7 @@ public class DungeonManiaController {
         else if (gameMode.equals ("Standard")) mode = new Standard ();
         else if (gameMode.equals ("Peaceful")) mode = new Peaceful ();
 
-        List<Entity> entities = EntityFactory.extractEntities (dungeonName);
+        List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
         Goal goal = EntityFactory.extractGoal (dungeonName);
 
         Game newGame = new Game (dungeonName, entities, goal, mode);
@@ -138,9 +138,8 @@ public class DungeonManiaController {
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         if (!allGames().contains(name)) throw new IllegalArgumentException();
-        String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
         Mode mode = GameLoader.extractMode(name);
-        List<Entity> entities = GameLoader.extractEntities(name);
+        List<Entity> entities = GameLoader.extractEntities(name, mode);
         Goal goal = GameLoader.extractGoal(name);
         String dungeonName = GameLoader.extractDungeonName(name);
 

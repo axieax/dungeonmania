@@ -11,7 +11,6 @@ import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
-import dungeonmania.model.mode.Peaceful;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -59,7 +58,7 @@ public class MercenaryTest {
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         assertTrue(game.getEntity("player").getPosition().equals(new Position(1, 1)));
@@ -86,7 +85,7 @@ public class MercenaryTest {
             game.addEntity(new Wall(new Position(i + 1, 2)));
         }
 
-        Mercenary mercenary = new Mercenary(new Position(1, 3), mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(new Position(1, 3), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         game.tick(null, Direction.NONE);
@@ -123,7 +122,7 @@ public class MercenaryTest {
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         game.addEntity(new Treasure(new Position(1, 2)));
@@ -167,7 +166,11 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier());
+        Position playerPos = new Position(1, 1);
+        Player player = new Player(playerPos);
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(),player);
         game.addEntity(mercenary);
 
         Position exitPos = new Position(1, 2);
@@ -184,7 +187,11 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
-        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier());
+        Position playerPos = new Position(1, 1);
+        Player player = new Player(playerPos);
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(),player);
         game.addEntity(mercenary);
     
         Position doorPos = new Position(1, 2);
@@ -208,7 +215,7 @@ public class MercenaryTest {
         game.addEntity(player);
         
         Position mercenaryPos = new Position(2, 1);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
     
         game.tick(null, Direction.NONE);
@@ -233,7 +240,7 @@ public class MercenaryTest {
         game.addEntity(player);
         
         Position mercenaryPos = new Position(5, 5);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         // mercenary too far away from character
@@ -248,7 +255,7 @@ public class MercenaryTest {
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        Mercenary mercenary = new Mercenary(new Position(2, 1), mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(new Position(2, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         // mercenary in adjacent tile, so attempt bribe

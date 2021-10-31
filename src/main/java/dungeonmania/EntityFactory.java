@@ -88,15 +88,15 @@ public class EntityFactory {
 
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            entities.add(extractEntity(entityInfo, playerEntity, mode));
+            entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
             if (entityInfo.getString ("type").startsWith("player")) continue;
-            entities.add(extractEntity(entityInfo, playerEntity, mode));
+            entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
         }
         return entities;
     }
 
 
-    public static final Entity extractEntity(JSONObject entityInfo, Entity playerEntity, Mode mode) {
+    public static final Entity extractEntity(JSONObject entityInfo, Player player, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
@@ -165,17 +165,15 @@ public class EntityFactory {
             return new Spider(position, mode.damageMultiplier());
         } else if (type.startsWith("zombie_toast")) {
             position = position.asLayer(19);
-            Player currPlayer = (Player) playerEntity;
-            return new ZombieToast(position, mode.damageMultiplier(), currPlayer);
+            return new ZombieToast(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("mercenary")) {
             position = position.asLayer(20);
-            Player currPlayer = (Player) playerEntity;
-            return new Mercenary(position, mode.damageMultiplier(), currPlayer);
+            return new Mercenary(position, mode.damageMultiplier(), player);
         }
         return null;
     }
 
-    private Map<String, BuildableEquipment> buildableMap() {
+    private static Map<String, BuildableEquipment> buildableMap() {
         // dummy objects
         Map<String, BuildableEquipment> map = new HashMap<>();
         map.put("bow", new Bow());
@@ -183,11 +181,11 @@ public class EntityFactory {
         return map;
     }
 
-    public List<BuildableEquipment> allBuildables() {
+    public static List<BuildableEquipment> allBuildables() {
         return new ArrayList<>(buildableMap().values());
     }
 
-    public BuildableEquipment getBuildable(String buildable) {
+    public static BuildableEquipment getBuildable(String buildable) {
         BuildableEquipment item = buildableMap().get(buildable);
         return item.clone();
     }

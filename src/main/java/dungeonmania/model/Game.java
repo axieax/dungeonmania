@@ -3,7 +3,6 @@ package dungeonmania.model;
 import dungeonmania.EntityFactory;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
-import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Portal;
@@ -13,8 +12,6 @@ import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,7 +46,6 @@ public final class Game {
     }
 
     public final Player getCharacter() {
-        // TODO: import Character class
         return entities
             .stream()
             .filter(e -> e instanceof Player)
@@ -58,19 +54,15 @@ public final class Game {
             .orElse(null);
     }
 
-    public final Mode getMode() {
-        return mode;
-    }
-
     public final List<Entity> getEntities() {
         return entities;
     }
 
-    public final Goal getGoal () {
+    public final Goal getGoal() {
         return goal;
     }
 
-    public final Mode getMode () {
+    public final Mode getMode() {
         return mode;
     }
 
@@ -159,9 +151,9 @@ public final class Game {
     }
 
     private final List<String> getBuildables() {
-        Character player = (Character) getCharacter();
-        EntityFactory
-            .getBuildableEquipments()
+        Player player = getCharacter();
+        return EntityFactory
+            .allBuildables()
             .stream()
             .filter(eq -> player.checkBuildable(eq))
             .map(eq -> eq.getPrefix())
@@ -177,7 +169,7 @@ public final class Game {
     }
 
     public final DungeonResponse build(String buildable) {
-        Character player = (Character) getCharacter();
+        Player player = getCharacter();
         BuildableEquipment item = EntityFactory.getBuildable(buildable);
         player.craft(item);
         return getDungeonResponse();
