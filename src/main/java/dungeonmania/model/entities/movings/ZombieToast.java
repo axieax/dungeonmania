@@ -41,7 +41,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
 
     @Override
-    public boolean isCollidable(Entity entity) {
+    public boolean collision(Entity entity) {
         // TODO Auto-generated method stub
         return false;
     }

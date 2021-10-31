@@ -119,7 +119,7 @@ public class GoalTest {
         // pick up the bomb
         DungeonResponse resp = move(dmc, Direction.RIGHT, 1);
         assertEquals(switchGoal, resp.getGoals());
-        assertEquals("bomb", resp.getInventory().get(0).getType());
+        assertEquals("bomb", resp.getInventory().get(0).getPrefix());
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 3).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());

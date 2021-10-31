@@ -14,6 +14,7 @@ public class Exit extends Entity {
 
     @Override
     public void interact(Game game, MovingEntity character) {
-        if (character instanceof Player) game.reachedExit();
+        // TODO Auto-generated method stub
+        
     }
 }
