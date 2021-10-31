@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
@@ -65,10 +66,11 @@ public class GameLoader {
         List<Entity> entities = new ArrayList<>();
 
         Entity playerEntity = null;
+
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString ("type").startsWith("player")) {
-                playerEntity = extractEntity(entityInfo, playerEntity, mode);
+                playerEntity = extractEntity(entityInfo, null, mode);
                 entities.add(playerEntity);
             }
         }
@@ -76,13 +78,13 @@ public class GameLoader {
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString ("type").startsWith("player")) continue;
-            entities.add(extractEntity(entityInfo, playerEntity, mode));
+            entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
         }
 
         return entities;
     }
 
-    public static final Entity extractEntity(JSONObject entityInfo, Entity playerEntity, Mode mode) {
+    public static final Entity extractEntity(JSONObject entityInfo, Player currentPlayer, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
@@ -102,21 +104,20 @@ public class GameLoader {
             String colour = entityInfo.getString("colour");
             return new Portal(position, colour);
         } else if (type.startsWith("zombie_toast_spawner")) {
-            return new ZombieToastSpawner(position);
+            return new ZombieToastSpawner(position, mode.tickRate());
             // Moving Entities
         } else if (type.startsWith("spider")) {
-            Spider newSpider = new Spider (position);
+            Spider newSpider = new Spider(position, mode.damageMultiplier());
             int health = entityInfo.getInt("health");
             newSpider.setHealth (health);
             return newSpider;
         } else if (type.startsWith("zombie_toast")) {
-            Player currentPlayer = (Player) playerEntity;
-            ZombieToast newZombieToast = new ZombieToast(position, currentPlayer);
+            ZombieToast newZombieToast = new ZombieToast(position, mode.damageMultiplier(), currentPlayer); 
             int health = entityInfo.getInt("health");
             newZombieToast.setHealth(health);
             return newZombieToast;
         } else if (type.startsWith("mercenary")) {
-            Mercenary newMercenary = new Mercenary(position);
+            Mercenary newMercenary = new Mercenary(position, mode.damageMultiplier(), currentPlayer);
             int health = entityInfo.getInt("health");
             newMercenary.setHealth(health);
             return newMercenary;
@@ -154,6 +155,12 @@ public class GameLoader {
             Player player = new Player (position);
             int health = entityInfo.getInt("health");
             player.setHealth(health);
+            JSONArray inventory = entityInfo.getJSONArray("inventory");
+            for (int i = 0; i < inventory.length(); i++) {
+                JSONObject item = inventory.getJSONObject(i);
+                Item inventoryItem = (Item) extractEntity (item, currentPlayer, mode);
+                currentPlayer.addInventoryItem (inventoryItem);
+            }
             return player;
         } else if (type.startsWith("bow")) {
             Bow newBow = new Bow();
@@ -185,6 +192,7 @@ public class GameLoader {
 
     public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
         JSONObject json = loadSavedDungeon(dungeonName);
+        if (json.get("goal-condition") == null) return null;
         return EntityFactory.extractGoal(json.getJSONObject("goal-condition"));
     }
 }

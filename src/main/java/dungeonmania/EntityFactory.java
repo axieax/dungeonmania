@@ -130,15 +130,7 @@ public class EntityFactory {
             return new Portal(position, colour);
         } else if (type.startsWith("zombie_toast_spawner")) {
             position = position.asLayer(6);
-            return new ZombieToastSpawner(position);
-            // Moving Entities
-        } else if (type.startsWith("spider")) {
-            return new Spider(position);
-        } else if (type.startsWith("zombie_toast")) {
-            Player currentPlayer = (Player) playerEntity;
-            return new ZombieToast(position, currentPlayer);
-        } else if (type.startsWith("mercenary")) {
-            return new Mercenary(position);
+            return new ZombieToastSpawner(position, mode.tickRate());
             // Collectable Entities
         } else if (type.startsWith("treasure")) {
             position = position.asLayer(7);
@@ -174,8 +166,18 @@ public class EntityFactory {
         } else if (type.startsWith("one_ring")) {
             position = position.asLayer(17);
             return new TheOneRing(position);
-        } else if (type.startsWith("player")) {
-            return new Player(position);
+            // Moving Entities
+        } else if (type.startsWith("spider")) {
+            position = position.asLayer(18);
+            return new Spider(position, mode.damageMultiplier());
+        } else if (type.startsWith("zombie_toast")) {
+            position = position.asLayer(19);
+            Player currPlayer = (Player) playerEntity;
+            return new ZombieToast(position, mode.damageMultiplier(), currPlayer);
+        } else if (type.startsWith("mercenary")) {
+            position = position.asLayer(20);
+            Player currPlayer = (Player) playerEntity;
+            return new Mercenary(position, mode.damageMultiplier(), currPlayer);
         }
         return null;
     }
