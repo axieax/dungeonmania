@@ -39,4 +39,9 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
             inventory.addItem(new Shield());
         }
     }
+
+    @Override
+    public BuildableEquipment clone() {
+        return new Shield();
+    }
 }
