@@ -9,6 +9,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public abstract class MovingEntity extends Entity implements Tickable {
+    
     private int health;
     private int attackDamage;
     private Direction movingDirection;
@@ -34,11 +35,16 @@ public abstract class MovingEntity extends Entity implements Tickable {
         this.damageMultiplier = damageMultiplier;
     }
 
+
     public Direction getDirection() {
         return this.movingDirection;
     }
     public void setDirection(Direction direction) {
         this.movingDirection = direction;
+    }
+
+    public boolean isEnemy() {
+        return isEnemy;
     }
 
     public void interact(Game game, MovingEntity character) { return; }
@@ -64,7 +70,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     }
     
     public int getBaseAttackDamage() {
-        return attackDamage * damageMultiplier;
+        return attackDamage;
     }
     
     
@@ -75,13 +81,11 @@ public abstract class MovingEntity extends Entity implements Tickable {
     }
 
 
-    public abstract Direction getDirection();
-
     public void moveTo(Position position) {
         this.setPosition(position);
     };
-
-    public abstract void moveTo(Position position);
-
     
+    public boolean collision(Entity entity) {
+        return !entity.isPassable();
+    }
 }

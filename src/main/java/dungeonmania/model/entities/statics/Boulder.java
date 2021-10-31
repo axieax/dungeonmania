@@ -33,14 +33,14 @@ public class Boulder extends Entity {
      * @param game
      * @param direction
      */
-    public void moveBoulder(Game game, Direction direction) {
+    private void moveBoulder(Game game, Direction direction) {
         Position newPosition = this.getOffsetPosition(direction);
         List<Entity> entities = game.getEntities(newPosition);
 
         if (entities.isEmpty()) {
             this.setPosition(newPosition);
         } else {
-            for(Entity entity: entities) {
+            for (Entity entity : entities) {
                 if (entity instanceof FloorSwitch) {
                     this.setPosition(newPosition);
                     ((FloorSwitch) entity).triggerSwitch(game);

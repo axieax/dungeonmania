@@ -11,14 +11,19 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Spider extends MovingEntity {
+    
     public static final int MAX_SPIDER_HEALTH = 20;
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
     private boolean isInitialMove;
     private List<Direction> spiderMovementPath;
     private Direction nextMoveInPath;
 
-    public Spider(Position position, int damageMultiplier) {
-        super("spider", position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, true, damageMultiplier);
+    public Spider(Position position) {
+        this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG);
+    }
+
+    public Spider(Position position, int health, int attackDamage) {
+        super("spider", position, health, attackDamage, true);
         this.isInitialMove = true;
         // default "circling" movement of spider
         this.spiderMovementPath = Arrays.asList(
@@ -61,7 +66,7 @@ public class Spider extends MovingEntity {
      */
     public boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
         for(Entity e: entitiesAtPos) {
-            if(e.getId() == "boulder") {
+            if(e.getId().equals("boulder")) {
                 return false;
             }
         }

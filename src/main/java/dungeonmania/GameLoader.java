@@ -58,16 +58,16 @@ public class GameLoader {
 
     public static final List<Entity> extractEntities(String dungeonName, Mode mode)
         throws IllegalArgumentException {
-        // extract JSON
+        // Extract JSON
         JSONObject json = loadSavedDungeon(dungeonName);
         JSONArray entitiesInfo = json.getJSONArray("entities");
 
-        // extract entities
+        // Extract entities
         List<Entity> entities = new ArrayList<>();
 
         Entity playerEntity = null;
 
-        for (int i = 0; i < entitiesInfo.length(); ++i) {
+        for (int i = 0; i < entitiesInfo.length(); i++) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString ("type").startsWith("player")) {
                 playerEntity = extractEntity(entityInfo, null, mode);
@@ -75,7 +75,7 @@ public class GameLoader {
             }
         }
 
-        for (int i = 0; i < entitiesInfo.length(); ++i) {
+        for (int i = 0; i < entitiesInfo.length(); i++) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString ("type").startsWith("player")) continue;
             entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
@@ -179,9 +179,9 @@ public class GameLoader {
     public static final Mode extractMode (String name) {
         JSONObject json = loadSavedDungeon(name);
         String gameMode = json.getString ("mode");
-        if (gameMode.equals ("Hard")) return new Hard ();
-        else if (gameMode.equals ("Standard")) return new Standard ();
-        else if (gameMode.equals ("Peaceful")) return new Peaceful ();
+        if (gameMode.equals("Hard")) return new Hard();
+        else if (gameMode.equals("Standard")) return new Standard();
+        else if (gameMode.equals("Peaceful")) return new Peaceful();
         return null;
     }
 

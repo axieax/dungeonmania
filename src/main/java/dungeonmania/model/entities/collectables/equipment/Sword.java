@@ -5,7 +5,7 @@ import dungeonmania.util.Position;
 
 public class Sword extends CollectableEquipment implements AttackEquipment {
 
-    public final int ATTACK_DAMAGE = 50;
+    private final int ATTACK_DAMAGE = 50;
 
     public Sword(Position position) {
         super("sword", position);
@@ -15,7 +15,4 @@ public class Sword extends CollectableEquipment implements AttackEquipment {
     public int getAttackDamage() {
         return ATTACK_DAMAGE;
     }
-
-    
-
 }

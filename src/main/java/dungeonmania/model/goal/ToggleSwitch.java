@@ -22,7 +22,7 @@ public class ToggleSwitch extends GoalLeaf {
         // B = set of boulder positions
         Set<Position> boulderPositions = new HashSet<>();
 
-        // find S and B
+        // Find S and B
         for (Entity e : game.getEntities()) {
             Position position = e.getPosition();
             if (e instanceof FloorSwitch) {
@@ -32,9 +32,9 @@ public class ToggleSwitch extends GoalLeaf {
             }
         }
 
-        // set difference D = S - B
+        // Set difference D = S - B
         switchPositions.removeAll(boulderPositions);
-        // return D.size()
+        // Return D.size()
         return switchPositions.size();
     }
 

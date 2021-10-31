@@ -35,17 +35,20 @@ public class PositionGraph {
         freePositions.add(entity.getPosition());
 
         if (entity instanceof MovingEntity) {
-            while (!positionsToEvaluate.isEmpty()) {
-                Position currPosition = positionsToEvaluate.remove();
+            int i = 0;
+            while (i < positionsToEvaluate.size()) {
+                Position currPosition = positionsToEvaluate.get(i);
                 List<Position> moveToPositions = game.getMoveablePositions(
                     (MovingEntity) entity,
                     currPosition
                 );
                 for (Position currMoveToPosition : moveToPositions) {
-                    freePositions.add(currMoveToPosition);
-                    positionsToEvaluate.add(currMoveToPosition);
+                    if (!positionsToEvaluate.contains(currMoveToPosition)) {
+                        freePositions.add(currMoveToPosition);
+                        positionsToEvaluate.add(currMoveToPosition);
+                    }
                 }
-                positionsToEvaluate.remove(currPosition);
+                i++;
             }
         }
 

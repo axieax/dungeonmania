@@ -1,7 +1,5 @@
 package dungeonmania;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
@@ -38,25 +36,17 @@ import dungeonmania.model.goal.OrComposite;
 import dungeonmania.model.goal.ToggleSwitch;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.util.Position;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class EntityFactory {
-
-    private static final List<String> entityLayers = Arrays.asList("wall");
 
     private static final JSONObject loadDungeon(String dungeonName)
         throws IllegalArgumentException {
@@ -72,43 +62,43 @@ public class EntityFactory {
         }
     }
 
-
-
-
     public static final List<Entity> extractEntities(String dungeonName, Mode mode)
         throws IllegalArgumentException {
-        // extract JSON
+        // Extract JSON
         JSONObject json = loadDungeon(dungeonName);
         JSONArray entitiesInfo = json.getJSONArray("entities");
-    
-        // extract entities
+
+        // Extract entities
         List<Entity> entities = new ArrayList<>();
-        
+
         Entity playerEntity = null;
-        for (int i = 0; i < entitiesInfo.length(); ++i) {
+        for (int i = 0; i < entitiesInfo.length(); i++) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            if (entityInfo.getString ("type").startsWith("player")) {
+            if (entityInfo.getString("type").startsWith("player")) {
                 playerEntity = extractEntity(entityInfo, null, mode);
                 entities.add(playerEntity);
             }
         }
 
-        for (int i = 0; i < entitiesInfo.length(); ++i) {
-            JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            entities.add(extractEntity(entityInfo, playerEntity, mode));
-            if (entityInfo.getString ("type").startsWith("player")) continue;
-            entities.add(extractEntity(entityInfo, playerEntity, mode));
+        if (playerEntity != null && playerEntity instanceof Player) {
+            for (int i = 0; i < entitiesInfo.length(); i++) {
+                JSONObject entityInfo = entitiesInfo.getJSONObject(i);
+                if (entityInfo.getString("type").startsWith("player")) continue;
+                entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
+            }
         }
         return entities;
     }
 
-
-    public static final Entity extractEntity(JSONObject entityInfo, Entity playerEntity, Mode mode) {
+    public static final Entity extractEntity(JSONObject entityInfo, Player player, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
-        // Static Entities
-        if (type.startsWith("wall")) {
+        if (type.startsWith("player")) {
+            position = position.asLayer(0);
+            return new Player(position);
+        } else if (type.startsWith("wall")) {
+            // Static Entities
             position = position.asLayer(0);
             return new Wall(position);
         } else if (type.startsWith("exit")) {
@@ -130,7 +120,7 @@ public class EntityFactory {
             return new Portal(position, colour);
         } else if (type.startsWith("zombie_toast_spawner")) {
             position = position.asLayer(6);
-            return new ZombieToastSpawner(position, mode.tickRate());
+            return new ZombieToastSpawner(position);
             // Collectable Entities
         } else if (type.startsWith("treasure")) {
             position = position.asLayer(7);
@@ -169,20 +159,18 @@ public class EntityFactory {
             // Moving Entities
         } else if (type.startsWith("spider")) {
             position = position.asLayer(18);
-            return new Spider(position, mode.damageMultiplier());
+            return new Spider(position);
         } else if (type.startsWith("zombie_toast")) {
             position = position.asLayer(19);
-            Player currPlayer = (Player) playerEntity;
-            return new ZombieToast(position, mode.damageMultiplier(), currPlayer);
+            return new ZombieToast(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("mercenary")) {
             position = position.asLayer(20);
-            Player currPlayer = (Player) playerEntity;
-            return new Mercenary(position, mode.damageMultiplier(), currPlayer);
+            return new Mercenary(position, mode.damageMultiplier(), player);
         }
         return null;
     }
 
-    private Map<String, BuildableEquipment> buildableMap() {
+    private static Map<String, BuildableEquipment> buildableMap() {
         // dummy objects
         Map<String, BuildableEquipment> map = new HashMap<>();
         map.put("bow", new Bow());
@@ -190,11 +178,11 @@ public class EntityFactory {
         return map;
     }
 
-    public List<BuildableEquipment> allBuildables() {
+    public static List<BuildableEquipment> allBuildables() {
         return new ArrayList<>(buildableMap().values());
     }
 
-    public BuildableEquipment getBuildable(String buildable) {
+    public static BuildableEquipment getBuildable(String buildable) {
         BuildableEquipment item = buildableMap().get(buildable);
         return item.clone();
     }
@@ -219,7 +207,7 @@ public class EntityFactory {
             case "AND":
                 GoalComposite and = new AndComposite();
                 JSONArray andSubgoals = json.getJSONArray("subgoals");
-                for (int i = 0; i < andSubgoals.length(); ++i) {
+                for (int i = 0; i < andSubgoals.length(); i++) {
                     JSONObject subgoal = andSubgoals.getJSONObject(i);
                     and.addGoal(extractGoal(subgoal));
                 }
@@ -227,7 +215,7 @@ public class EntityFactory {
             case "OR":
                 GoalComposite or = new OrComposite();
                 JSONArray orSubgoals = json.getJSONArray("subgoals");
-                for (int i = 0; i < orSubgoals.length(); ++i) {
+                for (int i = 0; i < orSubgoals.length(); i++) {
                     JSONObject subgoal = orSubgoals.getJSONObject(i);
                     or.addGoal(extractGoal(subgoal));
                 }

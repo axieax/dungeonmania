@@ -1,6 +1,7 @@
 package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 
@@ -88,8 +89,10 @@ public class KeyTest {
         game.addEntity(door);
 
         Player player = new Player(new Position(1, 3));
+        game.addEntity(player);
 
         Key key = new Key(new Position(1, 2), 1);
+        game.addEntity(key);
         
         // Player moves onto the position of the key and will pick it up
         player.move(game, Direction.UP);

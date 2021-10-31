@@ -2,18 +2,19 @@ package dungeonmania.model;
 
 import dungeonmania.EntityFactory;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
-import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,7 +49,6 @@ public final class Game {
     }
 
     public final Player getCharacter() {
-        // TODO: import Character class
         return entities
             .stream()
             .filter(e -> e instanceof Player)
@@ -57,16 +57,16 @@ public final class Game {
             .orElse(null);
     }
 
-    public final Mode getMode() {
-        return mode;
-    }
-
     public final List<Entity> getEntities() {
         return entities;
     }
 
     public final Goal getGoal() {
         return goal;
+    }
+
+    public final Mode getMode() {
+        return mode;
     }
 
     public final String getDungeonName() {
@@ -91,19 +91,16 @@ public final class Game {
     public final List<Position> getMoveablePositions(MovingEntity from, Position position) {
         int x = position.getX();
         int y = position.getY();
-        List<Position> positions = Arrays.asList(
-            new Position(x, y + 1),
-            new Position(x - 1, y),
-            new Position(x + 1, y),
-            new Position(x, y - 1)
-        );
+        List<Position> positions = new ArrayList<>();
+        positions.add(new Position(x, y + 1));
+        positions.add(new Position(x - 1, y));
+        positions.add(new Position(x + 1, y));
+        positions.add(new Position(x, y - 1));
         getCardinallyAdjacentEntities(position)
             .stream()
-            .forEach(
-                e -> {
-                    if (from.collision(e)) positions.remove(e.getPosition());
-                }
-            );
+            .forEach(e -> {
+                if (from.collision(e)) positions.remove(e.getPosition());
+            });
         return positions;
     }
 
@@ -117,24 +114,19 @@ public final class Game {
     public final List<Entity> getCardinallyAdjacentEntities(Position position) {
         return getAdjacentEntities(position)
             .stream()
-            .filter(
-                e -> {
-                    // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                    Position difference = Position.calculatePositionBetween(
-                        e.getPosition(),
-                        position
-                    );
-                    int xDiff = Math.abs(difference.getX());
-                    int yDiff = Math.abs(difference.getY());
-                    return (
-                        // ensure both xDiff and yDiff are either 0 or 1
-                        (xDiff == (xDiff & 1)) &&
-                        (yDiff == (yDiff & 1)) &&
-                        // logical XOR to check x and y are different
-                        ((xDiff == 1) ^ (yDiff == 1))
-                    );
-                }
-            )
+            .filter(e -> {
+                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                Position difference = Position.calculatePositionBetween(e.getPosition(), position);
+                int xDiff = Math.abs(difference.getX());
+                int yDiff = Math.abs(difference.getY());
+                return (
+                    // ensure both xDiff and yDiff are either 0 or 1
+                    (xDiff == (xDiff & 1)) &&
+                    (yDiff == (yDiff & 1)) &&
+                    // logical XOR to check x and y are different
+                    ((xDiff == 1) ^ (yDiff == 1))
+                );
+            })
             .collect(Collectors.toList());
     }
 
@@ -147,17 +139,17 @@ public final class Game {
         return new DungeonResponse(
             dungeonId,
             dungeonName,
-            entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
-            this.getCharacter().getInventoryResponses(),
-            this.getBuildables(),
-            (goal != null) ? goal.toString() : ""
+            entities.stream().map(Entity::getEntityResponse),
+            getCharacter().getInventoryResponse(),
+            getBuildables(),
+            goal.toString()
         );
     }
 
     private final List<String> getBuildables() {
-        Character player = (Character) getCharacter();
-        EntityFactory
-            .getBuildableEquipments()
+        Player player = getCharacter();
+        return EntityFactory
+            .allBuildables()
             .stream()
             .filter(eq -> player.checkBuildable(eq))
             .map(eq -> eq.getPrefix())
@@ -165,24 +157,42 @@ public final class Game {
     }
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection) {
-        entities
+        List<Tickable> tickables = entities
             .stream()
-            .filter(e -> e instanceof MovingEntity)
-            .forEach(e -> ((MovingEntity) e).tick(this));
+            .filter(e -> e instanceof Tickable)
+            .map(e -> (Tickable) e)
+            .collect(Collectors.toList());
+
+        // separate loop to avoid concurrency issues when zombie spawner adds new entity
+        // to entities
+        tickables.forEach(
+            e -> {
+                if (e instanceof Player) {
+                    ((Player) e).move(this, movementDirection);
+                } else {
+                    ((Tickable) e).tick(this);
+                }
+            }
+        );
         return getDungeonResponse();
     }
 
     public final DungeonResponse build(String buildable) {
-        Character player = (Character) getCharacter();
+        Player player = getCharacter();
         BuildableEquipment item = EntityFactory.getBuildable(buildable);
         player.craft(item);
         return getDungeonResponse();
     }
 
     public final DungeonResponse interact(String entityId) {
-        Entity player = getCharacter();
+        MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
-        player.interact(this, (MovingEntity) entity);
+        if(entity instanceof MovingEntity) {
+            player.interact(this, (MovingEntity) entity);
+        } else if(entity instanceof ZombieToastSpawner) {
+            ZombieToastSpawner spawner =  (ZombieToastSpawner) entity;
+            spawner.interact(this, player);
+        }
         return getDungeonResponse();
     }
 }

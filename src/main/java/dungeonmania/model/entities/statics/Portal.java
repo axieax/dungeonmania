@@ -34,8 +34,8 @@ public class Portal extends Entity {
         return game
             .getAllPortals()
             .stream()
-            .filter(
-                portal -> portal.getColour().equals(this.colour) && portal.getId() != this.getId()
+            .filter(portal ->
+                portal.getColour().equals(this.colour) && portal.getId() != this.getId()
             )
             .findFirst()
             .orElse(null);
@@ -52,7 +52,7 @@ public class Portal extends Entity {
         if (portal != null) {
             boolean collision = false;
             for (Entity entity : entities) {
-                if (!collision && character.collision(entity)) collision = true;
+                if (character.collision(entity)) collision = true;
             }
             if (!collision) character.moveTo(portal.getPosition());
         }

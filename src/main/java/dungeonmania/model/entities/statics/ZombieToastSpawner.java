@@ -1,5 +1,11 @@
 package dungeonmania.model.entities.statics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
@@ -9,20 +15,16 @@ import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.util.Position;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 public class ZombieToastSpawner extends Entity implements Tickable {
 
-    private int tickRate;
-    private int currTickRate;
+    private final int TICK_RATE;
+    private int currTick;
 
     public ZombieToastSpawner(Position position, int tickRate) {
         super("zombie_toast_spawner", position);
-        this.tickRate = tickRate;
-        this.currTickRate = 0;
+        this.TICK_RATE = tickRate;
+        this.currTick = 0;
     }
 
     /**
@@ -30,20 +32,25 @@ public class ZombieToastSpawner extends Entity implements Tickable {
      * the player destroys the spawner and the weapon loses durability.
      */
     @Override
-    public void interact(Game game, MovingEntity character){
+    public void interact(Game game, MovingEntity character) throws InvalidActionException {
         if (character instanceof Player) {
             Player player = (Player) character;
             if (player.hasWeapon()) {
                 Equipment weapon = player.getWeapon();
                 weapon.useEquipment(player);
                 game.removeEntity(this);
+            } else {
+                throw new InvalidActionException(
+                    "You need to have a weapon to destroy a zombie toast spawner"
+                );
             }
         }
     }
 
     @Override
     public void tick(Game game) {
-        if (currTickRate % tickRate == 0) {
+        currTick++;
+        if (currTick % TICK_RATE == 0) {
             int x = this.getX();
             int y = this.getY();
             List<Position> positions = Arrays.asList(
@@ -55,11 +62,9 @@ public class ZombieToastSpawner extends Entity implements Tickable {
             List<Position> openSquares = new ArrayList<>();
             positions
                 .stream()
-                .forEach(
-                    position -> {
-                        if (game.getEntities(position) == null) openSquares.add(position);
-                    }
-                );
+                .forEach(position -> {
+                    if (game.getEntities(position).isEmpty()) openSquares.add(position);
+                });
 
             if (!openSquares.isEmpty()) {
                 Random rand = new Random();
@@ -73,6 +78,6 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                 );
             }
         }
-        currTickRate++;
     }
 }
+
