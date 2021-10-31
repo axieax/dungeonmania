@@ -23,20 +23,186 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     private PlayerState state;
     private Inventory inventory = new Inventory();
-    List<MovingEntity> allies = new ArrayList<>();
+    private List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
-    public Player(Position position, int health, int attackDamage) {
-        super("player", position, health, attackDamage);
+    public Player(Position position) {
+        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false);
         this.state = new PlayerDefaultState(this);
     }
 
-    public Player(Position position) {
-        this(position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
+    /********************************
+     *  Getters and Setters         *
+     ********************************/
+
+    /**
+     * @return PlayerState
+     */
+    public PlayerState getState() {
+        return state;
     }
 
     /**
+     * Sets the player state.
+     * @param state
+     */
+    public void setState(PlayerState state) {
+        this.state = state;
+    }
+
+    /**
+     * Get a list of all allies that the player has.
+     *
+     * @return List<MovingEntity>
+     */
+    @Override
+    public List<MovingEntity> getAllies() {
+        return this.allies;
+    }
+
+    /********************************
+     *  Ally Methods                *
+     ********************************/
+
+    /**
+     * Add an ally to the player.
+     *
+     * @param ally
+     */
+    @Override
+    public void addAlly(MovingEntity ally) {
+        for (MovingEntity m : allies) {
+            // entity is already ally
+            if (m.getId() == ally.getId()) return;
+        }
+        allies.add(ally);
+    }
+
+    /********************************
+     *  Inventory Methods           *
+     ********************************/
+
+    /**
+     * Given an entity id, returns the item if it exists in the player's inventory
+     *
+     * @param itemId unique identifier of an entity
+     * @return Item if found, else null
+     */
+    public Item getInventoryItem(String itemId) {
+        return inventory.getItem(itemId);
+    }
+
+    /**
+     * Finds and return the item that has the prefix from the inventory
+     *
+     * @param prefix
+     * @return Item
+     */
+    public Item findInventoryItem(String prefix) {
+        return inventory.findItem(prefix);
+    }
+
+    /**
+     * Add an Item object to the inventory.
+     *
+     * @param item
+     */
+    public void addInventoryItem(Item item) {
+        inventory.addItem(item);
+    }
+
+    /**
+     * Remove an item with the itemId from the inventory
+     *
+     * @param itemId
+     */
+    public void removeInventoryItem(String itemId) {
+        inventory.removeItem(itemId);
+    }
+
+    /**
+     * Get a list of all equipments from the inventory.
+     *
+     * @return List<Equipment>
+     */
+    @Override
+    public List<Equipment> getEquipmentList() {
+        return inventory.getEquipmentList();
+    }
+
+    /**
+     * Get a list of all attackable equipments from the inventory.
+     *
+     * @return List<Equipment>
+     */
+    public List<Equipment> getAttackEquipmentList() {
+        return this.getEquipmentList()
+            .stream()
+            .filter(equipment -> equipment instanceof AttackEquipment)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Get a list of all defensable eqipments from the inventory.
+     *
+     * @return List<Equipment>
+     */
+    public List<Equipment> getDefenceEquipmentList() {
+        return this.getEquipmentList()
+            .stream()
+            .filter(equipment -> equipment instanceof DefenceEquipment)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * @return boolean
+     */
+    public boolean hasKey() {
+        return false;
+    }
+
+    /**
+     * @return Key
+     */
+    public Key getKey() {
+        return null;
+    }
+
+    /**
+     * @return boolean
+     */
+    public boolean hasWeapon() {
+        return this.getAttackEquipmentList().size() != 0;
+    }
+
+    /**
+     * @return Equipment
+     */
+    public Equipment getWeapon() {
+        Item weapon = inventory.findItem("sword");
+        if (weapon == null) weapon = inventory.findItem("bow");
+        return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
+    }
+
+    /**
+     * Returns a list of ItemResponse objects that contains information on the
+     * player's inventory.
+     *
+     * @return List<ItemResponse>
+     */
+    @Override
+    public List<ItemResponse> getInventoryResponses() {
+        return inventory.getInventoryResponses();
+    }
+
+    /********************************
+     *  Action Methods           *
+     ********************************/
+
+    /**
      * Conduct any required tasks for a player after it has moved into its new position
+     *
+     * @param game
      */
     @Override
     public void tick(Game game) {
@@ -51,10 +217,42 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     /**
+     * Interacts with any entity that is on the tile the character is about to move into.
+     * Upon movement, any observers are notified. If an entity blocks the player, then the
+     * player does not move at all.
+     * @param game
+     * @param direction
+     */
+    @Override
+    public void move(Game game, Direction direction) {
+        this.setDirection(direction);
+
+        Position newPlayerPos = this.getPosition().translateBy(direction);
+        List<Entity> entities = game.getEntities(newPlayerPos);
+        entities.forEach(entity -> entity.interact(game, this));
+
+        // after interacting enemies on the newPlayerPos, get the updated state of
+        // dungeon
+        List<Entity> updatedEntities = game.getEntities(newPlayerPos);
+        boolean canMove = true;
+        for (Entity e : updatedEntities) {
+            if (this.collision(e)) canMove = false;
+        }
+
+        if (canMove) {
+            this.setPosition(newPlayerPos);
+            // TODO: should we tick first or move first?
+            this.tick(game);
+            this.notifyObservers();
+        }
+    }
+
+    /**
      * A battle takes place when the character and the enemy are in the same cell, within a single tick.
      * A round of a battle occurs as follows:
      *      Character Health = Character Health - ((Enemy Health * Enemy Attack Damage) / 10)
      *      Enemy Health = Enemy Health - ((Character Health * Character Attack Damage) / 5)
+     *
      * @param opponent entity the character is fighting
      */
     @Override
@@ -80,6 +278,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     /**
      * Given an item, places it in the player's inventory
+     *
      * @param item that is able to placed in the player's inventory
      */
     @Override
@@ -89,65 +288,33 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     /**
      * Given a buildableItem, builds it if it is craftable
+     *
+     * @param equipment
      */
     @Override
     public void craft(BuildableEquipment equipment) {
         if (equipment.isBuildable(inventory)) equipment.craft(inventory);
     }
 
+    /**
+     * Check if the equipment is buildable
+     *
+     * @param equipment
+     * @return boolean
+     */
     public boolean checkBuildable(BuildableEquipment equipment) {
         return equipment.isBuildable(this.inventory);
     }
 
-    /**
-     * Given an entity id, returns the item if it exists in the player's inventory
-     * @param itemId unique identifier of an entity
-     * @return Item if found, else null
-     */
-    public Item getInventoryItem(String itemId) {
-        return inventory.getItem(itemId);
-    }
-
-    public Item findInventoryItem(String prefix) {
-        return inventory.findItem(prefix);
-    }
-
-    public void addInventoryItem(Item item) {
-        inventory.addItem(item);
-    }
-
-    public void removeInventoryItem(String itemId) {
-        inventory.removeItem(itemId);
-    }
-
-    @Override
-    public List<Equipment> getEquipmentList() {
-        return inventory.getEquipmentList();
-    }
-
-    public List<Equipment> getAttackEquipmentList() {
-        return this.getEquipmentList()
-            .stream()
-            .filter(equipment -> equipment instanceof AttackEquipment)
-            .collect(Collectors.toList());
-    }
-
-    public List<Equipment> getDefenceEquipmentList() {
-        return this.getEquipmentList()
-            .stream()
-            .filter(equipment -> equipment instanceof DefenceEquipment)
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ItemResponse> getInventoryResponses() {
-        return inventory.getInventoryResponses();
-    }
+    /********************************
+     *  Battling Methods           *
+     ********************************/
 
     /**
      * Returns the total attack damage a player is able to inflict upon an opponent.
      * This includes any attack damage provided by equipment e.g. sword
-     * @return a positive integer indicating the amount of attack
+     *
+     * @return int a positive integer indicating the amount of attack
      */
     public int getTotalAttackDamage() {
         // Normal damage inflicted by player
@@ -169,9 +336,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     /**
      * Given an attack damage inflicted to the player by an opponent,
-     * reduce the attack by applying defensive tactics
+     * reduce the attack by applying defensive multiplier.
+     *
      * @param opponentAttackDamage positive integer indicating attack amount to player
-     * @return reduced opponentAttackDamage corresponding to defence amount
+     * @return int reduced opponentAttackDamage corresponding to defence amount
      */
     public int applyDefenceToOpponentAttack(int opponentAttackDamage) {
         int finalAttackDamage = opponentAttackDamage;
@@ -181,123 +349,37 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return finalAttackDamage;
     }
 
-    @Override
-    public void addAlly(MovingEntity ally) {
-        for (MovingEntity m : allies) {
-            if (m.getId() == ally.getId()) {
-                // entity is already ally
-                return;
-            }
-        }
-
-        allies.add(ally);
-    }
-
-    @Override
-    public List<MovingEntity> getAllies() {
-        return this.allies;
-    }
+    /********************************
+     *  Observer/Subject Methods    *
+     ********************************/
 
     /**
-     * Interacts with any entity that is on the tile the character is about to move into.
-     * Upon movement, any observers are notified. If an entity blocks the player, then the
-     * player does not move at all.
-     * @param game
-     * @param direction
+     * Attach an observer to the player.
+     *
+     * @param observer
      */
-    @Override
-    public void move(Game game, Direction direction) {
-        Position newPlayerPos = this.getPosition().translateBy(direction);
-        List<Entity> entities = game.getEntities(newPlayerPos);
-        entities.forEach(entity -> entity.interact(game, this));
-
-        // after interacting enemies on the newPlayerPos, get the updated state of
-        // dungeon
-
-        List<Entity> updatedEntities = game.getEntities(newPlayerPos);
-        boolean canMove = true;
-        for (Entity e : updatedEntities) {
-            if (this.collision(e)) canMove = false;
-        }
-
-        if (canMove) {
-            this.setPosition(newPlayerPos);
-            // TODO: should we tick first or move first?
-            this.tick(game);
-            this.notifyObservers();
-        }
-    }
-
-    public void interact(Game game, MovingEntity character) {}
-
     @Override
     public void attach(Observer observer) {
         observers.add(observer);
     }
 
+    /**
+     * Detach an observer to the player.
+     *
+     * @param observer
+     */
     @Override
     public void detach(Observer observer) {
         observers.remove(observer);
     }
 
+    /**
+     * Notifies all observer of the player.
+     */
     @Override
     public void notifyObservers() {
         for (Observer o : observers) {
             o.update(this);
         }
-    }
-
-    /**
-     * Determines if the player has armour.
-     * Note that the armour must be used although it is stored in the inventory.
-     * @return true if player is wearing armour, otherwise false
-     */
-    public boolean hasArmour() {
-        return findInventoryItem("armour") != null;
-    }
-
-    public void reduceArmourDurability() {}
-
-    ////////////////////////////////////////////////////////////////////////////////
-
-    public void setState(PlayerState state) {
-        this.state = state;
-    }
-
-    public PlayerState getState() {
-        return state;
-    }
-
-    public boolean hasKey() {
-        return false;
-    }
-
-    public Key getKey() {
-        return null;
-    }
-
-    public boolean hasWeapon() {
-        return this.getAttackEquipmentList().size() != 0;
-    }
-
-    public Equipment getWeapon() {
-        Item weapon = inventory.findItem("sword");
-        if (weapon == null) weapon = inventory.findItem("bow");
-        return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
-    }
-
-    public Direction getDirection() {
-        return null;
-    }
-
-    @Override
-    public void moveTo(Position position) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public boolean isEnemy() {
-        return false;
     }
 }

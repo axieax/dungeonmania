@@ -23,9 +23,9 @@ public class ZombieToastSpawner extends Entity {
             Player player = (Player) character;
             if (player.hasWeapon()) {
                 Equipment weapon = player.getWeapon();
-                weapon.useEquipment();
+                weapon.useEquipment(player);
                 game.removeEntity(this);
             }
-        }        
+        }
     }
 }

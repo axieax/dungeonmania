@@ -8,17 +8,27 @@ import dungeonmania.util.Position;
 public abstract class MovingEntity extends Entity {
     private int health;
     private int attackDamage;
+    private Direction movingDirection;
+    private boolean isEnemy;
 
     public final double ARMOUR_DROP_RATE = 0;
     public final double THE_ONE_RING_DROP_RATE = 0.1; // 10% of dropping one_ring
     
-    public MovingEntity(String prefix, Position position, int health, int attackDamage) {
+    public MovingEntity(String prefix, Position position, int health, int attackDamage, boolean isEnemy) {
         super(prefix, position, true, true);
         this.health = health;
         this.attackDamage = attackDamage;
+        this.isEnemy = isEnemy;
     }
     
     public abstract void tick(Game game);
+
+    public Direction getDirection() {
+        return this.movingDirection;
+    }
+    public void setDirection(Direction direction) {
+        this.movingDirection = direction;
+    }
 
     public void interact(Game game, MovingEntity character) { return; }
     
@@ -47,13 +57,15 @@ public abstract class MovingEntity extends Entity {
     }
     
     
-    public abstract Direction getDirection();
-
     public boolean collision(Entity entity) {
         return !entity.isPassable();
     };
 
-    public abstract void moveTo(Position position);
+    public void moveTo(Position position) {
+        this.setPosition(position);
+    };
 
-    public abstract boolean isEnemy();
+    public boolean isEnemy() {
+        return this.isEnemy;
+    };
 }

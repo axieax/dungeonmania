@@ -3,8 +3,6 @@ package dungeonmania.model.entities.movings;
 import java.util.List;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.AttackEquipment;
-import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
@@ -29,8 +27,6 @@ public interface Character {
     public List<Equipment> getDefenceEquipmentList();
     
     public List<ItemResponse> getInventoryResponses();
-
-    public int getAttackStat();
 
     public int applyDefenceToOpponentAttack(int opponentAttackDamag);
 
