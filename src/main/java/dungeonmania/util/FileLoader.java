@@ -52,4 +52,22 @@ public final class FileLoader {
             throw new FileNotFoundException(directory);
         }
     }
+
+    /**
+     * Lists file names (without extension) within a specified non-resource directory.
+     * 
+     * @param directory A normal directory such as "mydirectory", relative to current working directory
+     * 
+     * @return A list of *only* filenames with no extensions nor relative/absolute paths i.e. [maze, otherFile]
+     * 
+     * @throws IOException If directory path is invalid or some other sort of IO issue occurred.
+     */
+    public static List<String> listFileNamesInDirectoryOutsideOfResources(String directory) throws IOException {
+        Path root = Paths.get(directory);
+        return Files.walk(root).filter(Files::isRegularFile).map(x -> {
+            String nameAndExt = x.toFile().getName();
+            int extIndex = nameAndExt.lastIndexOf('.');
+            return nameAndExt.substring(0, extIndex > -1 ? extIndex : nameAndExt.length());
+        }).collect(Collectors.toList());
+    }
 }
