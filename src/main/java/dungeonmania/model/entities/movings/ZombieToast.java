@@ -92,6 +92,11 @@ public class ZombieToast extends MovingEntity implements Observer {
     public void moveTo(Position position) {
         this.setPosition(position);
     }
+
+    @Override
+    public boolean isEnemy() {
+        return true;
+    }
     
     //////////////////////////////////////////////////////////////////
     public void setState(ZombieState state) {
