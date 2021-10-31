@@ -99,10 +99,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *  Inventory Methods           *
      ********************************/
 
-    public Inventory getInventory() {
-        return inventory;
-    }
-
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
      *
@@ -257,7 +253,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
         this.setDirection(direction);
 
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(entity -> entity.interact(game, this));
+        entities.forEach(entity -> {
+            entity.interact(game, this);
+        });
 
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
         boolean canMove = true;
