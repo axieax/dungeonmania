@@ -87,7 +87,7 @@ public class DungeonManiaController {
         else if (gameMode.equals ("Standard")) mode = new Standard ();
         else if (gameMode.equals ("Peaceful")) mode = new Peaceful ();
 
-        List<Entity> entities = EntityFactory.extractEntities (dungeonName);
+        List<Entity> entities = EntityFactory.extractEntities (dungeonName, mode);
         Goal goal = EntityFactory.extractGoal (dungeonName);
 
         Game newGame = new Game (dungeonName, entities, goal, mode);
@@ -120,11 +120,14 @@ public class DungeonManiaController {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
-
-        String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
-        FileWriter myFileWriter = new FileWriter (path, false);
-        myFileWriter.write(prettyString);
-        myFileWriter.close();
+        try {
+            String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
+            FileWriter myFileWriter = new FileWriter (path, false);
+            myFileWriter.write(prettyString);
+            myFileWriter.close();            
+        } catch (IOException e) {
+            return null;
+        }
 
         return currentGame.getDungeonResponse();
     }
@@ -140,7 +143,7 @@ public class DungeonManiaController {
         if (!allGames().contains(name)) throw new IllegalArgumentException();
         String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
         Mode mode = GameLoader.extractMode(name);
-        List<Entity> entities = GameLoader.extractEntities(name);
+        List<Entity> entities = GameLoader.extractEntities(name, mode);
         Goal goal = GameLoader.extractGoal(name);
         String dungeonName = GameLoader.extractDungeonName(name);
 
