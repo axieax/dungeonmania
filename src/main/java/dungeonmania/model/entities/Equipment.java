@@ -6,7 +6,7 @@ import dungeonmania.util.Position;
 public abstract class Equipment extends Item {
 
     private int durability = 5;
-    private final double MULTIPLIER = 1;
+    public final double MULTIPLIER = 1;
 
     public Equipment(String prefix, Position position) {
         super(prefix, position);
