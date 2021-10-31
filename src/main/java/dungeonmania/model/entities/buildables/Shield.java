@@ -1,6 +1,5 @@
 package dungeonmania.model.entities.buildables;
 
-import dungeonmania.model.Game;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.movings.Inventory;
 
@@ -9,6 +8,8 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
     private static final int WOOD_NEEDED = 2;
     private static final int TREASURE_NEEDED = 1;
     private static final int KEY_NEEDED = 1;
+
+    public final double MULTIPLIER = 0.25;
 
     public Shield() {
         super("shield", null);
@@ -28,9 +29,9 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
     @Override
     public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
-            inventory.removeItemQuantity("Wood", WOOD_NEEDED);
-            if (inventory.hasItemQuantity("Treasure", TREASURE_NEEDED)) {
-                inventory.removeItemQuantity("Treasure", TREASURE_NEEDED);
+            inventory.removeItemQuantity("wood", WOOD_NEEDED);
+            if (inventory.hasItemQuantity("treasure", TREASURE_NEEDED)) {
+                inventory.removeItemQuantity("treasure", TREASURE_NEEDED);
             } else {
                 inventory.removeItemQuantity("key", KEY_NEEDED);
             }
@@ -39,8 +40,7 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
     }
 
     @Override
-    public int setDefenceMultiplier(int defendAmount) {
-        // TODO Auto-generated method stub
-        return 0;
+    public BuildableEquipment clone() {
+        return new Shield();
     }
 }

@@ -21,9 +21,12 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Wall;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Peaceful;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 
 import dungeonmania.response.models.EntityResponse;
@@ -101,7 +104,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 2).toString(), characterPos.toString());
+        assertEquals(new Position(2, 1).toString(), characterPos.toString());
 
         // move character left
         response = controller.tick(null, Direction.LEFT);
@@ -263,7 +266,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(2, 1).toString(), characterPos.toString());
+        assertEquals(new Position(1, 2).toString(), characterPos.toString());
 
         // compares two DungeonResponses and returns true if they are the same
         // NOTE: Comparison is only done on the actual state of the dungeon, and not
@@ -325,11 +328,11 @@ public class CharacterTest {
         
         // move character to 6, 4
         for(int i = 0; i < 6; i++) {
-            response = controller.tick(null, Direction.DOWN);
+            response = controller.tick(null, Direction.RIGHT);
         }
 
         for(int i = 0; i < 4; i++) {
-            response = controller.tick(null, Direction.RIGHT);
+            response = controller.tick(null, Direction.DOWN);
         }
 
         entities = response.getEntities();
@@ -337,7 +340,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(4, 6).toString(), characterPos.toString());
+        assertEquals(new Position(6, 4).toString(), characterPos.toString());
 
         // save the game
         assertDoesNotThrow(() -> controller.saveGame("1"));
@@ -391,7 +394,7 @@ public class CharacterTest {
 
             Position loadedCharacterPos = getCharacterPosition(loadedEntities);
             assertNotNull(loadedCharacterPos);
-            assertEquals(new Position(2, 1).toString(), loadedCharacterPos.toString());
+            assertEquals(new Position(1, 2).toString(), loadedCharacterPos.toString());
 
             // move right
             loadedResponse = innerController.tick(null, Direction.RIGHT);
@@ -441,45 +444,45 @@ public class CharacterTest {
         assertEquals(new Position(1, 1).toString(), characterPos.toString());
 
 
-        for(int i = 0; i < 12; i++) {
+        for(int i = 0; i < 13; i++) {
             response = controller.tick(null, Direction.DOWN);
         }
 
-        assertEquals(new Position(11, 13).toString(), characterPos.toString());
+        assertEquals(new Position(1, 13).toString(), characterPos.toString());
         
         for(int i = 0; i < 10; i++) {
-            response = controller.tick(null, Direction.DOWN);
+            response = controller.tick(null, Direction.RIGHT);
         }
 
-        assertEquals(new Position(11, 13).toString(), characterPos.toString());
+        assertEquals(new Position(11, 14).toString(), characterPos.toString());
 
         response = controller.tick(null, Direction.UP); // collect arrow
         response = controller.tick(null, Direction.DOWN);
         response = controller.tick(null, Direction.RIGHT); // collect arrow
         response = controller.tick(null, Direction.RIGHT); // collect wood
 
-        assertEquals(new Position(13, 13).toString(), characterPos.toString());
+        assertEquals(new Position(13, 14).toString(), characterPos.toString());
         
         // build bow - player has sufficient items
         response = assertDoesNotThrow(() -> controller.build("bow"));
         
         // position after building should be the same
-        assertEquals(new Position(13, 13).toString(), characterPos.toString());
+        assertEquals(new Position(13, 14).toString(), characterPos.toString());
     }
     
     @Test
     public void testItemsUsedToCraftRemoved() {
-        // any items that are used to craft another a buildable entity should be
+        // any items that are used to craft another buildable entity should be
         // removed from the player's inventory, and are replaced with the built item
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         game.addEntity(new Wood(new Position(2, 1)));
-        game.addEntity(new Arrow(new Position(2, 1)));
         game.addEntity(new Arrow(new Position(3, 1)));
         game.addEntity(new Arrow(new Position(4, 1)));
+        game.addEntity(new Arrow(new Position(5, 1)));
 
         assertTrue(player.getInventoryResponses().size() == 0);
         
@@ -501,7 +504,7 @@ public class CharacterTest {
     @Test
     public void testCharacterCannotPickUpBombsItPlaced() {
         // removed from the player's inventory, and are replaced with the built item
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -529,7 +532,7 @@ public class CharacterTest {
     
     @Test
     public void testMovementDoesNotAffectHealth() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -539,11 +542,18 @@ public class CharacterTest {
         // move player
         game.tick(null, Direction.DOWN);
         assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.UP);
+        assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.LEFT);
+        assertTrue(player.getHealth() == playerHealth);
     }
 
     @Test
     public void testBattleReducesPlayerHealth() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
@@ -551,7 +561,8 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(2, 1);
-        Mercenary mercenary = new Mercenary(mercenaryPos);
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        game.addEntity(mercenary);
 
         game.tick(null, Direction.NONE);
 
@@ -565,7 +576,8 @@ public class CharacterTest {
 
     @Test
     public void testInvisibleState() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
@@ -574,7 +586,8 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(1, 4);
-        Mercenary mercenary = new Mercenary(mercenaryPos);
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        game.addEntity(mercenary);
         
         Position potionPos = new Position(2, 2);
         game.addEntity(new InvisibilityPotion(potionPos));
@@ -596,7 +609,8 @@ public class CharacterTest {
 
     @Test
     public void testInvincibleState() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
@@ -605,7 +619,8 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(1, 4);
-        Mercenary mercenary = new Mercenary(mercenaryPos);
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        game.addEntity(mercenary);
         
         Position potionPos = new Position(2, 2);
         game.addEntity(new InvincibilityPotion(potionPos));
@@ -630,11 +645,10 @@ public class CharacterTest {
 
     @Test
     public void testCanPickUpMultiplePotions() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
-        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
@@ -655,11 +669,10 @@ public class CharacterTest {
     
     @Test
     public void testCanDrinkTwoPotions() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new Goal(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
-        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
@@ -686,7 +699,7 @@ public class CharacterTest {
         return null;
     }
 
-    private List<Entity> SevenBySevenWallBoundary() {
+    private List<Entity> sevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
         
         // left border

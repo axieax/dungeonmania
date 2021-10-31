@@ -3,10 +3,14 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.DungeonManiaController;
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Exit;
-import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 
@@ -17,25 +21,28 @@ public class ExitTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
-        game.addEntity(new Exit("exit1", new Position(1, 1)));
-
-        assertTrue(new Position(1, 1).equals(game.getEntity("exit1").getPosition()));
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Exit exit = new Exit(new Position(1, 1));
+        game.addEntity(exit);
+                
+        assertTrue(new Position(1, 1).equals(game.getEntity(exit.getId()).getPosition()));
     }
 
     /**
-     * Test Exit when player completes the goal.
+     * Test if the player can move to an Exit tile.
      */
     @Test
-    public void exitCompleteGoal() {
-        fail();
-    }
+    public void exitMoveTo() {
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Exit exit = new Exit(new Position(1, 1));
+        game.addEntity(exit);
+                
+        Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
 
-    /**
-     * Test Exit when player has not completes the goal.
-     */
-    @Test
-    public void exitIncompleteGoal() {
-        fail();
+        player.move(game, Direction.RIGHT);
+
+        assertTrue(new Position(1, 1).equals(game.getEntity(exit.getId()).getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(player.getId()).getPosition()));
     }
 }

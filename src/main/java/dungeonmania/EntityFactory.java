@@ -35,6 +35,7 @@ import dungeonmania.model.goal.Goal;
 import dungeonmania.model.goal.GoalComposite;
 import dungeonmania.model.goal.OrComposite;
 import dungeonmania.model.goal.ToggleSwitch;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.util.Position;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -54,6 +55,8 @@ import org.json.JSONObject;
 
 public class EntityFactory {
 
+    private static final List<String> entityLayers = Arrays.asList("wall");
+
     private static final JSONObject loadDungeon(String dungeonName)
         throws IllegalArgumentException {
         try {
@@ -68,7 +71,7 @@ public class EntityFactory {
         }
     }
 
-    public static final List<Entity> extractEntities(String dungeonName)
+    public static final List<Entity> extractEntities(String dungeonName, Mode mode)
         throws IllegalArgumentException {
         // extract JSON
         JSONObject json = loadDungeon(dungeonName);
@@ -78,63 +81,84 @@ public class EntityFactory {
         List<Entity> entities = new ArrayList<>();
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            entities.add(extractEntity(entityInfo));
+            entities.add(extractEntity(entityInfo, mode));
         }
         return entities;
     }
 
-    public static final Entity extractEntity(JSONObject entityInfo) {
+    public static final Entity extractEntity(JSONObject entityInfo, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
         // Static Entities
         if (type.startsWith("wall")) {
+            position = position.asLayer(0);
             return new Wall(position);
         } else if (type.startsWith("exit")) {
+            position = position.asLayer(1);
             return new Exit(position);
-        } else if (type.startsWith("boulder")) {
-            return new Boulder(position);
         } else if (type.startsWith("switch")) {
+            position = position.asLayer(2);
             return new FloorSwitch(position);
+        } else if (type.startsWith("boulder")) {
+            position = position.asLayer(3);
+            return new Boulder(position);
         } else if (type.startsWith("door")) {
             int key = entityInfo.getInt("key");
+            position = position.asLayer(4);
             return new Door(position, key);
         } else if (type.startsWith("portal")) {
             String colour = entityInfo.getString("colour");
+            position = position.asLayer(5);
             return new Portal(position, colour);
         } else if (type.startsWith("zombie_toast_spawner")) {
-            return new ZombieToastSpawner(position);
-            // Moving Entities
-        } else if (type.startsWith("spider")) {
-            return new Spider(position);
-        } else if (type.startsWith("zombie_toast")) {
-            return new ZombieToast(position);
-        } else if (type.startsWith("mercenary")) {
-            return new Mercenary(position);
+            position = position.asLayer(6);
+            return new ZombieToastSpawner(position, mode.tickRate());
             // Collectable Entities
         } else if (type.startsWith("treasure")) {
+            position = position.asLayer(7);
             return new Treasure(position);
         } else if (type.startsWith("key")) {
             int key = entityInfo.getInt("key");
+            position = position.asLayer(8);
             return new Key(position, key);
         } else if (type.startsWith("health_potion")) {
+            position = position.asLayer(9);
             return new HealthPotion(position);
         } else if (type.startsWith("invincibility_potion")) {
+            position = position.asLayer(10);
             return new InvincibilityPotion(position);
         } else if (type.startsWith("invisibility_potion")) {
+            position = position.asLayer(11);
             return new InvisibilityPotion(position);
         } else if (type.startsWith("wood")) {
+            position = position.asLayer(12);
             return new Wood(position);
         } else if (type.startsWith("arrow")) {
+            position = position.asLayer(13);
             return new Arrow(position);
         } else if (type.startsWith("bomb")) {
+            position = position.asLayer(14);
             return new Bomb(position);
         } else if (type.startsWith("sword")) {
+            position = position.asLayer(15);
             return new Sword(position);
         } else if (type.startsWith("armour")) {
+            position = position.asLayer(16);
             return new Armour(position);
         } else if (type.startsWith("one_ring")) {
+            position = position.asLayer(17);
             return new TheOneRing(position);
+            // Moving Entities
+        } else if (type.startsWith("spider")) {
+            position = position.asLayer(18);
+            return new Spider(position, mode.damageMultiplier());
+        } else if (type.startsWith("zombie_toast")) {
+            position = position.asLayer(19);
+            return new ZombieToast(position, mode.damageMultiplier());
+        } else if (type.startsWith("mercenary")) {
+            position = position.asLayer(20);
+            return new Mercenary(position, mode.damageMultiplier());
         }
         return null;
     }
@@ -158,7 +182,9 @@ public class EntityFactory {
 
     public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
         JSONObject json = loadDungeon(dungeonName);
-        return extractGoal(json.getJSONObject("goal-condition"));
+        return (json.has("goal-condition"))
+            ? extractGoal(json.getJSONObject("goal-condition"))
+            : null;
     }
 
     private static final Goal extractGoal(JSONObject json) {

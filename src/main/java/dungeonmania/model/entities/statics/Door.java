@@ -9,12 +9,13 @@ import dungeonmania.util.Position;
 
 public class Door extends Entity {
 
-    private boolean open = false;
+    private boolean open;
     private int key;
 
     public Door(Position position, int key) {
-        super("door", position);
+        super("door", position, false, false);
         this.key = key;
+        this.open = false;
     }
 
     /**
@@ -48,7 +49,7 @@ public class Door extends Entity {
         if (character instanceof Player) {
             Player player = (Player) character;
             Key key = player.getKey();
-            if (this.unlockDoor(key)) key.consume(player);
+            if (key != null && this.unlockDoor(key)) key.consume(player);
         }
     }
 }

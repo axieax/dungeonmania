@@ -52,7 +52,7 @@ public class Portal extends Entity {
         if (portal != null) {
             boolean collision = false;
             for (Entity entity : entities) {
-                if (!collision && character.collision(entity)) collision = true;
+                if (character.collision(entity)) collision = true;
             }
             if (!collision) character.moveTo(portal.getPosition());
         }
