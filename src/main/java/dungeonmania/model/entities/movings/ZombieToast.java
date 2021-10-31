@@ -1,9 +1,6 @@
 package dungeonmania.model.entities.movings;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -15,18 +12,20 @@ public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
     public final double ARMOUR_DROP_RATE = 0.2;
 
-    private MovementState state;
-    
-    public ZombieToast(Position position, SubjectPlayer player) {
-        this(position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG, player);
-    }
-    
-    public ZombieToast(Position position, int health, int attackDamage, SubjectPlayer player) {
-        super("zombie_toast", position, health, attackDamage, true);
+    private ZombieState randomZombieState;
+    private ZombieState runZombieState;
+    private ZombieState state;
 
+    public ZombieToast(Position position, int damageMultiplier) {
+        super("zombie_toast", position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG, true, damageMultiplier);
         this.state = new DefaultState(this);
+    }
+
+    public ZombieToast(Position position, int damageMultiplier, SubjectPlayer player) {
+        this(position, damageMultiplier);
         player.attach(this);
     }
+    
 
     @Override
     public void tick(Game game) {
