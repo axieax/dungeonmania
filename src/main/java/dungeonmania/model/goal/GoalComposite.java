@@ -1,18 +1,30 @@
 package dungeonmania.model.goal;
 
+import dungeonmania.model.Game;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public abstract class GoalComposite implements Goal {
 
-    private List<Goal> goals = new ArrayList<>();
+    private final List<Goal> goals = new ArrayList<>();
 
-    public List<Goal> getGoals() {
+    /**
+     * Gets the list of Goals
+     *
+     * @return list of Goals
+     */
+    public final List<Goal> getGoals() {
         return goals;
+    }
+
+    /**
+     * Adds a Goal to a Composite Goal
+     *
+     * @param goal Goal to be added
+     */
+    public final void addGoal(Goal goal) {
+        goals.add(goal);
     }
 
     public String getOperator() {
@@ -20,22 +32,13 @@ public abstract class GoalComposite implements Goal {
     }
 
     @Override
-    public String toString() {
+    public String toString(Game game) {
+        // only include incomplete goals
         String delimiter = String.format(" %s ", getOperator());
-        return getIncompleteGoals()
+        return goals
+            .stream()
+            .filter(goal -> !goal.isComplete(game))
             .map(Goal::toString)
             .collect(Collectors.joining(delimiter, "(", ")"));
-    }
-
-    public JSONObject toJSON() {
-        JSONObject json = new JSONObject();
-        json.put("goal", getOperator());
-        JSONArray subgoals = new JSONArray(getIncompleteGoals().map(Goal::toJSON));
-        json.put("subgoals", subgoals);
-        return json;
-    }
-
-    private Stream<Goal> getIncompleteGoals() {
-        return getGoals().stream().filter(goal -> !goal.evaluate());
     }
 }

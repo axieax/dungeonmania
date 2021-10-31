@@ -10,6 +10,7 @@ import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -66,11 +67,18 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void battle(Game game, MovingEntity opponent) {
         state.battle(opponent);
 
-        // if either character or entity is dead, remove it
         if (this.getHealth() <= 0) {
-            game.removeEntity(this);
+            Item item = this.findInventoryItem("one_ring");
+            if (item != null && item instanceof Consumable) {
+                // use one ring if it is in inventory
+                ((Consumable) item).consume(this);
+            } else {
+                // entity is dead, remove it
+                game.removeEntity(this);
+            }
         }
 
+        // if either entity is dead, remove it
         if (opponent.getHealth() <= 0) {
             game.removeEntity(opponent);
             this.inBattle = false;
@@ -90,11 +98,15 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * Given a buildableItem, builds it if it is craftable
      */
     @Override
-    public void craft(BuildableEquipment item) {
-        if(item.isBuildable(inventory)) {
-            item.craft(inventory);
+    public void craft(BuildableEquipment equipment) {
+        if (equipment.isBuildable(inventory)) {
+            equipment.craft(inventory);
         }
     }
+
+    public boolean checkBuildable(BuildableEquipment equipment) {
+        return equipment.isBuildable(this.inventory);
+    } 
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
@@ -105,8 +117,8 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return inventory.getItem(itemId);
     }
 
-    public Item findInventoryItem(String className) {
-        return inventory.findItem(className);
+    public Item findInventoryItem(String prefix) {
+        return inventory.findItem(prefix);
     }
 
     public void addInventoryItem(Item item) {
@@ -140,8 +152,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     @Override
     public List<ItemResponse> getInventoryResponses() {
-        // TODO Auto-generated method stub
-        return null;
+        return inventory.getInventoryResponses();
     }
 
     /**
@@ -240,9 +251,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.notifyObservers();
     }
 
-    public void interact(Game game, MovingEntity character) {
-
-    }
+    public void interact(Game game, MovingEntity character) {}
 
     @Override
     public void attach(Observer observer) {
@@ -267,8 +276,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @return true if player is wearing armour, otherwise false
      */
     public boolean hasArmour() {
-        Item armour = findInventoryItem("Armour");
-        return armour == null ? false : true;
+        return findInventoryItem("armour") != null;
     }
 
     public void reduceArmourDurability() {}
@@ -277,6 +285,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public void setState(PlayerState state) {
         this.state = state;
+    }
+
+    public PlayerState getState() {
+        return state;
     }
 
     public boolean hasKey() {
@@ -302,7 +314,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     @Override
-    public boolean isCollidable(Entity entity) {
+    public boolean collision(Entity entity) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -310,6 +322,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     @Override
     public void moveTo(Position position) {
         // TODO Auto-generated method stub
-        
+
     }
 }
