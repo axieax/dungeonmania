@@ -29,13 +29,18 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
     @Override
     public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
-            inventory.removeItemQuantity("Wood", WOOD_NEEDED);
-            if (inventory.hasItemQuantity("Treasure", TREASURE_NEEDED)) {
-                inventory.removeItemQuantity("Treasure", TREASURE_NEEDED);
+            inventory.removeItemQuantity("wood", WOOD_NEEDED);
+            if (inventory.hasItemQuantity("treasure", TREASURE_NEEDED)) {
+                inventory.removeItemQuantity("treasure", TREASURE_NEEDED);
             } else {
                 inventory.removeItemQuantity("key", KEY_NEEDED);
             }
             inventory.addItem(new Shield());
         }
+    }
+
+    @Override
+    public BuildableEquipment clone() {
+        return new Shield();
     }
 }

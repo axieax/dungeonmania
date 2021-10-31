@@ -82,6 +82,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *  Inventory Methods           *
      ********************************/
 
+    public Inventory getInventory() {
+        return inventory;
+    }
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
      *
@@ -242,8 +245,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         List<Entity> entities = game.getEntities(newPlayerPos);
         entities.forEach(entity -> entity.interact(game, this));
 
-        // after interacting enemies on the newPlayerPos, get the updated state of
-        // dungeon
         List<Entity> updatedEntities = game.getEntities(newPlayerPos);
         boolean canMove = true;
         for (Entity e : updatedEntities) {
@@ -272,10 +273,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         if (this.getHealth() <= 0) {
             Item item = this.findInventoryItem("one_ring");
             if (item != null && item instanceof Consumable) {
-                // use one ring if it is in inventory
+                // Use one ring if it is in inventory
                 ((Consumable) item).consume(this);
             } else {
-                // entity is dead, remove it
+                // Entity is dead, remove it
                 game.removeEntity(this);
             }
         }
@@ -330,7 +331,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         // Normal damage inflicted by player
         int damageToOpponent = this.getBaseAttackDamage();
 
-        // any extra attack damage provided by equipment
+        // Any extra attack damage provided by equipment
         for (Equipment e : getAttackEquipmentList()) {
             if (e instanceof AttackEquipment) damageToOpponent +=
                 e.getMultiplier() * ((AttackEquipment) e).getAttackDamage();
@@ -363,6 +364,18 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *  Observer/Subject Methods    *
      ********************************/
 
+    public int numEnemiesCardinallyAdjacent(Game game) {
+        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(this.getPosition());
+        int enemies = 0;
+        for (Entity entity : cardinallyAdjacentEntities) {
+            // Enemy if it is a moving entity (note that the Player is excluded)
+            if (entity instanceof MovingEntity) {
+                enemies++;
+            }
+        }
+        return enemies;
+    }
+
     /**
      * Attach an observer to the player.
      *
@@ -384,7 +397,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     /**
-     * Notifies all observer of the player.
+     * Notifies all observers of the player.
      */
     @Override
     public void notifyObservers() {
