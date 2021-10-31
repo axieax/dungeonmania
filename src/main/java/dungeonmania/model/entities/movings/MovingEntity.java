@@ -2,10 +2,11 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Tickable;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public abstract class MovingEntity extends Entity {
+public abstract class MovingEntity extends Entity implements Tickable {
     private int health;
     private int attackDamage;
     private Direction movingDirection;
@@ -20,8 +21,6 @@ public abstract class MovingEntity extends Entity {
         this.attackDamage = attackDamage;
         this.isEnemy = isEnemy;
     }
-    
-    public abstract void tick(Game game);
 
     public Direction getDirection() {
         return this.movingDirection;

@@ -14,6 +14,8 @@ public class ZombieToast extends MovingEntity implements Observer {
     final static int MAX_ZOMBIE_HEALTH = 20;
     final static int MAX_ZOMBIE_ATTACK_DMG = 2;
 
+    public final double ARMOUR_DROP_RATE = 0.2;
+
     private ZombieState randomZombieState;
     private ZombieState runZombieState;
     private ZombieState state;
@@ -23,7 +25,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
     
     public ZombieToast(Position position, int health, int attackDamage, SubjectPlayer player) {
-        super("zombie_toast", position, health, attackDamage);
+        super("zombie_toast", position, health, attackDamage, true);
         this.randomZombieState = new ZombieRandomState(this);
         this.runZombieState = new ZombieRunState(this);
 

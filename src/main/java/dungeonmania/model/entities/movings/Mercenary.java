@@ -10,6 +10,8 @@ public class Mercenary extends MovingEntity implements Observer {
     public final static int MAX_MERCENARY_ATTACK_DMG = 5;
     public final static int TREASURE_REQUIRED_TO_BRIBE = 1;
 
+    public final double ARMOUR_DROP_RATE = 0.2;
+
     private MercenaryState defaultState;
     private MercenaryState runState;
     private MercenaryState state;
@@ -19,7 +21,7 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     public Mercenary(Position position, int health, int attackDamage) {
-        super("mercenary", position, health, attackDamage);
+        super("mercenary", position, health, attackDamage, true);
         this.defaultState = new MercenaryDefaultState(this);
         this.runState = new MercenaryRunState(this);
 
