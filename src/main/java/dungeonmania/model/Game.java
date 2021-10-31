@@ -65,12 +65,8 @@ public final class Game {
         return entities;
     }
 
-    public final Goal getGoal () {
+    public final Goal getGoal() {
         return goal;
-    }
-
-    public final Mode getMode () {
-        return mode;
     }
 
     public final String getDungeonName() {
@@ -154,7 +150,7 @@ public final class Game {
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
             this.getCharacter().getInventoryResponses(),
             this.getBuildables(),
-            goal.toString()
+            (goal != null) ? goal.toString() : ""
         );
     }
 

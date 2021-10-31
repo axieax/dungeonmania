@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.model.Game;
+import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;  
@@ -77,10 +80,9 @@ public class GameTest {
         DungeonResponse responseOne = controller.tick (null, Direction.NONE);
         assert (responseOne.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
 
-
         responseOne.getEntities();
         for (int i = 0; i < 13; i++) {
-            DungeonResponse responseTwo = controller.tick (null, Direction.NONE); 
+            DungeonResponse responseTwo = controller.tick(null, Direction.NONE); 
             assert (responseTwo.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
         }
 
@@ -88,4 +90,22 @@ public class GameTest {
         DungeonResponse responseThree= controller.tick (null, Direction.NONE);
         assert (responseThree.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
     }
+
+    
+    // get AdjacentEntities
+    // get CardinallyAdjacentEntities
+    // get Buildables
+    // tick
+    // build
+    // interact
+
+    // get Moveable positions
+    @Test
+    public void testMoveablePositions() {
+
+        Mode gameMode = new Standard();
+        Game controller = new Game("advanced", EntityFactory.extractEntities("advanced", gameMode), null, gameMode);
+        assertDoesNotThrow(() -> controller.newGame ("advanced", "Hard"));
+    }
+
 }
