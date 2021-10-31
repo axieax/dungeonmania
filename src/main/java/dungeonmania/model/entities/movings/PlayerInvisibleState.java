@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.movings;
 
+import dungeonmania.model.Game;
+
 public class PlayerInvisibleState implements PlayerState {
     
     private Player player;
@@ -14,7 +16,7 @@ public class PlayerInvisibleState implements PlayerState {
      * This is implemented by simulating attacks from both parties as having no effect.
      */
     @Override
-    public void battle(MovingEntity opponent) {}
+    public void battle(Game game, MovingEntity opponent) {}
 
     @Override
     public void updateState(Player player) {

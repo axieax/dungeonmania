@@ -19,10 +19,10 @@ public class MercenaryRunState implements EnemyMovementState {
     public void move(Game game, Position playerPos) {
         Position currPos = mercenary.getPosition();
 
-        List<Position> possiblePositionsToMove = game.getMoveablePositions(this.mercenary);
+        List<Position> possiblePositionsToMove = game.getMoveablePositions(this.mercenary, currPos);
 
         int optimalPathLength = -1;
-        Position optimalPathPosition;
+        Position optimalPathPosition = currPos;
 
         PositionGraph positionGraph = new PositionGraph(game, this.mercenary);
 

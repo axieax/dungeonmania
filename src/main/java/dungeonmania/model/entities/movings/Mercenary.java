@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -12,6 +13,8 @@ public class Mercenary extends MovingEntity implements Observer {
     public static final int MAX_MERCENARY_ATTACK_DMG = 5;
     public static final int TREASURE_REQUIRED_TO_BRIBE = 1;
     private static final int BATTLE_RADIUS = 5;
+
+    public final double ARMOUR_DROP_RATE = 0.2;
     
     private EnemyMovementState defaultState;
     private EnemyMovementState runState;
@@ -22,7 +25,7 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     public Mercenary(Position position, int health, int attackDamage) {
-        super("mercenary", position, health, attackDamage);
+        super("mercenary", position, health, attackDamage, true);
         this.defaultState = new MercenaryDefaultState(this);
         this.runState = new MercenaryRunState(this);
 
@@ -37,6 +40,12 @@ public class Mercenary extends MovingEntity implements Observer {
 
         // Check the cardinally adjacent entities to the player (this denotes they are fighting an enemy)
         // If a player is fighting an enemy within the battle radius, mercenary moves twice as fast to take advantage
+        game.getCardinallyAdjacentEntities(playerPos)
+            .stream()
+            .filter(e -> e instanceof MovingEntity)
+            .collect(Collectors.toList())
+            .size();
+
         if (player.numEnemiesCardinallyAdjacent(game) > 0 && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
             state.move(game, playerPos);
         }
@@ -75,12 +84,6 @@ public class Mercenary extends MovingEntity implements Observer {
     public Direction getDirection() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public boolean collision(Entity entity) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     @Override

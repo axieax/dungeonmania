@@ -27,9 +27,9 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class MercenaryTest {
 
-    static final String CHARACTER_TYPE = "player";
-    static final String DUNGEON_NAME = "advanced";
-    static final String GAME_MODE = "peaceful";
+    public static final String CHARACTER_TYPE = "player";
+    public static final String DUNGEON_NAME = "advanced";
+    public static final String GAME_MODE = "peaceful";
 
     @Test
     public void testDoesNotSpawnWithNoEnemies() {

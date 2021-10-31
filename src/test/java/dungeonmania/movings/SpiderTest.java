@@ -3,7 +3,6 @@ package dungeonmania.movings;
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -33,9 +32,9 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class SpiderTest {
 
-    static final String SPIDER = "spider";
-    static final String DUNGEON_NAME = "advanced";
-    static final String GAME_MODE = "peaceful";
+    public static final String SPIDER = "spider";
+    public static final String DUNGEON_NAME = "advanced";
+    public static final String GAME_MODE = "peaceful";
 
     @Test
     public void testEnsureSpiderSpawns() {

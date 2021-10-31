@@ -19,10 +19,10 @@ public class MercenaryDefaultState implements EnemyMovementState {
     public void move(Game game, Position playerPos) {
         Position currPos = mercenary.getPosition();
 
-        List<Position> possiblePositionsToMove = game.getMoveablePositions(this.mercenary);
+        List<Position> possiblePositionsToMove = game.getMoveablePositions(this.mercenary, currPos);
 
         int optimalPathLength = Integer.MAX_VALUE;
-        Position optimalPathPosition;
+        Position optimalPathPosition = currPos;
 
         PositionGraph positionGraph = new PositionGraph(game, this.mercenary);
 

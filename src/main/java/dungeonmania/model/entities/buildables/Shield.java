@@ -10,6 +10,8 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
     private static final int TREASURE_NEEDED = 1;
     private static final int KEY_NEEDED = 1;
 
+    public final double MULTIPLIER = 0.25;
+
     public Shield() {
         super("shield", null);
     }
@@ -36,11 +38,5 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
             }
             inventory.addItem(new Shield());
         }
-    }
-
-    @Override
-    public int setDefenceMultiplier(int defendAmount) {
-        // TODO Auto-generated method stub
-        return 0;
     }
 }

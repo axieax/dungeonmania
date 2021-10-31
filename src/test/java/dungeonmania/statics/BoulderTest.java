@@ -17,10 +17,12 @@ public class BoulderTest {
      */
     @Test
     public void instanceTest() {
+        // TODO: Follow new Game constructor
         Game game = new Game(3, 3);
-        game.addEntity(new Boulder("boulder1", new Position(1, 1)));
+        Boulder boulder = new Boulder(new Position(1, 1));
+        game.addEntity(boulder);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("boulder1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(boulder.getId()).getPosition()));
     }
 
     /**
@@ -30,15 +32,16 @@ public class BoulderTest {
     @Test
     public void boulderMoveByPlayer() {
         Game game = new Game(3, 3);
-        game.addEntity(new Boulder("boulder1", new Position(1, 1)));
+        Boulder boulder = new Boulder(new Position(1, 1));
+        game.addEntity(boulder);
 
-        Player player = new Player("player1", new Position(2, 1));
+        Player player = new Player(new Position(2, 1));
 
         game.addEntity(player);
         player.move(game, Direction.LEFT);
 
         // Player and boulder should both move to the left by one 
-        assertTrue(new Position(0, 1).equals(game.getEntity("boulder1").getPosition()));
+        assertTrue(new Position(0, 1).equals(game.getEntity(boulder.getId()).getPosition()));
         assertTrue(new Position(1, 1).equals(player.getPosition()));
     }
 
@@ -48,18 +51,20 @@ public class BoulderTest {
     @Test
     public void boulderBlocksBoulderMovement() {
         Game game = new Game(3, 3);
-        game.addEntity(new Boulder("boulder1", new Position(1, 1)));
-        game.addEntity(new Boulder("boulder2", new Position(2, 1)));
+        Boulder boulder1 = new Boulder(new Position(1, 1));
+        Boulder boulder2 = new Boulder(new Position(1, 2));
+        game.addEntity(boulder1);
+        game.addEntity(boulder2);
 
-        Player player = new Player("player1", new Position(3, 1));
+        Player player = new Player(new Position(3, 1));
 
         game.addEntity(player);
         player.move(game, Direction.LEFT);
 
         // Since there are two boulders next to each other
         // Neither the player nor boulders should move
-        assertTrue(new Position(1, 1).equals(game.getEntity("boulder1").getPosition()));
-        assertTrue(new Position(2, 1).equals(game.getEntity("boulder2").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(boulder1.getId()).getPosition()));
+        assertTrue(new Position(2, 1).equals(game.getEntity(boulder2.getId()).getPosition()));
         assertTrue(new Position(3, 1).equals(player.getPosition()));
     }
 }
