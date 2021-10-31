@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 
-import dungeonmania.DungeonManiaController;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
@@ -47,7 +46,7 @@ public class ZombieToastSpawnerTest {
         game.addEntity(new Player(new Position(10, 10)));
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
-            game.tick(null, Direction.NONE);
+            game.tick("", Direction.NONE);
         }
 
         // Check that only one zombie toast has spawned
@@ -62,6 +61,7 @@ public class ZombieToastSpawnerTest {
             }
         }
 
+        // count = player + spawner + zombie
         assertTrue(count == 1);
     }
 
@@ -122,9 +122,10 @@ public class ZombieToastSpawnerTest {
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1));
         game.addEntity(spawner);
         
-        game.addEntity(new Sword(new Position(3, 1)));
+        game.addEntity(new Sword(new Position(2, 1)));
 
-        Player player = new Player(new Position(3, 2));
+        Player player = new Player(new Position(2, 2));
+        game.addEntity(player);
         
         // Player picks up sword
         player.move(game, Direction.UP);

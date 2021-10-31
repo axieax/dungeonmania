@@ -62,7 +62,7 @@ public class ArmourTest {
         // Durability of armour when picked up should be 5
         assertTrue(item.getDurability() == 5);
 
-        Mercenary mercenary = new Mercenary(new Position(2, 1));
+        Mercenary mercenary = new Mercenary(new Position(2, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         // Player moves to attack (interact with) the mercenary

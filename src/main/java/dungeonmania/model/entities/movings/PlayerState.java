@@ -1,6 +1,6 @@
 package dungeonmania.model.entities.movings;
 
-import org.json.JSONObject;
+import dungeonmania.model.Game;
 
 public interface PlayerState {
     public void battle(Game game, MovingEntity opponent);

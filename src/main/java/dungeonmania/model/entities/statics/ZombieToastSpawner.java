@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.statics;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
@@ -16,8 +17,13 @@ import java.util.Random;
 
 public class ZombieToastSpawner extends Entity implements Tickable {
 
-    public ZombieToastSpawner(Position position) {
+    private final int TICK_RATE;
+    private int currTick;
+
+    public ZombieToastSpawner(Position position, int tickRate) {
         super("zombie_toast_spawner", position);
+        this.TICK_RATE = tickRate;
+        this.currTick = 0;
     }
 
     /**
@@ -25,19 +31,22 @@ public class ZombieToastSpawner extends Entity implements Tickable {
      * the player destroys the spawner and the weapon loses durability.
      */
     @Override
-    public void interact(Game game, MovingEntity character){
+    public void interact(Game game, MovingEntity character) throws InvalidActionException {
         if (character instanceof Player) {
             Player player = (Player) character;
             if (player.hasWeapon()) {
                 Equipment weapon = player.getWeapon();
                 weapon.useEquipment(player);
                 game.removeEntity(this);
+            } else {
+                throw new InvalidActionException("You need to have a weapon to destroy a zombie toast spawner");
             }
         }
     }
 
     @Override
     public void tick(Game game) {
+<<<<<<< HEAD
         int x = this.getX();
         int y = this.getY();
         List<Position> positions = Arrays.asList(
@@ -54,6 +63,26 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                     if (game.getEntities(position) == null) openSquares.add(position);
                 }
             );
+=======
+        currTick++;
+        if (currTick % TICK_RATE == 0) {
+            int x = this.getX();
+            int y = this.getY();
+            List<Position> positions = Arrays.asList(
+                new Position(x, y + 1),
+                new Position(x - 1, y),
+                new Position(x + 1, y),
+                new Position(x, y - 1)
+            );
+            List<Position> openSquares = new ArrayList<>();
+            positions
+                .stream()
+                .forEach(
+                    position -> {
+                        if (game.getEntities(position).isEmpty()) openSquares.add(position);
+                    }
+                );
+>>>>>>> f475b078d13590db7dfa5edf1466c15bd305b066
 
         if (!openSquares.isEmpty()) {
             Random rand = new Random();

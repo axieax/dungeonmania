@@ -2,8 +2,8 @@ package dungeonmania.model;
 
 import dungeonmania.EntityFactory;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
-import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.goal.Goal;
@@ -12,8 +12,6 @@ import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -47,20 +45,24 @@ public final class Game {
         return entities.stream().filter(e -> e.getId().equals(entityId)).findFirst().orElse(null);
     }
 
-    public final Entity getCharacter() {
-        // TODO: import Character class
-        return entities.stream().filter(e -> e instanceof Character).findFirst().orElse(null);
+    public final Player getCharacter() {
+        return entities
+            .stream()
+            .filter(e -> e instanceof Player)
+            .map(e -> (Player) e)
+            .findFirst()
+            .orElse(null);
     }
 
     public final List<Entity> getEntities() {
         return entities;
     }
 
-    public final Goal getGoal () {
+    public final Goal getGoal() {
         return goal;
     }
 
-    public final Mode getMode () {
+    public final Mode getMode() {
         return mode;
     }
 
@@ -141,21 +143,31 @@ public final class Game {
         );
     }
 
-    private final List<BuildableEquipment> getBuildables() {
-        Character player = (Character) getCharacter();
-        EntityFactory.getBuildableEquipments().stream().filter(eq -> player.checkBuildable(eq));
+    private final List<String> getBuildables() {
+        Player player = getCharacter();
+        return EntityFactory
+            .allBuildables()
+            .stream()
+            .filter(eq -> player.checkBuildable(eq))
+            .map(eq -> eq.getPrefix())
+            .collect(Collectors.toList());
     }
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection) {
-        entities
+        List<Tickable> tickables = entities
             .stream()
-            .filter(e -> e instanceof MovingEntity)
-            .forEach(e -> ((MovingEntity) e).tick(this));
+            .filter(e -> e instanceof Tickable)
+            .map(e -> (Tickable) e)
+            .collect(Collectors.toList());
+
+        // separate loop to avoid concurrency issues when zombie spawner adds new entity
+        // to entities
+        tickables.forEach(e -> ((Tickable) e).tick(this));
         return getDungeonResponse();
     }
 
     public final DungeonResponse build(String buildable) {
-        Character player = (Character) getCharacter();
+        Player player = getCharacter();
         BuildableEquipment item = EntityFactory.getBuildable(buildable);
         player.craft(item);
         return getDungeonResponse();

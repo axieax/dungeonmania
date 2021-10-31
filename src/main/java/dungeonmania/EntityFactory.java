@@ -1,7 +1,5 @@
 package dungeonmania;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
@@ -38,25 +36,18 @@ import dungeonmania.model.goal.OrComposite;
 import dungeonmania.model.goal.ToggleSwitch;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.util.Position;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class EntityFactory {
-
-    private static final List<String> entityLayers = Arrays.asList("wall");
 
     private static final JSONObject loadDungeon(String dungeonName)
         throws IllegalArgumentException {
@@ -72,43 +63,43 @@ public class EntityFactory {
         }
     }
 
-
-
-
     public static final List<Entity> extractEntities(String dungeonName, Mode mode)
         throws IllegalArgumentException {
         // extract JSON
         JSONObject json = loadDungeon(dungeonName);
         JSONArray entitiesInfo = json.getJSONArray("entities");
-    
+
         // extract entities
         List<Entity> entities = new ArrayList<>();
-        
+
         Entity playerEntity = null;
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            if (entityInfo.getString ("type").startsWith("player")) {
+            if (entityInfo.getString("type").startsWith("player")) {
                 playerEntity = extractEntity(entityInfo, null, mode);
                 entities.add(playerEntity);
             }
         }
 
-        for (int i = 0; i < entitiesInfo.length(); ++i) {
-            JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            entities.add(extractEntity(entityInfo, playerEntity, mode));
-            if (entityInfo.getString ("type").startsWith("player")) continue;
-            entities.add(extractEntity(entityInfo, playerEntity, mode));
+        if (playerEntity != null && playerEntity instanceof Player) {
+            for (int i = 0; i < entitiesInfo.length(); ++i) {
+                JSONObject entityInfo = entitiesInfo.getJSONObject(i);
+                if (entityInfo.getString("type").startsWith("player")) continue;
+                entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
+            }
         }
         return entities;
     }
 
-
-    public static final Entity extractEntity(JSONObject entityInfo, Entity playerEntity, Mode mode) {
+    public static final Entity extractEntity(JSONObject entityInfo, Player player, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
-        // Static Entities
-        if (type.startsWith("wall")) {
+        if (type.startsWith("player")) {
+            position = position.asLayer(0);
+            return new Player(position);
+        } else if (type.startsWith("wall")) {
+            // Static Entities
             position = position.asLayer(0);
             return new Wall(position);
         } else if (type.startsWith("exit")) {
@@ -172,17 +163,15 @@ public class EntityFactory {
             return new Spider(position);
         } else if (type.startsWith("zombie_toast")) {
             position = position.asLayer(19);
-            Player currPlayer = (Player) playerEntity;
-            return new ZombieToast(position, mode.damageMultiplier(), currPlayer);
+            return new ZombieToast(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("mercenary")) {
             position = position.asLayer(20);
-            Player currPlayer = (Player) playerEntity;
-            return new Mercenary(position, mode.damageMultiplier(), currPlayer);
+            return new Mercenary(position, mode.damageMultiplier(), player);
         }
         return null;
     }
 
-    private Map<String, BuildableEquipment> buildableMap() {
+    private static Map<String, BuildableEquipment> buildableMap() {
         // dummy objects
         Map<String, BuildableEquipment> map = new HashMap<>();
         map.put("bow", new Bow());
@@ -190,11 +179,11 @@ public class EntityFactory {
         return map;
     }
 
-    public List<BuildableEquipment> allBuildables() {
+    public static List<BuildableEquipment> allBuildables() {
         return new ArrayList<>(buildableMap().values());
     }
 
-    public BuildableEquipment getBuildable(String buildable) {
+    public static BuildableEquipment getBuildable(String buildable) {
         BuildableEquipment item = buildableMap().get(buildable);
         return item.clone();
     }

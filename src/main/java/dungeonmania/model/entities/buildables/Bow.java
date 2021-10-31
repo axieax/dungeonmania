@@ -1,6 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
-import dungeonmania.model.Game;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.movings.Inventory;
 import dungeonmania.util.Position;
@@ -21,11 +21,13 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
     }
 
     @Override
-    public void craft(Inventory inventory) {
+    public void craft(Inventory inventory) throws InvalidActionException{
         if (isBuildable(inventory)) {
             inventory.removeItemQuantity("wood", WOOD_NEEDED);
             inventory.removeItemQuantity("arrow", ARROWS_NEEDED);
             inventory.addItem(new Bow());
+        } else {
+            throw new InvalidActionException("You don't have enough resources to build a Bow.");
         }
     }
 

@@ -1,14 +1,12 @@
 package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.equipment.Sword;
-import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
@@ -211,9 +209,11 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesMercenaryKilled() {
+        Mode mode = new Standard();
+        Player player = new Player(new Position(0, 0));
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
-            new Mercenary(new Position(0, 3))
+            player,
+            new Mercenary(new Position(0, 3), mode.damageMultiplier(), player)
         );
         Game game = new Game("test", entities, new DestroyEnemies(), null);
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
@@ -222,12 +222,10 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesMercenaryBribed() {
-        Entity mercenary = new Mercenary(new Position(0, 4));
-        List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
-            new Treasure(new Position(0, 1)),
-            mercenary
-        );
+        Mode mode = new Standard();
+        Player player = new Player(new Position(0, 0));
+        Entity mercenary = new Mercenary(new Position(0, 4), mode.damageMultiplier(), player);
+        List<Entity> entities = Arrays.asList(player, new Treasure(new Position(0, 1)), mercenary);
         Game game = new Game("test", entities, new DestroyEnemies(), null);
         // pick up treasure
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
@@ -244,7 +242,7 @@ public class GoalTest {
         Game game = new Game("test", entities, new DestroyEnemies(), null);
         assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
         // spider moves up
-        assertEquals("", game.interact("", Direction.DOWN).getGoals());
+        assertEquals("", game.tick("", Direction.DOWN).getGoals());
     }
 
     @Test

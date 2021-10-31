@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Shield;
@@ -19,9 +17,11 @@ import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class ShieldTest {
+
     /**
      * Test whether the buildable entity can be crafted up by the Player.
      */
@@ -124,7 +124,7 @@ public class ShieldTest {
         Item item = player.getInventoryItem(shield.getId());
         assertTrue(((Shield) item).getDurability() == 5);
 
-        Mercenary mercenary = new Mercenary(new Position(2, 2));
+        Mercenary mercenary = new Mercenary(new Position(2, 2), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         // Player moves to attack (interact with) the mercenary with the shield

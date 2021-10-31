@@ -4,6 +4,7 @@ import dungeonmania.model.Game;
 import dungeonmania.util.Position;
 
 public class DefaultState implements MovementState {
+    
     private MovingEntity enemy;
 
     public DefaultState(MovingEntity enemy) {

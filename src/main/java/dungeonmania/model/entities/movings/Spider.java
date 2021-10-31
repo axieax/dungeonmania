@@ -11,6 +11,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Spider extends MovingEntity {
+    
     public static final int MAX_SPIDER_HEALTH = 20;
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
     private boolean isInitialMove;
@@ -65,7 +66,7 @@ public class Spider extends MovingEntity {
      */
     public boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
         for(Entity e: entitiesAtPos) {
-            if(e.getId() == "boulder") {
+            if(e.getId().equals("boulder")) {
                 return false;
             }
         }

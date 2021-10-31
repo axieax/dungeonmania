@@ -86,7 +86,7 @@ public class BowTest {
         Item item = player.getInventoryItem(bow.getId());
         assertTrue(((Bow) item).getDurability() == 5);
 
-        Mercenary mercenary = new Mercenary(new Position(2, 3));
+        Mercenary mercenary = new Mercenary(new Position(2, 3), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         // Player moves to attack (interact with) the mercenary with the bow

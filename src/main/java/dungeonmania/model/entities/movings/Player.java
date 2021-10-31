@@ -18,12 +18,13 @@ import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 
-public class Player extends MovingEntity implements Character, SubjectPlayer {
+public class Player extends MovingEntity implements SubjectPlayer {
 
     public static final int MAX_CHARACTER_HEALTH = 100;
     public static final int CHARACTER_ATTACK_DMG = 10;
 
     private PlayerState state;
+    private boolean inBattle;
     private Inventory inventory = new Inventory();
     private List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
@@ -31,6 +32,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public Player(Position position) {
         super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false);
         this.state = new PlayerDefaultState(this);
+        this.inBattle = false;
     }
 
     /********************************
@@ -52,12 +54,26 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.state = state;
     }
 
+     /**
+     * @return boolean
+     */
+    public boolean getInBattle() {
+        return inBattle;
+    }
+
+    /**
+     * Sets the player battle status.
+     * @param inBattle
+     */
+    public void setInBattle(boolean inBattle) {
+        this.inBattle = inBattle;
+    }
+
     /**
      * Get a list of all allies that the player has.
      *
      * @return List<MovingEntity>
      */
-    @Override
     public List<MovingEntity> getAllies() {
         return this.allies;
     }
@@ -71,11 +87,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @param ally
      */
-    @Override
     public void addAlly(MovingEntity ally) {
         for (MovingEntity m : allies) {
-            // entity is already ally
-            if (m.getId() == ally.getId()) return;
+            // Entity is already ally
+            if (m.getId().equals(ally.getId())) return;
         }
         allies.add(ally);
     }
@@ -83,10 +98,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     /********************************
      *  Inventory Methods           *
      ********************************/
-
-    public Inventory getInventory() {
-        return inventory;
-    }
 
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
@@ -131,7 +142,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @return List<Equipment>
      */
-    @Override
     public List<Equipment> getEquipmentList() {
         return inventory.getEquipmentList();
     }
@@ -207,13 +217,12 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @return List<ItemResponse>
      */
-    @Override
     public List<ItemResponse> getInventoryResponses() {
         return inventory.getInventoryResponses();
     }
 
     /********************************
-     *  Action Methods           *
+     *  Action Methods              *
      ********************************/
 
     /**
@@ -240,12 +249,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @param game
      * @param direction
      */
-    @Override
     public void move(Game game, Direction direction) {
         this.setDirection(direction);
 
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(entity -> entity.interact(game, this));
+        entities.forEach(entity -> {
+            entity.interact(game, this);
+        });
 
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
         boolean canMove = true;
@@ -268,9 +278,12 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @param opponent entity the character is fighting
      */
-    @Override
     public void battle(Game game, MovingEntity opponent) {
         state.battle(game, opponent);
+
+        // Notify the observers that the player is in battle
+        this.setInBattle(true);
+        this.notifyObservers();
 
         if (this.getHealth() <= 0) {
             Item item = this.findInventoryItem("one_ring");
@@ -283,10 +296,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
             }
         }
 
-        // if either entity is dead, remove it
+        // If either entity is dead, remove it
         if (opponent.getHealth() <= 0) {
             game.removeEntity(opponent);
         }
+
+        // Notify the observers that the player is no longer in battle
+        this.setInBattle(false);
     }
 
     /**
@@ -294,7 +310,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @param item that is able to placed in the player's inventory
      */
-    @Override
     public void collect(Item item) {
         this.addInventoryItem(item);
     }
@@ -304,7 +319,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      *
      * @param equipment
      */
-    @Override
     public void craft(BuildableEquipment equipment) {
         if (equipment.isBuildable(inventory)) equipment.craft(inventory);
     }
@@ -320,7 +334,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     /********************************
-     *  Battling Methods           *
+     *  Battling Methods            *
      ********************************/
 
     /**
@@ -339,7 +353,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
                 e.getMultiplier() * ((AttackEquipment) e).getAttackDamage();
         }
 
-        // any extra attack damage provided by allies
+        // Any extra attack damage provided by allies
         for (MovingEntity a : this.getAllies()) {
             damageToOpponent += a.getBaseAttackDamage();
         }
@@ -365,20 +379,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     /********************************
      *  Observer/Subject Methods    *
      ********************************/
-
-    public int numEnemiesCardinallyAdjacent(Game game) {
-        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(
-            this.getPosition()
-        );
-        int enemies = 0;
-        for (Entity entity : cardinallyAdjacentEntities) {
-            // Enemy if it is a moving entity (note that the Player is excluded)
-            if (entity instanceof MovingEntity) {
-                enemies++;
-            }
-        }
-        return enemies;
-    }
 
     /**
      * Attach an observer to the player.
