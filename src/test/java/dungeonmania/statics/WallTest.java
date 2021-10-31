@@ -2,11 +2,15 @@ package dungeonmania.statics;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Wall;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -18,7 +22,7 @@ public class WallTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Wall wall = new Wall(new Position(1, 1));
         game.addEntity(wall);
 
@@ -30,7 +34,7 @@ public class WallTest {
      */
     @Test
     public void wallBlockPlayer() {
-        Game game = new Game(5, 5);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         game.addEntity(new Wall(new Position(0, 0)));
         game.addEntity(new Wall(new Position(0, 1)));
         game.addEntity(new Wall(new Position(0, 2)));
@@ -63,7 +67,7 @@ public class WallTest {
      */
     @Test
     public void wallBlockEnemies() {
-        Game game = new Game(5, 5);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         game.addEntity(new Wall(new Position(0, 0)));
         game.addEntity(new Wall(new Position(0, 1)));
         game.addEntity(new Wall(new Position(0, 2)));
@@ -93,7 +97,7 @@ public class WallTest {
      * Test if wall blocks movement of moving boulders.
      */
     public void wallBlockBoulder() {
-        Game game = new Game(5, 5);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         game.addEntity(new Wall(new Position(3, 0)));
 
         Boulder boulder = new Boulder(new Position(1, 0));

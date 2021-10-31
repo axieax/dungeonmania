@@ -1,11 +1,14 @@
 package dungeonmania.statics;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Boulder;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -17,8 +20,7 @@ public class BoulderTest {
      */
     @Test
     public void instanceTest() {
-        // TODO: Follow new Game constructor
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Boulder boulder = new Boulder(new Position(1, 1));
         game.addEntity(boulder);
 
@@ -31,7 +33,7 @@ public class BoulderTest {
      */
     @Test
     public void boulderMoveByPlayer() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Boulder boulder = new Boulder(new Position(1, 1));
         game.addEntity(boulder);
 
@@ -50,7 +52,7 @@ public class BoulderTest {
      */
     @Test
     public void boulderBlocksBoulderMovement() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Boulder boulder1 = new Boulder(new Position(1, 1));
         Boulder boulder2 = new Boulder(new Position(1, 2));
         game.addEntity(boulder1);

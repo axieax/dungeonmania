@@ -2,12 +2,15 @@ package dungeonmania.statics;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Door;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,7 @@ public class DoorTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
@@ -31,7 +34,7 @@ public class DoorTest {
      */
     @Test
     public void doorBlockWithoutKey() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
@@ -48,7 +51,7 @@ public class DoorTest {
     */
     @Test
     public void doorUnlockWithKey() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
@@ -71,7 +74,7 @@ public class DoorTest {
      */
     @Test
     public void doorLockWithIncorrectKey() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
@@ -94,7 +97,7 @@ public class DoorTest {
     */
     @Test
     public void multipleDoorUnlocking() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Door door1 = new Door(new Position(1, 1), 1);
         game.addEntity(door1);
         Door door2 = new Door(new Position(2, 1), 2);

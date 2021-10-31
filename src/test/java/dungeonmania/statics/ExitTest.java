@@ -3,10 +3,12 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dungeonmania.DungeonManiaController;
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.statics.Exit;
-import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +19,7 @@ public class ExitTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Exit exit = new Exit(new Position(1, 1));
         game.addEntity(exit);
         

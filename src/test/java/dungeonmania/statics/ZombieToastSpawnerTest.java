@@ -3,6 +3,8 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
+
 import dungeonmania.DungeonManiaController;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -12,6 +14,8 @@ import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -23,11 +27,11 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1));
         game.addEntity(spawner);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity(spawner.getId().getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(spawner.getId()).getPosition()));
     }
 
     /**
@@ -37,7 +41,7 @@ public class ZombieToastSpawnerTest {
     public void zombieToastSpawnEveryCycle() {
       
         DungeonManiaController controller = new DungeonManiaController();
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         game.addEntity(new ZombieToastSpawner(new Position(1, 1)));
         
         // Ticks the game 20 times
@@ -47,7 +51,7 @@ public class ZombieToastSpawnerTest {
 
         // Check that only one zombie toast has spawned
         int count = 0;
-        for (Entity entity : game.getAllEntities()) {
+        for (Entity entity : game.getEntities()) {
             if (entity instanceof ZombieToast) {
                 ZombieToast zombieToast = (ZombieToast) entity;
                 if (zombieToast.getPosition().equals(new Position(1, 0))) count++;
@@ -65,7 +69,7 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastSurroundedByWalls() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         game.addEntity(new ZombieToastSpawner(new Position(1, 1)));
 
         // The zombie toast spawner is surrounded by either walls or boulders
@@ -79,7 +83,7 @@ public class ZombieToastSpawnerTest {
         game.addEntity(new Wall(new Position(2, 2)));
 
         // Check that there are no zombie toasts spawned
-        for (Entity entity : game.getAllEntities()) {
+        for (Entity entity : game.getEntities()) {
             if (entity instanceof ZombieToast) {
                 fail("ZombieToast spawned even though there are no open squares");
             }
@@ -91,7 +95,7 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastCannotSpawn() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         game.addEntity(new ZombieToastSpawner(new Position(1, 1)));
 
         // The zombie toast spawner is blocked by boulders in the four cardinal directions
@@ -101,7 +105,7 @@ public class ZombieToastSpawnerTest {
         game.addEntity(new Boulder(new Position(2, 1)));
 
         // Check that there are no zombie toasts spawned
-        for (Entity entity : game.getAllEntities()) {
+        for (Entity entity : game.getEntities()) {
             if (entity instanceof ZombieToast) {
                 fail("ZombieToast spawned even though there are no open squares");
             }
@@ -113,7 +117,7 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastDestroySpawner() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1));
         game.addEntity(spawner);
         

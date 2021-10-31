@@ -70,7 +70,7 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     /** 
-     * Character attempts to bribe mercenary
+     * Player attempts to bribe mercenary
      */
     @Override
     public void interact(Game game, MovingEntity character) { 
@@ -115,16 +115,14 @@ public class Mercenary extends MovingEntity implements Observer {
         List<Position> possiblePositionsToMove = game.getMoveablePositions(this, currPos);
 
         int optimalPathLength = -1;
-        Position optimalPathPosition;
 
         PositionGraph positionGraph = new PositionGraph(game, this);
 
         // Find the shortest possible path from the mercenary to the player
         for (Position position: possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(currPos, playerPos);
+            int pathLen = positionGraph.BFS(position, playerPos);
             if (pathLen > optimalPathLength) {
                 optimalPathLength = pathLen;
-                optimalPathPosition = position;
             }
         }
         return optimalPathLength;

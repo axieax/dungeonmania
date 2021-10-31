@@ -23,10 +23,10 @@ public class ZombieRunState implements EnemyMovementState {
     public void move(Game game, Position playerPos) {
         Position currPos = zombie.getPosition();
 
-        List<Position> possiblePositionsToMove = game.getMoveablePositions(this.zombie);
+        List<Position> possiblePositionsToMove = game.getMoveablePositions(this.zombie, currPos);
 
         int optimalPathLength = -1;
-        Position optimalPathPosition;
+        Position optimalPathPosition = currPos;
 
         PositionGraph positionGraph = new PositionGraph(game, this.zombie);
 

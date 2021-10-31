@@ -3,11 +3,15 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -19,7 +23,7 @@ public class PotionTest {
      */
     @Test
     public void instanceHealthPotionTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         HealthPotion healthPotion = new HealthPotion(new Position(1, 1));
         game.addEntity(healthPotion);
 
@@ -31,7 +35,7 @@ public class PotionTest {
      */
     @Test
     public void instanceInvincibilityPotionTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         InvincibilityPotion invincibilityPotion = new InvincibilityPotion(new Position(1, 1));
         game.addEntity(invincibilityPotion);
 
@@ -43,7 +47,7 @@ public class PotionTest {
      */
     @Test
     public void instanceInvisibilityPotionTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         InvisibilityPotion invisibilityPotion = new InvisibilityPotion(new Position(1, 1));
         game.addEntity(invisibilityPotion);
 
@@ -55,7 +59,7 @@ public class PotionTest {
      */
     @Test
     public void collectHealthPotionTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         HealthPotion healthPotion = new HealthPotion(new Position(1, 1));
         game.addEntity(healthPotion);
 
@@ -73,7 +77,7 @@ public class PotionTest {
      */
     @Test
     public void collectInvincibilityPotionTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         InvincibilityPotion invincibilityPotion = new InvincibilityPotion(new Position(1, 1));
         game.addEntity(invincibilityPotion);
 
@@ -91,7 +95,7 @@ public class PotionTest {
      */
     @Test
     public void collectInvisibilityPotionTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         InvisibilityPotion invisibilityPotion = new InvisibilityPotion(new Position(1, 1));
         game.addEntity(invisibilityPotion);
 

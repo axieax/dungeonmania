@@ -234,8 +234,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         List<Entity> entities = game.getEntities(newPlayerPos);
         entities.forEach(entity -> entity.interact(game, this));
 
-        // after interacting enemies on the newPlayerPos, get the updated state of
-        // dungeon
         List<Entity> updatedEntities = game.getEntities(newPlayerPos);
         boolean canMove = true;
         for (Entity e : updatedEntities) {
@@ -244,7 +242,6 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
         if (canMove) {
             this.setPosition(newPlayerPos);
-            // TODO: should we tick first or move first?
             this.tick(game);
             this.notifyObservers();
         }
@@ -265,10 +262,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         if (this.getHealth() <= 0) {
             Item item = this.findInventoryItem("one_ring");
             if (item != null && item instanceof Consumable) {
-                // use one ring if it is in inventory
+                // Use one ring if it is in inventory
                 ((Consumable) item).consume(this);
             } else {
-                // entity is dead, remove it
+                // Entity is dead, remove it
                 game.removeEntity(this);
             }
         }
@@ -323,7 +320,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         // Normal damage inflicted by player
         int damageToOpponent = this.getBaseAttackDamage();
 
-        // any extra attack damage provided by equipment
+        // Any extra attack damage provided by equipment
         for (Equipment e : getAttackEquipmentList()) {
             if (e instanceof AttackEquipment) damageToOpponent +=
                 e.getMultiplier() * ((AttackEquipment) e).getAttackDamage();
@@ -389,7 +386,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     }
 
     /**
-     * Notifies all observer of the player.
+     * Notifies all observers of the player.
      */
     @Override
     public void notifyObservers() {

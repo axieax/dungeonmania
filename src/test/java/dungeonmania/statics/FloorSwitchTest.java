@@ -3,11 +3,14 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Player;
-import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -19,10 +22,13 @@ public class FloorSwitchTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
-        game.addEntity(new FloorSwitch("floorswitch1", new Position(1, 1)));
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("floorswitch1").getPosition()));
+        FloorSwitch floorSwitch = new FloorSwitch(new Position(1, 1));
+
+        game.addEntity(floorSwitch);
+
+        assertTrue(new Position(1, 1).equals(game.getEntity(floorSwitch.getId()).getPosition()));
     }
 
     /**
@@ -30,11 +36,11 @@ public class FloorSwitchTest {
      */
     @Test
     public void floorSwitchEmptySquare() {
-        Game game = new Game(5, 5);
-        FloorSwitch floorSwitch = new FloorSwitch("floorswitch1", new Position(1, 1));
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        FloorSwitch floorSwitch = new FloorSwitch(new Position(1, 1));
         game.addEntity(floorSwitch);
 
-        Player player = new Player("player1", new Position(0, 1));
+        Player player = new Player(new Position(0, 1));
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);
@@ -52,14 +58,14 @@ public class FloorSwitchTest {
      */
     @Test
     public void wallBlockEnemies() {
-        Game game = new Game(5, 5);
-        FloorSwitch floorSwitch = new FloorSwitch("floorswitch1", new Position(2, 0));
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 0));
         game.addEntity(floorSwitch);
 
-        Player player = new Player("player1", new Position(0, 0));
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
 
-        Boulder boulder = new Boulder("boulder1", new Position(1, 0));
+        Boulder boulder = new Boulder(new Position(1, 0));
         game.addEntity(boulder);
 
         // Move boulder on top of switch
