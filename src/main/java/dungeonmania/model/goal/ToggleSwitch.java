@@ -11,7 +11,7 @@ import java.util.Set;
 public class ToggleSwitch extends GoalLeaf {
 
     public ToggleSwitch() {
-        super("boulders");
+        super("switch");
     }
 
     @Override
