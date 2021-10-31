@@ -1,6 +1,9 @@
 package dungeonmania.model.entities.movings;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -22,8 +25,8 @@ public class ZombieToast extends MovingEntity implements Observer {
     
     public ZombieToast(Position position, int health, int attackDamage, SubjectPlayer player) {
         super("zombie_toast", position, health, attackDamage, true);
-        this.defaultState = new ZombieDefaultState(this);
-        this.runState = new ZombieRunState(this);
+        this.defaultState = new DefaultState(this);
+        this.runState = new RunState(this);
 
         this.state = defaultState;
         player.attach(this);
@@ -108,5 +111,31 @@ public class ZombieToast extends MovingEntity implements Observer {
 
     public EnemyMovementState getRunState() {
         return runState;
+    }
+
+    public void move(Game game, Position playerPos) {
+        Position currPos = this.getPosition();
+        Set<Direction> chosen = new HashSet<>();
+        
+        // Choose a direction (other than none)
+        List<Direction> possibleDirections = Arrays.asList(
+            Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT
+        );
+        
+        // Choose a random direction
+        while(chosen.size() != possibleDirections.size()) {
+            Direction direction = possibleDirections.get((int) Math.random() % 4);
+            chosen.add(direction);
+            
+            Position newPos = currPos.translateBy(direction);
+            List<Entity> entitiesNewPos = game.getEntities(newPos);
+
+            if(entitiesNewPos == null || this.canZombieMoveOntoPosition(entitiesNewPos)) {
+                this.setPosition(newPos);
+                return;
+            }
+        }
+
+        // All 4 directions are blocked, do not move anywhere
     }
 }

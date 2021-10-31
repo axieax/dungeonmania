@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -26,8 +25,8 @@ public class Mercenary extends MovingEntity implements Observer {
 
     public Mercenary(Position position, int health, int attackDamage) {
         super("mercenary", position, health, attackDamage, true);
-        this.defaultState = new MercenaryDefaultState(this);
-        this.runState = new MercenaryRunState(this);
+        this.defaultState = new DefaultState(this);
+        this.runState = new RunState(this);
 
         this.state = defaultState;
     }
@@ -126,5 +125,27 @@ public class Mercenary extends MovingEntity implements Observer {
             }
         }
         return optimalPathLength;
+    }
+
+    public void move(Game game, Position playerPos) {
+        Position currPos = this.getPosition();
+
+        List<Position> possiblePositionsToMove = game.getMoveablePositions(this, currPos);
+
+        int optimalPathLength = Integer.MAX_VALUE;
+        Position optimalPathPosition = currPos;
+
+        PositionGraph positionGraph = new PositionGraph(game, this);
+
+        // Move the mercenary to the closest possible position to the player
+        for (Position position : possiblePositionsToMove) {
+            int pathLen = positionGraph.BFS(this.getPosition(), playerPos);
+            if (pathLen < optimalPathLength) {
+                optimalPathLength = pathLen;
+                optimalPathPosition = position;
+            }
+        }
+
+        if (optimalPathPosition != null) this.setPosition(optimalPathPosition);
     }
 }
