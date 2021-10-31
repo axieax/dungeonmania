@@ -49,8 +49,6 @@ import org.json.JSONObject;
 
 public class EntityFactory {
 
-    private static final List<String> entityLayers = Arrays.asList("wall");
-
     private static final JSONObject loadDungeon(String dungeonName)
         throws IllegalArgumentException {
         try {
@@ -65,43 +63,43 @@ public class EntityFactory {
         }
     }
 
-
-
-
     public static final List<Entity> extractEntities(String dungeonName, Mode mode)
         throws IllegalArgumentException {
         // extract JSON
         JSONObject json = loadDungeon(dungeonName);
         JSONArray entitiesInfo = json.getJSONArray("entities");
-    
+
         // extract entities
         List<Entity> entities = new ArrayList<>();
-        
+
         Entity playerEntity = null;
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            if (entityInfo.getString ("type").startsWith("player")) {
+            if (entityInfo.getString("type").startsWith("player")) {
                 playerEntity = extractEntity(entityInfo, null, mode);
                 entities.add(playerEntity);
             }
         }
 
-        for (int i = 0; i < entitiesInfo.length(); ++i) {
-            JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
-            if (entityInfo.getString ("type").startsWith("player")) continue;
-            entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
+        if (playerEntity != null && playerEntity instanceof Player) {
+            for (int i = 0; i < entitiesInfo.length(); ++i) {
+                JSONObject entityInfo = entitiesInfo.getJSONObject(i);
+                if (entityInfo.getString("type").startsWith("player")) continue;
+                entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
+            }
         }
         return entities;
     }
-
 
     public static final Entity extractEntity(JSONObject entityInfo, Player player, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
-        // Static Entities
-        if (type.startsWith("wall")) {
+        if (type.startsWith("player")) {
+            position = position.asLayer(0);
+            return new Player(position);
+        } else if (type.startsWith("wall")) {
+            // Static Entities
             position = position.asLayer(0);
             return new Wall(position);
         } else if (type.startsWith("exit")) {

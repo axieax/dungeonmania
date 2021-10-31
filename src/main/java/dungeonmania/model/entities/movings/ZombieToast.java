@@ -62,10 +62,6 @@ public class ZombieToast extends MovingEntity implements Observer {
         this.state = state;
     }
 
-    public MovementState getState() {
-        return state;
-    }
-
     public void move(Game game, Position playerPos) {
         List<Position> possiblePositions = game.getMoveablePositions(this, this.getPosition());
 

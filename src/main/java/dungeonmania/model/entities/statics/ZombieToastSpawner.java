@@ -18,13 +18,13 @@ import dungeonmania.util.Position;
 
 public class ZombieToastSpawner extends Entity implements Tickable {
 
-    private int tickRate;
-    private int currTickRate;
+    private final int TICK_RATE;
+    private int currTick;
 
     public ZombieToastSpawner(Position position, int tickRate) {
         super("zombie_toast_spawner", position);
-        this.tickRate = tickRate;
-        this.currTickRate = 0;
+        this.TICK_RATE = tickRate;
+        this.currTick = 0;
     }
 
     /**
@@ -49,7 +49,8 @@ public class ZombieToastSpawner extends Entity implements Tickable {
 
     @Override
     public void tick(Game game) {
-        if (currTickRate % tickRate == 0) {
+        currTick++;
+        if (currTick % TICK_RATE == 0) {
             int x = this.getX();
             int y = this.getY();
             List<Position> positions = Arrays.asList(
@@ -62,7 +63,7 @@ public class ZombieToastSpawner extends Entity implements Tickable {
             positions
                 .stream()
                 .forEach(position -> {
-                    if (game.getEntities(position) == null) openSquares.add(position);
+                    if (game.getEntities(position).isEmpty()) openSquares.add(position);
                 });
 
             if (!openSquares.isEmpty()) {
@@ -77,6 +78,5 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                 );
             }
         }
-        currTickRate++;
     }
 }
