@@ -36,7 +36,7 @@ public class Mercenary extends MovingEntity implements Observer {
             .collect(Collectors.toList())
             .size();
 
-        if (player.numEnemiesCardinallyAdjacent(game) > 0 && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
+        if (getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
             state.move(game, playerPos);
         }
     }

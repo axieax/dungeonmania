@@ -38,7 +38,7 @@ import dungeonmania.util.Position;
 public class CharacterTest {
     final static String CHARACTER_TYPE = "player";
     final static String DUNGEON_NAME = "advanced";
-    final static String GAME_MODE = "peaceful";
+    final static String GAME_MODE = "Peaceful";
 
     @Test
     public void testMovementIdempotence() {

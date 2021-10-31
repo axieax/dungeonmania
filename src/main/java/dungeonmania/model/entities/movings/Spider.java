@@ -61,7 +61,7 @@ public class Spider extends MovingEntity {
      */
     public boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
         for(Entity e: entitiesAtPos) {
-            if(e.getId() == "boulder") {
+            if(e.getId().equals("boulder")) {
                 return false;
             }
         }

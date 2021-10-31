@@ -82,10 +82,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *  Inventory Methods           *
      ********************************/
 
-    public Inventory getInventory() {
-        return inventory;
-    }
-
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
      *
@@ -359,20 +355,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /********************************
      *  Observer/Subject Methods    *
      ********************************/
-
-    public int numEnemiesCardinallyAdjacent(Game game) {
-        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(
-            this.getPosition()
-        );
-        int enemies = 0;
-        for (Entity entity : cardinallyAdjacentEntities) {
-            // Enemy if it is a moving entity (note that the Player is excluded)
-            if (entity instanceof MovingEntity) {
-                enemies++;
-            }
-        }
-        return enemies;
-    }
 
     /**
      * Attach an observer to the player.
