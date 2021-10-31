@@ -90,68 +90,71 @@ public class GameLoader {
         String type = entityInfo.getString("type");
         // Static Entities
         if (type.startsWith("wall")) {
+            position = position.asLayer(0);
             return new Wall(position);
         } else if (type.startsWith("exit")) {
+            position = position.asLayer(1);
             return new Exit(position);
         } else if (type.startsWith("boulder")) {
+            position = position.asLayer(3);
             return new Boulder(position);
         } else if (type.startsWith("switch")) {
+            position = position.asLayer(2);
             return new FloorSwitch(position);
         } else if (type.startsWith("door")) {
             int key = entityInfo.getInt("key");
+            position = position.asLayer(4);
             return new Door(position, key);
         } else if (type.startsWith("portal")) {
             String colour = entityInfo.getString("colour");
+            position = position.asLayer(5);
             return new Portal(position, colour);
         } else if (type.startsWith("zombie_toast_spawner")) {
+            position = position.asLayer(6);
             return new ZombieToastSpawner(position, mode.tickRate());
             // Moving Entities
-        } else if (type.startsWith("spider")) {
-            Spider newSpider = new Spider(position, mode.damageMultiplier());
-            int health = entityInfo.getInt("health");
-            newSpider.setHealth (health);
-            return newSpider;
-        } else if (type.startsWith("zombie_toast")) {
-            ZombieToast newZombieToast = new ZombieToast(position, mode.damageMultiplier(), currentPlayer); 
-            int health = entityInfo.getInt("health");
-            newZombieToast.setHealth(health);
-            return newZombieToast;
-        } else if (type.startsWith("mercenary")) {
-            Mercenary newMercenary = new Mercenary(position, mode.damageMultiplier(), currentPlayer);
-            int health = entityInfo.getInt("health");
-            newMercenary.setHealth(health);
-            return newMercenary;
-            // Collectable Entities
-        } else if (type.startsWith("treasure")) {
+        }  else if (type.startsWith("treasure")) {
+            position = position.asLayer(7);
             return new Treasure(position);
         } else if (type.startsWith("key")) {
             int key = entityInfo.getInt("key");
+            position = position.asLayer(8);
             return new Key(position, key);
         } else if (type.startsWith("health_potion")) {
+            position = position.asLayer(9);
             return new HealthPotion(position);
         } else if (type.startsWith("invincibility_potion")) {
+            position = position.asLayer(10);
             return new InvincibilityPotion(position);
         } else if (type.startsWith("invisibility_potion")) {
+            position = position.asLayer(11);
             return new InvisibilityPotion(position);
         } else if (type.startsWith("wood")) {
+            position = position.asLayer(12);
             return new Wood(position);
         } else if (type.startsWith("arrow")) {
+            position = position.asLayer(13);
             return new Arrow(position);
         } else if (type.startsWith("bomb")) {
+            position = position.asLayer(14);
             return new Bomb(position);
         } else if (type.startsWith("sword")) {
+            position = position.asLayer(15);
             Sword newSword = new Sword(position);
             int durability = entityInfo.getInt("durability");
             newSword.setDurability(durability);
             return newSword;
         } else if (type.startsWith("armour")) {
+            position = position.asLayer(16);
             Armour newArmour = new Armour(position);
             int durability = entityInfo.getInt("durability");
             newArmour.setDurability(durability);
             return newArmour;
         } else if (type.startsWith("one_ring")) {
+            position = position.asLayer(17);
             return new TheOneRing(position);
         } else if (type.startsWith("player")) {
+            position = position.asLayer(0);
             Player player = new Player (position);
             int health = entityInfo.getInt("health");
             player.setHealth(health);
@@ -172,6 +175,25 @@ public class GameLoader {
             int durability = entityInfo.getInt("durability");
             newShield.setDurability(durability);
             return newShield;
+        } else if (type.startsWith("spider")) {
+            position = position.asLayer(18);
+            Spider newSpider = new Spider(position);
+            int health = entityInfo.getInt("health");
+            newSpider.setHealth (health);
+            return newSpider;
+        } else if (type.startsWith("zombie_toast")) {
+            position = position.asLayer(19);
+            ZombieToast newZombieToast = new ZombieToast(position, mode.damageMultiplier(), currentPlayer); 
+            int health = entityInfo.getInt("health");
+            newZombieToast.setHealth(health);
+            return newZombieToast;
+        } else if (type.startsWith("mercenary")) {
+            position = position.asLayer(20);
+            Mercenary newMercenary = new Mercenary(position, mode.damageMultiplier(), currentPlayer);
+            int health = entityInfo.getInt("health");
+            newMercenary.setHealth(health);
+            return newMercenary;
+            // Collectable Entities
         }
         return null;
     }

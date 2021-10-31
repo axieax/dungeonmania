@@ -115,10 +115,16 @@ public class DungeonManiaController {
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
 
-        String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
-        FileWriter myFileWriter = new FileWriter(path, false);
-        myFileWriter.write(prettyString);
-        myFileWriter.close();
+        try {
+            String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
+            FileWriter myFileWriter = new FileWriter(path, false);
+            myFileWriter.write(prettyString);
+            myFileWriter.close();
+        } catch (IOException e) {
+            return null;
+        }
+
+
 
         return currentGame.getDungeonResponse();
     }

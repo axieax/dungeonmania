@@ -31,18 +31,18 @@ public class GameTest {
         assertDoesNotThrow(() -> controller.newGame ("zombie", "Standard"));
 
         DungeonResponse responseOne = controller.tick (null, Direction.NONE);
-        assert (responseOne.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
+        assert (responseOne.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
 
 
         responseOne.getEntities();
         for (int i = 0; i < 18; i++) {
             DungeonResponse responseTwo = controller.tick (null, Direction.NONE); 
-            assert (responseTwo.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
+            assert (responseTwo.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
         }
 
         // 20 ticks have passed
         DungeonResponse responseThree= controller.tick (null, Direction.NONE);
-        assert (responseThree.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
+        assert (responseThree.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
     }
     /**
      * This tests Zombie Spawn Rate in Peaceful Game Mode
@@ -53,18 +53,18 @@ public class GameTest {
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Peaceful"));
 
         DungeonResponse responseOne = controller.tick (null, Direction.NONE);
-        assert (responseOne.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
+        assert (responseOne.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
 
 
         responseOne.getEntities();
         for (int i = 0; i < 18; i++) {
             DungeonResponse responseTwo = controller.tick (null, Direction.NONE); 
-            assert (responseTwo.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
+            assert (responseTwo.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
         }
 
         // 20 ticks have passed
         DungeonResponse responseThree= controller.tick (null, Direction.NONE);
-        assert (responseThree.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
+        assert (responseThree.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
     }
 
     /**
@@ -78,17 +78,17 @@ public class GameTest {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Hard"));
         DungeonResponse responseOne = controller.tick (null, Direction.NONE);
-        assert (responseOne.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
+        assert (responseOne.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
 
         responseOne.getEntities();
         for (int i = 0; i < 13; i++) {
             DungeonResponse responseTwo = controller.tick(null, Direction.NONE); 
-            assert (responseTwo.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
+            assert (responseTwo.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
         }
 
         // 15 ticks have passed
         DungeonResponse responseThree= controller.tick (null, Direction.NONE);
-        assert (responseThree.getEntities().stream().filter(e -> e.getType().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
+        assert (responseThree.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
     }
 
     
