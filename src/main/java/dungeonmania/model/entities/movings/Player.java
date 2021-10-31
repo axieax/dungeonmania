@@ -324,4 +324,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public boolean isEnemy() {
+        return false;
+    }
 }

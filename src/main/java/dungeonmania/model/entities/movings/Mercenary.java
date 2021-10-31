@@ -69,6 +69,11 @@ public class Mercenary extends MovingEntity implements Observer {
         this.setPosition(position);
     }
 
+    @Override
+    public boolean isEnemy() {
+        return false;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////
     public void setState(MercenaryState state) {
         this.state = state;

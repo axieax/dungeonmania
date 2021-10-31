@@ -67,4 +67,6 @@ public abstract class MovingEntity extends Entity {
     public abstract boolean collision(Entity entity);
 
     public abstract void moveTo(Position position);
+
+    public abstract boolean isEnemy();
 }
