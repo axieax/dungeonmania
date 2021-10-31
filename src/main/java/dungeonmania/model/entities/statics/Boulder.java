@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.statics;
 
+import java.util.List;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
@@ -33,11 +35,18 @@ public class Boulder extends Entity {
      */
     public void moveBoulder(Game game, Direction direction) {
         Position newPosition = this.getOffsetPosition(direction);
-        Entity entityAtPosition = game.getEntityAtPosition(newPosition);
-        if (entityAtPosition == null || entityAtPosition instanceof FloorSwitch) {
+        List<Entity> entities = game.getEntities(newPosition);
+
+        if (entities.isEmpty()) {
             this.setPosition(newPosition);
+        } else {
+            for(Entity entity: entities) {
+                if (entity instanceof FloorSwitch) {
+                    this.setPosition(newPosition);
+                    ((FloorSwitch) entity).triggerSwitch(game);
+                    break;
+                }
+            }
         }
-        if (entityAtPosition instanceof FloorSwitch)
-            ((FloorSwitch) entityAtPosition).triggerSwitch(game);
     }
 }

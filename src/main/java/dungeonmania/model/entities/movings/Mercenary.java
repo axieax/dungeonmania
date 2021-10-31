@@ -59,8 +59,9 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     @Override
-    public boolean isCollidable(Entity entity) {
-        return true;
+    public boolean collision(Entity entity) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override

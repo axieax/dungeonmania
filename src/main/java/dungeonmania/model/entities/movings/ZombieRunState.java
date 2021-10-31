@@ -1,9 +1,11 @@
 package dungeonmania.model.entities.movings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -22,7 +24,29 @@ public class ZombieRunState implements ZombieState {
             Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT
         );
 
-        // TODO:
-        // use BFS with destination as position of player where the x and y coordinates are swapped
+        List<Position> possiblePositionsToMove = game.getMoveablePositions(this.zombie);
+
+        int optimalPathLength = -1;
+        Position optimalPathPosition;
+
+        PositionGraph positionGraph = new PositionGraph(game, this.zombie);
+
+        for (Position position: possiblePositionsToMove) {
+            int pathLen = positionGraph.BFS(this.zombie.getPosition(), game.getCharacter().getPosition());
+            if (pathLen > optimalPathLength) {
+                optimalPathLength = pathLen;
+                optimalPathPosition = position;
+            }
+        }
+
+        if (optimalPathPosition != null) this.zombie.setPosition(optimalPathPosition);
     }
+
+    public List<Position> getShortestPath(Game game, Entity fromEntity, Entity toEntity) {
+        // Get a list of node positions
+        List<Position> positionNodes = this.getAllFreePositions(game, fromEntity);
+
+
+    }
+
 }
