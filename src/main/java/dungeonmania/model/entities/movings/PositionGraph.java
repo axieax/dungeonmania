@@ -18,8 +18,8 @@ public class PositionGraph {
     
     public PositionGraph(Game game, Entity entity) {
         this.game = game;
-        this.nodes = this.getAllFreePositions();
         this.entity = entity;
+        this.nodes = this.getAllFreePositions();
     }
 
     /**
@@ -30,14 +30,14 @@ public class PositionGraph {
      * @return
      */
     private List<Position> getAllFreePositions() {
-        List<Position> positionsToEvaluate = new ArrayList<>();
-        List<Position> freePositions = new ArrayList<>();
+        LinkedList<Position> positionsToEvaluate = new LinkedList<>();
+        LinkedList<Position> freePositions = new LinkedList<>();
 
         positionsToEvaluate.add(entity.getPosition());
         freePositions.add(entity.getPosition());
         
-        while (positionsToEvaluate.size() > 0) {
-            Position currPosition = positionsToEvaluate.get(0);
+        while (!positionsToEvaluate.isEmpty()) {
+            Position currPosition = positionsToEvaluate.remove();
             List<Position> moveToPositions = game.getMoveablePositions(entity, currPosition);
             for (Position currMoveToPosition: moveToPositions) {
                 freePositions.add(currMoveToPosition);
