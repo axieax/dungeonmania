@@ -170,7 +170,15 @@ public final class Game {
 
         // separate loop to avoid concurrency issues when zombie spawner adds new entity
         // to entities
-        tickables.forEach(e -> ((Tickable) e).tick(this));
+        tickables.forEach(
+            e -> {
+                if (e instanceof Player) {
+                    ((Player) e).move(this, movementDirection);
+                } else {
+                    ((Tickable) e).tick(this);
+                }
+            }
+        );
         return getDungeonResponse();
     }
 

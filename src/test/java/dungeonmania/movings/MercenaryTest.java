@@ -30,7 +30,7 @@ public class MercenaryTest {
 
     public static final String CHARACTER_TYPE = "player";
     public static final String DUNGEON_NAME = "advanced";
-    public static final String GAME_MODE = "peaceful";
+    public static final String GAME_MODE = "Peaceful";
 
     @Test
     public void testDoesNotSpawnWithNoEnemies() {
