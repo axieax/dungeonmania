@@ -103,7 +103,7 @@ public class CharacterTest {
 
         characterPos = getCharacterPosition(entities);
         assertNotNull(characterPos);
-        assertEquals(new Position(1, 2).toString(), characterPos.toString());
+        assertEquals(new Position(2, 1).toString(), characterPos.toString());
 
         // move character left
         response = controller.tick(null, Direction.LEFT);
