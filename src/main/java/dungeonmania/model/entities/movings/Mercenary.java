@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.movings;
 
+import java.util.List;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
@@ -29,9 +31,15 @@ public class Mercenary extends MovingEntity implements Observer {
 
     @Override
     public void tick(Game game) {
-        Position playerPos = game.getCharacter().getPosition();
+        Player player = (Player) game.getCharacter();
+        Position playerPos = player.getPosition();
         state.move(game, playerPos);
-        // If a player is fighting an enemy, mercenary moves twice as fast to take advantage
+
+        // Check the cardinally adjacent entities to the player (this denotes they are fighting an enemy)
+        // If a player is fighting an enemy within the battle radius, mercenary moves twice as fast to take advantage
+        if (player.numEnemiesCardinallyAdjacent(game) > 0 && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
+            state.move(game, playerPos);
+        }
     }
 
     /**
@@ -96,5 +104,26 @@ public class Mercenary extends MovingEntity implements Observer {
 
     public EnemyMovementState getRunState() {
         return runState;
+    }
+
+    public int getDistanceToPlayer(Game game, Position playerPos) {
+        Position currPos = this.getPosition();
+
+        List<Position> possiblePositionsToMove = game.getMoveablePositions(this, currPos);
+
+        int optimalPathLength = -1;
+        Position optimalPathPosition;
+
+        PositionGraph positionGraph = new PositionGraph(game, this);
+
+        // Find the shortest possible path from the mercenary to the player
+        for (Position position: possiblePositionsToMove) {
+            int pathLen = positionGraph.BFS(currPos, playerPos);
+            if (pathLen > optimalPathLength) {
+                optimalPathLength = pathLen;
+                optimalPathPosition = position;
+            }
+        }
+        return optimalPathLength;
     }
 }

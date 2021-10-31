@@ -316,6 +316,18 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         return null;
     }
 
+    public int numEnemiesCardinallyAdjacent(Game game) {
+        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(this.getPosition());
+        int enemies = 0;
+        for (Entity entity : cardinallyAdjacentEntities) {
+            // Enemy if it is a moving entity (note that the Player is excluded)
+            if (entity instanceof MovingEntity) {
+                enemies++;
+            }
+        }
+        return enemies;
+    }
+
     @Override
     public boolean collision(Entity entity) {
         // TODO Auto-generated method stub
