@@ -58,8 +58,9 @@ public class ArmourTest {
 
         Armour item = new Armour(new Position(1, 1));
         game.addEntity(item);
-
+        
         Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
         player.move(game, Direction.RIGHT);
 
         // Durability of armour when picked up should be 5
@@ -70,23 +71,7 @@ public class ArmourTest {
 
         // Player moves to attack (interact with) the mercenary
         // This will cause the durability of the armour to decrease by 1
-        player.move(game, Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
         assertTrue(item.getDurability() == 4);
-    }
-
-    /**
-     * Test armour protection for ZombieToast since zombies randomly spawn with armour.
-     */
-    @Test
-    public void monsterArmourTest() {
-        fail();
-    }
-
-    /**
-     * Test if the Player can take the Armour from a defeated ZombieToast/Mercenary
-     */
-    @Test
-    public void takeArmourTest() {
-        fail();
     }
 }

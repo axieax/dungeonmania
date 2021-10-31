@@ -26,8 +26,9 @@ public class SwordTest {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Sword sword = new Sword(new Position(1, 1));
         game.addEntity(sword);
+        String swordId = sword.getId();
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("sword1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(swordId).getPosition()));
     }
 
     /**
@@ -60,6 +61,7 @@ public class SwordTest {
         game.addEntity(sword);
 
         Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
         player.move(game, Direction.RIGHT);
 
         // Durability of sword when picked up should be 5
@@ -72,14 +74,7 @@ public class SwordTest {
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the sword
         // This will cause the durability of the sword to decrease by 1
+        game.interact(spawner.getId());
         assertTrue(sword.getDurability() == 4);
-    }
-
-    /**
-     * Test if Sword can be used in battles
-     */
-    @Test
-    public void battleTest() {
-        fail();
     }
 }
