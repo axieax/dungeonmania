@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.statics;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
@@ -30,13 +31,15 @@ public class ZombieToastSpawner extends Entity implements Tickable {
      * the player destroys the spawner and the weapon loses durability.
      */
     @Override
-    public void interact(Game game, MovingEntity character){
+    public void interact(Game game, MovingEntity character) throws InvalidActionException {
         if (character instanceof Player) {
             Player player = (Player) character;
             if (player.hasWeapon()) {
                 Equipment weapon = player.getWeapon();
                 weapon.useEquipment(player);
                 game.removeEntity(this);
+            } else {
+                throw new InvalidActionException("You need to have a weapon to destroy a zombie toast spawner");
             }
         }
     }

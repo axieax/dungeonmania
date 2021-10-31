@@ -24,6 +24,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public static final int CHARACTER_ATTACK_DMG = 10;
 
     private PlayerState state;
+    private boolean inBattle;
     private Inventory inventory = new Inventory();
     private List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
@@ -31,6 +32,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public Player(Position position) {
         super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false);
         this.state = new PlayerDefaultState(this);
+        this.inBattle = false;
     }
 
     /********************************
@@ -50,6 +52,21 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public void setState(PlayerState state) {
         this.state = state;
+    }
+
+     /**
+     * @return boolean
+     */
+    public boolean getInBattle() {
+        return inBattle;
+    }
+
+    /**
+     * Sets the player battle status.
+     * @param inBattle
+     */
+    public void setInBattle(boolean inBattle) {
+        this.inBattle = inBattle;
     }
 
     /**
@@ -72,8 +89,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public void addAlly(MovingEntity ally) {
         for (MovingEntity m : allies) {
-            // entity is already ally
-            if (m.getId() == ally.getId()) return;
+            // Entity is already ally
+            if (m.getId().equals(ally.getId())) return;
         }
         allies.add(ally);
     }
@@ -209,7 +226,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /********************************
-     *  Action Methods           *
+     *  Action Methods              *
      ********************************/
 
     /**
@@ -266,6 +283,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void battle(Game game, MovingEntity opponent) {
         state.battle(game, opponent);
 
+        // Notify the observers that the player is in battle
+        this.setInBattle(true);
+        this.notifyObservers();
+
         if (this.getHealth() <= 0) {
             Item item = this.findInventoryItem("one_ring");
             if (item != null && item instanceof Consumable) {
@@ -277,10 +298,13 @@ public class Player extends MovingEntity implements SubjectPlayer {
             }
         }
 
-        // if either entity is dead, remove it
+        // If either entity is dead, remove it
         if (opponent.getHealth() <= 0) {
             game.removeEntity(opponent);
         }
+
+        // Notify the observers that the player is no longer in battle
+        this.setInBattle(false);
     }
 
     /**
@@ -312,7 +336,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /********************************
-     *  Battling Methods           *
+     *  Battling Methods            *
      ********************************/
 
     /**
@@ -331,7 +355,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
                 e.getMultiplier() * ((AttackEquipment) e).getAttackDamage();
         }
 
-        // any extra attack damage provided by allies
+        // Any extra attack damage provided by allies
         for (MovingEntity a : this.getAllies()) {
             damageToOpponent += a.getBaseAttackDamage();
         }
@@ -357,20 +381,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /********************************
      *  Observer/Subject Methods    *
      ********************************/
-
-    public int numEnemiesCardinallyAdjacent(Game game) {
-        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(
-            this.getPosition()
-        );
-        int enemies = 0;
-        for (Entity entity : cardinallyAdjacentEntities) {
-            // Enemy if it is a moving entity (note that the Player is excluded)
-            if (entity instanceof MovingEntity) {
-                enemies++;
-            }
-        }
-        return enemies;
-    }
 
     /**
      * Attach an observer to the player.

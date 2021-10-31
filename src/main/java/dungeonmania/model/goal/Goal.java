@@ -4,6 +4,7 @@ import dungeonmania.model.Game;
 import org.json.JSONObject;
 
 public interface Goal {
+    
     /**
      * Returns the operator (name) of a Goal
      *

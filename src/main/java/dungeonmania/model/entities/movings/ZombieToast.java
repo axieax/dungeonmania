@@ -7,8 +7,8 @@ import java.util.Random;
 
 public class ZombieToast extends MovingEntity implements Observer {
 
-    static final int MAX_ZOMBIE_HEALTH = 20;
-    static final int MAX_ZOMBIE_ATTACK_DMG = 2;
+    public static final int MAX_ZOMBIE_HEALTH = 20;
+    public static final int MAX_ZOMBIE_ATTACK_DMG = 2;
     public final double ARMOUR_DROP_RATE = 0.2;
     private MovementState state;
 
