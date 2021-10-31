@@ -561,7 +561,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(2, 1);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         game.tick(null, Direction.NONE);
@@ -586,7 +586,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(1, 4);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
         
         Position potionPos = new Position(2, 2);
@@ -619,7 +619,7 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position mercenaryPos = new Position(1, 4);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier());
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
         
         Position potionPos = new Position(2, 2);

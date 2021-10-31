@@ -87,7 +87,7 @@ public class DungeonManiaController {
         else if (gameMode.equals ("Standard")) mode = new Standard ();
         else if (gameMode.equals ("Peaceful")) mode = new Peaceful ();
 
-        List<Entity> entities = EntityFactory.extractEntities (dungeonName);
+        List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
         Goal goal = EntityFactory.extractGoal (dungeonName);
 
         Game newGame = new Game (dungeonName, entities, goal, mode);

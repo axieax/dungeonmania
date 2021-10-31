@@ -2,6 +2,7 @@ package dungeonmania.model.entities;
 
 import org.json.JSONObject;
 
+import dungeonmania.model.entities.movings.Player;
 import dungeonmania.util.Position;
 
 public abstract class Equipment extends Item {

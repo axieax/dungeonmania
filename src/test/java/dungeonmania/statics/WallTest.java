@@ -80,9 +80,10 @@ public class WallTest {
         game.addEntity(new Wall(new Position(2, 2)));
 
         // Put player out of map since a game requires a player
-        game.addEntity(new Player(new Position(5, 5)));
+        Player player = new Player(new Position(5, 5));
+        game.addEntity(player);
 
-        ZombieToast zombie = new ZombieToast(new Position(1, 1), mode.damageMultiplier());
+        ZombieToast zombie = new ZombieToast(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(zombie);
 
         zombie.tick(game);
