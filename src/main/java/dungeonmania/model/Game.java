@@ -55,6 +55,18 @@ public final class Game {
         return entities;
     }
 
+    public final Goal getGoal () {
+        return goal;
+    }
+
+    public final Mode getMode () {
+        return mode;
+    }
+
+    public final String getDungeonName() {
+        return dungeonName;
+    }
+
     public final List<Entity> getEntities(Position position) {
         return entities
             .stream()
