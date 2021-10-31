@@ -8,6 +8,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Mercenary extends MovingEntity implements Observer {
+    
     public static final int MAX_MERCENARY_HEALTH = 50;
     public static final int MAX_MERCENARY_ATTACK_DMG = 5;
     public static final int TREASURE_REQUIRED_TO_BRIBE = 1;

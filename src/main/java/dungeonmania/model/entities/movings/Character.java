@@ -10,6 +10,7 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
 public interface Character {
+    
     public void battle(Game game, MovingEntity opponent);
 
     public void collect(Item item);

@@ -1,7 +1,5 @@
 package dungeonmania;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
@@ -37,19 +35,14 @@ import dungeonmania.model.goal.OrComposite;
 import dungeonmania.model.goal.ToggleSwitch;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.util.Position;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

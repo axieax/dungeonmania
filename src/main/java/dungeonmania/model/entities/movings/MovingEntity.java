@@ -7,6 +7,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public abstract class MovingEntity extends Entity implements Tickable {
+    
     private int health;
     private int attackDamage;
     private Direction movingDirection;
