@@ -1,8 +1,33 @@
 package dungeonmania.model.mode;
 
 public interface Mode {
-    public int damageMultiplier();
-    public int tickRate();
-    public int initialHealth();
-    public int invincibilityPotionMultipler(); 
+    /**
+     * @return the damage multipler of the mode
+     */
+    default int damageMultiplier() {
+        return 1;
+    }
+
+    /**
+     * @return the tick rate of zombie toast spawner
+     */
+    default int tickRate() {
+        return 20;
+
+    }
+
+    /**
+     * @return gets the initial health of the player
+     */
+    default int initialHealth() {
+        return 100;
+    }
+
+    /**
+     * @return the invincibility potion multiplier
+     */
+    default int invincibilityPotionMultipler() {
+        return 1;
+
+    }
 }
