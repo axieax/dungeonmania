@@ -18,7 +18,7 @@ public class ZombieToastSpawner extends Entity {
      * the player destroys the spawner and the weapon loses durability.
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
+    public void interact(Game game, MovingEntity character){
         if (character instanceof Player) {
             Player player = (Player) character;
             if (player.hasWeapon()) {

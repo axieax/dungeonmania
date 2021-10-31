@@ -7,6 +7,7 @@ import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.goal.Goal;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -52,6 +53,18 @@ public final class Game {
 
     public final List<Entity> getEntities() {
         return entities;
+    }
+
+    public final Goal getGoal () {
+        return goal;
+    }
+
+    public final Mode getMode () {
+        return mode;
+    }
+
+    public final String getDungeonName() {
+        return dungeonName;
     }
 
     public final List<Entity> getEntities(Position position) {

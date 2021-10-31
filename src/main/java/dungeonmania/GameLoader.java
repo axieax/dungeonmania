@@ -1,10 +1,7 @@
 package dungeonmania;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.Bow;
-import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
@@ -28,59 +25,45 @@ import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
-import dungeonmania.model.goal.AndComposite;
-import dungeonmania.model.goal.CollectTreasure;
-import dungeonmania.model.goal.DestroyEnemies;
-import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.goal.Goal;
-import dungeonmania.model.goal.GoalComposite;
-import dungeonmania.model.goal.OrComposite;
-import dungeonmania.model.goal.ToggleSwitch;
+import dungeonmania.model.mode.Hard;
+import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Peaceful;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Position;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class EntityFactory {
-
-    private static final JSONObject loadDungeon(String dungeonName)
+public class GameLoader {
+    private static final JSONObject loadSavedDungeon(String dungeonName)
         throws IllegalArgumentException {
         try {
             String content = new String(
                 Files.readAllBytes(
-                    Paths.get("src/main/resources/dungeons/" + dungeonName + ".json")
+                    Paths.get("./src/main/java/dungeonmania/savedGames/" + dungeonName + ".json")
                 )
             );
             return new JSONObject(content);
         } catch (IOException e) {
             throw new IllegalArgumentException(dungeonName);
         }
-    }
-
-
+    }  
 
 
     public static final List<Entity> extractEntities(String dungeonName)
         throws IllegalArgumentException {
         // extract JSON
-        JSONObject json = loadDungeon(dungeonName);
+        JSONObject json = loadSavedDungeon(dungeonName);
         JSONArray entitiesInfo = json.getJSONArray("entities");
-    
+
         // extract entities
         List<Entity> entities = new ArrayList<>();
-        
+
         Entity playerEntity = null;
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
@@ -95,6 +78,7 @@ public class EntityFactory {
             if (entityInfo.getString ("type").startsWith("player")) continue;
             entities.add(extractEntity(entityInfo, playerEntity));
         }
+
         return entities;
     }
 
@@ -121,12 +105,21 @@ public class EntityFactory {
             return new ZombieToastSpawner(position);
             // Moving Entities
         } else if (type.startsWith("spider")) {
-            return new Spider(position);
+            Spider newSpider = new Spider (position);
+            int health = entityInfo.getInt("health");
+            newSpider.setHealth (health);
+            return newSpider;
         } else if (type.startsWith("zombie_toast")) {
             Player currentPlayer = (Player) playerEntity;
-            return new ZombieToast(position, currentPlayer);
+            ZombieToast newZombieToast = new ZombieToast(position, currentPlayer);
+            int health = entityInfo.getInt("health");
+            newZombieToast.setHealth(health);
+            return newZombieToast;
         } else if (type.startsWith("mercenary")) {
-            return new Mercenary(position);
+            Mercenary newMercenary = new Mercenary(position);
+            int health = entityInfo.getInt("health");
+            newMercenary.setHealth(health);
+            return newMercenary;
             // Collectable Entities
         } else if (type.startsWith("treasure")) {
             return new Treasure(position);
@@ -146,67 +139,52 @@ public class EntityFactory {
         } else if (type.startsWith("bomb")) {
             return new Bomb(position);
         } else if (type.startsWith("sword")) {
-            return new Sword(position);
+            Sword newSword = new Sword(position);
+            int durability = entityInfo.getInt("durability");
+            newSword.setDurability(durability);
+            return newSword;
         } else if (type.startsWith("armour")) {
-            return new Armour(position);
+            Armour newArmour = new Armour(position);
+            int durability = entityInfo.getInt("durability");
+            newArmour.setDurability(durability);
+            return newArmour;
         } else if (type.startsWith("one_ring")) {
             return new TheOneRing(position);
         } else if (type.startsWith("player")) {
-            return new Player(position);
+            Player player = new Player (position);
+            int health = entityInfo.getInt("health");
+            player.setHealth(health);
+            return player;
+        } else if (type.startsWith("bow")) {
+            Bow newBow = new Bow();
+            int durability = entityInfo.getInt("durability");
+            newBow.setDurability(durability);
+            return newBow;
+        } else if (type.startsWith ("shield")) {
+            Shield newShield = new Shield();
+            int durability = entityInfo.getInt("durability");
+            newShield.setDurability(durability);
+            return newShield;
         }
         return null;
     }
 
-    private Map<String, BuildableEquipment> buildableMap() {
-        // dummy objects
-        Map<String, BuildableEquipment> map = new HashMap<>();
-        map.put("bow", new Bow());
-        map.put("shield", new Shield());
-        return map;
+    public static final Mode extractMode (String name) {
+        JSONObject json = loadSavedDungeon(name);
+        String gameMode = json.getString ("mode");
+        if (gameMode.equals ("Hard")) return new Hard ();
+        else if (gameMode.equals ("Standard")) return new Standard ();
+        else if (gameMode.equals ("Peaceful")) return new Peaceful ();
+        return null;
     }
 
-    public List<BuildableEquipment> allBuildables() {
-        return new ArrayList<>(buildableMap().values());
-    }
-
-    public BuildableEquipment getBuildable(String buildable) {
-        BuildableEquipment item = buildableMap().get(buildable);
-        return item.clone();
+    public static final String extractDungeonName (String name) {
+        JSONObject json = loadSavedDungeon(name);
+        return json.getString ("dungeonName");
     }
 
     public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
-        JSONObject json = loadDungeon(dungeonName);
-        return extractGoal(json.getJSONObject("goal-condition"));
-    }
-
-    public static final Goal extractGoal(JSONObject json) {
-        switch (json.getString("goal")) {
-            case "enemies":
-                return new DestroyEnemies();
-            case "treasure":
-                return new CollectTreasure();
-            case "exit":
-                return new ExitCondition();
-            case "boulders":
-                return new ToggleSwitch();
-            case "AND":
-                GoalComposite and = new AndComposite();
-                JSONArray andSubgoals = json.getJSONArray("subgoals");
-                for (int i = 0; i < andSubgoals.length(); ++i) {
-                    JSONObject subgoal = andSubgoals.getJSONObject(i);
-                    and.addGoal(extractGoal(subgoal));
-                }
-                return and;
-            case "OR":
-                GoalComposite or = new OrComposite();
-                JSONArray orSubgoals = json.getJSONArray("subgoals");
-                for (int i = 0; i < orSubgoals.length(); ++i) {
-                    JSONObject subgoal = orSubgoals.getJSONObject(i);
-                    or.addGoal(extractGoal(subgoal));
-                }
-                return or;
-            default:
-                return null;
-        }
+        JSONObject json = loadSavedDungeon(dungeonName);
+        return EntityFactory.extractGoal(json.getJSONObject("goal-condition"));
     }
 }

@@ -2,6 +2,8 @@ package dungeonmania.model.entities;
 
 import java.util.UUID;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.response.models.EntityResponse;
@@ -81,6 +83,14 @@ public abstract class Entity {
             position,
             interactable
         );
+    }
+
+    public JSONObject toJSON() {
+        JSONObject entity = new JSONObject();
+        entity.put ("x", getX());
+        entity.put ("y", getY());
+        entity.put ("type", getClass().getSimpleName().toLowerCase());
+        return entity;
     }
 
     public abstract void interact(Game game, MovingEntity character);

@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.movings;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Direction;
@@ -62,9 +64,18 @@ public abstract class MovingEntity extends Entity {
         this.defaultBattleDamage = defaultBattleDamage;
     }
     
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("health", health);
+        return info;
+    }
+
+
     public abstract Direction getDirection();
 
     public abstract boolean collision(Entity entity);
 
     public abstract void moveTo(Position position);
+
+    
 }

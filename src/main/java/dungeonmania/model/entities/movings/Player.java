@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
+
 public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public static final int MAX_CHARACTER_HEALTH = 100;
@@ -311,6 +313,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public Direction getDirection() {
         return null;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put (state.getClass().getSimpleName(), state.ticksLeft());
+        info.put ("inventory", inventory.toJSON());
+        return info;
     }
 
     @Override
