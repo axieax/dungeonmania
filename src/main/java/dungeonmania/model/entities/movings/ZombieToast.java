@@ -24,6 +24,7 @@ public class ZombieToast extends MovingEntity implements Observer {
         this.defaultState = new ZombieDefaultState(this);
         this.runState = new ZombieRunState(this);
 
+        this.state = defaultState;
         player.attach(this);
     }
 

@@ -6,9 +6,10 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Mercenary extends MovingEntity implements Observer {
-    public final static int MAX_MERCENARY_HEALTH = 50;
-    public final static int MAX_MERCENARY_ATTACK_DMG = 5;
-    public final static int TREASURE_REQUIRED_TO_BRIBE = 1;
+    public static final int MAX_MERCENARY_HEALTH = 50;
+    public static final int MAX_MERCENARY_ATTACK_DMG = 5;
+    public static final int TREASURE_REQUIRED_TO_BRIBE = 1;
+    private static final int BATTLE_RADIUS = 5;
     
     private EnemyMovementState defaultState;
     private EnemyMovementState runState;
@@ -30,6 +31,7 @@ public class Mercenary extends MovingEntity implements Observer {
     public void tick(Game game) {
         Position playerPos = game.getCharacter().getPosition();
         state.move(game, playerPos);
+        // If a player is fighting an enemy, mercenary moves twice as fast to take advantage
     }
 
     /**
@@ -48,8 +50,6 @@ public class Mercenary extends MovingEntity implements Observer {
         } else {
             this.setState(getDefaultState());
         }
-        
-        // TODO: If a player is fighting an enemy, mercenary moves twice as fast to take advantage
     }
 
     /** 

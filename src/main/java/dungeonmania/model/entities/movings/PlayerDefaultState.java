@@ -8,7 +8,7 @@ import dungeonmania.model.entities.collectables.equipment.Armour;
 public class PlayerDefaultState implements PlayerState {
     
     private Player player;
-    public final static int ARMOUR_DROP_CHANCE = 10;
+    public static final int ARMOUR_DROP_CHANCE = 10;
 
     public PlayerDefaultState(Player player) {
         this.player = player;
@@ -28,7 +28,7 @@ public class PlayerDefaultState implements PlayerState {
 
         int playerHealth = player.getHealth();
         int opponentHealth = opponent.getHealth();
-        // battles only last a single tick
+        // Battles only last a single tick
         while (playerHealth >= 0 && opponentHealth >= 0) {
             opponent.setHealth(opponent.getHealth() - damageToOpponent);
             player.setHealth(player.getHealth() - damageToPlayer);
@@ -37,7 +37,7 @@ public class PlayerDefaultState implements PlayerState {
             opponentHealth = opponent.getHealth();
         }
 
-        // if the player wins against a zombie or mercenary, there is a small chance
+        // If the player wins against a zombie or mercenary, there is a small chance
         // that armour is dropped (and placed into the player's inventory)
         Random random = new Random();
         int num = random.nextInt(100);
