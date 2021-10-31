@@ -287,6 +287,10 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         this.state = state;
     }
 
+    public PlayerState getState() {
+        return state;
+    }
+
     public boolean hasKey() {
         return false;
     }
