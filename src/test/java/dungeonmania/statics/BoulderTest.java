@@ -54,7 +54,7 @@ public class BoulderTest {
     public void boulderBlocksBoulderMovement() {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Boulder boulder1 = new Boulder(new Position(1, 1));
-        Boulder boulder2 = new Boulder(new Position(1, 2));
+        Boulder boulder2 = new Boulder(new Position(2, 1));
         game.addEntity(boulder1);
         game.addEntity(boulder2);
 

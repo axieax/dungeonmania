@@ -85,6 +85,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public Inventory getInventory() {
         return inventory;
     }
+
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
      *
@@ -161,14 +162,14 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @return boolean
      */
     public boolean hasKey() {
-        return false;
+        return this.getKey() != null;
     }
 
     /**
      * @return Key
      */
     public Key getKey() {
-        return null;
+        return (Key) inventory.findItem("key");
     }
 
     /**
@@ -189,7 +190,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     /**
      * Checks if the inventory has the specified quantity of the item.
-     * 
+     *
      * @param prefix
      * @param quantity
      * @return
@@ -241,18 +242,17 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void move(Game game, Direction direction) {
         this.setDirection(direction);
 
-        Position newPlayerPos = this.getPosition().translateBy(direction);
-        List<Entity> entities = game.getEntities(newPlayerPos);
+        List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(entity -> entity.interact(game, this));
 
-        List<Entity> updatedEntities = game.getEntities(newPlayerPos);
+        List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
         boolean canMove = true;
         for (Entity e : updatedEntities) {
             if (this.collision(e)) canMove = false;
         }
 
         if (canMove) {
-            this.setPosition(newPlayerPos);
+            this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
             this.notifyObservers();
         }
@@ -365,7 +365,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      ********************************/
 
     public int numEnemiesCardinallyAdjacent(Game game) {
-        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(this.getPosition());
+        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(
+            this.getPosition()
+        );
         int enemies = 0;
         for (Entity entity : cardinallyAdjacentEntities) {
             // Enemy if it is a moving entity (note that the Player is excluded)
