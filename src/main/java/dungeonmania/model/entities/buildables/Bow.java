@@ -8,6 +8,8 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
 
     private static final int WOOD_NEEDED = 1;
     private static final int ARROWS_NEEDED = 3;
+    private final double MULTIPLIER = 2;
+    public final int ATTACK_DAMAGE = 30;
 
     public Bow() {
         super("bow", null);
@@ -21,15 +23,19 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
     @Override
     public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
-            inventory.removeItemQuantity("Wood", WOOD_NEEDED);
-            inventory.removeItemQuantity("Arrows", ARROWS_NEEDED);
+            inventory.removeItemQuantity("wood", WOOD_NEEDED);
+            inventory.removeItemQuantity("arrow", ARROWS_NEEDED);
             inventory.addItem(new Bow());
         }
     }
 
     @Override
-    public int setAttackMultiplier(int attackDamage) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int getAttackDamage() {
+        return this.ATTACK_DAMAGE;
+    }
+
+    @Override
+    public BuildableEquipment clone() {
+        return new Bow();
     }
 }

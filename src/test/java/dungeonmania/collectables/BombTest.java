@@ -3,9 +3,13 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -17,10 +21,11 @@ public class BombTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
-        game.addEntity(new Bomb("bomb1", new Position(1, 1)));
-
-        assertTrue(new Position(1, 1).equals(game.getEntity("bomb1").getPosition()));
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Bomb bomb = new Bomb(new Position(1, 1));
+        game.addEntity(bomb);
+        
+        assertTrue(new Position(1, 1).equals(game.getEntity(bomb.getId()).getPosition()));
     }
 
     /**
@@ -28,21 +33,17 @@ public class BombTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Bomb bomb = new Bomb(new Position(1, 1));
+        game.addEntity(bomb);
 
-        String collectableId = "bomb1";
-
-        Bomb item = new Bomb(collectableId, new Position(1, 1));
-
-        game.addEntity(item);
-
-        Player player = new Player("player1", new Position(0, 1));
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(game.getEntity(collectableId) == null);
-        assertTrue(player.getInventoryItem(collectableId).equals(item));
+        assertTrue(game.getEntity(bomb.getId()) == null);
+        assertTrue(player.getInventoryItem(bomb.getId()).equals(bomb));
     }
 
     /**

@@ -27,6 +27,7 @@ public class Inventory {
      * @param item
      */
     public void addItem(Item item) {
+        item.setPosition(null);
         items.add(item);
     }
 

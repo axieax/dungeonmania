@@ -19,7 +19,7 @@ public class FloorSwitch extends Entity {
      * @return
      */
     public boolean isTriggered(Game game) {
-        List<Entity> entities = game.getEntitiesAtPosition(this.getPosition());
+        List<Entity> entities = game.getEntities(this.getPosition());
         return entities.stream().anyMatch(entity -> (entity instanceof Boulder));
     }
 

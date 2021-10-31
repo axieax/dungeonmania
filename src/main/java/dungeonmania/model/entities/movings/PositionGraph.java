@@ -1,49 +1,52 @@
 package dungeonmania.model.entities.movings;
 
-import java.util.ArrayList;
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
+import dungeonmania.util.Position;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
-import dungeonmania.util.Position;
 
 public class PositionGraph {
 
     private Game game;
     private List<Position> nodes;
     private Entity entity;
-    
+
     public PositionGraph(Game game, Entity entity) {
         this.game = game;
-        this.nodes = this.getAllFreePositions();
         this.entity = entity;
+        this.nodes = this.getAllFreePositions();
     }
 
     /**
      * Gets all free positions that the entity can can go to
-     * 
+     *
      * @param game
      * @param entity
      * @return
      */
     private List<Position> getAllFreePositions() {
-        List<Position> positionsToEvaluate = new ArrayList<>();
-        List<Position> freePositions = new ArrayList<>();
+        LinkedList<Position> positionsToEvaluate = new LinkedList<>();
+        LinkedList<Position> freePositions = new LinkedList<>();
 
         positionsToEvaluate.add(entity.getPosition());
         freePositions.add(entity.getPosition());
-        
-        while (positionsToEvaluate.size() > 0) {
-            Position currPosition = positionsToEvaluate.get(0);
-            List<Position> moveToPositions = game.getMoveablePositions(entity, currPosition);
-            for (Position currMoveToPosition: moveToPositions) {
-                freePositions.add(currMoveToPosition);
-                positionsToEvaluate.add(currMoveToPosition);
+
+        if (entity instanceof MovingEntity) {
+            while (!positionsToEvaluate.isEmpty()) {
+                Position currPosition = positionsToEvaluate.remove();
+                List<Position> moveToPositions = game.getMoveablePositions(
+                    (MovingEntity) entity,
+                    currPosition
+                );
+                for (Position currMoveToPosition : moveToPositions) {
+                    freePositions.add(currMoveToPosition);
+                    positionsToEvaluate.add(currMoveToPosition);
+                }
+                positionsToEvaluate.remove(currPosition);
             }
-            positionsToEvaluate.remove(currPosition);
         }
 
         return freePositions;
@@ -51,7 +54,7 @@ public class PositionGraph {
 
     /**
      * Returns the shortest path length from src to dest using BFS algorithm.
-     * 
+     *
      * @param src Position
      * @param dest Position
      * @return
@@ -73,18 +76,23 @@ public class PositionGraph {
         dist.put(src, 0);
         queue.add(src);
 
-        // Breadth First Search Algorithm to find shortest path length
-        while (!queue.isEmpty()) {
-            Position vertex = queue.remove();
-            List<Position> adjacentPositions = game.getCardinallyAdjacentMoveablePositions(this.entity, vertex);
+        if (entity instanceof MovingEntity) {
+            // Breadth First Search Algorithm to find shortest path length
+            while (!queue.isEmpty()) {
+                Position vertex = queue.remove();
+                List<Position> adjacentPositions = game.getMoveablePositions(
+                    (MovingEntity) this.entity,
+                    vertex
+                );
 
-            for (Position currNode: adjacentPositions) {
-                if (visited.get(currNode)) {
-                    visited.put(currNode, true);
-                    dist.put(currNode, dist.get(currNode) + 1);
-                    pred.put(currNode, vertex);
+                for (Position currNode : adjacentPositions) {
+                    if (visited.get(currNode)) {
+                        visited.put(currNode, true);
+                        dist.put(currNode, dist.get(currNode) + 1);
+                        pred.put(currNode, vertex);
 
-                    if (currNode == dest) return dist.get(currNode);
+                        if (currNode == dest) return dist.get(currNode);
+                    }
                 }
             }
         }

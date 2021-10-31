@@ -7,6 +7,7 @@ import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.util.Position;
 import java.util.HashSet;
 import java.util.Set;
+import org.json.JSONObject;
 
 public class ToggleSwitch extends GoalLeaf {
 
@@ -35,5 +36,12 @@ public class ToggleSwitch extends GoalLeaf {
         switchPositions.removeAll(boulderPositions);
         // return D.size()
         return switchPositions.size();
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("goal", "boulders");
+        return json;
     }
 }

@@ -7,10 +7,12 @@ import dungeonmania.model.entities.movings.Character;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.goal.Goal;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -66,6 +68,23 @@ public final class Game {
             .filter(e -> e instanceof Portal)
             .map(e -> (Portal) e)
             .collect(Collectors.toList());
+    }
+
+    public final List<Position> getMoveablePositions(MovingEntity from, Position position) {
+        int x = position.getX();
+        int y = position.getY();
+        List<Position> positions = Arrays.asList(
+            new Position(x, y + 1),
+            new Position(x - 1, y),
+            new Position(x + 1, y),
+            new Position(x, y - 1)
+        );
+        getCardinallyAdjacentEntities(position)
+            .stream()
+            .forEach(e -> {
+                if (from.collision(e)) positions.remove(e.getPosition());
+            });
+        return positions;
     }
 
     public final List<Entity> getAdjacentEntities(Position position) {

@@ -2,9 +2,13 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
@@ -16,10 +20,11 @@ public class ArrowTest {
      */
     @Test
     public void instanceTest() {
-        Game game = new Game(3, 3);
-        game.addEntity(new Arrow("arrows1", new Position(1, 1)));
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Arrow arrow = new Arrow(new Position(1, 1));
+        game.addEntity(arrow);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("arrows1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(arrow.getId()).getPosition()));
     }
 
     /**
@@ -27,20 +32,16 @@ public class ArrowTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game(3, 3);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Arrow arrow = new Arrow(new Position(1, 1));
+        game.addEntity(arrow);
 
-        String collectableId = "arrows1";
-
-        Arrow item = new Arrow(collectableId, new Position(1, 1));
-
-        game.addEntity(item);
-
-        Player player = new Player("player1", new Position(0, 1));
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
 
-        assertTrue(game.getEntity(collectableId) == null);
-        assertTrue(player.getInventoryItem(collectableId).equals(item));
+        assertTrue(game.getEntity(arrow.getId()) == null);
+        assertTrue(player.getInventoryItem(arrow.getId()).equals(arrow));
     }
 }

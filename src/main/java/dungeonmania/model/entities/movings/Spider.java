@@ -6,12 +6,13 @@ import java.util.List;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Spider extends MovingEntity {
-    public final static int MAX_SPIDER_HEALTH = 20;
-    public final static int MAX_SPIDER_ATTACK_DMG = 2;
+    public static final int MAX_SPIDER_HEALTH = 20;
+    public static final int MAX_SPIDER_ATTACK_DMG = 2;
     private boolean isInitialMove;
     private List<Direction> spiderMovementPath;
     private Direction nextMoveInPath;
@@ -21,7 +22,7 @@ public class Spider extends MovingEntity {
     }
 
     public Spider(Position position, int health, int attackDamage) {
-        super("spider", position, health, attackDamage);
+        super("spider", position, health, attackDamage, true);
         this.isInitialMove = true;
         // default "circling" movement of spider
         this.spiderMovementPath = Arrays.asList(
@@ -34,7 +35,9 @@ public class Spider extends MovingEntity {
             Direction.UP,
             Direction.RIGHT
         );
-        this.nextMoveInPath = spiderMovementPath.get(0); // index of spiderMovementPath
+
+        // index of spiderMovementPath
+        this.nextMoveInPath = spiderMovementPath.get(0);
     }
 
     /**
@@ -73,7 +76,7 @@ public class Spider extends MovingEntity {
     //////////////////////////////////////////////////////////////////////////////
     /**
      * 
-     * @param game the spider is contained in
+     * @param game dungeon the spider is contained in
      * @param currentPos of spider
      */
     private void doInitialSpiderMove(Game game, Position currentPos) {
@@ -90,7 +93,7 @@ public class Spider extends MovingEntity {
      * Given the current position of a spider, moves a spider onto the next tile,
      * ensuring that the spider maintains a "circular path" and reverses direction
      * if necessary.
-     * @param game the spider is contained in
+     * @param game dungeon the spider is contained in
      * @param currentPos of spider
      */
     private void moveSpider(Game game, Position currentPos) {
@@ -127,13 +130,18 @@ public class Spider extends MovingEntity {
 
     @Override
     public boolean collision(Entity entity) {
-        // TODO Auto-generated method stub
-        return false;
+        if (entity instanceof Wall) return false;
+        return !entity.isPassable();
     }
 
     @Override
     public void moveTo(Position position) {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public boolean isEnemy() {
+        return true;
     }
 }
