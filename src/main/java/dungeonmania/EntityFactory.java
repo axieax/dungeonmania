@@ -75,7 +75,7 @@ public class EntityFactory {
 
 
 
-    public static final List<Entity> extractEntities(String dungeonName)
+    public static final List<Entity> extractEntities(String dungeonName, Mode mode)
         throws IllegalArgumentException {
         // extract JSON
         JSONObject json = loadDungeon(dungeonName);
@@ -88,28 +88,22 @@ public class EntityFactory {
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString ("type").startsWith("player")) {
-                playerEntity = extractEntity(entityInfo, playerEntity);
+                playerEntity = extractEntity(entityInfo, null, mode);
                 entities.add(playerEntity);
             }
         }
 
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-<<<<<<< HEAD
-            entities.add(extractEntity(entityInfo, mode));
-=======
+            entities.add(extractEntity(entityInfo, playerEntity, mode));
             if (entityInfo.getString ("type").startsWith("player")) continue;
-            entities.add(extractEntity(entityInfo, playerEntity));
->>>>>>> 0739578
+            entities.add(extractEntity(entityInfo, playerEntity, mode));
         }
         return entities;
     }
 
-<<<<<<< HEAD
-    public static final Entity extractEntity(JSONObject entityInfo, Mode mode) {
-=======
-    public static final Entity extractEntity(JSONObject entityInfo, Entity playerEntity) {
->>>>>>> 0739578
+
+    public static final Entity extractEntity(JSONObject entityInfo, Entity playerEntity, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");

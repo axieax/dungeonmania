@@ -55,7 +55,7 @@ public class GameLoader {
     }  
 
 
-    public static final List<Entity> extractEntities(String dungeonName)
+    public static final List<Entity> extractEntities(String dungeonName, Mode mode)
         throws IllegalArgumentException {
         // extract JSON
         JSONObject json = loadSavedDungeon(dungeonName);
@@ -68,7 +68,7 @@ public class GameLoader {
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString ("type").startsWith("player")) {
-                playerEntity = extractEntity(entityInfo, playerEntity);
+                playerEntity = extractEntity(entityInfo, playerEntity, mode);
                 entities.add(playerEntity);
             }
         }
@@ -76,13 +76,13 @@ public class GameLoader {
         for (int i = 0; i < entitiesInfo.length(); ++i) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString ("type").startsWith("player")) continue;
-            entities.add(extractEntity(entityInfo, playerEntity));
+            entities.add(extractEntity(entityInfo, playerEntity, mode));
         }
 
         return entities;
     }
 
-    public static final Entity extractEntity(JSONObject entityInfo, Entity playerEntity) {
+    public static final Entity extractEntity(JSONObject entityInfo, Entity playerEntity, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
