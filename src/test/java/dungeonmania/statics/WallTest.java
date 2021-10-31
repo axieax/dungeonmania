@@ -79,6 +79,9 @@ public class WallTest {
         game.addEntity(new Wall(new Position(2, 1)));
         game.addEntity(new Wall(new Position(2, 2)));
 
+        // Put player out of map since a game requires a player
+        game.addEntity(new Player(new Position(5, 5)));
+
         ZombieToast zombie = new ZombieToast(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(zombie);
 
@@ -98,6 +101,7 @@ public class WallTest {
     /**
      * Test if wall blocks movement of moving boulders.
      */
+    @Test
     public void wallBlockBoulder() {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         game.addEntity(new Wall(new Position(3, 0)));
