@@ -85,6 +85,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public Inventory getInventory() {
         return inventory;
     }
+
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
      *
@@ -161,14 +162,14 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @return boolean
      */
     public boolean hasKey() {
-        return false;
+        return this.getKey() != null;
     }
 
     /**
      * @return Key
      */
     public Key getKey() {
-        return null;
+        return (Key) inventory.findItem("key");
     }
 
     /**
@@ -189,7 +190,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     /**
      * Checks if the inventory has the specified quantity of the item.
-     * 
+     *
      * @param prefix
      * @param quantity
      * @return
@@ -365,7 +366,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      ********************************/
 
     public int numEnemiesCardinallyAdjacent(Game game) {
-        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(this.getPosition());
+        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(
+            this.getPosition()
+        );
         int enemies = 0;
         for (Entity entity : cardinallyAdjacentEntities) {
             // Enemy if it is a moving entity (note that the Player is excluded)

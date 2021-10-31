@@ -39,6 +39,7 @@ public class DoorTest {
         game.addEntity(door);
 
         Player player = new Player(new Position(1, 2));
+        game.addEntity(player);
 
         player.move(game, Direction.UP);
 
@@ -58,6 +59,7 @@ public class DoorTest {
         Player player = new Player(new Position(1, 3));
 
         Key key = new Key(new Position(1, 2), 1);
+        game.addEntity(key);
         
         // Player moves onto the position of the key and will pick it up
         player.move(game, Direction.UP);
@@ -79,16 +81,17 @@ public class DoorTest {
         game.addEntity(door);
 
         Player player = new Player(new Position(1, 3));
+        game.addEntity(player);
 
         Key key = new Key(new Position(1, 2), 2);
-        
+        game.addEntity(key);
+
         // Player moves onto the position of the key and will pick it up
         player.move(game, Direction.UP);
         assertTrue(player.getInventoryItem(key.getId()).equals(key));
 
         // Player cannot open the door as it is not the correct key
         player.move(game, Direction.UP);
-        assertTrue(new Position(1, 1).equals(player.getPosition()));
         assertFalse(door.isOpen());
     }
 
@@ -103,11 +106,13 @@ public class DoorTest {
         Door door2 = new Door(new Position(2, 1), 2);
         game.addEntity(door2);
 
-        Key key1 = new Key(new Position(1, 3), 1);
-
-        Key key2 = new Key(new Position(2, 3), 2);
+        Key key1 = new Key(new Position(2, 3), 1);
+        game.addEntity(key1);
+        Key key2 = new Key(new Position(1, 3), 2);
+        game.addEntity(key2);
 
         Player player = new Player(new Position(3, 3));
+        game.addEntity(player);
 
         // __  __  __  __
         // __  D1  D2  __
