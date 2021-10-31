@@ -1,6 +1,7 @@
 package dungeonmania.model.entities;
 
-import dungeonmania.model.entities.movings.Player;
+import org.json.JSONObject;
+
 import dungeonmania.util.Position;
 
 public abstract class Equipment extends Item {
@@ -32,5 +33,15 @@ public abstract class Equipment extends Item {
 
     public double getMultiplier() {
         return this.MULTIPLIER;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("durability", durability);
+        return info;
+    }
+
+    public void setDurability (int durability) {
+        this.durability = durability;
     }
 }
