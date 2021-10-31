@@ -24,23 +24,19 @@ public class FloorSwitch extends Entity {
     }
 
     @Override
-    public void interact(Game game, MovingEntity character) {
-        // TODO
-    }
+    public void interact(Game game, MovingEntity character) {}
 
     /**
-     * When called, trigger the switch so that cardinally adjacent bombs explode, destroying 
+     * When called, trigger the switch so that cardinally adjacent bombs explode, destroying
      * all entities in the bomb's blast radius, except for the character.
      * @param game
      */
     public void triggerSwitch(Game game) {
         if (this.isTriggered(game)) {
             List<Entity> entities = game.getCardinallyAdjacentEntities(this.getPosition());
-            entities.forEach(
-                entity -> {
-                    if (entity instanceof Bomb) ((Bomb) entity).explode(game);
-                }
-            );
+            entities.forEach(entity -> {
+                if (entity instanceof Bomb) ((Bomb) entity).explode(game);
+            });
         }
     }
 }

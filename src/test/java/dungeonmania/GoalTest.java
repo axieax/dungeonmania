@@ -11,7 +11,6 @@ import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
-import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Exit;
@@ -51,7 +50,7 @@ public class GoalTest {
         int ticks
     ) {
         DungeonResponse resp = null;
-        for (int i = 0; i < ticks; ++i) resp = dmc.tick(itemUsed, direction);
+        for (int i = 0; i < ticks; i++) resp = dmc.tick(itemUsed, direction);
         return resp;
     }
 

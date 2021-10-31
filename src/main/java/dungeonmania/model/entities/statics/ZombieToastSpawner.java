@@ -1,5 +1,10 @@
 package dungeonmania.model.entities.statics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -10,10 +15,6 @@ import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.util.Position;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 public class ZombieToastSpawner extends Entity implements Tickable {
 
@@ -39,7 +40,9 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                 weapon.useEquipment(player);
                 game.removeEntity(this);
             } else {
-                throw new InvalidActionException("You need to have a weapon to destroy a zombie toast spawner");
+                throw new InvalidActionException(
+                    "You need to have a weapon to destroy a zombie toast spawner"
+                );
             }
         }
     }
@@ -59,11 +62,9 @@ public class ZombieToastSpawner extends Entity implements Tickable {
             List<Position> openSquares = new ArrayList<>();
             positions
                 .stream()
-                .forEach(
-                    position -> {
-                        if (game.getEntities(position).isEmpty()) openSquares.add(position);
-                    }
-                );
+                .forEach(position -> {
+                    if (game.getEntities(position).isEmpty()) openSquares.add(position);
+                });
 
             if (!openSquares.isEmpty()) {
                 Random rand = new Random();
