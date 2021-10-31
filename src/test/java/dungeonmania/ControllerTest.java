@@ -24,7 +24,7 @@ import dungeonmania.response.models.EntityResponse;
 public class ControllerTest {
     
     //////////////////
-    /// Test new Game
+    /// Test New Game
     //////////////////
     /**
      * This test ensures that an exception is thrown when an invalid game mode
@@ -92,12 +92,12 @@ public class ControllerTest {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));
 
-        // player moves to battle mercenary
+        // Player moves to battle mercenary
         controller.tick (null, Direction.RIGHT);
         controller.tick (null, Direction.RIGHT);
         DungeonResponse currGame = controller.tick (null, Direction.RIGHT);
 
-        // find current position of the player
+        // Find current position of the player
         Position playerPosition = new Position(0, 0);
         for (EntityResponse entity: currGame.getEntities()) {
             if (entity.getType().equals ("player")) playerPosition = entity.getPosition();
@@ -106,7 +106,7 @@ public class ControllerTest {
         // Save the current game
         assertDoesNotThrow(() -> controller.saveGame ("GameOne"));
 
-        // new controller is made
+        // New controller is made
         DungeonManiaController controllerNew = new DungeonManiaController();
         DungeonResponse loadedGame = controllerNew.loadGame("GameOne");  
         // There should be only one goal left
@@ -158,7 +158,7 @@ public class ControllerTest {
     public void testItemNotInInventory () {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
-        // invisibility poition is not in inventory
+        // Invisibility poition is not in inventory
         assertThrows (InvalidActionException.class, () ->controller.tick ("invisibility_potion", Direction.NONE));    
     }
 

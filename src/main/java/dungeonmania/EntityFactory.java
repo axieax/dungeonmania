@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,15 +64,15 @@ public class EntityFactory {
 
     public static final List<Entity> extractEntities(String dungeonName, Mode mode)
         throws IllegalArgumentException {
-        // extract JSON
+        // Extract JSON
         JSONObject json = loadDungeon(dungeonName);
         JSONArray entitiesInfo = json.getJSONArray("entities");
 
-        // extract entities
+        // Extract entities
         List<Entity> entities = new ArrayList<>();
 
         Entity playerEntity = null;
-        for (int i = 0; i < entitiesInfo.length(); ++i) {
+        for (int i = 0; i < entitiesInfo.length(); i++) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString("type").startsWith("player")) {
                 playerEntity = extractEntity(entityInfo, null, mode);
@@ -82,7 +81,7 @@ public class EntityFactory {
         }
 
         if (playerEntity != null && playerEntity instanceof Player) {
-            for (int i = 0; i < entitiesInfo.length(); ++i) {
+            for (int i = 0; i < entitiesInfo.length(); i++) {
                 JSONObject entityInfo = entitiesInfo.getJSONObject(i);
                 if (entityInfo.getString("type").startsWith("player")) continue;
                 entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
@@ -208,7 +207,7 @@ public class EntityFactory {
             case "AND":
                 GoalComposite and = new AndComposite();
                 JSONArray andSubgoals = json.getJSONArray("subgoals");
-                for (int i = 0; i < andSubgoals.length(); ++i) {
+                for (int i = 0; i < andSubgoals.length(); i++) {
                     JSONObject subgoal = andSubgoals.getJSONObject(i);
                     and.addGoal(extractGoal(subgoal));
                 }
@@ -216,7 +215,7 @@ public class EntityFactory {
             case "OR":
                 GoalComposite or = new OrComposite();
                 JSONArray orSubgoals = json.getJSONArray("subgoals");
-                for (int i = 0; i < orSubgoals.length(); ++i) {
+                for (int i = 0; i < orSubgoals.length(); i++) {
                     JSONObject subgoal = orSubgoals.getJSONObject(i);
                     or.addGoal(extractGoal(subgoal));
                 }
