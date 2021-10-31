@@ -64,7 +64,7 @@ public abstract class MovingEntity extends Entity {
     
     public abstract Direction getDirection();
 
-    public abstract boolean isCollidable(Entity entity);
+    public abstract boolean collision(Entity entity);
 
     public abstract void moveTo(Position position);
 }

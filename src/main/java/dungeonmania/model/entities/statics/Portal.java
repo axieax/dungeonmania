@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.statics;
 
+import java.util.List;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
@@ -46,9 +48,13 @@ public class Portal extends Entity {
     public void teleport(Game game, MovingEntity character) {
         Portal portal = this.findPortal(game);
         Position teleportedPosition = portal.getPosition().translateBy(character.getDirection());
-        Entity entityAtPortal = game.getEntityAtPosition(teleportedPosition);
-        if (portal != null && character.isCollidable(entityAtPortal)) {
-            character.moveTo(portal.getPosition());
+        List<Entity> entities = game.getEntities(teleportedPosition);
+        if (portal != null) {
+            boolean collision = false;
+            for (Entity entity : entities) {
+                if (!collision && character.collision(entity)) collision = true;
+            }
+            if (!collision) character.moveTo(portal.getPosition());
         }
     }
 }
