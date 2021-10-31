@@ -1,10 +1,10 @@
-package dungeonmania;
+package dungeonmania.movings;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-
+import dungeonmania.DungeonManiaController;
 import dungeonmania.response.models.DungeonResponse;
 
 @TestInstance(value = Lifecycle.PER_CLASS)

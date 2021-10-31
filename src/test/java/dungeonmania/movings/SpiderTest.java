@@ -1,15 +1,13 @@
-package dungeonmania;
+package dungeonmania.movings;
 
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;

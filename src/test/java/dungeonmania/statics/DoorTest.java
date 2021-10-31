@@ -20,9 +20,10 @@ public class DoorTest {
     @Test
     public void instanceTest() {
         Game game = new Game(3, 3);
-        game.addEntity(new Door("door1", new Position(1, 1), 1));
+        Door door = new Door(new Position(1, 1), 1);
+        game.addEntity(door);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity("door1").getPosition()));
+        assertTrue(new Position(1, 1).equals(game.getEntity(door.getId()).getPosition()));
     }
 
     /**
@@ -31,10 +32,10 @@ public class DoorTest {
     @Test
     public void doorBlockWithoutKey() {
         Game game = new Game(3, 3);
-        Door door = new Door("door1", new Position(1, 1), 1);
+        Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player("player1", new Position(1, 2));
+        Player player = new Player(new Position(1, 2));
 
         player.move(game, Direction.UP);
 
@@ -48,17 +49,16 @@ public class DoorTest {
     @Test
     public void doorUnlockWithKey() {
         Game game = new Game(3, 3);
-        Door door = new Door("door1", new Position(1, 1), 1);
+        Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player("player1", new Position(1, 3));
+        Player player = new Player(new Position(1, 3));
 
-        String collectableId = "key1";
-        Key key = new Key(collectableId, new Position(1, 2), 1);
+        Key key = new Key(new Position(1, 2), 1);
         
         // Player moves onto the position of the key and will pick it up
         player.move(game, Direction.UP);
-        assertTrue(player.getInventoryItem(collectableId).equals(key));
+        assertTrue(player.getInventoryItem(key.getId()).equals(key));
 
         // Player opens the door
         player.move(game, Direction.UP);
@@ -72,17 +72,16 @@ public class DoorTest {
     @Test
     public void doorLockWithIncorrectKey() {
         Game game = new Game(3, 3);
-        Door door = new Door("door1", new Position(1, 1), 1);
+        Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player("player1", new Position(1, 3));
+        Player player = new Player(new Position(1, 3));
 
-        String collectableId = "key1";
-        Key key = new Key(collectableId, new Position(1, 2), 2);
+        Key key = new Key(new Position(1, 2), 2);
         
         // Player moves onto the position of the key and will pick it up
         player.move(game, Direction.UP);
-        assertTrue(player.getInventoryItem(collectableId).equals(key));
+        assertTrue(player.getInventoryItem(key.getId()).equals(key));
 
         // Player cannot open the door as it is not the correct key
         player.move(game, Direction.UP);
@@ -96,18 +95,16 @@ public class DoorTest {
     @Test
     public void multipleDoorUnlocking() {
         Game game = new Game(3, 3);
-        Door door1 = new Door("door1", new Position(1, 1), 1);
+        Door door1 = new Door(new Position(1, 1), 1);
         game.addEntity(door1);
-        Door door2 = new Door("door2", new Position(2, 1), 2);
+        Door door2 = new Door(new Position(2, 1), 2);
         game.addEntity(door2);
 
-        String collectableId1 = "key1";
-        Key key1 = new Key(collectableId1, new Position(1, 3), 1);
+        Key key1 = new Key(new Position(1, 3), 1);
 
-        String collectableId2 = "key2";
-        Key key2 = new Key(collectableId2, new Position(2, 3), 2);
+        Key key2 = new Key(new Position(2, 3), 2);
 
-        Player player = new Player("player1", new Position(3, 3));
+        Player player = new Player(new Position(3, 3));
 
         // __  __  __  __
         // __  D1  D2  __
@@ -116,7 +113,7 @@ public class DoorTest {
         
         // Player moves onto the position of key1 and will pick it up
         player.move(game, Direction.LEFT);
-        assertTrue(player.getInventoryItem(collectableId1).equals(key1));
+        assertTrue(player.getInventoryItem(key1.getId()).equals(key1));
 
         // Attempt to unlock door2, fails so player stays in the same position
         player.move(game, Direction.UP);
@@ -133,7 +130,7 @@ public class DoorTest {
         // Player moves onto the position of key2 and will pick it up
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
-        assertTrue(player.getInventoryItem(collectableId2).equals(key2));
+        assertTrue(player.getInventoryItem(key2.getId()).equals(key2));
 
         // Attempt to unlock door2, succeeds so player moves to the door2 position
         player.move(game, Direction.RIGHT);
@@ -141,6 +138,5 @@ public class DoorTest {
         player.move(game, Direction.UP);
         assertTrue(door2.isOpen());
         assertTrue(new Position(2, 1).equals(player.getPosition()));
-        
     }
 }

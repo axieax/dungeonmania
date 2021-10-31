@@ -73,7 +73,7 @@ public class Spider extends MovingEntity {
     //////////////////////////////////////////////////////////////////////////////
     /**
      * 
-     * @param game the spider is contained in
+     * @param game dungeon the spider is contained in
      * @param currentPos of spider
      */
     private void doInitialSpiderMove(Game game, Position currentPos) {
@@ -90,7 +90,7 @@ public class Spider extends MovingEntity {
      * Given the current position of a spider, moves a spider onto the next tile,
      * ensuring that the spider maintains a "circular path" and reverses direction
      * if necessary.
-     * @param game the spider is contained in
+     * @param game dungeon the spider is contained in
      * @param currentPos of spider
      */
     private void moveSpider(Game game, Position currentPos) {

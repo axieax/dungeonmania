@@ -18,9 +18,10 @@ public class ExitTest {
     @Test
     public void instanceTest() {
         Game game = new Game(3, 3);
-        game.addEntity(new Exit("exit1", new Position(1, 1)));
-
-        assertTrue(new Position(1, 1).equals(game.getEntity("exit1").getPosition()));
+        Exit exit = new Exit(new Position(1, 1));
+        game.addEntity(exit);
+        
+        assertTrue(new Position(1, 1).equals(game.getEntity(exit.getId()).getPosition()));
     }
 
     /**
