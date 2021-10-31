@@ -71,6 +71,10 @@ public class PlayerDefaultState implements PlayerState {
         }
     }
 
+    public int ticksLeft() {
+        return 0;
+    }
+
     @Override
     public void updateState(Player player) {}
 }

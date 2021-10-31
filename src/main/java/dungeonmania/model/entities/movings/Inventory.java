@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
+
 public class Inventory {
 
     List<Item> items = new ArrayList<>();
@@ -110,5 +112,13 @@ public class Inventory {
         }
 
         return response;
+    }
+
+    public JSONArray toJSON() {
+        JSONArray itemsJSON = new JSONArray();
+        for (Item item:items) {
+            itemsJSON.put (item.toJSON());
+        }
+        return itemsJSON;
     }
 }
