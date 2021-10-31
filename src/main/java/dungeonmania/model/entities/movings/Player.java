@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
+
 public class Player extends MovingEntity implements Character, SubjectPlayer {
 
     public static final int MAX_CHARACTER_HEALTH = 100;
@@ -85,6 +87,7 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public Inventory getInventory() {
         return inventory;
     }
+
     /**
      * Given an entity id, returns the item if it exists in the player's inventory
      *
@@ -161,14 +164,14 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      * @return boolean
      */
     public boolean hasKey() {
-        return false;
+        return this.getKey() != null;
     }
 
     /**
      * @return Key
      */
     public Key getKey() {
-        return null;
+        return (Key) inventory.findItem("key");
     }
 
     /**
@@ -185,6 +188,17 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         Item weapon = inventory.findItem("sword");
         if (weapon == null) weapon = inventory.findItem("bow");
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
+    }
+
+    /**
+     * Checks if the inventory has the specified quantity of the item.
+     *
+     * @param prefix
+     * @param quantity
+     * @return
+     */
+    public boolean hasItemQuantity(String prefix, int quantity) {
+        return inventory.hasItemQuantity(prefix, quantity);
     }
 
     /**
@@ -230,18 +244,17 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
     public void move(Game game, Direction direction) {
         this.setDirection(direction);
 
-        Position newPlayerPos = this.getPosition().translateBy(direction);
-        List<Entity> entities = game.getEntities(newPlayerPos);
+        List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(entity -> entity.interact(game, this));
 
-        List<Entity> updatedEntities = game.getEntities(newPlayerPos);
+        List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
         boolean canMove = true;
         for (Entity e : updatedEntities) {
             if (this.collision(e)) canMove = false;
         }
 
         if (canMove) {
-            this.setPosition(newPlayerPos);
+            this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
             this.notifyObservers();
         }
@@ -354,7 +367,9 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
      ********************************/
 
     public int numEnemiesCardinallyAdjacent(Game game) {
-        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(this.getPosition());
+        List<Entity> cardinallyAdjacentEntities = game.getCardinallyAdjacentEntities(
+            this.getPosition()
+        );
         int enemies = 0;
         for (Entity entity : cardinallyAdjacentEntities) {
             // Enemy if it is a moving entity (note that the Player is excluded)
@@ -375,11 +390,13 @@ public class Player extends MovingEntity implements Character, SubjectPlayer {
         observers.add(observer);
     }
 
-    /**
-     * Detach an observer to the player.
-     *
-     * @param observer
-     */
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put (state.getClass().getSimpleName(), state.ticksLeft());
+        info.put ("inventory", inventory.toJSON());
+        return info;
+    }
+
     @Override
     public void detach(Observer observer) {
         observers.remove(observer);

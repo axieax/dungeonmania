@@ -13,6 +13,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,6 +56,18 @@ public final class Game {
         return entities;
     }
 
+    public final Goal getGoal () {
+        return goal;
+    }
+
+    public final Mode getMode () {
+        return mode;
+    }
+
+    public final String getDungeonName() {
+        return dungeonName;
+    }
+
     public final List<Entity> getEntities(Position position) {
         return entities
             .stream()
@@ -73,12 +86,11 @@ public final class Game {
     public final List<Position> getMoveablePositions(MovingEntity from, Position position) {
         int x = position.getX();
         int y = position.getY();
-        List<Position> positions = Arrays.asList(
-            new Position(x, y + 1),
-            new Position(x - 1, y),
-            new Position(x + 1, y),
-            new Position(x, y - 1)
-        );
+        List<Position> positions = new ArrayList<>();
+        positions.add(new Position(x, y + 1));
+        positions.add(new Position(x - 1, y));
+        positions.add(new Position(x + 1, y));
+        positions.add(new Position(x, y - 1));
         getCardinallyAdjacentEntities(position)
             .stream()
             .forEach(e -> {

@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.movings;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Tickable;
@@ -56,15 +58,20 @@ public abstract class MovingEntity extends Entity implements Tickable {
     }
     
     
-    public boolean collision(Entity entity) {
-        return !entity.isPassable();
-    };
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("health", health);
+        return info;
+    }
+
+
+    public abstract Direction getDirection();
 
     public void moveTo(Position position) {
         this.setPosition(position);
     };
 
-    public boolean isEnemy() {
-        return this.isEnemy;
-    };
+    public abstract void moveTo(Position position);
+
+    
 }

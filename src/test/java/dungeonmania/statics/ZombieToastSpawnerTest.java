@@ -40,13 +40,14 @@ public class ZombieToastSpawnerTest {
     @Test
     public void zombieToastSpawnEveryCycle() {
       
-        DungeonManiaController controller = new DungeonManiaController();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
-        game.addEntity(new ZombieToastSpawner(new Position(1, 1)));
-        
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
+        game.addEntity(spawner);
+        game.addEntity(new Player(new Position(10, 10)));
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
-            controller.tick(null, Direction.NONE);
+            game.tick(null, Direction.NONE);
         }
 
         // Check that only one zombie toast has spawned
