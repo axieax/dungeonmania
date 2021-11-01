@@ -158,7 +158,7 @@ public class Spider extends MovingEntity {
                 indexOfNextMove = (indexOfNextMove + 5) % 8;
             } else {
                 this.isMovementReverse = true;
-                indexOfNextMove = (indexOfNextMove + 3) % 8;
+                indexOfNextMove = (indexOfNextMove + 4) % 8;
             }
             Collections.reverse(this.spiderMovementPath);
             return; // no movement occurs if blocked
