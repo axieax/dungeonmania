@@ -1,7 +1,6 @@
 package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 
@@ -60,6 +59,7 @@ public class TheOneRingTest {
         game.addEntity(ring);
 
         Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
         player.move(game, Direction.RIGHT);
         assertTrue(player.getInventoryItem(ring.getId()).equals(ring));
 
@@ -107,6 +107,7 @@ public class TheOneRingTest {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
         player.move(game, Direction.RIGHT);
 
         // Defeating 12 Mercenaries should be able to allow the player to have TheOneRing
