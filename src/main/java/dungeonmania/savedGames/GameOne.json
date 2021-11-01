@@ -3,7 +3,7 @@
   "entities": [
     {
       "PlayerDefaultState": 0,
-      "x": 1,
+      "x": 4,
       "y": 1,
       "health": 100,
       "type": "player",
@@ -221,8 +221,8 @@
       "type": "wall"
     },
     {
-      "x": 3,
-      "y": 5,
+      "x": 2,
+      "y": 7,
       "health": 50,
       "type": "mercenary"
     },
