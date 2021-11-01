@@ -64,7 +64,7 @@ public class DungeonManiaController {
     /**
      * Creates a new game, where dungeonName is the name of the dungeon map
      * (corresponding to a JSON file stored in the model) and gameMode is one of
-     * "standard", "peaceful" or "hard".
+     * "Standard", "Peaceful" or "Hard".
      *
      * @param dungeonName
      * @param gameMode
