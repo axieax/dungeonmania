@@ -19,6 +19,7 @@ import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Peaceful;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
@@ -270,6 +271,7 @@ public class SpiderTest {
 
         Position boulderPos = new Position(4, 2);
         Boulder boulder = new Boulder(boulderPos);
+        game.addEntity(boulder);
 
         Position initialSpiderPos = new Position(3, 3);
         Spider spider = new Spider(initialSpiderPos);

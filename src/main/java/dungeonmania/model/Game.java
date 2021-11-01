@@ -193,7 +193,7 @@ public final class Game {
             } else {
                 ((Tickable) e).tick(this);
             }
-        );
+        });
         
         Spider.spawnSpider(this);
         return getDungeonResponse();
