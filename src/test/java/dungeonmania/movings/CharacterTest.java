@@ -673,7 +673,7 @@ public class CharacterTest {
         throws IllegalArgumentException, InvalidActionException {
         EntityResponse player = entities
             .stream()
-            .filter(e -> e.getPrefix().equals(CHARACTER_TYPE))
+            .filter(e -> e.getPrefix().startsWith(CHARACTER_TYPE))
             .findFirst()
             .orElse(null);
 
