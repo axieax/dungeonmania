@@ -42,7 +42,6 @@ public class Spider extends MovingEntity {
      */
     @Override
     public void tick(Game game) {
-
         Position currentPos = this.getPosition();
         
         if(getIsInitialMove()) {
@@ -60,14 +59,41 @@ public class Spider extends MovingEntity {
      * @param entitiesAtPos list of entities on the new position
      * @return true if the spider is free to pass, else false
      */
-    public boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
+    public static boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
         for(Entity e: entitiesAtPos) {
-            if(e.getId().equals("boulder")) {
+            if(e.getPrefix().equals("boulder")) {
                 return false;
             }
         }
 
-        return false;
+        return true;
+    }
+
+    /**
+     * Spawns a spider on an entity depending on the tick rate
+     */
+    public static void spawnSpider(Game game) {
+        int tick = game.getTick();
+        int tickRate = game.getTickRate();
+        if(tick != 0 && tick % tickRate == 0) {
+            // choose a random entity and spawn on it
+            List<Entity> entities = game.getEntities(); // all entities in the dungeon
+            Collections.shuffle(entities); // random order
+
+            boolean canSpawn = false;
+            Position position = null;
+            for(Entity e: entities) {
+                position = e.getPosition();
+                List<Entity> entitiesAtPos = game.getEntities(position);
+                if(canSpiderMoveOntoPosition(entitiesAtPos)) {
+                    canSpawn = true;
+                }
+            }
+
+            if(canSpawn) {
+                game.addEntity(new Spider(position, game.getMode().damageMultiplier()));
+            }
+        }
     }
     
     //////////////////////////////////////////////////////////////////////////////

@@ -385,7 +385,7 @@ public class SpiderTest {
         DungeonResponse updatedResponse = null;
         while (true) {
             updatedResponse = controller.tick(null, Direction.NONE);
-            List<EntityResponse> entities = response.getEntities();
+            List<EntityResponse> entities = updatedResponse.getEntities();
             EntityResponse spider = getSpiderEntity(entities);
             if (spider != null) {
                 return updatedResponse;
@@ -395,6 +395,9 @@ public class SpiderTest {
 
     private Position getSpiderPosition(List<EntityResponse> entities) {
         EntityResponse spider = getSpiderEntity(entities);
+        if(spider == null) {
+            return null;
+        }
         return spider.getPosition();
     }
 
