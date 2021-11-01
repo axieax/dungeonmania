@@ -1,7 +1,6 @@
 package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 
@@ -19,7 +18,7 @@ import org.junit.jupiter.api.Test;
 public class PotionTest {
 
     /**
-     * Test whether the entity instance has been created with the correct positions
+     * Test whether the entity instance has been created with the correct positions.
      */
     @Test
     public void instanceHealthPotionTest() {
@@ -31,7 +30,7 @@ public class PotionTest {
     }
 
     /**
-     * Test whether the entity instance has been created with the correct positions
+     * Test whether the entity instance has been created with the correct positions.
      */
     @Test
     public void instanceInvincibilityPotionTest() {
@@ -43,7 +42,7 @@ public class PotionTest {
     }
 
     /**
-     * Test whether the entity instance has been created with the correct positions
+     * Test whether the entity instance has been created with the correct positions.
      */
     @Test
     public void instanceInvisibilityPotionTest() {
