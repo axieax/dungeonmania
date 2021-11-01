@@ -30,7 +30,8 @@ public abstract class GoalLeaf implements Goal {
 
     @Override
     public String toString(Game game) {
-        return String.format(":%s(%d)", getOperator(), numRemaining(game));
+        int quantity = numRemaining(game);
+        return (quantity != 0) ? String.format(":%s(%d)", getOperator(), quantity) : "";
     }
 
     public JSONObject toJSON() {

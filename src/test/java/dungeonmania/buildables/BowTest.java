@@ -13,7 +13,6 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
-import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -62,8 +61,7 @@ public class BowTest {
      * Test durability of Bow.
      */
     public void durabilityTest() {
-        Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
         Wood wood = new Wood(new Position(1, 0));
         Arrow arrow1 = new Arrow(new Position(1, 1));

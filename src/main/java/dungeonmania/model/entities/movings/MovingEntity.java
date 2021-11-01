@@ -35,6 +35,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
         this.damageMultiplier = damageMultiplier;
     }
 
+
     public Direction getDirection() {
         return this.movingDirection;
     }
@@ -69,7 +70,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     }
     
     public int getBaseAttackDamage() {
-        return attackDamage * damageMultiplier;
+        return attackDamage;
     }
     
     

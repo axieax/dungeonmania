@@ -2,13 +2,6 @@ package dungeonmania.movings;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
@@ -24,48 +17,49 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class ZombieToastTest {
+
     @Test
     public void testZombieSpawnRateNormalModes() {
-        Mode mode = new Standard();
-
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
-        
+
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(5, 5), mode.tickRate());
         game.addEntity(spawner);
-        
+
         int numEntities = game.getEntities().size();
 
         // Zombie should spawn
-        for(int i = 0; i < 20; i++) {
-            player.move(game, Direction.NONE);
+        for (int i = 0; i < 20; i++) {
+            game.tick("", Direction.NONE);
         }
 
         assertTrue(game.getEntities().size() > numEntities);
     }
-    
+
     @Test
     public void testBasicMovement() {
-        Mode mode = new Standard();
-
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        Position zombiePos =  new Position(5, 5);
-        ZombieToastSpawner spawner = new ZombieToastSpawner(zombiePos, mode.tickRate());
-        game.addEntity(spawner);
+        Position zombiePos = new Position(5, 5);
+        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        game.addEntity(zombie);
 
-        
-        player.move(game, Direction.RIGHT);
+        game.tick("", Direction.RIGHT);
         List<Entity> entitiesAtOldZombiePos = game.getEntities(zombiePos);
-        
+
         // zombie should change position as there exists an open tile
         assertTrue(entitiesAtOldZombiePos.size() == 0);
     }
@@ -73,15 +67,15 @@ public class ZombieToastTest {
     @Test
     public void testWallBlockingMovement() {
         Mode mode = new Standard();
-        
+
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
-        
+
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(5, 5), mode.tickRate());
         game.addEntity(spawner);
-        
+
         // surround zombie with a wall, leaving one tile adjacent to the spawner open
         game.addEntity(new Wall(new Position(3, 5)));
         game.addEntity(new Wall(new Position(3, 4)));
@@ -90,11 +84,11 @@ public class ZombieToastTest {
 
         Position expectedZombieSpawnTile = new Position(4, 5);
         // zombie should spawn in 20 ticks
-        for(int i = 0; i < 20; i++ ) {
+        for (int i = 0; i < 20; i++) {
             assertTrue(game.getEntities(expectedZombieSpawnTile).size() == 0);
-            player.move(game, Direction.NONE);
+            game.tick("", Direction.NONE);
         }
-        
+
         List<Entity> entitesAtTileAdjacentToSpawner = game.getEntities(expectedZombieSpawnTile);
         assertTrue(entitesAtTileAdjacentToSpawner.size() > 0);
     }
@@ -103,43 +97,42 @@ public class ZombieToastTest {
     public void testEdgeCornerMovement() {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-        
+
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
-        
+
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
-        
+
         game.addEntity(zombie);
         assertTrue(game.getEntities(zombiePos).size() > 0);
-        
+
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(5, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
-        
+
         // zombie is trapped in the corner and should not move in further ticks
         zombie.tick(game);
         assertTrue(game.getEntities(zombiePos).size() > 0);
     }
-   
+
     @Test
     public void testZombieCannotWalkThroughClosedDoor() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
-        
+
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
-        
+
         game.addEntity(zombie);
         assertTrue(game.getEntities(zombiePos).size() > 0);
-        
+
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
@@ -149,37 +142,72 @@ public class ZombieToastTest {
         Position keyPos = new Position(1, 5);
         Key key = new Key(keyPos, 1);
         game.addEntity(new Door(doorPos, 1));
-        game.addEntity(key);
 
         // zombie is trapped in the corner and should not move in further ticks
-        for(int i = 0; i < 5; i ++) {
+        for (int i = 0; i < 5; i++) {
             zombie.tick(game);
             assertTrue(game.getEntities(zombiePos).size() > 0);
         }
     }
-    
+
     @Test
     public void testZombieCanWalkThroughOpenDoor() {
+        Mode mode = new Standard();
 
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(4, 2));
+        game.addEntity(player);
+        game.addEntity(new Key(new Position(4, 3), 1));
+        Door door = new Door(new Position(4, 4), 1);
+        game.addEntity(door);
+        game.tick("", Direction.DOWN);
+
+        assertTrue(player.hasItemQuantity("key", 1));
+        game.tick("", Direction.DOWN);
+        assertTrue(door.getPosition().equals(player.getPosition()));
+        assertTrue(door.isOpen());
+
+        game.tick("", Direction.UP);
+
+        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(5, 5), mode.tickRate());
+        game.addEntity(spawner);
+
+        // surround zombie with a wall, leaving one tile adjacent to the spawner open
+        game.addEntity(new Wall(new Position(3, 5)));
+        game.addEntity(new Wall(new Position(3, 4)));
+        game.addEntity(new Wall(new Position(5, 4)));
+
+        Position expectedZombieSpawnTile = new Position(4, 5);
+        // zombie should spawn in 20 ticks
+        for (int i = 0; i < 20; i++) {
+            assertTrue(game.getEntities(expectedZombieSpawnTile).size() == 0);
+            game.tick("", Direction.NONE);
+        }
+
+        List<Entity> entitesAtTileAdjacentToSpawner = game.getEntities(expectedZombieSpawnTile);
+        assertTrue(entitesAtTileAdjacentToSpawner.size() == 1);
+
+        game.tick("", Direction.NONE);
+        assertTrue(door.getPosition().equals(entitesAtTileAdjacentToSpawner.get(0).getPosition()));
     }
 
     @Test
     public void testPortalNoEffect() {
         // portals have no effect on zombies
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
-        
+
         game.addEntity(zombie);
         assertTrue(game.getEntities(zombiePos).size() > 0);
-        
+
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
@@ -188,23 +216,21 @@ public class ZombieToastTest {
         Position portalPos = new Position(5, 4);
         Portal portal = new Portal(portalPos, "blue");
         game.addEntity(portal);
+        game.tick("", Direction.NONE);
         
-        // the only option for the zombie is to move to the portal
-        assertTrue(game.getEntities(portalPos).size() == 0);
-        zombie.tick(game);
-        assertTrue(game.getEntities(portalPos).size() > 0); // portal has no effect
+        // the only option for the zombie is to move to the portal which cant pass through
+        assertTrue(zombie.getPosition().equals(zombiePos)); // portal has no effect
     }
 
     @Test
     public void testZombmieCannotMoveBoulder() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
         
@@ -219,42 +245,40 @@ public class ZombieToastTest {
         Position boulderPos = new Position(5, 4);
         Boulder boulder = new Boulder(boulderPos);
         game.addEntity(boulder);
+
+        game.tick("", Direction.NONE);
         
         // zombie should stay in its position, as it cannot move a boulder
-        assertTrue(game.getEntities(boulderPos).size() == 0);
-        zombie.tick(game);
-        assertTrue(game.getEntities(boulderPos).size() == 0); // portal has no effect
-        assertTrue(game.getEntities(zombiePos).size() == 1);
+        assertTrue(zombie.getPosition().equals(zombiePos));
     }
 
-    private List<Entity> sevenBySevenWallBoundary() {
+    private List<Entity> SevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
-        
+
         // left border
-        for(int i = 0; i < 7; i ++) {
+        for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(0, i));
             wallBorder.add(wall);
         }
-        
+
         // right border
-        for(int i = 0; i < 7; i ++) {
+        for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(6, i));
             wallBorder.add(wall);
         }
 
         // top border
-        for(int i = 1; i < 6; i ++) {
+        for (int i = 1; i < 6; i++) {
             Wall wall = new Wall(new Position(i, 0));
             wallBorder.add(wall);
         }
 
         // bottom border
-        for(int i = 1; i < 6; i ++) {
+        for (int i = 1; i < 6; i++) {
             Wall wall = new Wall(new Position(i, 6));
             wallBorder.add(wall);
         }
 
         return wallBorder;
     }
-
 }
