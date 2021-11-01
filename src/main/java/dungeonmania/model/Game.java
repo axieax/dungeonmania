@@ -143,8 +143,23 @@ public final class Game {
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
             this.getCharacter().getInventoryResponses(),
             this.getBuildables(),
-            goal.toString(this)
+            formatGoal()
         );
+    }
+
+    /**
+     * Formats the Goal string, removing any brackets if necessary
+     *
+     * @return Goal string for DungeonResponse
+     */
+    private final String formatGoal() {
+        if (goal == null) return "";
+        String goalString = goal.toString(this);
+        // remove starting and closing brackets
+        if (goalString.startsWith("(") && goalString.endsWith(")")) {
+            goalString = goalString.substring(1, goalString.length() - 1);
+        }
+        return goalString;
     }
 
     private final List<String> getBuildables() {
