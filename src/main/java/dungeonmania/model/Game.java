@@ -21,14 +21,14 @@ public final class Game {
 
     private final String dungeonId;
     private final String dungeonName;
-    private List<Entity> entities = new ArrayList<>();
+    private final List<Entity> entities;
     private final Goal goal;
     private final Mode mode;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
         this.dungeonId = UUID.randomUUID().toString();
         this.dungeonName = dungeonName;
-        this.entities = entities;
+        this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
         // TODO: attach observers
