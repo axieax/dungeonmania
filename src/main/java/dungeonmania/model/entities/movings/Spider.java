@@ -16,7 +16,7 @@ public class Spider extends MovingEntity {
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
     private boolean isInitialMove;
     private List<Direction> spiderMovementPath;
-    private Direction nextMoveInPath;
+    private int indexOfNextMove;
 
     public Spider(Position position, int damageMultiplier) {
         super("spider", position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, true, damageMultiplier);
@@ -34,7 +34,7 @@ public class Spider extends MovingEntity {
         );
 
         // index of spiderMovementPath
-        this.nextMoveInPath = spiderMovementPath.get(0);
+        this.indexOfNextMove = 0;
     }
 
     /**
@@ -120,8 +120,8 @@ public class Spider extends MovingEntity {
      * @param currentPos of spider
      */
     private void moveSpider(Game game, Position currentPos) {
-        int indexOf = spiderMovementPath.indexOf(nextMoveInPath);
-        
+        Direction nextMoveInPath = spiderMovementPath.get(indexOfNextMove);
+
         Position newPos = currentPos.translateBy(nextMoveInPath);
         List<Entity> entitiesNewPos = game.getEntities(newPos);
         if(entitiesNewPos == null || canSpiderMoveOntoPosition(entitiesNewPos)) {
@@ -130,10 +130,10 @@ public class Spider extends MovingEntity {
             Collections.reverse(spiderMovementPath);
         }
         
-        if(indexOf == spiderMovementPath.size() - 1) { // end of movement path
+        if(indexOfNextMove == spiderMovementPath.size() - 1) { // end of movement path
             nextMoveInPath = spiderMovementPath.get(0);
         } else {
-            nextMoveInPath = spiderMovementPath.get(indexOf += 1);
+            nextMoveInPath = spiderMovementPath.get(indexOfNextMove += 1);
         }
     }
 
