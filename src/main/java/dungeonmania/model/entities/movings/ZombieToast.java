@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.List;
 import java.util.Random;
@@ -69,7 +70,13 @@ public class ZombieToast extends MovingEntity implements Observer {
         if (!possiblePositions.isEmpty()) {
             Random rand = new Random();
             Position randPosition = possiblePositions.get(rand.nextInt(possiblePositions.size()));
+            Position offset = Position.calculatePositionBetween(this.getPosition(), randPosition);
+            if (Direction.LEFT.getOffset().equals(offset)) this.setDirection(Direction.LEFT);
+            else if (Direction.UP.getOffset().equals(offset)) this.setDirection(Direction.UP);
+            else if (Direction.RIGHT.getOffset().equals(offset)) this.setDirection(Direction.RIGHT);
+            else if (Direction.DOWN.getOffset().equals(offset)) this.setDirection(Direction.DOWN);
             this.setPosition(randPosition);
         }
+        else this.setDirection(Direction.NONE);
     }
 }
