@@ -1,6 +1,5 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,8 +20,6 @@ import dungeonmania.model.goal.DestroyEnemies;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.goal.GoalComposite;
 import dungeonmania.model.goal.ToggleSwitch;
-import dungeonmania.model.mode.Mode;
-import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -259,10 +256,9 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesSpider() {
-        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
-            new Spider(new Position(0, -2), mode.damageMultiplier())
+            new Spider(new Position(0, -2))
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
@@ -272,8 +268,7 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesZombie() {
-        Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0));
+        Entity player = new Player(new Position(0, 0));
         List<Entity> entities = Arrays.asList(
             player,
             new ZombieToast(new Position(0, -1), mode.damageMultiplier(), player)
@@ -287,8 +282,7 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesZombieSpawner() {
-        Mode mode = new Standard();
-        Entity spawner = new ZombieToastSpawner(new Position(0, 2), mode.damageMultiplier());
+        Entity spawner = new ZombieToastSpawner(new Position(0, 2));
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
             new Sword(new Position(0, 1)),
@@ -377,6 +371,7 @@ public class GoalTest {
         assertEquals("", game.tick("", Direction.LEFT).getGoals());
     }
 
+
     /**
      * Test that Portals does not have a goal
      */
@@ -388,7 +383,7 @@ public class GoalTest {
         assertEquals(stateOne.getGoals(), "");
     }
 
-    /**
+        /**
      * This tests the completion of goals in the advanced dungeon
      */
     @Test
@@ -402,4 +397,5 @@ public class GoalTest {
         assertEquals(treasureGoal, move(controller, Direction.RIGHT, 5).getGoals());
         assertEquals("", move(controller, Direction.RIGHT, 1).getGoals());
     }
+
 }

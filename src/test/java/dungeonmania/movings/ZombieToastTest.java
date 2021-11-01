@@ -28,9 +28,7 @@ public class ZombieToastTest {
 
     @Test
     public void testZombieSpawnRateNormalModes() {
-        Mode mode = new Standard();
-
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -50,9 +48,7 @@ public class ZombieToastTest {
 
     @Test
     public void testBasicMovement() {
-        Mode mode = new Standard();
-
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -106,7 +102,7 @@ public class ZombieToastTest {
         game.addEntity(player);
 
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
 
@@ -124,14 +120,13 @@ public class ZombieToastTest {
 
     @Test
     public void testZombieCannotWalkThroughClosedDoor() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
 
@@ -147,7 +142,6 @@ public class ZombieToastTest {
         Position keyPos = new Position(1, 5);
         Key key = new Key(keyPos, 1);
         game.addEntity(new Door(doorPos, 1));
-        game.addEntity(key);
 
         // zombie is trapped in the corner and should not move in further ticks
         for (int i = 0; i < 5; i++) {
@@ -201,14 +195,13 @@ public class ZombieToastTest {
     @Test
     public void testPortalNoEffect() {
         // portals have no effect on zombies
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
 
@@ -231,14 +224,13 @@ public class ZombieToastTest {
 
     @Test
     public void testZombmieCannotMoveBoulder() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        ZombieToast zombie = new ZombieToast(zombiePos, player);
 
         assertTrue(game.getEntities(zombiePos).size() == 0);
         
@@ -260,7 +252,7 @@ public class ZombieToastTest {
         assertTrue(zombie.getPosition().equals(zombiePos));
     }
 
-    private List<Entity> sevenBySevenWallBoundary() {
+    private List<Entity> SevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
 
         // left border

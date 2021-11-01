@@ -80,3 +80,4 @@ public class ZombieToastSpawner extends Entity implements Tickable {
         }
     }
 }
+
