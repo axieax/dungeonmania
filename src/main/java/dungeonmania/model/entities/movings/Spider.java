@@ -21,7 +21,7 @@ public class Spider extends MovingEntity {
     public Spider(Position position, int damageMultiplier) {
         super("spider", position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, true, damageMultiplier);
         this.isInitialMove = true;
-        // default "circling" movement of spider
+        // Default "circling" movement of spider
         this.spiderMovementPath = Arrays.asList(
             Direction.RIGHT,
             Direction.DOWN,
@@ -33,7 +33,7 @@ public class Spider extends MovingEntity {
             Direction.RIGHT
         );
 
-        // index of spiderMovementPath
+        // Index of spiderMovementPath
         this.nextMoveInPath = spiderMovementPath.get(0);
     }
 

@@ -136,7 +136,7 @@ public class ShieldTest {
         game.addEntity(spider);
 
         // Player moves to defend against the spider with the shield
-        // This will cause the durability of the shield to decrease by 1 each time it battles (within one tick)
+        // Durability of shield decreases by 1 each time it battles (within one tick)
         player.move(game, Direction.RIGHT);
 
         assertTrue(shield == null || shield.getDurability() != initialDurability);
@@ -174,10 +174,10 @@ public class ShieldTest {
         game.addEntity(mercenary);
 
         // Player moves to defend against the mercenary with the shield
-        // This will cause the durability of the shield to decrease by 1 each time it battles (within one tick)
         player.move(game, Direction.RIGHT);
 
         // Either the player or the mercenary should be dead
+        // Durability of shield decreases by 1 each time it battles (within one tick)
         assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
         assertTrue(shield == null || shield.getDurability() != initialDurability);
     }

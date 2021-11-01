@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 public class WallTest {
 
     /**
-     * Test whether the entity instance has been created with the correct positions
+     * Test whether the entity instance has been created with the correct positions.
      */
     @Test
     public void instanceTest() {

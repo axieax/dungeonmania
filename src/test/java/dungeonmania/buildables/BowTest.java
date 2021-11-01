@@ -84,6 +84,7 @@ public class BowTest {
         player.move(game, Direction.DOWN);
 
         game.build("bow");
+
         // Durability of bow when built should be 5
         int initialDurability = 5;
         Bow bow = (Bow) player.findInventoryItem("bow");
@@ -95,7 +96,7 @@ public class BowTest {
         player.move(game, Direction.RIGHT);
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the bow
-        // This will cause the durability of the bow to decrease by 1
+        // Durability of bow decreases by 1
         game.interact(spawner.getId());
         assertTrue(bow.getDurability() == initialDurability - 1);
     }
@@ -127,25 +128,19 @@ public class BowTest {
 
         game.build("bow");
 
-        // Durability of bow when built should be 5
         int initialDurability = 5;
         Bow bow = (Bow) player.findInventoryItem("bow");
         assertTrue(bow.getDurability() == initialDurability);
 
-        // Mercenary spawns with 50 health
         Mercenary mercenary = new Mercenary(new Position(2, 3), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
-        assertTrue(mercenary.getHealth() == 50);
-
-        // Player moves to attack (interact with) the mercenary with the bow
+        // Player moves to attack the mercenary with the bow
         player.move(game, Direction.RIGHT);
 
-        System.out.println(player.getPosition());
-        System.out.println(mercenary.getPosition());
-
         // Either the player or the mercenary should be dead
-        assertTrue((game.getEntity(mercenary.getId()) == null));
+        // Durability of bow decreases by 1 each time it battles (within one tick)
+        assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
         assertTrue(bow == null || bow.getDurability() != initialDurability);
     }
 }
