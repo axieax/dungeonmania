@@ -120,7 +120,7 @@ public class EntityFactory {
             return new Portal(position, colour);
         } else if (type.startsWith("zombie_toast_spawner")) {
             position = position.asLayer(6);
-            return new ZombieToastSpawner(position);
+            return new ZombieToastSpawner(position, mode.tickRate());
             // Collectable Entities
         } else if (type.startsWith("treasure")) {
             position = position.asLayer(7);

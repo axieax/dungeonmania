@@ -1,6 +1,7 @@
 package dungeonmania.model;
 
 import dungeonmania.EntityFactory;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
@@ -139,10 +140,10 @@ public final class Game {
         return new DungeonResponse(
             dungeonId,
             dungeonName,
-            entities.stream().map(Entity::getEntityResponse),
-            getCharacter().getInventoryResponse(),
+            entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
+            getCharacter().getInventoryResponses(),
             getBuildables(),
-            goal.toString()
+            goal.toString(this)
         );
     }
 
@@ -184,7 +185,10 @@ public final class Game {
         return getDungeonResponse();
     }
 
-    public final DungeonResponse interact(String entityId) {
+    public final DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
+        if (!entities.stream().map (Entity::getId).collect (Collectors.toList()).contains(entityId)) {
+            throw new IllegalArgumentException();
+        }
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
         if(entity instanceof MovingEntity) {

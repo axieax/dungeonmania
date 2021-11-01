@@ -63,12 +63,6 @@ public class Mercenary extends MovingEntity implements Observer {
      * Player attempts to bribe mercenary
      */
     @Override
-<<<<<<< HEAD
-    public void interact(Game game, MovingEntity character) { 
-        Player player = (Player) character;
-        if (player.getInventory().hasItemQuantity("treasure", TREASURE_REQUIRED_TO_BRIBE)) {
-            player.addAlly(this);
-=======
     public void interact(Game game, MovingEntity character) throws InvalidActionException {
         Player player = (Player) character;
         // Player must be within 2 cardinal tiles to the mercenary and 
@@ -81,7 +75,6 @@ public class Mercenary extends MovingEntity implements Observer {
             }
         } else {
             throw new InvalidActionException("You don't have enough treasure to bribe the mercenary");
->>>>>>> f475b078d13590db7dfa5edf1466c15bd305b066
         }
     }
 

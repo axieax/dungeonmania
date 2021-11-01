@@ -81,8 +81,8 @@ public class DungeonManiaController {
         if (gameMode.equals("Hard")) mode = new Hard(); else if (gameMode.equals("Standard")) mode =
             new Standard(); else if (gameMode.equals("Peaceful")) mode = new Peaceful();
 
-        List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
-        Goal goal = EntityFactory.extractGoal(dungeonName);
+        List<Entity> entities = EntityFactory.extractEntities (dungeonName, mode);
+        Goal goal = EntityFactory.extractGoal (dungeonName);
 
         Game newGame = new Game(dungeonName, entities, goal, mode);
         games.add(newGame);
@@ -114,17 +114,14 @@ public class DungeonManiaController {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
-
         try {
             String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
-            FileWriter myFileWriter = new FileWriter(path, false);
+            FileWriter myFileWriter = new FileWriter (path, false);
             myFileWriter.write(prettyString);
-            myFileWriter.close();
+            myFileWriter.close();            
         } catch (IOException e) {
             return null;
         }
-
-
 
         return currentGame.getDungeonResponse();
     }
@@ -137,6 +134,7 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException - If id is not a valid game id
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
+        if (name.length() == 0) throw new IllegalArgumentException();
         if (!allGames().contains(name)) throw new IllegalArgumentException();
         Mode mode = GameLoader.extractMode(name);
         List<Entity> entities = GameLoader.extractEntities(name, mode);
@@ -156,20 +154,9 @@ public class DungeonManiaController {
      */
     public List<String> allGames() {
         try { // adapted from given code
-            String directory = "/savedGames";
-            Path root = Paths.get(getClass().getResource(directory).toURI());
-            return Files
-                .walk(root)
-                .filter(Files::isRegularFile)
-                .map(x -> {
-                    String nameAndExt = x.toFile().getName();
-                    int extIndex = nameAndExt.lastIndexOf('.');
-                    return nameAndExt.substring(0, extIndex > -1 ? extIndex : nameAndExt.length());
-                })
-                .collect(Collectors.toList());
+            String directory = "./src/main/java/dungeonmania/savedGames/";
+            return FileLoader.listFileNamesInDirectoryOutsideOfResources(directory);
         } catch (IOException e) {
-            return new ArrayList<>();
-        } catch (URISyntaxException a) {
             return new ArrayList<>();
         }
     }
@@ -190,7 +177,7 @@ public class DungeonManiaController {
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
         if (
-            itemUsed != null &&
+            (itemUsed.length() == 0) &&
             !(
                 itemUsed.equals("bomb") ||
                 itemUsed.equals("invincibility_potion") ||
@@ -236,6 +223,6 @@ public class DungeonManiaController {
         if (!(buildable.equals("bow") || buildable.equals("shield"))) {
             throw new IllegalArgumentException();
         }
-        return build(buildable);
+        return currentGame.build(buildable);
     }
 }
