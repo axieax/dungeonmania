@@ -14,9 +14,11 @@ public class Spider extends MovingEntity {
     
     public static final int MAX_SPIDER_HEALTH = 20;
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
+    public static final int MAX_SPIDERS = 4;
     private boolean isInitialMove;
     private List<Direction> spiderMovementPath;
-    private Direction nextMoveInPath;
+    private boolean isMovementReverse;
+    private int indexOfNextMove;
 
     public Spider(Position position) {
         this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG);
@@ -37,8 +39,9 @@ public class Spider extends MovingEntity {
             Direction.RIGHT
         );
 
-        // Index of spiderMovementPath
-        this.nextMoveInPath = spiderMovementPath.get(0);
+        // index of spiderMovementPath
+        this.indexOfNextMove = 0;
+        this.isMovementReverse = false;
     }
 
     /**
@@ -46,7 +49,6 @@ public class Spider extends MovingEntity {
      */
     @Override
     public void tick(Game game) {
-
         Position currentPos = this.getPosition();
         
         if(getIsInitialMove()) {
@@ -64,14 +66,64 @@ public class Spider extends MovingEntity {
      * @param entitiesAtPos list of entities on the new position
      * @return true if the spider is free to pass, else false
      */
-    public boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
+    public static boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
         for(Entity e: entitiesAtPos) {
-            if(e.getId().equals("boulder")) {
+            if(e.getPrefix().equals("boulder")) {
                 return false;
             }
         }
 
-        return false;
+        return true;
+    }
+
+    /**
+     * Spawns a spider on an entity depending on the tick rate
+     */
+    public static void spawnSpider(Game game) {
+        int numSpidersInGame = getNumSpiderInGame(game);
+        if(numSpidersInGame == MAX_SPIDERS) {
+            return;
+        }
+        
+        int tick = game.getTick();
+        int tickRate = game.getTickRate();
+        if(tick != 0 && tick % tickRate == 0) {
+            // choose a random entity and spawn on it
+            List<Entity> entities = game.getEntities(); // all entities in the dungeon
+            Collections.shuffle(entities); // random order
+
+            boolean canSpawn = false;
+            Position position = null;
+            for(Entity e: entities) {
+                position = e.getPosition();
+                List<Entity> entitiesAtPos = game.getEntities(position);
+                if(canSpiderMoveOntoPosition(entitiesAtPos)) {
+                    canSpawn = true;
+                    break;
+                }
+            }
+
+            if(canSpawn) {
+                game.addEntity(new Spider(position, game.getMode().damageMultiplier()));
+            }
+        }
+    }
+    
+    /**
+     * Determines the number of spiders that currently exist in the game
+     * @param game Game reference
+     * @return number of spiders
+     */
+    public static int getNumSpiderInGame(Game game) {
+        List<Entity> entities = game.getEntities();
+        int spiders = 0;
+        for(Entity e: entities) {
+            if(e.getPrefix() == "spider") {
+                spiders++;
+            }
+        }
+
+        return spiders;
     }
     
     //////////////////////////////////////////////////////////////////////////////
@@ -98,20 +150,28 @@ public class Spider extends MovingEntity {
      * @param currentPos of spider
      */
     private void moveSpider(Game game, Position currentPos) {
-        int indexOf = spiderMovementPath.indexOf(nextMoveInPath);
-        
+        Direction nextMoveInPath = spiderMovementPath.get(indexOfNextMove);
+
         Position newPos = currentPos.translateBy(nextMoveInPath);
         List<Entity> entitiesNewPos = game.getEntities(newPos);
         if(entitiesNewPos == null || canSpiderMoveOntoPosition(entitiesNewPos)) {
             this.setPosition(newPos);
         } else { // reverse direction
-            Collections.reverse(spiderMovementPath);
+            if(this.isMovementReverse) {
+                this.isMovementReverse = false;
+                indexOfNextMove = (indexOfNextMove + 5) % 8;
+            } else {
+                this.isMovementReverse = true;
+                indexOfNextMove = (indexOfNextMove + 4) % 8;
+            }
+            Collections.reverse(this.spiderMovementPath);
+            return; // no movement occurs if blocked
         }
         
-        if(indexOf == spiderMovementPath.size() - 1) { // end of movement path
-            nextMoveInPath = spiderMovementPath.get(0);
+        if(indexOfNextMove >= spiderMovementPath.size() - 1) { // end of movement path
+            indexOfNextMove = 0;
         } else {
-            nextMoveInPath = spiderMovementPath.get(indexOf += 1);
+            indexOfNextMove += 1;
         }
     }
 

@@ -8,6 +8,7 @@ import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
@@ -28,6 +29,8 @@ public final class Game {
     private final List<Entity> entities;
     private final Goal goal;
     private final Mode mode;
+    
+    private int tick = 0;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
         this.dungeonId = UUID.randomUUID().toString();
@@ -174,12 +177,14 @@ public final class Game {
     }
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection) {
+        this.tick += 1;
+        
         List<Tickable> tickables = entities
-            .stream()
-            .filter(e -> e instanceof Tickable)
-            .map(e -> (Tickable) e)
-            .collect(Collectors.toList());
-
+        .stream()
+        .filter(e -> e instanceof Tickable)
+        .map(e -> (Tickable) e)
+        .collect(Collectors.toList());
+        
         // separate loop to avoid concurrency issues when zombie spawner adds new entity
         // to entities
         tickables.forEach(e -> {
@@ -188,7 +193,9 @@ public final class Game {
             } else {
                 ((Tickable) e).tick(this);
             }
-        });
+        );
+        
+        Spider.spawnSpider(this);
         return getDungeonResponse();
     }
 
@@ -214,5 +221,14 @@ public final class Game {
             spawner.interact(this, player);
         }
         return getDungeonResponse();
+    }
+
+
+    public int getTick() {
+        return tick;
+    }
+
+    public int getTickRate() {
+        return mode.tickRate();
     }
 }

@@ -73,7 +73,7 @@ public class SpiderTest {
         Position spiderSpawnPos = spider.getPosition();
 
         response = controller.tick(null, Direction.NONE);
-
+        entities = response.getEntities();
         // initially spider must always move 1 block upwards
         Position spiderPos = getSpiderPosition(entities);
         assertTrue(spiderPos.equals(spiderSpawnPos.translateBy(Direction.UP)));
@@ -95,7 +95,7 @@ public class SpiderTest {
         Position spiderSpawnPos = spider.getPosition(); // initial spawn position
 
         // spider can never go back to initial spawn position
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 20; i++) {
             response = controller.tick(null, Direction.NONE);
             entities = response.getEntities();
             Position spiderPos = getSpiderPosition(entities);
@@ -118,33 +118,48 @@ public class SpiderTest {
 
         // initially spider moves 1 block up
         response = controller.tick(null, Direction.NONE);
+        entities = response.getEntities();
         Position spiderPos = getSpiderPosition(entities);
         assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.UP)));
 
         // next movement is to the right
+        oldSpiderPos = spiderPos;
         response = controller.tick(null, Direction.NONE);
+        entities = response.getEntities();
         spiderPos = getSpiderPosition(entities);
         assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.RIGHT)));
 
         // next movement is down twice
         for (int i = 0; i < 2; i++) {
+            oldSpiderPos = spiderPos;
             response = controller.tick(null, Direction.NONE);
+            entities = response.getEntities();
             spiderPos = getSpiderPosition(entities);
             assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.DOWN)));
         }
 
         // next movement is to the left twice
-        response = controller.tick(null, Direction.NONE);
-        spiderPos = getSpiderPosition(entities);
-        assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.LEFT)));
+        for(int i = 0; i < 2; i++) {
+            oldSpiderPos = spiderPos;
+            response = controller.tick(null, Direction.NONE);
+            entities = response.getEntities();
+            spiderPos = getSpiderPosition(entities);
+            assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.LEFT)));
+        }
 
         // next movement is up twice
-        response = controller.tick(null, Direction.NONE);
-        spiderPos = getSpiderPosition(entities);
-        assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.UP)));
+        for(int i = 0; i < 2; i ++) {
+            oldSpiderPos = spiderPos;
+            response = controller.tick(null, Direction.NONE);
+            entities = response.getEntities();
+            spiderPos = getSpiderPosition(entities);
+            assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.UP)));
+        }
 
         // to complete the circle, next movement one right
+        oldSpiderPos = spiderPos;
         response = controller.tick(null, Direction.NONE);
+        entities = response.getEntities();
         spiderPos = getSpiderPosition(entities);
         assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.RIGHT)));
     }
@@ -241,13 +256,19 @@ public class SpiderTest {
 
     @Test
     public void testSpiderBoulderReverseDirection() {
-        // boulder is placed north-west of initial spider position
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
-        
+        Mode mode = new Peaceful();
+
+        Game game = new Game(
+            "game",
+            sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        Position boulderPos = new Position(2, 2);
+        Position boulderPos = new Position(4, 2);
         Boulder boulder = new Boulder(boulderPos);
 
         Position initialSpiderPos = new Position(3, 3);
@@ -255,11 +276,16 @@ public class SpiderTest {
 
         game.tick(null, Direction.NONE);
         assertTrue(spider.getPosition().equals(new Position(3, 2)));
-        game.tick(null, Direction.NONE);
+
         // spider attempts to move into boulder but fails and so, stays in the same position
-        assertTrue(spider.getPosition().equals(new Position(3, 2)));
         game.tick(null, Direction.NONE);
-        assertTrue(spider.getPosition().equals(new Position(4, 2)));
+        assertTrue(spider.getPosition().equals(new Position(3, 2)));
+        
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(2, 2)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(2, 3)));
     }
 
     @Test
@@ -345,7 +371,7 @@ public class SpiderTest {
         DungeonResponse updatedResponse = null;
         while (true) {
             updatedResponse = controller.tick(null, Direction.NONE);
-            List<EntityResponse> entities = response.getEntities();
+            List<EntityResponse> entities = updatedResponse.getEntities();
             EntityResponse spider = getSpiderEntity(entities);
             if (spider != null) {
                 return updatedResponse;
@@ -355,6 +381,9 @@ public class SpiderTest {
 
     private Position getSpiderPosition(List<EntityResponse> entities) {
         EntityResponse spider = getSpiderEntity(entities);
+        if(spider == null) {
+            return null;
+        }
         return spider.getPosition();
     }
 
