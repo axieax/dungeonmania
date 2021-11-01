@@ -94,7 +94,7 @@ public class SpiderTest {
         Position spiderSpawnPos = spider.getPosition(); // initial spawn position
 
         // spider can never go back to initial spawn position
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 20; i++) {
             response = controller.tick(null, Direction.NONE);
             entities = response.getEntities();
             Position spiderPos = getSpiderPosition(entities);
@@ -276,7 +276,6 @@ public class SpiderTest {
     public void testSpiderBoulderReverseDirection() {
         Mode mode = new Peaceful();
 
-        // boulder is placed north-west of initial spider position
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
@@ -287,7 +286,7 @@ public class SpiderTest {
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        Position boulderPos = new Position(2, 2);
+        Position boulderPos = new Position(4, 2);
         Boulder boulder = new Boulder(boulderPos);
         game.addEntity(boulder);
 
@@ -297,11 +296,16 @@ public class SpiderTest {
 
         game.tick(null, Direction.NONE);
         assertTrue(spider.getPosition().equals(new Position(3, 2)));
-        game.tick(null, Direction.NONE);
+
         // spider attempts to move into boulder but fails and so, stays in the same position
-        assertTrue(spider.getPosition().equals(new Position(3, 2)));
         game.tick(null, Direction.NONE);
-        assertTrue(spider.getPosition().equals(new Position(4, 2)));
+        assertTrue(spider.getPosition().equals(new Position(3, 2)));
+        
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(2, 2)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(2, 3)));
     }
 
     @Test

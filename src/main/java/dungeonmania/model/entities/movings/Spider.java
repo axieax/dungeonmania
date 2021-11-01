@@ -16,6 +16,8 @@ public class Spider extends MovingEntity {
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
     private boolean isInitialMove;
     private List<Direction> spiderMovementPath;
+    private List<Direction> spiderMovementReversePath;
+    private boolean isMovementReverse;
     private int indexOfNextMove;
 
     public Spider(Position position, int damageMultiplier) {
@@ -33,8 +35,21 @@ public class Spider extends MovingEntity {
             Direction.RIGHT
         );
 
+        this.spiderMovementReversePath = Arrays.asList(
+            Direction.LEFT,
+            Direction.DOWN,
+            Direction.DOWN,
+            Direction.RIGHT,
+            Direction.RIGHT,
+            Direction.UP,
+            Direction.UP,
+            Direction.LEFT
+
+        );
+
         // index of spiderMovementPath
         this.indexOfNextMove = 0;
+        this.isMovementReverse = false;
     }
 
     /**
@@ -87,6 +102,7 @@ public class Spider extends MovingEntity {
                 List<Entity> entitiesAtPos = game.getEntities(position);
                 if(canSpiderMoveOntoPosition(entitiesAtPos)) {
                     canSpawn = true;
+                    break;
                 }
             }
 
@@ -120,17 +136,23 @@ public class Spider extends MovingEntity {
      * @param currentPos of spider
      */
     private void moveSpider(Game game, Position currentPos) {
-        Direction nextMoveInPath = spiderMovementPath.get(indexOfNextMove);
+        List<Direction> movementPath = isMovementReverse ? spiderMovementReversePath : spiderMovementPath;
+        Direction nextMoveInPath = movementPath.get(indexOfNextMove);
 
         Position newPos = currentPos.translateBy(nextMoveInPath);
         List<Entity> entitiesNewPos = game.getEntities(newPos);
         if(entitiesNewPos == null || canSpiderMoveOntoPosition(entitiesNewPos)) {
             this.setPosition(newPos);
         } else { // reverse direction
-            Collections.reverse(spiderMovementPath);
+            if(this.isMovementReverse) {
+                this.isMovementReverse = false;
+            } else {
+                this.isMovementReverse = true;
+            }
+            return; // no movement occurs if blocked
         }
         
-        if(indexOfNextMove == spiderMovementPath.size() - 1) { // end of movement path
+        if(indexOfNextMove >= movementPath.size() - 1) { // end of movement path
             indexOfNextMove = 0;
         } else {
             indexOfNextMove += 1;
