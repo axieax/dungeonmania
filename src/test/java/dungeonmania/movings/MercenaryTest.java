@@ -35,8 +35,9 @@ public class MercenaryTest {
 
     @Test
     public void testDoesNotSpawnWithNoEnemies() {
+        Mode mode = new Standard();
         // mercenaries only spawn in dungeons with at least one enemy
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         assertTrue(game.getEntities().size() == 28);
         
         Player player = new Player(new Position(1, 1));
@@ -51,8 +52,9 @@ public class MercenaryTest {
 
     @Test
     public void testSimpleMovement() {
+        Mode mode = new Standard();
         // Distance between the mercenary and player should decrease per tick/movement
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -71,8 +73,9 @@ public class MercenaryTest {
 
     @Test
     public void testMercenarySimpleWall() {
+        Mode mode = new Standard();
         // Wall exists between player and mercenary and so mercenary should go around the wall
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
 
         Player player = new Player(new Position(1, 1));
@@ -114,7 +117,8 @@ public class MercenaryTest {
 
     @Test
     public void testBribedMercenaryMovement() {
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -160,7 +164,8 @@ public class MercenaryTest {
 
     @Test
     public void testCannotMoveThroughExit() {
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
@@ -171,6 +176,7 @@ public class MercenaryTest {
 
         Position exitPos = new Position(1, 2);
         Exit exit = new Exit(exitPos);
+        game.addEntity(exit);
         
         assertTrue(game.getEntities(exitPos).size() == 1);
         mercenary.moveTo(exitPos);
@@ -179,7 +185,8 @@ public class MercenaryTest {
     
     @Test
     public void testCannotMoveThroughClosedDoor() {
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
@@ -190,6 +197,7 @@ public class MercenaryTest {
     
         Position doorPos = new Position(1, 2);
         Door door = new Door(doorPos, 0);
+        game.addEntity(door);
         
         assertTrue(game.getEntities(doorPos).size() == 1);
 
@@ -200,7 +208,8 @@ public class MercenaryTest {
 
     @Test
     public void testSimpleFight() {
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
@@ -221,10 +230,11 @@ public class MercenaryTest {
 
     @Test
     public void testInteractMercenaryNotAdjacent() {
+        Mode mode = new Standard();
         // InvalidActionException if the player is not within 2 cardinal
         // tiles to the mercenary, if they are bribing
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
@@ -239,8 +249,9 @@ public class MercenaryTest {
     }
     
     public void testBribeWithoutTreasure() {
+        Mode mode = new Standard();
         // character attemps to bribe mercenary without any treasure should throw an exception
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
