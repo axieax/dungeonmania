@@ -80,6 +80,6 @@ public class SwordTest {
         // This will cause the durability of the sword to decrease by 1
         game.interact(spawner.getId());
         Entity item = player.findInventoryItem("sword");
-        assertTrue(item == null || ((Sword) item).getDurability() != initialDurability);
+        assertTrue(item == null || ((Sword) item).getDurability() == initialDurability - 1);
     }
 }

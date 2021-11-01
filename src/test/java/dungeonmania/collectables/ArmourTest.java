@@ -74,6 +74,6 @@ public class ArmourTest {
         // This will cause the durability of the armour to decrease by 1
         player.move(game, Direction.RIGHT);
         Entity armour = player.findInventoryItem("armour");
-        assertTrue(armour == null || ((Armour) armour).getDurability() != initialDurability);
+        assertTrue(armour == null || ((Armour) armour).getDurability() == initialDurability - 1);
     }
 }
