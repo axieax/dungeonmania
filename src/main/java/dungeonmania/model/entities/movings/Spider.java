@@ -14,6 +14,7 @@ public class Spider extends MovingEntity {
     
     public static final int MAX_SPIDER_HEALTH = 20;
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
+    public static final int MAX_SPIDERS = 4;
     private boolean isInitialMove;
     private List<Direction> spiderMovementPath;
     private List<Direction> spiderMovementReversePath;
@@ -88,6 +89,11 @@ public class Spider extends MovingEntity {
      * Spawns a spider on an entity depending on the tick rate
      */
     public static void spawnSpider(Game game) {
+        int numSpidersInGame = getNumSpiderInGame(game);
+        if(numSpidersInGame == MAX_SPIDERS) {
+            return;
+        }
+        
         int tick = game.getTick();
         int tickRate = game.getTickRate();
         if(tick != 0 && tick % tickRate == 0) {
@@ -110,6 +116,23 @@ public class Spider extends MovingEntity {
                 game.addEntity(new Spider(position, game.getMode().damageMultiplier()));
             }
         }
+    }
+    
+    /**
+     * Determines the number of spiders that currently exist in the game
+     * @param game Game reference
+     * @return number of spiders
+     */
+    public int getNumSpiderInGame(Game game) {
+        List<Entity> entities = game.getEntities();
+        int spiders = 0;
+        for(Entity e: entities) {
+            if(e.getPrefix() == "spider") {
+                spiders++;
+            }
+        }
+
+        return spiders;
     }
     
     //////////////////////////////////////////////////////////////////////////////
