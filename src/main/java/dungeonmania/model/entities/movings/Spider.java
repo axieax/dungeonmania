@@ -17,7 +17,6 @@ public class Spider extends MovingEntity {
     public static final int MAX_SPIDERS = 4;
     private boolean isInitialMove;
     private List<Direction> spiderMovementPath;
-    private List<Direction> spiderMovementReversePath;
     private boolean isMovementReverse;
     private int indexOfNextMove;
 
@@ -34,18 +33,6 @@ public class Spider extends MovingEntity {
             Direction.UP,
             Direction.UP,
             Direction.RIGHT
-        );
-
-        this.spiderMovementReversePath = Arrays.asList(
-            Direction.LEFT,
-            Direction.DOWN,
-            Direction.DOWN,
-            Direction.RIGHT,
-            Direction.RIGHT,
-            Direction.UP,
-            Direction.UP,
-            Direction.LEFT
-
         );
 
         // index of spiderMovementPath
@@ -159,8 +146,7 @@ public class Spider extends MovingEntity {
      * @param currentPos of spider
      */
     private void moveSpider(Game game, Position currentPos) {
-        List<Direction> movementPath = isMovementReverse ? spiderMovementReversePath : spiderMovementPath;
-        Direction nextMoveInPath = movementPath.get(indexOfNextMove);
+        Direction nextMoveInPath = spiderMovementPath.get(indexOfNextMove);
 
         Position newPos = currentPos.translateBy(nextMoveInPath);
         List<Entity> entitiesNewPos = game.getEntities(newPos);
@@ -169,13 +155,16 @@ public class Spider extends MovingEntity {
         } else { // reverse direction
             if(this.isMovementReverse) {
                 this.isMovementReverse = false;
+                indexOfNextMove = (indexOfNextMove + 5) % 8;
             } else {
                 this.isMovementReverse = true;
+                indexOfNextMove = (indexOfNextMove + 3) % 8;
             }
+            Collections.reverse(this.spiderMovementPath);
             return; // no movement occurs if blocked
         }
         
-        if(indexOfNextMove >= movementPath.size() - 1) { // end of movement path
+        if(indexOfNextMove >= spiderMovementPath.size() - 1) { // end of movement path
             indexOfNextMove = 0;
         } else {
             indexOfNextMove += 1;
