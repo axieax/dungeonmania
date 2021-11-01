@@ -29,6 +29,21 @@
         "switch": "images/tileset/floor_switch.png",
         "invincibility_potion": "images/tileset/items/potion_10.png",
         "sword": "images/tileset/items/sword_silver.png",
-        "door": "images/tileset/walls/wooden/door_locked_silver.png"
+        "door_1": "images/tileset/walls/wooden/door_locked_gold.png",
+        "door_1_open": "images/tileset/walls/wooden/door_unlocked_gold.png",
+        "door_2": "images/tileset/walls/wooden/door_locked_silver.png",
+        "door_2_open": "images/tileset/walls/wooden/door_unlocked.png",
+        "door": "images/tileset/walls/wooden/door_locked_gold.png",
+        "key_1": "images/tileset/items/key_gold.png",
+        "key_2": "images/tileset/items/key_silver.png",
+        "key": "images/tileset/items/key_gold.png",
+        "armour": "images/tileset/items/armour.png",
+        "shield": "images/tileset/items/shield.png",
+        "one_ring": "images/tileset/items/ring_0_special.png",
+        "portal": "images/tileset/entities/portal_00.png",
+        "zombie_toast_spawner": "images/tileset/entities/zombie_spawner.png",
+        "zombie_toast": "images/tileset/entities/zombie_00.png",
+        "health_potion": "images/tileset/items/potion_4.png",
+        "invisibility_potion": "images/tileset/items/potion2.png"
     }
 }
