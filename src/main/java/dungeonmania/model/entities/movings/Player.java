@@ -15,7 +15,6 @@ import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
@@ -54,7 +53,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         this.state = state;
     }
 
-     /**
+    /**
      * @return boolean
      */
     public boolean getInBattle() {
@@ -253,9 +252,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
         this.setDirection(direction);
 
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(entity -> {
-            entity.interact(game, this);
-        });
+        entities.forEach(
+            entity -> {
+                // cannot interact with moving entities when moving
+                if (!(entity instanceof MovingEntity)) entity.interact(game, this);
+            }
+        );
 
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
         boolean canMove = true;
@@ -392,8 +394,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put (state.getClass().getSimpleName(), state.ticksLeft());
-        info.put ("inventory", inventory.toJSON());
+        info.put(state.getClass().getSimpleName(), state.ticksLeft());
+        info.put("inventory", inventory.toJSON());
         return info;
     }
 
