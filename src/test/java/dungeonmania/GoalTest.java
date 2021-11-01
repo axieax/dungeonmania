@@ -15,7 +15,6 @@ import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.FloorSwitch;
-import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.AndComposite;
 import dungeonmania.model.goal.DestroyEnemies;
@@ -73,7 +72,7 @@ public class GoalTest {
     @Test
     public final void mazeExitTest() {
         DungeonManiaController dmc = new DungeonManiaController();
-        dmc.newGame("maze", "standard");
+        dmc.newGame("maze", "Standard");
         // navigate the maze
         String exitGoal = ":exit(1)";
         assertEquals(exitGoal, move(dmc, Direction.UP, 2).getGoals());
@@ -98,7 +97,7 @@ public class GoalTest {
     @Test
     public final void bouldersSwitchTest() {
         DungeonManiaController dmc = new DungeonManiaController();
-        dmc.newGame("boulders", "standard");
+        dmc.newGame("boulders", "Standard");
         // navigate the maze
         String switchGoal = ":switch(1)";
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
@@ -136,7 +135,7 @@ public class GoalTest {
     @Test
     public final void bombsSwitchTest() {
         DungeonManiaController dmc = new DungeonManiaController();
-        dmc.newGame("bombs", "standard");
+        dmc.newGame("bombs", "Standard");
         // navigate the maze
         String switchGoal = ":switch(1)";
         // pick up the bomb
@@ -189,7 +188,7 @@ public class GoalTest {
             new Player(new Position(0, 0)),
             new Exit(new Position(0, 2))
         );
-        Game game = new Game("test", entities, new ExitCondition(), null);
+        Game game = new Game("test", entities, new ExitCondition(), new Standard());
         assertEquals(":exit(1)", game.tick("", Direction.DOWN).getGoals());
         assertEquals("", game.tick("", Direction.DOWN).getGoals());
     }
@@ -205,7 +204,7 @@ public class GoalTest {
             new Boulder(new Position(1, 0)),
             new FloorSwitch(new Position(1, 0))
         );
-        Game game = new Game("test", entities, new ToggleSwitch(), null);
+        Game game = new Game("test", entities, new ToggleSwitch(), new Standard());
         assertEquals(":switch(1)", game.tick("", Direction.DOWN).getGoals());
         assertEquals("", game.tick("", Direction.DOWN).getGoals());
     }
@@ -218,7 +217,7 @@ public class GoalTest {
             player,
             new Mercenary(new Position(0, 3), mode.damageMultiplier(), player)
         );
-        Game game = new Game("test", entities, new DestroyEnemies(), null);
+        Game game = new Game("test", entities, new DestroyEnemies(), mode);
         assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
         assertEquals("", game.tick("", Direction.DOWN).getGoals());
     }
@@ -229,7 +228,7 @@ public class GoalTest {
         Player player = new Player(new Position(0, 0));
         Entity mercenary = new Mercenary(new Position(0, 4), mode.damageMultiplier(), player);
         List<Entity> entities = Arrays.asList(player, new Treasure(new Position(0, 1)), mercenary);
-        Game game = new Game("test", entities, new DestroyEnemies(), null);
+        Game game = new Game("test", entities, new DestroyEnemies(), mode);
         // pick up treasure
         assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
         // bribe mercenary
@@ -243,7 +242,7 @@ public class GoalTest {
             new Player(new Position(0, 0)),
             new Spider(new Position(0, -2), mode.damageMultiplier())
         );
-        Game game = new Game("test", entities, new DestroyEnemies(), null);
+        Game game = new Game("test", entities, new DestroyEnemies(), mode);
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
         // spider moves up
         assertEquals("", game.tick("", Direction.UP).getGoals());
@@ -255,20 +254,11 @@ public class GoalTest {
         Player player = new Player(new Position(0, 0));
         List<Entity> entities = Arrays.asList(
             player,
-            new ZombieToast(new Position(0, -2), mode.damageMultiplier(), player),
-            // walls to force direction
-            new Wall(new Position(-1, 0)),
-            new Wall(new Position(-1, -1)),
-            new Wall(new Position(-1, -2)),
-            new Wall(new Position(-1, -3)),
-            new Wall(new Position(0, -3)),
-            new Wall(new Position(1, -3)),
-            new Wall(new Position(1, -2)),
-            new Wall(new Position(1, -1)),
-            new Wall(new Position(1, 0))
+            new ZombieToast(new Position(0, -1), mode.damageMultiplier(), player)
         );
-        Game game = new Game("test", entities, new DestroyEnemies(), null);
-        assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
+        Game game = new Game("test", entities, new DestroyEnemies(), mode);
+        DungeonResponse resp = game.getDungeonResponse();
+        assertEquals(":enemies(1)", resp.getGoals());
         // zombie toast moves up
         assertEquals("", game.tick("", Direction.UP).getGoals());
     }
@@ -332,7 +322,7 @@ public class GoalTest {
         and.addGoal(new ExitCondition());
         and.addGoal(new ToggleSwitch());
         // check goal reached first
-        Game game = new Game("test", entities, and, null);
+        Game game = new Game("test", entities, and, new Standard());
         List<String> expected = Arrays.asList(
             ":treasure(1) AND :exit(1)",
             ":exit(1) AND :treasure(1)"
@@ -355,7 +345,7 @@ public class GoalTest {
         and.addGoal(new ExitCondition());
         and.addGoal(new ToggleSwitch());
         // check goal reached first
-        Game game = new Game("test", entities, and, null);
+        Game game = new Game("test", entities, and, new Standard());
         List<String> expected = Arrays.asList(
             ":treasure(1) AND :exit(1)",
             ":exit(1) AND :treasure(1)"
@@ -383,7 +373,7 @@ public class GoalTest {
     public void testAdvancedGoal() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame("advanced", "Standard"));
-        String treasureGoal = ":treasure";
+        String treasureGoal = ":treasure(1)";
 
         assertEquals(treasureGoal, move(controller, Direction.UP, 3).getGoals());
         assertEquals(treasureGoal, move(controller, Direction.LEFT, 6).getGoals());
