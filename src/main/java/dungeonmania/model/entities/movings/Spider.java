@@ -123,7 +123,7 @@ public class Spider extends MovingEntity {
      * @param game Game reference
      * @return number of spiders
      */
-    public int getNumSpiderInGame(Game game) {
+    public static int getNumSpiderInGame(Game game) {
         List<Entity> entities = game.getEntities();
         int spiders = 0;
         for(Entity e: entities) {
