@@ -7,6 +7,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
+import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
@@ -249,6 +250,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param direction
      */
     public void move(Game game, Direction direction) {
+        this.move(game, direction, "");
+    }
+
+    /**
+     * Interacts with any entity that is on the tile the character is about to move into.
+     * Upon movement, any observers are notified. If an entity blocks the player, then the
+     * player does not move at all.
+     * @param game
+     * @param direction
+     */
+    public void move(Game game, Direction direction, String itemId) {
         this.setDirection(direction);
 
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
@@ -270,7 +282,13 @@ public class Player extends MovingEntity implements SubjectPlayer {
             this.tick(game);
             this.notifyObservers();
         }
+
+        Item item = getInventoryItem(itemId);
+        if (item != null && item instanceof Bomb) {
+            ((Bomb)item).place(game, this.getPosition());
+        }
     }
+
 
     /**
      * A battle takes place when the character and the enemy are in the same cell, within a single tick.

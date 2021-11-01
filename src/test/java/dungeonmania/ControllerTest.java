@@ -100,7 +100,7 @@ public class ControllerTest {
         // Find current position of the player
         Position playerPosition = new Position(0, 0);
         for (EntityResponse entity: currGame.getEntities()) {
-            if (entity.getPrefix().equals ("player")) playerPosition = entity.getPosition();
+            if (entity.getPrefix().startsWith("player")) playerPosition = entity.getPosition();
         }
 
         // Save the current game

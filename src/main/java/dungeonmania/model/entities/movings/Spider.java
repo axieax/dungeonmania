@@ -104,7 +104,7 @@ public class Spider extends MovingEntity {
             }
 
             if(canSpawn) {
-                game.addEntity(new Spider(position, game.getMode().damageMultiplier()));
+                game.addEntity(new Spider(position));
             }
         }
     }
