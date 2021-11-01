@@ -108,8 +108,7 @@ public class ShieldTest {
      */
     @Test
     public void durabilityTest() {
-        Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
 
         Wood wood1 = new Wood(new Position(1, 0));
         Wood wood2 = new Wood(new Position(2, 0));
@@ -132,7 +131,7 @@ public class ShieldTest {
         Shield shield = (Shield) player.findInventoryItem("shield");
         assertTrue(shield.getDurability() == initialDurability);
 
-        Spider spider = new Spider(new Position(3, 1), 1);
+        Spider spider = new Spider(new Position(3, 1));
         game.addEntity(spider);
 
         // Player moves to defend against the spider with the shield

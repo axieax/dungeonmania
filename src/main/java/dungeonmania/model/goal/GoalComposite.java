@@ -4,6 +4,7 @@ import dungeonmania.model.Game;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public abstract class GoalComposite implements Goal {
@@ -39,14 +40,16 @@ public abstract class GoalComposite implements Goal {
         return goals
             .stream()
             .filter(goal -> !goal.isComplete(game))
-            .map(Goal::toString)
+            .map(goal -> goal.toString(game))
             .collect(Collectors.joining(delimiter, "(", ")"));
     }
 
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put("goal", getOperator());
-        json.put("subgoals", goals.stream().map(Goal::toJSON));
+        JSONArray arr = new JSONArray();
+        goals.stream().forEach(s -> arr.put(s.toJSON()));
+        json.put("subgoals", arr);
         return json;
     }
 }

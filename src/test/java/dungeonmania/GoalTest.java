@@ -1,6 +1,5 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -75,20 +74,20 @@ public class GoalTest {
         dmc.newGame("maze", "Standard");
         // navigate the maze
         String exitGoal = ":exit(1)";
-        assertEquals(exitGoal, move(dmc, Direction.UP, 2).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.LEFT, 5).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.LEFT, 1).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.LEFT, 1).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.UP, 6).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.LEFT, 2).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.UP, 5).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.LEFT, 4).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.DOWN, 10).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.LEFT, 4).getGoals());
-        assertEquals(exitGoal, move(dmc, Direction.UP, 9).getGoals());
-        assertEquals("", move(dmc, Direction.UP, 1).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.DOWN, 2).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.RIGHT, 5).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.DOWN, 1).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.DOWN, 1).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.DOWN, 6).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.RIGHT, 2).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.DOWN, 5).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.RIGHT, 4).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.UP, 10).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.RIGHT, 4).getGoals());
+        assertEquals(exitGoal, move(dmc, Direction.DOWN, 9).getGoals());
+        assertEquals("", move(dmc, Direction.DOWN, 1).getGoals());
     }
 
     /**
@@ -99,34 +98,44 @@ public class GoalTest {
         DungeonManiaController dmc = new DungeonManiaController();
         dmc.newGame("boulders", "Standard");
         // navigate the maze
-        String switchGoal = ":switch(1)";
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 4).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        String switchGoal = ":switch(6)";
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 4).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 3).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
+        switchGoal = switchGoal.replace("6", "5");
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
-        assertEquals("", move(dmc, Direction.LEFT, 1).getGoals());
+        switchGoal = switchGoal.replace("5", "6");
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        switchGoal = switchGoal.replace("6", "5");
+        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        switchGoal = switchGoal.replace("5", "4");
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 4).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        switchGoal = switchGoal.replace("4", "3");
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
+        switchGoal = switchGoal.replace("3", "2");
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        switchGoal = switchGoal.replace("2", "1");
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        assertEquals("", move(dmc, Direction.RIGHT, 1).getGoals());
     }
 
     /**
@@ -137,49 +146,61 @@ public class GoalTest {
         DungeonManiaController dmc = new DungeonManiaController();
         dmc.newGame("bombs", "Standard");
         // navigate the maze
-        String switchGoal = ":switch(1)";
+        String switchGoal = ":switch(6)";
         // pick up the bomb
-        DungeonResponse resp = move(dmc, Direction.LEFT, 1);
+        DungeonResponse resp = move(dmc, Direction.RIGHT, 1);
         assertEquals(switchGoal, resp.getGoals());
         assertEquals("bomb", resp.getInventory().get(0).getPrefix());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 3).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 3).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
+        switchGoal = switchGoal.replace("6", "5");
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
+        switchGoal = switchGoal.replace("5", "6");
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.DOWN, 4).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        switchGoal = switchGoal.replace("6", "5");
+        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.DOWN, 3).getGoals());
+        switchGoal = switchGoal.replace("5", "4");
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 4).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
+        switchGoal = switchGoal.replace("4", "3");
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
+        switchGoal = switchGoal.replace("3", "2");
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
+        switchGoal = switchGoal.replace("2", "3");
+        assertEquals(switchGoal, move(dmc, Direction.UP, 3).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 3).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        switchGoal = switchGoal.replace("3", "2");
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 3).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
 
         // place the bomb
-        assertEquals(switchGoal, move(dmc, Direction.UP, 3).getGoals());
-        resp = move(dmc, Direction.RIGHT, "bomb", 1);
+        resp = move(dmc, Direction.NONE, "bomb", 1);
         assertEquals(switchGoal, resp.getGoals());
         assertEquals(0, resp.getInventory().size());
 
-        assertEquals(switchGoal, move(dmc, Direction.UP, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
-        assertEquals(switchGoal, move(dmc, Direction.DOWN, 1).getGoals());
-        assertEquals("", move(dmc, Direction.LEFT, 1).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
+        assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
+        assertEquals("", move(dmc, Direction.RIGHT, 1).getGoals());
     }
 
     @Test
@@ -237,10 +258,9 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesSpider() {
-        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
-            new Spider(new Position(0, -2), mode.damageMultiplier())
+            new Spider(new Position(0, -2))
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
@@ -250,8 +270,7 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesZombie() {
-        Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0));
+        Entity player = new Player(new Position(0, 0));
         List<Entity> entities = Arrays.asList(
             player,
             new ZombieToast(new Position(0, -1), mode.damageMultiplier(), player)
@@ -265,8 +284,7 @@ public class GoalTest {
 
     @Test
     public final void testSimpleEnemiesZombieSpawner() {
-        Mode mode = new Standard();
-        Entity spawner = new ZombieToastSpawner(new Position(0, 2), mode.damageMultiplier());
+        Entity spawner = new ZombieToastSpawner(new Position(0, 2));
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
             new Sword(new Position(0, 1)),
@@ -355,6 +373,7 @@ public class GoalTest {
         assertEquals("", game.tick("", Direction.LEFT).getGoals());
     }
 
+
     /**
      * Test that Portals does not have a goal
      */
@@ -366,7 +385,7 @@ public class GoalTest {
         assertEquals(stateOne.getGoals(), "");
     }
 
-    /**
+        /**
      * This tests the completion of goals in the advanced dungeon
      */
     @Test
@@ -375,9 +394,10 @@ public class GoalTest {
         assertDoesNotThrow(() -> controller.newGame("advanced", "Standard"));
         String treasureGoal = ":treasure(1)";
 
-        assertEquals(treasureGoal, move(controller, Direction.UP, 3).getGoals());
-        assertEquals(treasureGoal, move(controller, Direction.LEFT, 6).getGoals());
-        assertEquals(treasureGoal, move(controller, Direction.LEFT, 5).getGoals());
-        assertEquals("", move(controller, Direction.LEFT, 1).getGoals());
+        assertEquals(treasureGoal, move(controller, Direction.DOWN, 3).getGoals());
+        assertEquals(treasureGoal, move(controller, Direction.RIGHT, 6).getGoals());
+        assertEquals(treasureGoal, move(controller, Direction.RIGHT, 5).getGoals());
+        assertEquals("", move(controller, Direction.RIGHT, 1).getGoals());
     }
+
 }

@@ -25,10 +25,11 @@ public class ToggleSwitch extends GoalLeaf {
         // Find S and B
         for (Entity e : game.getEntities()) {
             Position position = e.getPosition();
+            Position noLayer = new Position(position.getX(), position.getY());
             if (e instanceof FloorSwitch) {
-                switchPositions.add(position);
+                switchPositions.add(noLayer);
             } else if (e instanceof Boulder) {
-                boulderPositions.add(position);
+                boulderPositions.add(noLayer);
             }
         }
 

@@ -55,7 +55,6 @@ public class SwordTest {
     public void durabilityTest() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-
         Sword sword = new Sword(new Position(1, 1));
         game.addEntity(sword);
 
