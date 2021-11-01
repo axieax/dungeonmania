@@ -4,6 +4,7 @@ import dungeonmania.EntityFactory;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.ZombieToast;
@@ -194,10 +195,12 @@ public final class Game {
     public final DungeonResponse interact(String entityId) {
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
-        if(entity instanceof MovingEntity) {
+        if (entity instanceof Mercenary) {
+            ((Mercenary) entity).interact(this, (Player) player);
+        } else if (entity instanceof MovingEntity) {
             player.interact(this, (MovingEntity) entity);
-        } else if(entity instanceof ZombieToastSpawner) {
-            ZombieToastSpawner spawner =  (ZombieToastSpawner) entity;
+        } else if (entity instanceof ZombieToastSpawner) {
+            ZombieToastSpawner spawner = (ZombieToastSpawner) entity;
             spawner.interact(this, player);
         }
         return getDungeonResponse();

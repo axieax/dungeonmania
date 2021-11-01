@@ -120,25 +120,9 @@ public class Spider extends MovingEntity {
     }
 
     @Override
-    public Direction getDirection() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public boolean collision(Entity entity) {
         if (entity instanceof Wall) return false;
         return !entity.isPassable();
     }
 
-    @Override
-    public void moveTo(Position position) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public boolean isEnemy() {
-        return true;
-    }
 }
