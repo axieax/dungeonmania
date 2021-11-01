@@ -169,14 +169,13 @@ public final class Game {
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection) {
         this.tick += 1;
-        Spider.spawnSpider(this);
-
+        
         List<Tickable> tickables = entities
-            .stream()
-            .filter(e -> e instanceof Tickable)
-            .map(e -> (Tickable) e)
-            .collect(Collectors.toList());
-
+        .stream()
+        .filter(e -> e instanceof Tickable)
+        .map(e -> (Tickable) e)
+        .collect(Collectors.toList());
+        
         // separate loop to avoid concurrency issues when zombie spawner adds new entity
         // to entities
         tickables.forEach(
@@ -188,6 +187,8 @@ public final class Game {
                 }
             }
         );
+        
+        Spider.spawnSpider(this);
         return getDungeonResponse();
     }
 

@@ -72,7 +72,7 @@ public class SpiderTest {
         Position spiderSpawnPos = spider.getPosition();
 
         response = controller.tick(null, Direction.NONE);
-
+        entities = response.getEntities();
         // initially spider must always move 1 block upwards
         Position spiderPos = getSpiderPosition(entities);
         assertTrue(spiderPos.equals(spiderSpawnPos.translateBy(Direction.UP)));
