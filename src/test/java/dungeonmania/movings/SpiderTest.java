@@ -277,7 +277,6 @@ public class SpiderTest {
         Spider spider = new Spider(initialSpiderPos);
 
         game.tick(null, Direction.NONE);
-        assertTrue(spider.getPosition().equals(new Position(3, 2)));
 
         // spider attempts to move into boulder but fails and so, stays in the same position
         game.tick(null, Direction.NONE);
