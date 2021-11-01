@@ -361,7 +361,7 @@ public class SpiderTest {
     public EntityResponse getSpiderEntity(List<EntityResponse> entities)
         throws IllegalArgumentException, InvalidActionException {
         for (EntityResponse e : entities) {
-            if (e.getPrefix()== SPIDER) {
+            if (e.getPrefix().equals(SPIDER)) {
                 return e;
             }
         }
