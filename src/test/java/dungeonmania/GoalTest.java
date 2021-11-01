@@ -384,7 +384,7 @@ public class GoalTest {
     public void testPortalsGoal() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame("portals", "Standard"));
-        DungeonResponse stateOne = controller.tick(null, Direction.NONE);
+        DungeonResponse stateOne = controller.tick("", Direction.NONE);
         assertEquals(stateOne.getGoals(), "");
     }
 
@@ -395,7 +395,7 @@ public class GoalTest {
     public void testAdvancedGoal() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame("advanced", "Standard"));
-        String treasureGoal = ":treasure";
+        String treasureGoal = ":treasure(1)";
 
         assertEquals(treasureGoal, move(controller, Direction.DOWN, 3).getGoals());
         assertEquals(treasureGoal, move(controller, Direction.RIGHT, 6).getGoals());
