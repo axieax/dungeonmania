@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.statics;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
@@ -54,11 +56,19 @@ public class Door extends Entity {
         }
     }
 
+
     @Override
     public EntityResponse getEntityResponse() {
         String doorStatus = String.format("%s_%d", getPrefix(), key);
         if (open) doorStatus += "_open";
 
         return new EntityResponse(getId(), doorStatus, getPosition(), isInteractable());
+
+    @Override 
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("key", key);
+        return info;
+
     }
 }

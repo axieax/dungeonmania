@@ -26,6 +26,7 @@ import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -262,7 +263,7 @@ public class GoalTest {
         Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
-            new Spider(new Position(0, -2), mode.damageMultiplier())
+            new Spider(new Position(0, -2))
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
@@ -274,10 +275,10 @@ public class GoalTest {
     public final void testSimpleEnemiesZombie() {
         Mode mode = new Standard();
         Player player = new Player(new Position(0, 0));
-        List<Entity> entities = Arrays.asList(
-            player,
-            new ZombieToast(new Position(0, -1), mode.damageMultiplier(), player)
-        );
+        ZombieToast zombie = new ZombieToast(new Position(0, -1), mode.damageMultiplier(), player);
+        List<Entity> entities = new ArrayList<>();
+        entities.add(player);
+        entities.add(zombie);
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
         DungeonResponse resp = game.getDungeonResponse();
         assertEquals(":enemies(1)", resp.getGoals());
@@ -288,7 +289,7 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesZombieSpawner() {
         Mode mode = new Standard();
-        Entity spawner = new ZombieToastSpawner(new Position(0, 2), mode.damageMultiplier());
+        Entity spawner = new ZombieToastSpawner(new Position(0, 2), mode.tickRate());
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
             new Sword(new Position(0, 1)),

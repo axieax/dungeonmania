@@ -40,7 +40,7 @@ public abstract class GoalComposite implements Goal {
         return goals
             .stream()
             .filter(goal -> !goal.isComplete(game))
-            .map(Goal::toString)
+            .map(goal -> goal.toString(game))
             .collect(Collectors.joining(delimiter, "(", ")"));
     }
 

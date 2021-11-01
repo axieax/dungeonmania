@@ -34,16 +34,4 @@ public abstract class Item extends Entity {
             game.removeEntity(this);
         }
     }
-
-    @Override
-    public JSONObject toJSON() {
-        if (this instanceof Equipment) {
-            Equipment currItem = (Equipment) this;
-            return currItem.toJSON();
-        } else if (this instanceof Potion) {
-            Potion currItem = (Potion) this;
-            return currItem.toJSON();
-        }
-        return this.toJSON();
-    }
 }

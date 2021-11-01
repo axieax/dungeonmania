@@ -15,6 +15,7 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
@@ -672,6 +673,7 @@ public class CharacterTest {
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
@@ -703,6 +705,7 @@ public class CharacterTest {
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 

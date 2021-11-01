@@ -1,6 +1,7 @@
 package dungeonmania.model;
 
 import dungeonmania.EntityFactory;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
@@ -143,8 +144,23 @@ public final class Game {
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
             this.getCharacter().getInventoryResponses(),
             this.getBuildables(),
-            goal.toString(this)
+            formatGoal()
         );
+    }
+
+    /**
+     * Formats the Goal string, removing any brackets if necessary
+     *
+     * @return Goal string for DungeonResponse
+     */
+    private final String formatGoal() {
+        if (goal == null) return "";
+        String goalString = goal.toString(this);
+        // remove starting and closing brackets
+        if (goalString.startsWith("(") && goalString.endsWith(")")) {
+            goalString = goalString.substring(1, goalString.length() - 1);
+        }
+        return goalString;
     }
 
     private final List<String> getBuildables() {
@@ -183,7 +199,10 @@ public final class Game {
         return getDungeonResponse();
     }
 
-    public final DungeonResponse interact(String entityId) {
+    public final DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
+        if (!entities.stream().map (Entity::getId).collect (Collectors.toList()).contains(entityId)) {
+            throw new IllegalArgumentException();
+        }
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
         if (entity instanceof Mercenary) {

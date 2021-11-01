@@ -5,6 +5,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.Mercenary;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -34,8 +35,8 @@ public class MercenaryTest {
 
     @Test
     public void testDoesNotSpawnWithNoEnemies() {
-        // mercenaries only spawn in dungeons with at least one enemy
         Mode mode = new Standard();
+        // mercenaries only spawn in dungeons with at least one enemy
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         assertTrue(game.getEntities().size() == 28);
         
@@ -51,8 +52,8 @@ public class MercenaryTest {
 
     @Test
     public void testSimpleMovement() {
-        // Distance between the mercenary and player should decrease per tick/movement
         Mode mode = new Standard();
+        // Distance between the mercenary and player should decrease per tick/movement
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
@@ -72,8 +73,8 @@ public class MercenaryTest {
 
     @Test
     public void testMercenarySimpleWall() {
-        // Wall exists between player and mercenary and so mercenary should go around the wall
         Mode mode = new Standard();
+        // Wall exists between player and mercenary and so mercenary should go around the wall
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
 
@@ -229,10 +230,10 @@ public class MercenaryTest {
 
     @Test
     public void testInteractMercenaryNotAdjacent() {
+        Mode mode = new Standard();
         // InvalidActionException if the player is not within 2 cardinal
         // tiles to the mercenary, if they are bribing
 
-        Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
@@ -248,8 +249,8 @@ public class MercenaryTest {
     }
     
     public void testBribeWithoutTreasure() {
-        // character attemps to bribe mercenary without any treasure should throw an exception
         Mode mode = new Standard();
+        // character attemps to bribe mercenary without any treasure should throw an exception
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
