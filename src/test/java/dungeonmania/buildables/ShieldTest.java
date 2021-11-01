@@ -14,6 +14,7 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -102,7 +103,8 @@ public class ShieldTest {
      * Test durability of Shield.
      */
     public void durabilityTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         Wood wood1 = new Wood(new Position(1, 0));
         Wood wood2 = new Wood(new Position(2, 0));

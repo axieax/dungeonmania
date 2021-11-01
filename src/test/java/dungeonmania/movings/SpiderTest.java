@@ -152,7 +152,7 @@ public class SpiderTest {
     @Test
     public void testMovementThroughDoor() {
         // can move through closed doors
-        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -175,7 +175,7 @@ public class SpiderTest {
     @Test
     public void testMovementThroughSwitch() {
         // switches have no effect
-        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -197,7 +197,7 @@ public class SpiderTest {
     @Test
     public void testMovementThroughPortal() {
         // portals have no effect on the spider
-        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -219,7 +219,7 @@ public class SpiderTest {
 
     @Test
     public void testSpiderMovementIntoExitNoEffect() {
-        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -242,7 +242,7 @@ public class SpiderTest {
     @Test
     public void testSpiderBoulderReverseDirection() {
         // boulder is placed north-west of initial spider position
-        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -267,7 +267,7 @@ public class SpiderTest {
         // a boulder exists in the tile above where the spider spawns, and so,
         // the spider should not move anywhere
 
-        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -291,7 +291,7 @@ public class SpiderTest {
         // spider spawns on the edge of the map (0, 0) and is able to traverse
         // outside the walls
         
-        Game game = new Game("game", SevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(5, 5));
         game.addEntity(player);
@@ -307,7 +307,7 @@ public class SpiderTest {
         assertTrue(game.getEntities(initialSpiderPos).size() == 1);
     }
 
-    private List<Entity> SevenBySevenWallBoundary() {
+    private List<Entity> sevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
         
         // left border
@@ -361,7 +361,7 @@ public class SpiderTest {
     public EntityResponse getSpiderEntity(List<EntityResponse> entities)
         throws IllegalArgumentException, InvalidActionException {
         for (EntityResponse e : entities) {
-            if (e.getType()== SPIDER) {
+            if (e.getPrefix().equals(SPIDER)) {
                 return e;
             }
         }
