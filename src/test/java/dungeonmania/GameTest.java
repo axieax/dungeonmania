@@ -1,75 +1,105 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.util.Direction;
 import java.util.stream.Collectors;
-
-
 import org.junit.jupiter.api.Test;
 
-import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
-import dungeonmania.model.mode.Mode;
-import dungeonmania.model.mode.Standard;
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.util.Direction;
-import dungeonmania.util.Position;  
-
 public class GameTest {
+
     /**
      * Test zombie spawn rate in Standard Game Mode
      */
     @Test
     public void testStandardGameMode() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("zombie", "Standard"));
+        assertDoesNotThrow(() -> controller.newGame("zombie", "Standard"));
 
-        DungeonResponse responseOne = controller.tick (null, Direction.NONE);
-        assertEquals (responseOne.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size(), 0);
-
+        DungeonResponse responseOne = controller.tick(null, Direction.NONE);
+        assertEquals(
+            0,
+            responseOne
+                .getEntities()
+                .stream()
+                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .collect(Collectors.toList())
+                .size()
+        );
 
         responseOne.getEntities();
         for (int i = 0; i < 18; i++) {
-            DungeonResponse responseTwo = controller.tick (null, Direction.NONE); 
-            assert (responseTwo.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
+            DungeonResponse responseTwo = controller.tick(null, Direction.NONE);
+            assertEquals(
+                0,
+                responseTwo
+                    .getEntities()
+                    .stream()
+                    .filter(e -> e.getPrefix().equals("zombie_toast"))
+                    .collect(Collectors.toList())
+                    .size()
+            );
         }
 
         // 20 ticks have passed
-        DungeonResponse responseThree= controller.tick (null, Direction.NONE);
-        assert (responseThree.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
+        DungeonResponse responseThree = controller.tick(null, Direction.NONE);
+        assertEquals(
+            1,
+            responseThree
+                .getEntities()
+                .stream()
+                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .collect(Collectors.toList())
+                .size()
+        );
     }
+
     /**
      * This tests Zombie Spawn Rate in Peaceful Game Mode
      */
     @Test
     public void testPeacefulGameMode() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "Peaceful"));
+        assertDoesNotThrow(() -> controller.newGame("advanced", "Peaceful"));
 
-        DungeonResponse responseOne = controller.tick (null, Direction.NONE);
-        assert (responseOne.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
-
+        DungeonResponse responseOne = controller.tick(null, Direction.NONE);
+        assertEquals(
+            0,
+            responseOne
+                .getEntities()
+                .stream()
+                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .collect(Collectors.toList())
+                .size()
+        );
 
         responseOne.getEntities();
         for (int i = 0; i < 18; i++) {
-            DungeonResponse responseTwo = controller.tick (null, Direction.NONE); 
-            assert (responseTwo.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
+            DungeonResponse responseTwo = controller.tick(null, Direction.NONE);
+            assertEquals(
+                0,
+                responseTwo
+                    .getEntities()
+                    .stream()
+                    .filter(e -> e.getPrefix().equals("zombie_toast"))
+                    .collect(Collectors.toList())
+                    .size()
+            );
         }
 
         // 20 ticks have passed
-        DungeonResponse responseThree= controller.tick (null, Direction.NONE);
-        assert (responseThree.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
+        DungeonResponse responseThree = controller.tick(null, Direction.NONE);
+        assertEquals(
+            1,
+            responseThree
+                .getEntities()
+                .stream()
+                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .collect(Collectors.toList())
+                .size()
+        );
     }
 
     /**
@@ -81,52 +111,43 @@ public class GameTest {
     @Test
     public void testHardGameMode() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "Hard"));
-        DungeonResponse responseOne = controller.tick (null, Direction.NONE);
-        assert (responseOne.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);
-
+        assertDoesNotThrow(() -> controller.newGame("advanced", "Hard"));
+        DungeonResponse responseOne = controller.tick(null, Direction.NONE);
+        assertEquals(
+            0,
+            responseOne
+                .getEntities()
+                .stream()
+                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .collect(Collectors.toList())
+                .size()
+        );
 
         responseOne.getEntities();
         for (int i = 0; i < 13; i++) {
-            DungeonResponse responseTwo = controller.tick (null, Direction.NONE); 
-            assert (responseTwo.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 0);       
+            DungeonResponse responseTwo = controller.tick(null, Direction.NONE);
+            assertEquals(
+                0,
+                responseTwo
+                    .getEntities()
+                    .stream()
+                    .filter(e -> e.getPrefix().equals("zombie_toast"))
+                    .collect(Collectors.toList())
+                    .size()
+            );
         }
 
         // 15 ticks have passed
-        DungeonResponse responseThree= controller.tick (null, Direction.NONE);
-        assert (responseThree.getEntities().stream().filter(e -> e.getClass().getSimpleName().toLowerCase().equals("zombie_toast")).collect (Collectors.toList()).size() == 1);
-    }
-
-
-
-    @Test 
-    public void testMoveablePositions () {
-        Mode gameMode = new Standard();
-        Game newGame = new Game ("advanced", EntityFactory.extractEntities("advanced", gameMode), null, gameMode);
-
-        Player gamePlayer = null;
-        for (Entity entity: newGame.getEntities()) {
-            if (entity.getClass().getSimpleName().toLowerCase().equals ("player")) {
-                gamePlayer = (Player) entity;
-            }
-        }
-
-        List<Position> possiblePositions = newGame.getMoveablePositions (gamePlayer, gamePlayer.getPosition());
-        assert (possiblePositions.size() == 2);
-
-        newGame.tick (null, Direction.DOWN);
-
-        possiblePositions = newGame.getMoveablePositions (gamePlayer, gamePlayer.getPosition());
-        assert (possiblePositions.size() == 3);
-
-        newGame.tick (null, Direction.DOWN);
-        newGame.tick (null, Direction.DOWN);
-        newGame.tick (null, Direction.DOWN);
-        newGame.tick (null, Direction.RIGHT);
-
-        possiblePositions = newGame.getMoveablePositions (gamePlayer, gamePlayer.getPosition());
-        assert (possiblePositions.size() == 4);
-
+        DungeonResponse responseThree = controller.tick(null, Direction.NONE);
+        assertEquals(
+            1,
+            responseThree
+                .getEntities()
+                .stream()
+                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .collect(Collectors.toList())
+                .size()
+        );
     }
 
     @Test
@@ -256,5 +277,4 @@ public class GameTest {
         assertDoesNotThrow(()->newGame.interact(mercenaryId));
         assert (gamePlayer.getAllies().size() == 1);
     }
-
 }

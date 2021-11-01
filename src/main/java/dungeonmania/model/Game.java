@@ -5,6 +5,7 @@ import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.ZombieToast;
@@ -24,14 +25,14 @@ public final class Game {
 
     private final String dungeonId;
     private final String dungeonName;
-    private List<Entity> entities = new ArrayList<>();
+    private final List<Entity> entities;
     private final Goal goal;
     private final Mode mode;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
         this.dungeonId = UUID.randomUUID().toString();
         this.dungeonName = dungeonName;
-        this.entities = entities;
+        this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
         // TODO: attach observers
@@ -141,8 +142,8 @@ public final class Game {
             dungeonId,
             dungeonName,
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
-            getCharacter().getInventoryResponses(),
-            getBuildables(),
+            this.getCharacter().getInventoryResponses(),
+            this.getBuildables(),
             goal.toString(this)
         );
     }
@@ -166,15 +167,13 @@ public final class Game {
 
         // separate loop to avoid concurrency issues when zombie spawner adds new entity
         // to entities
-        tickables.forEach(
-            e -> {
-                if (e instanceof Player) {
-                    ((Player) e).move(this, movementDirection);
-                } else {
-                    ((Tickable) e).tick(this);
-                }
+        tickables.forEach(e -> {
+            if (e instanceof Player) {
+                ((Player) e).move(this, movementDirection);
+            } else {
+                ((Tickable) e).tick(this);
             }
-        );
+        });
         return getDungeonResponse();
     }
 
@@ -191,10 +190,12 @@ public final class Game {
         }
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
-        if(entity instanceof MovingEntity) {
+        if (entity instanceof Mercenary) {
+            ((Mercenary) entity).interact(this, (Player) player);
+        } else if (entity instanceof MovingEntity) {
             player.interact(this, (MovingEntity) entity);
-        } else if(entity instanceof ZombieToastSpawner) {
-            ZombieToastSpawner spawner =  (ZombieToastSpawner) entity;
+        } else if (entity instanceof ZombieToastSpawner) {
+            ZombieToastSpawner spawner = (ZombieToastSpawner) entity;
             spawner.interact(this, player);
         }
         return getDungeonResponse();

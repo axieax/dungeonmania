@@ -440,19 +440,25 @@ public class CharacterTest {
             response = controller.tick(null, Direction.DOWN);
         }
 
-        assertTrue(new Position(1, 13).equals(characterPos));
-
+        entities = response.getEntities();
+        characterPos = getCharacterPosition(entities);
+        assertTrue(new Position(1, 14).equals(characterPos));
+        
         for (int i = 0; i < 10; i++) {
             response = controller.tick(null, Direction.RIGHT);
         }
-
+        
+        entities = response.getEntities();
+        characterPos = getCharacterPosition(entities);
         assertTrue(new Position(11, 14).equals(characterPos));
-
+        
         response = controller.tick(null, Direction.UP); // collect arrow
         response = controller.tick(null, Direction.DOWN);
         response = controller.tick(null, Direction.RIGHT); // collect arrow
         response = controller.tick(null, Direction.RIGHT); // collect wood
-
+        
+        entities = response.getEntities();
+        characterPos = getCharacterPosition(entities);
         assertTrue(new Position(13, 14).equals(characterPos));
 
         // build bow - player has sufficient items
@@ -512,12 +518,16 @@ public class CharacterTest {
         game.addEntity(player);
 
         game.addEntity(new Bomb(new Position(2, 1)));
-        game.tick(null, Direction.RIGHT); // player picks up bomb
 
+        assertTrue(player.getInventoryResponses().size() == 0);
+        game.tick(null, Direction.RIGHT); // player picks up bomb
+        assertTrue(player.getInventoryResponses().size() > 0);
+        
         game.tick(null, Direction.DOWN);
         Position updatedPlayerPos = new Position(2, 2);
-
+        
         game.tick("bomb", Direction.NONE); // place bomb
+        assertTrue(player.getInventoryResponses().size() == 0);
         assertTrue(game.getEntities(updatedPlayerPos).size() == 2); // bomb + player
 
         game.tick(null, Direction.UP);
