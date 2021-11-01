@@ -5,6 +5,7 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Key extends Item implements Consumable {
@@ -21,7 +22,7 @@ public class Key extends Item implements Consumable {
     }
 
     /**
-     * If the Player interacts with the Key, collect the Key into the player's 
+     * If the Player interacts with the Key, collect the Key into the player's
      * inventory if there are no keys. Since the Player can only hold one key at
      * a time.
      */
@@ -36,5 +37,15 @@ public class Key extends Item implements Consumable {
     @Override
     public void consume(Player player) {
         player.removeInventoryItem(this.getId());
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        return new EntityResponse(
+            getId(),
+            String.format("%s_%d", getPrefix(), key),
+            getPosition(),
+            isInteractable()
+        );
     }
 }
