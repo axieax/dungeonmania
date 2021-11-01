@@ -1,24 +1,9 @@
 package dungeonmania;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -30,6 +15,18 @@ import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class DungeonManiaController {
 
@@ -64,7 +61,7 @@ public class DungeonManiaController {
     /**
      * Creates a new game, where dungeonName is the name of the dungeon map
      * (corresponding to a JSON file stored in the model) and gameMode is one of
-     * "standard", "peaceful" or "hard".
+     * "Standard", "Peaceful" or "Hard".
      *
      * @param dungeonName
      * @param gameMode
@@ -184,7 +181,7 @@ public class DungeonManiaController {
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
         if (
-            itemUsed != null &&
+            itemUsed.length() != 0 &&
             !(
                 itemUsed.equals("bomb") ||
                 itemUsed.equals("invincibility_potion") ||
