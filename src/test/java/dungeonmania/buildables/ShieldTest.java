@@ -122,14 +122,14 @@ public class ShieldTest {
         Shield shield = new Shield();
         player.craft(shield);
 
-        // Durability of shield when picked up should be 5
+        // Durability of shield when crafted should be 5
         Item item = player.getInventoryItem(shield.getId());
         assertTrue(((Shield) item).getDurability() == 5);
 
         Mercenary mercenary = new Mercenary(new Position(2, 2), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
-        // Player moves to attack (interact with) the mercenary with the shield
+        // Player moves to defend (interact with) the mercenary with the shield
         // This will cause the durability of the shield to decrease by 1
         player.move(game, Direction.RIGHT);
 
@@ -141,6 +141,39 @@ public class ShieldTest {
      */
     @Test
     public void battleTest() {
-        fail();
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+
+        Wood wood1 = new Wood(new Position(1, 0));
+        Wood wood2 = new Wood(new Position(2, 0));
+        Key key = new Key(new Position(2, 1), 1);
+
+        game.addEntity(wood1);
+        game.addEntity(wood2);
+        game.addEntity(key);
+
+        Player player = new Player(new Position(0, 0));
+        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.DOWN);
+
+        Shield shield = new Shield();
+        player.craft(shield);
+
+        Item item = player.getInventoryItem(shield.getId());
+        assertTrue(((Shield) item).getDurability() == 5);
+
+        Mercenary mercenary = new Mercenary(new Position(2, 2), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        assertTrue(player.getHealth() == 100);
+
+        // Player moves to defend (interact with) the mercenary with the shield
+        // Upon defending, the player will take 5 * 0.25 = 1 damage from the mercenary
+        // This durability of the shield will also decrease by 1
+        player.move(game, Direction.RIGHT);
+
+        assertTrue(player.getHealth() == 99);
+        assertTrue(((Shield) item).getDurability() == 4);
     }
 }
