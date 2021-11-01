@@ -161,13 +161,6 @@ public class SpiderTest {
         entities = response.getEntities();
         spiderPos = getSpiderPosition(entities);
         assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.RIGHT)));
-
-        // next movement is to the right
-        oldSpiderPos = spiderPos;
-        response = controller.tick(null, Direction.NONE);
-        entities = response.getEntities();
-        spiderPos = getSpiderPosition(entities);
-        assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.RIGHT)));
     }
 
     @Test

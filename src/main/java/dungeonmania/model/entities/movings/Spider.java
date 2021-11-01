@@ -131,9 +131,9 @@ public class Spider extends MovingEntity {
         }
         
         if(indexOfNextMove == spiderMovementPath.size() - 1) { // end of movement path
-            nextMoveInPath = spiderMovementPath.get(0);
+            indexOfNextMove = 0;
         } else {
-            nextMoveInPath = spiderMovementPath.get(indexOfNextMove += 1);
+            indexOfNextMove += 1;
         }
     }
 
