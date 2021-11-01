@@ -78,22 +78,6 @@ public class Mercenary extends MovingEntity implements Observer {
         }
     }
 
-    @Override
-    public Direction getDirection() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void moveTo(Position position) {
-        this.setPosition(position);
-    }
-
-    @Override
-    public boolean isEnemy() {
-        return false;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////
     public void setState(MovementState state) {
         this.state = state;
@@ -130,7 +114,7 @@ public class Mercenary extends MovingEntity implements Observer {
 
         // Move the mercenary to the closest possible position to the player
         for (Position position : possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(currPos, playerPos);
+            int pathLen = positionGraph.BFS(position, playerPos);
             if (pathLen < optimalPathLength) {
                 optimalPathLength = pathLen;
                 optimalPathPosition = position;

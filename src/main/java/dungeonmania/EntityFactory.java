@@ -94,10 +94,7 @@ public class EntityFactory {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
-        if (type.startsWith("player")) {
-            position = position.asLayer(0);
-            return new Player(position);
-        } else if (type.startsWith("wall")) {
+        if (type.startsWith("wall")) {
             // Static Entities
             position = position.asLayer(0);
             return new Wall(position);
@@ -159,13 +156,16 @@ public class EntityFactory {
             // Moving Entities
         } else if (type.startsWith("spider")) {
             position = position.asLayer(18);
-            return new Spider(position, mode.damageMultiplier());
+            return new Spider(position);
         } else if (type.startsWith("zombie_toast")) {
             position = position.asLayer(19);
             return new ZombieToast(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("mercenary")) {
             position = position.asLayer(20);
             return new Mercenary(position, mode.damageMultiplier(), player);
+        } else if (type.startsWith("player")) {
+            position = position.asLayer(21);
+            return new Player(position);
         }
         return null;
     }

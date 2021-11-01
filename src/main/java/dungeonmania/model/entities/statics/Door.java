@@ -1,10 +1,13 @@
 package dungeonmania.model.entities.statics;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Door extends Entity {
@@ -51,5 +54,21 @@ public class Door extends Entity {
             Key key = player.getKey();
             if (key != null && this.unlockDoor(key)) key.consume(player);
         }
+    }
+
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        String doorStatus = String.format("%s_%d", getPrefix(), key);
+        if (open) doorStatus += "_open";
+
+        return new EntityResponse(getId(), doorStatus, getPosition(), isInteractable());
+
+    @Override 
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("key", key);
+        return info;
+
     }
 }

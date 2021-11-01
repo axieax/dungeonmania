@@ -20,10 +20,14 @@ public class Spider extends MovingEntity {
     private boolean isMovementReverse;
     private int indexOfNextMove;
 
-    public Spider(Position position, int damageMultiplier) {
-        super("spider", position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, true, damageMultiplier);
+    public Spider(Position position) {
+        this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG);
+    }
+
+    public Spider(Position position, int health, int attackDamage) {
+        super("spider", position, health, attackDamage, true);
         this.isInitialMove = true;
-        // default "circling" movement of spider
+        // Default "circling" movement of spider
         this.spiderMovementPath = Arrays.asList(
             Direction.RIGHT,
             Direction.DOWN,
@@ -180,25 +184,9 @@ public class Spider extends MovingEntity {
     }
 
     @Override
-    public Direction getDirection() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public boolean collision(Entity entity) {
         if (entity instanceof Wall) return false;
         return !entity.isPassable();
     }
 
-    @Override
-    public void moveTo(Position position) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public boolean isEnemy() {
-        return true;
-    }
 }

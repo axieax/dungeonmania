@@ -5,6 +5,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.Mercenary;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -34,16 +35,13 @@ public class MercenaryTest {
 
     @Test
     public void testDoesNotSpawnWithNoEnemies() {
-        // mercenaries only spawn in dungeons with at least one enemy
         Mode mode = new Standard();
+        // mercenaries only spawn in dungeons with at least one enemy
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-        assertTrue(game.getEntities().size() == 28);
-        
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
-        assertTrue(numEntities == 29);
         for(int i = 0; i < 200; i++) {
             assertTrue(game.getEntities().size() == numEntities);
         }
@@ -51,8 +49,8 @@ public class MercenaryTest {
 
     @Test
     public void testSimpleMovement() {
-        // Distance between the mercenary and player should decrease per tick/movement
         Mode mode = new Standard();
+        // Distance between the mercenary and player should decrease per tick/movement
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
@@ -60,9 +58,6 @@ public class MercenaryTest {
 
         Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-
-        assertTrue(game.getEntity("player").getPosition().equals(new Position(1, 1)));
-        assertTrue(game.getEntity("mercenary").getPosition().equals(new Position(3, 3)));
 
         player.move(game, Direction.RIGHT);
 
@@ -72,10 +67,10 @@ public class MercenaryTest {
 
     @Test
     public void testMercenarySimpleWall() {
-        // Wall exists between player and mercenary and so mercenary should go around the wall
         Mode mode = new Standard();
+        // Wall with 1 gap exists and mercenary should go directly to player, and not move
+        // outside/go through the gap
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -85,27 +80,10 @@ public class MercenaryTest {
             game.addEntity(new Wall(new Position(i + 1, 2)));
         }
 
-        Mercenary mercenary = new Mercenary(new Position(1, 3), mode.damageMultiplier(), player);
+        Mercenary mercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
-        game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getX() == 2);
-        game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getX() == 3);
-        game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getX() == 4);
-        game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getX() == 5);
-
-        // mercenary now below wall gap
-        game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getY() == 2);
-        game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getY() == 1);
-
         // mercenary now at same horizontal level as player and any further ticks reduce the horizontal distance
-        game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getX() == 4);
         game.tick(null, Direction.NONE);
         assertTrue(mercenary.getX() == 3);
         game.tick(null, Direction.NONE);
@@ -115,7 +93,7 @@ public class MercenaryTest {
     }
 
     @Test
-    public void testBribedMercenaryMovement() {
+    public void testBribedMercenaryDoesNotAttack() {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
@@ -141,24 +119,18 @@ public class MercenaryTest {
         }
 
         // mercenary in adjacent tile, so bribe
-        game.interact("mercenary");
+        int playerHealth = player.getHealth();
 
+        game.interact(mercenary.getId());
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1); // player still at tile
+        
         game.tick(null, Direction.NONE);
-        assertTrue(game.getEntities(updatedPlayerPos).size() == 2); // mercenary on top of player
+        assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == playerHealth);
         
-        // any further movements result in the mercenary following the player
-        game.tick(null, Direction.RIGHT);
-        assertTrue(game.getEntities(player.getPosition()).size() == 2); // player still at tile
-
-        game.tick(null, Direction.DOWN);
-        assertTrue(game.getEntities(player.getPosition()).size() == 2); // player still at tile
-
-        game.tick(null, Direction.UP);
-        assertTrue(game.getEntities(player.getPosition()).size() == 2); // player still at tile
-        
-        game.tick(null, Direction.LEFT);
-        assertTrue(game.getEntities(player.getPosition()).size() == 2); // player still at tile
     }
 
     @Test
@@ -187,22 +159,30 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
-        Position playerPos = new Position(1, 1);
+        Position playerPos = new Position(5, 5);
         Player player = new Player(playerPos);
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(),player);
         game.addEntity(mercenary);
+
+        // surround mercenary and door with wall
+        game.addEntity(new Wall(new Position(1, 2)));
+        game.addEntity(new Wall(new Position(2, 2)));
+        game.addEntity(new Wall(new Position(3, 2)));
+        game.addEntity(new Wall(new Position(3, 1)));
     
-        Position doorPos = new Position(1, 2);
+        Position doorPos = new Position(2, 1);
         Door door = new Door(doorPos, 0);
         game.addEntity(door);
         
         assertTrue(game.getEntities(doorPos).size() == 1);
-
-        // mercenary should not be able to move to the tile with the door as it is closed
-        mercenary.moveTo(doorPos);
-        assertTrue(game.getEntities(doorPos).size() == 1);
+        
+        // mercenary should not be able to go in the door position
+        for(int i = 0; i < 100; i ++) {
+            game.tick(null, Direction.NONE);       
+            assertTrue(game.getEntities(doorPos).size() == 1);
+        }
     }
 
     @Test
@@ -218,9 +198,9 @@ public class MercenaryTest {
         Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
     
-        game.tick(null, Direction.NONE);
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntities(mercenaryPos).size() == 1);
+        game.tick(null, Direction.NONE);
 
         // mercenary should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
@@ -231,8 +211,8 @@ public class MercenaryTest {
     public void testInteractMercenaryNotAdjacent() {
         // InvalidActionException if the player is not within 2 cardinal
         // tiles to the mercenary, if they are bribing
-
         Mode mode = new Standard();
+
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
@@ -244,12 +224,12 @@ public class MercenaryTest {
         game.addEntity(mercenary);
 
         // mercenary too far away from character
-        assertThrows(InvalidActionException.class, () -> game.interact("mercenary"));
+        assertThrows(InvalidActionException.class, () -> game.interact(mercenary.getId()));
     }
     
     public void testBribeWithoutTreasure() {
-        // character attemps to bribe mercenary without any treasure should throw an exception
         Mode mode = new Standard();
+        // character attemps to bribe mercenary without any treasure should throw an exception
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));

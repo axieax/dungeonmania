@@ -1,6 +1,7 @@
 package dungeonmania.model;
 
 import dungeonmania.EntityFactory;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
@@ -25,7 +26,7 @@ public final class Game {
 
     private final String dungeonId;
     private final String dungeonName;
-    private List<Entity> entities = new ArrayList<>();
+    private final List<Entity> entities;
     private final Goal goal;
     private final Mode mode;
     
@@ -34,7 +35,7 @@ public final class Game {
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
         this.dungeonId = UUID.randomUUID().toString();
         this.dungeonName = dungeonName;
-        this.entities = entities;
+        this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
         // TODO: attach observers
@@ -102,11 +103,9 @@ public final class Game {
         positions.add(new Position(x, y - 1));
         getCardinallyAdjacentEntities(position)
             .stream()
-            .forEach(
-                e -> {
-                    if (from.collision(e)) positions.remove(e.getPosition());
-                }
-            );
+            .forEach(e -> {
+                if (from.collision(e)) positions.remove(e.getPosition());
+            });
         return positions;
     }
 
@@ -120,24 +119,19 @@ public final class Game {
     public final List<Entity> getCardinallyAdjacentEntities(Position position) {
         return getAdjacentEntities(position)
             .stream()
-            .filter(
-                e -> {
-                    // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                    Position difference = Position.calculatePositionBetween(
-                        e.getPosition(),
-                        position
-                    );
-                    int xDiff = Math.abs(difference.getX());
-                    int yDiff = Math.abs(difference.getY());
-                    return (
-                        // ensure both xDiff and yDiff are either 0 or 1
-                        (xDiff == (xDiff & 1)) &&
-                        (yDiff == (yDiff & 1)) &&
-                        // logical XOR to check x and y are different
-                        ((xDiff == 1) ^ (yDiff == 1))
-                    );
-                }
-            )
+            .filter(e -> {
+                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                Position difference = Position.calculatePositionBetween(e.getPosition(), position);
+                int xDiff = Math.abs(difference.getX());
+                int yDiff = Math.abs(difference.getY());
+                return (
+                    // ensure both xDiff and yDiff are either 0 or 1
+                    (xDiff == (xDiff & 1)) &&
+                    (yDiff == (yDiff & 1)) &&
+                    // logical XOR to check x and y are different
+                    ((xDiff == 1) ^ (yDiff == 1))
+                );
+            })
             .collect(Collectors.toList());
     }
 
@@ -153,8 +147,23 @@ public final class Game {
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
             this.getCharacter().getInventoryResponses(),
             this.getBuildables(),
-            goal.toString()
+            formatGoal()
         );
+    }
+
+    /**
+     * Formats the Goal string, removing any brackets if necessary
+     *
+     * @return Goal string for DungeonResponse
+     */
+    private final String formatGoal() {
+        if (goal == null) return "";
+        String goalString = goal.toString(this);
+        // remove starting and closing brackets
+        if (goalString.startsWith("(") && goalString.endsWith(")")) {
+            goalString = goalString.substring(1, goalString.length() - 1);
+        }
+        return goalString;
     }
 
     private final List<String> getBuildables() {
@@ -178,13 +187,11 @@ public final class Game {
         
         // separate loop to avoid concurrency issues when zombie spawner adds new entity
         // to entities
-        tickables.forEach(
-            e -> {
-                if (e instanceof Player) {
-                    ((Player) e).move(this, movementDirection);
-                } else {
-                    ((Tickable) e).tick(this);
-                }
+        tickables.forEach(e -> {
+            if (e instanceof Player) {
+                ((Player) e).move(this, movementDirection);
+            } else {
+                ((Tickable) e).tick(this);
             }
         );
         
@@ -199,13 +206,18 @@ public final class Game {
         return getDungeonResponse();
     }
 
-    public final DungeonResponse interact(String entityId) {
+    public final DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
+        if (!entities.stream().map (Entity::getId).collect (Collectors.toList()).contains(entityId)) {
+            throw new IllegalArgumentException();
+        }
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
-        if(entity instanceof MovingEntity) {
+        if (entity instanceof Mercenary) {
+            ((Mercenary) entity).interact(this, (Player) player);
+        } else if (entity instanceof MovingEntity) {
             player.interact(this, (MovingEntity) entity);
-        } else if(entity instanceof ZombieToastSpawner) {
-            ZombieToastSpawner spawner =  (ZombieToastSpawner) entity;
+        } else if (entity instanceof ZombieToastSpawner) {
+            ZombieToastSpawner spawner = (ZombieToastSpawner) entity;
             spawner.interact(this, player);
         }
         return getDungeonResponse();

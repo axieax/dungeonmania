@@ -2,6 +2,8 @@ package dungeonmania.model.entities.statics;
 
 import java.util.List;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
@@ -56,5 +58,12 @@ public class Portal extends Entity {
             }
             if (!collision) character.moveTo(portal.getPosition());
         }
+    }
+
+    @Override 
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("colour", colour);
+        return info;
     }
 }
