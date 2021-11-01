@@ -137,7 +137,7 @@ public class BowTest {
         assertTrue(mercenary.getHealth() == 50);
 
         // Player moves to attack (interact with) the mercenary with the bow
-        // Upon attacking the player will inflict 10 + 30 * 2 = 70 damage to the mercenary
+        // Upon attacking, the player will inflict 10 + 30 * 2 = 70 damage to the mercenary
         // This means the mercenary will be killed and is removed from Game
         // The durability of the bow will also decrease by 1
         player.move(game, Direction.RIGHT);
