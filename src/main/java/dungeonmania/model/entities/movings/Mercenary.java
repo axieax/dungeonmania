@@ -78,22 +78,6 @@ public class Mercenary extends MovingEntity implements Observer {
         }
     }
 
-    @Override
-    public Direction getDirection() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void moveTo(Position position) {
-        this.setPosition(position);
-    }
-
-    @Override
-    public boolean isEnemy() {
-        return false;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////
     public void setState(MovementState state) {
         this.state = state;

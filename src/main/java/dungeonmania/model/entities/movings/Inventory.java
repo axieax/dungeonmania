@@ -78,12 +78,18 @@ public class Inventory {
      * @param quantity
      */
     public void removeItemQuantity(String prefix, int quantity) {
+
+        
         if (this.hasItemQuantity(prefix, quantity)) {
+            List<Item> toRemove = new ArrayList<>();
             items
                 .stream()
                 .filter(item -> item.getPrefix().equals(prefix))
                 .limit(quantity)
-                .forEach(item -> items.remove(item));
+                .forEach(item -> toRemove.add(item));
+            toRemove
+                .stream()
+                .forEach(i -> items.remove(i));
         }
     }
 
