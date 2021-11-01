@@ -304,60 +304,6 @@ public class CharacterTest {
     }
 
     @Test
-    public void testSavingAndLoadingGameRetainsOriginalPosition() {
-        // Create a new controller
-        DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse response = controller.newGame(DUNGEON_NAME, GAME_MODE);
-
-        // initial position 1, 1
-        List<EntityResponse> entities = response.getEntities();
-        assertTrue(entities.size() > 0);
-
-        Position characterPos = getCharacterPosition(entities);
-        assertNotNull(characterPos);
-        assertTrue(new Position(1, 1).equals(characterPos));
-
-        // move character to 6, 4
-        for (int i = 0; i < 6; i++) {
-            response = controller.tick(null, Direction.RIGHT);
-        }
-
-        for (int i = 0; i < 4; i++) {
-            response = controller.tick(null, Direction.DOWN);
-        }
-
-        entities = response.getEntities();
-        assertTrue(entities.size() > 0);
-
-        characterPos = getCharacterPosition(entities);
-        assertNotNull(characterPos);
-        assertTrue(new Position(6, 4).equals(characterPos));
-
-        // save the game
-        assertDoesNotThrow(() -> controller.saveGame("1"));
-
-        // load the game
-        final DungeonResponse innerResponse = response;
-        assertDoesNotThrow(
-            () -> {
-                DungeonResponse loadedResponse = controller.loadGame("1");
-
-                List<EntityResponse> responseEntities = innerResponse.getEntities();
-                List<EntityResponse> loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
-                assertEquals(responseEntities.size(), loadedEntities.size());
-                for (int i = 0; i < loadedEntities.size(); i++) {
-                    if (loadedEntities.get(i).getPrefix() == CHARACTER_TYPE) {
-                        // ensure player position has not changed
-                        assertTrue(responseEntities.get(i).equals(loadedEntities.get(i)));
-                        break;
-                    }
-                }
-            }
-        );
-    }
-
-    @Test
     public void testSavingAndLoadingGameMovement() {
         // saving a game and then loading it does not affect movement
 
@@ -519,7 +465,8 @@ public class CharacterTest {
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        game.addEntity(new Bomb(new Position(2, 1)));
+        Bomb bomb = new Bomb(new Position(2, 1));
+        game.addEntity(bomb);
 
         assertTrue(player.getInventoryResponses().size() == 0);
         game.tick(null, Direction.RIGHT); // player picks up bomb
@@ -528,7 +475,7 @@ public class CharacterTest {
         game.tick(null, Direction.DOWN);
         Position updatedPlayerPos = new Position(2, 2);
         
-        game.tick("bomb", Direction.NONE); // place bomb
+        game.tick(bomb.getId(), Direction.NONE); // place bomb
         assertTrue(player.getInventoryResponses().size() == 0);
         assertTrue(game.getEntities(updatedPlayerPos).size() == 2); // bomb + player
 
@@ -539,8 +486,8 @@ public class CharacterTest {
         assertTrue(game.getEntities(new Position(2, 2)).size() == 1); // bomb position
 
         // any attempt to move onto the block with the bomb fials
-        game.tick(null, Direction.DOWN);
-        assertTrue(game.getEntities(updatedPlayerPos).size() == 1); // player position
+        game.tick(null, Direction.LEFT);
+        assertTrue(game.getEntities(player.getPosition()).size() == 1); // player position
         assertTrue(game.getEntities(new Position(2, 2)).size() == 1); // bomb position
     }
 

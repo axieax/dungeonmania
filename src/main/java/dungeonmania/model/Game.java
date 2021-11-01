@@ -189,7 +189,7 @@ public final class Game {
         // to entities
         tickables.forEach(e -> {
             if (e instanceof Player) {
-                ((Player) e).move(this, movementDirection);
+                ((Player) e).move(this, movementDirection, itemUsedId);
             } else {
                 ((Tickable) e).tick(this);
             }

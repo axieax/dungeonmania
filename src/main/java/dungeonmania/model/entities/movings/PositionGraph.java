@@ -89,7 +89,7 @@ public class PositionGraph {
                 );
 
                 for (Position currNode : adjacentPositions) {
-                    if (visited.get(currNode)) {
+                    if (visited.get(currNode) != null) {
                         visited.put(currNode, true);
                         dist.put(currNode, dist.get(currNode) + 1);
                         pred.put(currNode, vertex);
