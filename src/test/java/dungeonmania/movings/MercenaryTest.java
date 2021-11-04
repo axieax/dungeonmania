@@ -66,7 +66,7 @@ public class MercenaryTest {
     }
 
     @Test
-    public void testSimpleMovementFollow() {
+    public void testSimpleMovementFollowFar() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
@@ -85,6 +85,24 @@ public class MercenaryTest {
 
         // mercenary should move to the left to follow the player
         assertTrue(mercenary.getPosition().equals(new Position(1, 8)));
+    }
+
+    @Test
+    public void testSimpleMovementFollowBattle() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        game.tick("", Direction.NONE);
+
+        // mercenary should battle player
+        assertTrue(!game.getEntities().contains(mercenary) || !game.getEntities().contains(player));
+
     }
 
     @Test
