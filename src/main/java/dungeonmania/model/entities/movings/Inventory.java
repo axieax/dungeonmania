@@ -21,7 +21,7 @@ public class Inventory {
      * @return
      */
     public Item getItem(String itemId) {
-        return items.stream().filter(i -> i.getId() == itemId).findFirst().orElse(null);
+        return items.stream().filter(i -> i.getId().equals(itemId)).findFirst().orElse(null);
     }
 
     /**

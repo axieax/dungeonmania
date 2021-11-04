@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.movings;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
@@ -9,6 +10,8 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.BuildableEquipment;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.equipment.Sword;
+import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -260,7 +263,18 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param game
      * @param direction
      */
-    public void move(Game game, Direction direction, String itemId) {
+    public void move(Game game, Direction direction, String itemId)
+        throws IllegalArgumentException {
+        // check itemId
+        Entity itemEntity = game.getEntity(itemId);
+        Item item = getInventoryItem(itemId);
+        if (itemEntity != null && (itemId != null && item == null)) throw new InvalidActionException(
+            "At Player move method - itemUsed is not in the player's inventory"
+        );
+        if (item != null && !(item instanceof Potion || item instanceof Bomb)) throw new IllegalArgumentException(
+            "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
+        );
+
         this.setDirection(direction);
 
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
@@ -283,12 +297,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
             this.notifyObservers();
         }
 
-        Item item = getInventoryItem(itemId);
-        if (item != null && item instanceof Bomb) {
-            ((Bomb)item).place(game, this.getPosition());
+        if (itemId != null && item instanceof Bomb) {
+            ((Bomb) item).place(game, this.getPosition());
         }
     }
-
 
     /**
      * A battle takes place when the character and the enemy are in the same cell, within a single tick.

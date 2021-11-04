@@ -29,7 +29,7 @@ public final class Game {
     private final List<Entity> entities;
     private final Goal goal;
     private final Mode mode;
-    
+
     private int tick = 0;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
@@ -103,9 +103,11 @@ public final class Game {
         positions.add(new Position(x, y - 1));
         getCardinallyAdjacentEntities(position)
             .stream()
-            .forEach(e -> {
-                if (from.collision(e)) positions.remove(e.getPosition());
-            });
+            .forEach(
+                e -> {
+                    if (from.collision(e)) positions.remove(e.getPosition());
+                }
+            );
         return positions;
     }
 
@@ -119,19 +121,24 @@ public final class Game {
     public final List<Entity> getCardinallyAdjacentEntities(Position position) {
         return getAdjacentEntities(position)
             .stream()
-            .filter(e -> {
-                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                Position difference = Position.calculatePositionBetween(e.getPosition(), position);
-                int xDiff = Math.abs(difference.getX());
-                int yDiff = Math.abs(difference.getY());
-                return (
-                    // ensure both xDiff and yDiff are either 0 or 1
-                    (xDiff == (xDiff & 1)) &&
-                    (yDiff == (yDiff & 1)) &&
-                    // logical XOR to check x and y are different
-                    ((xDiff == 1) ^ (yDiff == 1))
-                );
-            })
+            .filter(
+                e -> {
+                    // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                    Position difference = Position.calculatePositionBetween(
+                        e.getPosition(),
+                        position
+                    );
+                    int xDiff = Math.abs(difference.getX());
+                    int yDiff = Math.abs(difference.getY());
+                    return (
+                        // ensure both xDiff and yDiff are either 0 or 1
+                        (xDiff == (xDiff & 1)) &&
+                        (yDiff == (yDiff & 1)) &&
+                        // logical XOR to check x and y are different
+                        ((xDiff == 1) ^ (yDiff == 1))
+                    );
+                }
+            )
             .collect(Collectors.toList());
     }
 
@@ -176,25 +183,28 @@ public final class Game {
             .collect(Collectors.toList());
     }
 
-    public final DungeonResponse tick(String itemUsedId, Direction movementDirection) {
+    public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
+        throws IllegalArgumentException, InvalidActionException {
         this.tick += 1;
-        
+
         List<Tickable> tickables = entities
-        .stream()
-        .filter(e -> e instanceof Tickable)
-        .map(e -> (Tickable) e)
-        .collect(Collectors.toList());
-        
+            .stream()
+            .filter(e -> e instanceof Tickable)
+            .map(e -> (Tickable) e)
+            .collect(Collectors.toList());
+
         // separate loop to avoid concurrency issues when zombie spawner adds new entity
         // to entities
-        tickables.forEach(e -> {
-            if (e instanceof Player) {
-                ((Player) e).move(this, movementDirection, itemUsedId);
-            } else {
-                ((Tickable) e).tick(this);
+        tickables.forEach(
+            e -> {
+                if (e instanceof Player) {
+                    ((Player) e).move(this, movementDirection, itemUsedId);
+                } else {
+                    ((Tickable) e).tick(this);
+                }
             }
-        });
-        
+        );
+
         Spider.spawnSpider(this);
         return getDungeonResponse();
     }
@@ -206,8 +216,9 @@ public final class Game {
         return getDungeonResponse();
     }
 
-    public final DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
-        if (!entities.stream().map (Entity::getId).collect (Collectors.toList()).contains(entityId)) {
+    public final DungeonResponse interact(String entityId)
+        throws IllegalArgumentException, InvalidActionException {
+        if (!entities.stream().map(Entity::getId).collect(Collectors.toList()).contains(entityId)) {
             throw new IllegalArgumentException();
         }
         MovingEntity player = getCharacter();
@@ -222,7 +233,6 @@ public final class Game {
         }
         return getDungeonResponse();
     }
-
 
     public int getTick() {
         return tick;

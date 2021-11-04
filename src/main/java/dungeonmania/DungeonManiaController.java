@@ -7,6 +7,10 @@ import com.google.gson.JsonParser;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.collectables.Bomb;
+import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
+import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
+import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
@@ -166,25 +170,13 @@ public class DungeonManiaController {
      * @param itemUsed
      * @param movementDirection
      * @return
-     * @throws IllegalArgumentException If itemUsed is not a bomb,
+     * @throws IllegalArgumentException If itemUsed is not a bomb, health_potion
      *                                  invincibility_potion, or an
      *                                  invisibility_potion
      * @throws InvalidActionException   If itemUsed is not in the player's inventory
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        if (itemUsed != null &&
-            itemUsed.length() != 0 &&
-            !(
-                itemUsed.equals("bomb") ||
-                itemUsed.equals("invincibility_potion") ||
-                itemUsed.equals("invisibility_potion") ||
-                itemUsed.equals("health_potion")
-            )
-        ) {
-            throw new IllegalArgumentException();
-        }
-
         return currentGame.tick(itemUsed, movementDirection);
     }
 
