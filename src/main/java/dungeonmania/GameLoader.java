@@ -86,7 +86,8 @@ public class GameLoader {
 
     public static final Entity extractEntity(JSONObject entityInfo, Player currentPlayer, Mode mode) {
         // Extract / generate basic parameters
-        Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
+        Position position = 
+        new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
         // Static Entities
         if (type.startsWith("wall")) {
@@ -161,8 +162,8 @@ public class GameLoader {
             JSONArray inventory = entityInfo.getJSONArray("inventory");
             for (int i = 0; i < inventory.length(); i++) {
                 JSONObject item = inventory.getJSONObject(i);
-                Item inventoryItem = (Item) extractEntity (item, currentPlayer, mode);
-                currentPlayer.addInventoryItem (inventoryItem);
+                Item inventoryItem = (Item) extractEntity (item, null, mode);
+                player.addInventoryItem (inventoryItem);
             }
             return player;
         } else if (type.startsWith("bow")) {
@@ -214,7 +215,6 @@ public class GameLoader {
 
     public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
         JSONObject json = loadSavedDungeon(dungeonName);
-        if (json.get("goal-condition") == null) return null;
-        return EntityFactory.extractGoal(json.getJSONObject("goal-condition"));
+        return (json.has("goal-condition")) ? EntityFactory.extractGoal(json.getJSONObject("goal-condition")):null;
     }
 }
