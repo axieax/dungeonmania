@@ -89,16 +89,16 @@ public class PositionGraph {
                 );
 
                 for (Position currNode : adjacentPositions) {
-                    if (visited.get(currNode) != null) {
+                    if (!visited.get(currNode)) {
                         visited.put(currNode, true);
-                        dist.put(currNode, dist.get(currNode) + 1);
+                        dist.put(currNode, dist.get(vertex) + 1);
                         pred.put(currNode, vertex);
-
-                        if (currNode == dest) return dist.get(currNode);
+                        queue.add(currNode);
+                        if (currNode.equals(dest)) return dist.get(currNode);
                     }
                 }
             }
         }
-        return -1;
+        return Integer.MAX_VALUE;
     }
 }

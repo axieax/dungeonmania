@@ -30,6 +30,9 @@ public final class Game {
     private final Goal goal;
     private final Mode mode;
 
+    private int MAX_WIDTH = 2;
+    private int MAX_HEIGHT = 11;
+
     private int tick = 0;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
@@ -108,7 +111,18 @@ public final class Game {
                     if (from.collision(e)) positions.remove(e.getPosition());
                 }
             );
-        return positions;
+        return positions
+            .stream()
+            .filter(
+                pos ->
+                    (
+                        pos.getX() >= 0 &&
+                        pos.getX() < MAX_WIDTH &&
+                        pos.getY() >= 0 &&
+                        pos.getY() < MAX_HEIGHT
+                    )
+            )
+            .collect(Collectors.toList());
     }
 
     public final List<Entity> getAdjacentEntities(Position position) {

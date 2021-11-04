@@ -59,10 +59,32 @@ public class MercenaryTest {
         Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
-        player.move(game, Direction.RIGHT);
+        game.tick("", Direction.RIGHT);
 
         // mercenary should move upwards or stay in the same horizontal line
         assertTrue(mercenary.getY() <= 3);
+    }
+
+    @Test
+    public void testSimpleMovementFollow() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(1, 10), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        game.tick("", Direction.NONE);
+
+        // mercenary should move to the left to follow the player
+        assertTrue(mercenary.getPosition().equals(new Position(1, 9)));
+
+        game.tick("", Direction.NONE);
+
+        // mercenary should move to the left to follow the player
+        assertTrue(mercenary.getPosition().equals(new Position(1, 8)));
     }
 
     @Test
