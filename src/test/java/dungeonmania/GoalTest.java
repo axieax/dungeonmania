@@ -2,6 +2,7 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
@@ -26,11 +27,13 @@ import dungeonmania.model.goal.ToggleSwitch;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 public class GoalTest {
@@ -199,7 +202,7 @@ public class GoalTest {
         // place the bomb
         resp = move(dmc, Direction.NONE, "bomb", 1);
         assertEquals(switchGoal, resp.getGoals());
-        assertEquals(0, resp.getInventory().size());
+        assertFalse(resp.getInventory().stream().anyMatch(item -> item.getPrefix().equals("bomb")));
 
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
