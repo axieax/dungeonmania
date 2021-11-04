@@ -87,8 +87,8 @@ public abstract class Entity {
 
     public JSONObject toJSON() {
         JSONObject entity = new JSONObject();
-        entity.put ("x", getX());
-        entity.put ("y", getY());
+        entity.put ("x", (position != null) ? getX() : 0);
+        entity.put ("y", (position != null) ? getY() : 0);
         entity.put ("type", getPrefix());
         return entity;
     }

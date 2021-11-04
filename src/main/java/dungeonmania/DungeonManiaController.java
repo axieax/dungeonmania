@@ -70,17 +70,21 @@ public class DungeonManiaController {
      *                                  dungeonName is not a dungeon that exists
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
-        throws IllegalArgumentException {
+    throws IllegalArgumentException {
         if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException();
         if (!getGameModes().contains(gameMode)) throw new IllegalArgumentException();
 
+        // determine game mode
         Mode mode = null;
         if (gameMode.equals("Hard")) mode = new Hard(); else if (gameMode.equals("Standard")) mode =
             new Standard(); else if (gameMode.equals("Peaceful")) mode = new Peaceful();
-
+        
+        // get game entities
         List<Entity> entities = EntityFactory.extractEntities (dungeonName, mode);
+        // get goal
         Goal goal = EntityFactory.extractGoal (dungeonName);
-
+        
+        // create new game
         Game newGame = new Game(dungeonName, entities, goal, mode);
         games.add(newGame);
         currentGame = newGame;
@@ -99,19 +103,26 @@ public class DungeonManiaController {
 
         JSONObject currGame = new JSONObject();
 
+        // save all entities in the game
         JSONArray entities = new JSONArray();
         for (Entity entity : currentGame.getEntities()) {
             entities.put(entity.toJSON());
         }
         currGame.put("entities", entities);
+
+        // save the mode of the game and the goal of the game
         currGame.put("mode", currentGame.getMode().getClass().getSimpleName());
-        currGame.put("goal-condition", currentGame.getGoal().toJSON());
+        Goal goal = currentGame.getGoal();
+        if (goal != null) currGame.put("goal-condition", goal.toJSON());
+
+        // save the dungeon name of the game
         currGame.put("dungeonName", currentGame.getDungeonName());
 
+        // get a pretty printed json string
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
-        try {
+        try { // write the json string to a file
             String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
             FileWriter myFileWriter = new FileWriter (path, false);
             myFileWriter.write(prettyString);
@@ -131,13 +142,17 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException - If id is not a valid game id
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
+        // name must not have length = 0 and not be contained already in saved games
         if (name.length() == 0) throw new IllegalArgumentException();
         if (!allGames().contains(name)) throw new IllegalArgumentException();
+
+        // extract details of the game
         Mode mode = GameLoader.extractMode(name);
         List<Entity> entities = GameLoader.extractEntities(name, mode);
         Goal goal = GameLoader.extractGoal(name);
         String dungeonName = GameLoader.extractDungeonName(name);
 
+        // load game and set this game as the current game
         Game newGame = new Game(dungeonName, entities, goal, mode);
         games.add(newGame);
         currentGame = newGame;
@@ -150,7 +165,7 @@ public class DungeonManiaController {
      * @return
      */
     public List<String> allGames() {
-        try { // adapted from given code
+        try { // the name of files in a directory
             String directory = "./src/main/java/dungeonmania/savedGames/";
             return FileLoader.listFileNamesInDirectoryOutsideOfResources(directory);
         } catch (IOException e) {

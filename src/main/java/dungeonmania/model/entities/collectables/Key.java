@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.collectables;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.MovingEntity;
@@ -37,6 +39,13 @@ public class Key extends Item implements Consumable {
     @Override
     public void consume(Player player) {
         player.removeInventoryItem(this.getId());
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("key", key);
+        return info;
     }
 
     @Override
