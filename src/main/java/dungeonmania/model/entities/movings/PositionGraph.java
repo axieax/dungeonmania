@@ -63,6 +63,8 @@ public class PositionGraph {
      * @return
      */
     public int BFS(Position src, Position dest) {
+        if (src.equals(dest)) return 0;
+
         LinkedList<Position> queue = new LinkedList<Position>();
 
         Map<Position, Boolean> visited = new HashMap<>();
@@ -89,16 +91,16 @@ public class PositionGraph {
                 );
 
                 for (Position currNode : adjacentPositions) {
-                    if (visited.get(currNode) != null) {
+                    if (visited.get(currNode) != null && !visited.get(currNode)) {
                         visited.put(currNode, true);
-                        dist.put(currNode, dist.get(currNode) + 1);
+                        dist.put(currNode, dist.get(vertex) + 1);
                         pred.put(currNode, vertex);
-
-                        if (currNode == dest) return dist.get(currNode);
+                        queue.add(currNode);
+                        if (currNode.equals(dest)) return dist.get(currNode);
                     }
                 }
             }
         }
-        return -1;
+        return Integer.MAX_VALUE;
     }
 }

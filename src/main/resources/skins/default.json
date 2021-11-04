@@ -44,6 +44,6 @@
         "zombie_toast_spawner": "images/tileset/entities/zombie_spawner.png",
         "zombie_toast": "images/tileset/entities/zombie_00.png",
         "health_potion": "images/tileset/items/potion_4.png",
-        "invisibility_potion": "images/tileset/items/potion2.png"
+        "invisibility_potion": "images/tileset/items/potion_2.png"
     }
 }

@@ -130,5 +130,9 @@ public class Mercenary extends MovingEntity implements Observer {
         }
 
         this.setPosition(optimalPathPosition);
+
+        if (player.getPosition().equals(this.getPosition())){
+            player.battle(game, this);
+        }
     }
 }
