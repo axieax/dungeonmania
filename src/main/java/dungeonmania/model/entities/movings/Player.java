@@ -191,7 +191,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @return boolean
      */
     public boolean hasWeapon() {
-        return this.getAttackEquipmentList().size() != 0;
+        return !this.getAttackEquipmentList().isEmpty()
     }
 
     /**
