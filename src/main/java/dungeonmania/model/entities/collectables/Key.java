@@ -37,7 +37,7 @@ public class Key extends Item implements Consumable {
     }
 
     @Override
-    public void consume(Player player) {
+    public void consume(Game game, Player player) {
         player.removeInventoryItem(this.getId());
     }
 

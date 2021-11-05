@@ -1,15 +1,15 @@
 package dungeonmania.model.entities.collectables;
 
-import java.util.List;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.util.Position;
+import java.util.List;
 
-public class Bomb extends Item {
+public class Bomb extends Item implements Consumable {
 
     private boolean isPlaced;
 
@@ -22,10 +22,9 @@ public class Bomb extends Item {
      * Place a bomb at the specified position on the dungeon.
      * @param position
      */
-    public void place(Game game, Position position) {
-        this.setPosition(position);
+    public void consume(Game game, Player player) {
+        this.setPosition(player.getPosition());
         game.addEntity(this);
-        Player player = game.getCharacter();
         player.removeInventoryItem(this.getId());
         isPlaced = true;
     }
@@ -42,16 +41,18 @@ public class Bomb extends Item {
     }
 
     /**
-     * Explodes the bomb destroying all entities in the bomb's blast radius, 
+     * Explodes the bomb destroying all entities in the bomb's blast radius,
      * except for the character.
      * @param game
      */
     public void explode(Game game) {
         List<Entity> entities = game.getAdjacentEntities(this.getPosition());
         game.removeEntity(this);
-        entities.forEach(entity -> {
-            if (entity instanceof Bomb) ((Bomb)entity).explode(game);
-            if (!(entity instanceof Player)) game.removeEntity(entity);
-        });
+        entities.forEach(
+            entity -> {
+                if (entity instanceof Bomb) ((Bomb) entity).explode(game);
+                if (!(entity instanceof Player)) game.removeEntity(entity);
+            }
+        );
     }
 }
