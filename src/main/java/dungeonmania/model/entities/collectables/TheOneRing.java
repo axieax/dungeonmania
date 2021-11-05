@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.collectables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Consumable;
@@ -16,7 +17,7 @@ public class TheOneRing extends Item implements Consumable {
     }
 
     @Override
-    public void consume(Player player) {
+    public void consume(Game game, Player player) {
         player.removeInventoryItem(this.getId());
         player.setHealth(Player.MAX_CHARACTER_HEALTH);
     }

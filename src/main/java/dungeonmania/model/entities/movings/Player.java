@@ -275,6 +275,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
             "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
         );
 
+        // consume item
+        if (item != null && item instanceof Consumable) ((Consumable) item).consume(game, this);
+
         this.setDirection(direction);
 
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
@@ -295,10 +298,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
             this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
             this.notifyObservers();
-        }
-
-        if (itemId != null && item instanceof Bomb) {
-            ((Bomb) item).place(game, this.getPosition());
         }
     }
 
@@ -321,7 +320,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             Item item = this.findInventoryItem("one_ring");
             if (item != null && item instanceof Consumable) {
                 // Use one ring if it is in inventory
-                ((Consumable) item).consume(this);
+                ((Consumable) item).consume(game, this);
             } else {
                 // Entity is dead, remove it
                 game.removeEntity(this);
