@@ -51,10 +51,10 @@ public class Portal extends Entity {
             Position teleportedPosition = portal
                 .getPosition()
                 .translateBy(character.getDirection());
-            boolean collision = game
-                .getEntities(teleportedPosition)
-                .stream()
-                .allMatch(e -> !character.collision(e));
+            boolean collision = false;
+            for (Entity e : game.getEntities(teleportedPosition)) {
+                if (character.collision(e)) collision = true;
+            }
             if (!collision) character.moveTo(portal.getPosition());
         }
     }

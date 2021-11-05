@@ -21,3 +21,4 @@
 * When a game is saved, the name String provided should not be empty.
 * Assume that there exist a corresponding portal. If there is no corresponding portal to teleport, the entity stays on the same position.
 * Assume that bomb explosions will also destroy floor switches.
+* Bombs can only explode once it has been placed by the user - meaning that bombs spawned next to a switch cannot explode initially.

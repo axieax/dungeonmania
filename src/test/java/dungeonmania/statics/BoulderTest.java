@@ -88,7 +88,7 @@ public class BoulderTest {
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 2));
         game.addEntity(floorSwitch);
 
-        Bomb bomb = new Bomb(new Position(1, 2));
+        Bomb bomb = new Bomb(new Position(2, 1));
         game.addEntity(bomb);
 
         // create a wall on top of the bomb
@@ -105,6 +105,20 @@ public class BoulderTest {
         assertTrue(game.getEntity(wall2.getId()) != null);
         assertTrue(game.getEntity(wall3.getId()) != null);
 
+        // get bomb
+        game.tick(null, Direction.UP);
+        game.tick(null, Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
+
+        // place bomb
+        game.tick(bomb.getId(), Direction.NONE);
+
+        // go to initial spawn spot
+        game.tick(null, Direction.LEFT);
+        game.tick(null, Direction.LEFT);
+        game.tick(null, Direction.DOWN);
+
+        // move boulder to trigger bomb explosion
         game.tick("", Direction.RIGHT);
 
         // boulder explodes

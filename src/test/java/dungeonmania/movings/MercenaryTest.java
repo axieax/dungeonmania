@@ -129,7 +129,7 @@ public class MercenaryTest {
         game.tick(null, Direction.NONE);
         assertTrue(mercenary.getX() == 2);
         game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getX() == 1); // same position as player
+        assertTrue(mercenary.getX() == 1); // same position as player but mercenary should be killed
     }
 
     @Test
@@ -220,8 +220,8 @@ public class MercenaryTest {
         
         // mercenary should not be able to go in the door position
         for(int i = 0; i < 100; i ++) {
-            game.tick(null, Direction.NONE);       
-            assertTrue(game.getEntities(doorPos).size() == 1);
+            game.tick(null, Direction.NONE);   
+            assertTrue(!game.getEntity(mercenary.getId()).getPosition().equals(doorPos));
         }
     }
 

@@ -34,7 +34,7 @@ public class Mercenary extends MovingEntity implements Observer {
         state.move(game, playerPos);
 
         // If a player is fighting an enemy within the battle radius, mercenary moves twice as fast
-        if (moveTwice && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
+        if (this.isAlive() && moveTwice && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
             state.move(game, playerPos);
             moveTwice = false;
         }
