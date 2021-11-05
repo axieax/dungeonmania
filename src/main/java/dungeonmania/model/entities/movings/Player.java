@@ -265,21 +265,24 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public void move(Game game, Direction direction, String itemId)
         throws IllegalArgumentException {
-        // check itemId
-        Entity itemEntity = game.getEntity(itemId);
-        Item item = getInventoryItem(itemId);
-        if (itemEntity != null && (itemId != null && item == null)) throw new InvalidActionException(
-            "At Player move method - itemUsed is not in the player's inventory"
-        );
-        if (item != null && !(item instanceof Potion || item instanceof Bomb)) throw new IllegalArgumentException(
-            "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
-        );
+        if (itemId != null && itemId.length() > 0) {
+            // check if itemId is not it player inventory
+            if (game.getEntity(itemId) != null) throw new InvalidActionException(
+                "At Player move method - itemUsed is not in the player's inventory"
+            );
+            // check if itemUsed can be consumed
+            Item item = getInventoryItem(itemId);
+            if (item != null && !(item instanceof Consumable)) throw new IllegalArgumentException(
+                "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
+            );
 
-        // consume item
-        if (item != null && item instanceof Consumable) ((Consumable) item).consume(game, this);
+            // consume item
+            if (item != null && item instanceof Consumable) ((Consumable) item).consume(game, this);
+        }
 
         this.setDirection(direction);
 
+        // interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(
             entity -> {
@@ -289,10 +292,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         );
 
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
-        boolean canMove = true;
-        for (Entity e : updatedEntities) {
-            if (this.collision(e)) canMove = false;
-        }
+        boolean canMove = updatedEntities.stream().allMatch(e -> !this.collision(e));
 
         if (canMove) {
             this.setPosition(this.getPosition().translateBy(direction));
