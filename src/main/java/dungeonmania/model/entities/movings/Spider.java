@@ -97,11 +97,6 @@ public class Spider extends MovingEntity {
             List<Entity> entities = game.getEntities(); // all entities in the dungeon
             Collections.shuffle(entities); // random order
 
-            for(Entity e: entities) {
-                System.out.println(e.getPrefix());
-            }
-            
-            
             boolean canSpawn = false;
             Position position = null;
             for (Entity e : entities) {
@@ -169,11 +164,10 @@ public class Spider extends MovingEntity {
         } else { // reverse direction
             if (this.isMovementReverse) {
                 this.isMovementReverse = false;
-                indexOfNextMove = Math.abs(spiderMovementPath.size() - (indexOfNextMove + 4)) % 8;
             } else {
                 this.isMovementReverse = true;
-                indexOfNextMove =  Math.abs(spiderMovementPath.size() - (indexOfNextMove + 4)) % 8;
             }
+            indexOfNextMove =  Math.abs(spiderMovementPath.size() - (indexOfNextMove + 4)) % 8;
             Collections.reverse(this.spiderMovementPath);
             return; // no movement occurs if blocked
         }
