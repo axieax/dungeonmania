@@ -20,3 +20,4 @@
 * In Peaceful Mode and Standard Mode, players begin with 100 health. In Hard Mode, players begin with 80 health.
 * When a game is saved, the name String provided should not be empty.
 * Assume that there exist a corresponding portal. If there is no corresponding portal to teleport, the entity stays on the same position.
+* Assume that bomb explosions will also destroy floor switches.
