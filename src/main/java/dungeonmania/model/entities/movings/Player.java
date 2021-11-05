@@ -191,7 +191,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @return boolean
      */
     public boolean hasWeapon() {
-        return !this.getAttackEquipmentList().isEmpty()
+        return !this.getAttackEquipmentList().isEmpty();
     }
 
     /**
@@ -272,7 +272,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             );
             // check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
-            if (item != null && !(item instanceof Consumable)) throw new IllegalArgumentException(
+            if (item != null && !(item instanceof Bomb || item instanceof Potion)) throw new IllegalArgumentException(
                 "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
             );
 
@@ -318,7 +318,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         if (this.getHealth() <= 0) {
             Item item = this.findInventoryItem("one_ring");
-            if (item != null && item instanceof Consumable) {
+            if (item != null && (item instanceof Consumable)) {
                 // Use one ring if it is in inventory
                 ((Consumable) item).consume(game, this);
             } else {
