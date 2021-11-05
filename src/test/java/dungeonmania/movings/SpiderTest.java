@@ -38,6 +38,7 @@ public class SpiderTest {
     public static final String SPIDER = "spider";
     public static final String DUNGEON_ADVANCED = "advanced";
     public static final String DUNGEON_MAZE = "maze";
+    public static final String DUNGEON_PORTAL = "portal";
     public static final String GAME_MODE_PEACEFUL = "Peaceful";
 
     @Test
@@ -47,6 +48,27 @@ public class SpiderTest {
         // Create a new controller
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse response = controller.newGame(DUNGEON_MAZE, GAME_MODE_PEACEFUL);
+
+        int numEntities = response.getEntities().size();
+        // at least one spider must spawn
+        assertTimeout(
+            ofMinutes(1),
+            () -> {
+                DungeonResponse updatedResponse = tickGameUntilSpiderSpawns(controller, response);
+                assertTrue(updatedResponse != null);
+                // spider spawn must increase num entities
+                assertTrue(updatedResponse.getEntities().size() > numEntities);
+            }
+        );
+    }
+
+    @Test
+    public void testSpiderSpawnPortalMap() {
+        // Create a new controller
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse response = controller.newGame(DUNGEON_PORTAL, GAME_MODE_PEACEFUL);
+
+        
 
         int numEntities = response.getEntities().size();
         // at least one spider must spawn

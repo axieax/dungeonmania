@@ -97,6 +97,11 @@ public class Spider extends MovingEntity {
             List<Entity> entities = game.getEntities(); // all entities in the dungeon
             Collections.shuffle(entities); // random order
 
+            for(Entity e: entities) {
+                System.out.println(e.getPrefix());
+            }
+            
+            
             boolean canSpawn = false;
             Position position = null;
             for (Entity e : entities) {
