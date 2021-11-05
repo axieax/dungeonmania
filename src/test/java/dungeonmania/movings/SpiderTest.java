@@ -166,6 +166,68 @@ public class SpiderTest {
     }
 
     @Test
+    public void testSpiderPositionCompleteReverseCircle() {
+        // spider reverses direction while going left
+        Mode mode = new Peaceful();
+
+        Game game = new Game(
+            "game",
+            sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Position boulderPos = new Position(4, 2);
+        Boulder boulder = new Boulder(boulderPos);
+        game.addEntity(boulder);
+
+        Position initialSpiderPos = new Position(3, 3);
+        Spider spider = new Spider(initialSpiderPos);
+        
+        game.addEntity(spider);
+        assertTrue(spider.getPosition().equals(new Position(3, 3)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(3, 2)));
+
+        // reverse direction
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(3, 2)));
+
+        // remove boulder
+        game.removeEntity(boulder);
+        
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(2, 2)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(2, 3)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(2, 4)));
+        
+        // spider attempts to move into boulder but fails and so, stays in the same position
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(3, 4)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(4, 4)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(4, 3)));
+        
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(4, 2)));
+
+        // back to initial position
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(3, 2)));
+    }
+
+    @Test
     public void testMovementThroughDoor() {
         // can move through closed doors
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
