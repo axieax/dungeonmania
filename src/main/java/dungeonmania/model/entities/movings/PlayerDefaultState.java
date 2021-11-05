@@ -39,6 +39,11 @@ public class PlayerDefaultState implements PlayerState {
             defenseEquipments.forEach(defenseEquipment -> defenseEquipment.useEquipment(player));
             player.setHealth(originalHealth - ((opponent.getHealth() * opponentAttackDamage) / 10));
             
+            if (player.getHealth() != 100) {
+                System.out.println("Gabe sucks");
+                int test = opponent.getBaseAttackDamage();
+            }
+
             /**
              * TODO: Instead of using all attack equipment for each battle, only use them if the default
              * attack of the character is not enough to kill the opponent.

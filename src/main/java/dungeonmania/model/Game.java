@@ -162,6 +162,9 @@ public final class Game {
      * @return DungeonResponse for the Dungeon
      */
     public final DungeonResponse getDungeonResponse() {
+        // if (this.getCharacter() == null) {
+        //     System.out.println("You have the one ring");
+        // }
         return new DungeonResponse(
             dungeonId,
             dungeonName,

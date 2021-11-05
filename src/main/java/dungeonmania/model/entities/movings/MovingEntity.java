@@ -18,14 +18,6 @@ public abstract class MovingEntity extends Entity implements Tickable {
 
     public final double ARMOUR_DROP_RATE = 0;
     public final double THE_ONE_RING_DROP_RATE = 0.1; // 10% of dropping one_ring
-    
-    public MovingEntity(String prefix, Position position, int health, int attackDamage, boolean isEnemy) {
-        super(prefix, position, true, true);
-        this.health = health;
-        this.attackDamage = attackDamage;
-        this.isEnemy = isEnemy;
-        this.damageMultiplier = 1;
-    }
 
     public MovingEntity(String prefix, Position position, int health, int attackDamage, boolean isEnemy, int damageMultiplier) {
         super(prefix, position, true, true);
@@ -34,7 +26,6 @@ public abstract class MovingEntity extends Entity implements Tickable {
         this.isEnemy = isEnemy;
         this.damageMultiplier = damageMultiplier;
     }
-
 
     public Direction getDirection() {
         return this.movingDirection;
@@ -70,7 +61,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     }
     
     public int getBaseAttackDamage() {
-        return attackDamage;
+        return attackDamage * damageMultiplier;
     }
     
     
