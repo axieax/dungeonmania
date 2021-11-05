@@ -91,11 +91,11 @@ public class TheOneRingTest {
 
         Mercenary mercenary4 = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
         game.addEntity(mercenary4);
-        // player.move(game, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
 
         // Player's health is 25 - ((50 * 5) / 10) = 0
         // However, since TheOneRing is in the player's inventory, their health should be set back to 100
-        // assertTrue(player.getHealth() == 100);
+        assertTrue(player.getHealth() == 100);
     }
 
     /**
