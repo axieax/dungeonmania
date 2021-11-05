@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
@@ -95,5 +96,53 @@ public class PortalTest {
         player.move(game, Direction.DOWN);
 
         assertTrue(new Position(3, 2).equals(player.getPosition()));
+    }
+
+    /**
+     * Test teleport of there is no corresponding portal
+     */
+    @Test
+    public void testNoPortal() {
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+
+        Player player = new Player(new Position(1, 0));
+
+        Portal portal = new Portal(new Position(0,0), "BLUE");
+        game.addEntity(player);
+        game.addEntity(portal);
+
+        // Player teleports by moving into the portal
+        assertTrue(new Position(1, 0).equals(player.getPosition()));
+        player.move(game, Direction.LEFT);
+        // player should stay on the same position - based on assumption
+        assertTrue(new Position(1, 0).equals(player.getPosition()));
+    }
+
+    /**
+     * Test teleport of there is a entity that the teleporter cannot pass through.
+     */
+    @Test
+    public void teleportWithBloackableEntity() {
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+
+        Player player = new Player(new Position(1, 0));
+
+        Portal portalStart = new Portal(new Position(0,0), "BLUE");
+        Portal portalEnd = new Portal(new Position(2,2), "BLUE");
+        Wall wall = new Wall(new Position(2,1));
+
+        game.addEntity(player);
+        game.addEntity(portalStart);
+        game.addEntity(portalEnd);
+        game.addEntity(wall);
+
+        assertTrue(new Position(1, 0).equals(player.getPosition()));
+        assertTrue(new Position(0, 0).equals(portalStart.getPosition()));
+        assertTrue(new Position(2, 2).equals(portalEnd.getPosition()));
+        assertTrue(new Position(2, 1).equals(wall.getPosition()));
+
+        // player cannot teleport since a wall is blocking the teleport position
+        player.move(game, Direction.LEFT);
+        assertTrue(new Position(1, 0).equals(player.getPosition()));
     }
 }
