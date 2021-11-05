@@ -36,8 +36,9 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 public class SpiderTest {
 
     public static final String SPIDER = "spider";
-    public static final String DUNGEON_NAME = "advanced";
-    public static final String GAME_MODE = "Peaceful";
+    public static final String DUNGEON_ADVANCED = "advanced";
+    public static final String DUNGEON_MAZE = "maze";
+    public static final String GAME_MODE_PEACEFUL = "Peaceful";
 
     @Test
     public void testEnsureSpiderSpawns() {
@@ -45,10 +46,9 @@ public class SpiderTest {
 
         // Create a new controller
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse response = controller.newGame(DUNGEON_NAME, GAME_MODE);
+        DungeonResponse response = controller.newGame(DUNGEON_MAZE, GAME_MODE_PEACEFUL);
 
         int numEntities = response.getEntities().size();
-
         // at least one spider must spawn
         assertTimeout(
             ofMinutes(1),
@@ -65,7 +65,7 @@ public class SpiderTest {
     public void testInitialSpiderMovement() {
         // Create a new controller
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse response = controller.newGame(DUNGEON_NAME, GAME_MODE);
+        DungeonResponse response = controller.newGame(DUNGEON_ADVANCED, GAME_MODE_PEACEFUL);
 
         response = tickGameUntilSpiderSpawns(controller, response);
         List<EntityResponse> entities = response.getEntities();
@@ -87,7 +87,7 @@ public class SpiderTest {
 
         // Create a new controller
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse response = controller.newGame(DUNGEON_NAME, GAME_MODE);
+        DungeonResponse response = controller.newGame(DUNGEON_ADVANCED, GAME_MODE_PEACEFUL);
 
         response = tickGameUntilSpiderSpawns(controller, response);
         List<EntityResponse> entities = response.getEntities();
@@ -109,7 +109,7 @@ public class SpiderTest {
     public void testSpiderPositionCompleteCircle() {
         // Create a new controller
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse response = controller.newGame(DUNGEON_NAME, GAME_MODE);
+        DungeonResponse response = controller.newGame(DUNGEON_ADVANCED, GAME_MODE_PEACEFUL);
 
         response = tickGameUntilSpiderSpawns(controller, response);
         List<EntityResponse> entities = response.getEntities();
@@ -525,6 +525,61 @@ public class SpiderTest {
         assertTrue(game.getEntities(initialSpiderPos).size() == 1);
     }
 
+    @Test
+    public void testBoulderReplacementClockwiseMovement() {
+        // Boulder placed at right bottom corner, then moved to top right when
+        // spider attempts to reverse direction.
+        // Throughout, the spider should maintain a clockwise movement,
+        // and at no point should it move anti-clockwise
+        Mode mode = new Peaceful();
+
+        Game game = new Game(
+            "game",
+            sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Position boulderPos = new Position(4, 4);
+        Boulder boulder = new Boulder(boulderPos);
+        game.addEntity(boulder);
+
+        Position initialSpiderPos = new Position(3, 3);
+        Spider spider = new Spider(initialSpiderPos);
+        
+        game.addEntity(spider);
+        assertTrue(spider.getPosition().equals(new Position(3, 3)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(3, 2)));
+        
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(4, 2)));
+
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(4, 3)));
+
+        // next tile has boulder, so spider should stay in same position
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(4, 3)));
+
+        // Place boulder at (4, 2) so that spider cannot reverse direction and
+        // remove boulder at (4, 4)
+        boulder.setPosition(new Position(4, 2));
+        // attempt to move upwards fails
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(4, 3)));
+        
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(4, 4)));
+        
+        game.tick(null, Direction.NONE);
+        assertTrue(spider.getPosition().equals(new Position(3, 4)));
+    }
+    
     private List<Entity> sevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
         
@@ -553,6 +608,42 @@ public class SpiderTest {
         }
 
         return wallBorder;
+    }
+
+    @Test
+    public void interactWithSpiderNoAction() {
+        // utilising the 'interact' method in spider should do nothing
+        Mode mode = new Peaceful();
+
+        Game game = new Game(
+            "game",
+            sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
+        Position playerPos = new Position(1, 1);
+        Player player = new Player(playerPos);
+        game.addEntity(player);
+
+        int numEntitiesAtPlayerPos = game.getEntities(playerPos).size();
+
+        Position boulderPos = new Position(4, 4);
+        Boulder boulder = new Boulder(boulderPos);
+        game.addEntity(boulder);
+
+        Position initialSpiderPos = new Position(3, 3);
+        Spider spider = new Spider(initialSpiderPos);
+        game.addEntity(spider);
+
+        int numEntitiesAtSpiderPos = game.getEntities(initialSpiderPos).size();
+
+        assertTrue(spider.getPosition().equals(new Position(3, 3)));
+
+        spider.interact(game, player);
+        // player and spider still exist
+        assertTrue(game.getEntities(playerPos).size() == numEntitiesAtPlayerPos);
+        assertTrue(game.getEntities(initialSpiderPos).size() == numEntitiesAtSpiderPos);
     }
     
     public DungeonResponse tickGameUntilSpiderSpawns(
