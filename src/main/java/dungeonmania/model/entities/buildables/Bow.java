@@ -3,7 +3,6 @@ package dungeonmania.model.entities.buildables;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.movings.Inventory;
-import dungeonmania.util.Position;
 public class Bow extends BuildableEquipment implements AttackEquipment {
 
     private static final int WOOD_NEEDED = 1;

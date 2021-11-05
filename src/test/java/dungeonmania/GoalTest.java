@@ -200,7 +200,7 @@ public class GoalTest {
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
 
         // place the bomb
-        resp = move(dmc, Direction.NONE, "bomb", 1);
+        resp = move(dmc, Direction.NONE, resp.getInventory().get(0).getId(), 1);
         assertEquals(switchGoal, resp.getGoals());
         assertFalse(resp.getInventory().stream().anyMatch(item -> item.getPrefix().equals("bomb")));
 

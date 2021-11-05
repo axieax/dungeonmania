@@ -5,7 +5,6 @@ import java.util.Random;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
-import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Mercenary extends MovingEntity implements Observer {
@@ -84,22 +83,8 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     public int getDistanceToPlayer(Game game, Position playerPos) {
-        Position currPos = this.getPosition();
-
-        List<Position> possiblePositionsToMove = game.getMoveablePositions(this, currPos);
-
-        int optimalPathLength = -1;
-
         PositionGraph positionGraph = new PositionGraph(game, this);
-
-        // Find the shortest possible path from the mercenary to the player
-        for (Position position: possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(position, playerPos);
-            if (pathLen > optimalPathLength) {
-                optimalPathLength = pathLen;
-            }
-        }
-        return optimalPathLength;
+        return positionGraph.BFS(this.getPosition(), playerPos);
     }
 
     public void move(Game game, Position playerPos) {
