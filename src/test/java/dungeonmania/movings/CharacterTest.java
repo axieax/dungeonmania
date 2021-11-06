@@ -10,6 +10,7 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Treasure;
@@ -19,6 +20,8 @@ import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.PlayerInvincibleState;
+import dungeonmania.model.entities.movings.PlayerInvisibleState;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -32,6 +35,8 @@ import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.eclipse.jetty.util.DateCache.Tick;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -554,26 +559,26 @@ public class CharacterTest {
 
         game.addEntity(player);
 
-        Position mercenaryPos = new Position(1, 4);
+        Position mercenaryPos = new Position(1, 5);
         Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-
+        
         Position potionPos = new Position(2, 2);
-        game.addEntity(new InvisibilityPotion(potionPos));
+        InvisibilityPotion potion = new InvisibilityPotion(potionPos);
+        game.addEntity(potion);
+
         game.tick(null, Direction.RIGHT); // player picks up potion
 
-        game.tick("invisibility_potion", Direction.NONE); // drink potion
-
-        // at this point, the mercenary should be adjacent to the player
-        assertTrue(game.getAdjacentEntities(potionPos).size() > 0);
+        game.tick(potion.getId(), Direction.NONE); // drink potion
+        assertTrue(player.getState() instanceof PlayerInvisibleState);
+        
         assertTrue(player.getHealth() == initialPlayerHealth);
-
-        // any further ticks (for a limited time) should not result in battle
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == initialPlayerHealth);
-
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == initialPlayerHealth);
+        
+        // mercenary should not fight the player - until the effects of the potion have weared away
+        while(!(player.getState() instanceof PlayerInvisibleState)) {
+            game.tick(null, Direction.NONE);
+            assertTrue(player.getHealth() == initialPlayerHealth);
+        }
     }
 
     @Test
@@ -587,29 +592,31 @@ public class CharacterTest {
 
         game.addEntity(player);
 
-        Position mercenaryPos = new Position(1, 4);
+        Position mercenaryPos = new Position(1, 5);
         Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-
+        
         Position potionPos = new Position(2, 2);
-        game.addEntity(new InvincibilityPotion(potionPos));
+        InvincibilityPotion potion = new InvincibilityPotion(potionPos);
+        game.addEntity(potion);
+
         game.tick(null, Direction.RIGHT); // player picks up potion
 
-        game.tick("invisibility_potion", Direction.NONE); // drink potion
-
-        // at this point, the mercenary should be adjacent to the player
-        assertTrue(game.getAdjacentEntities(potionPos).size() > 0);
+        game.tick(potion.getId(), Direction.NONE); // drink potion
+        assertTrue(player.getState() instanceof PlayerInvincibleState);
+        
         assertTrue(player.getHealth() == initialPlayerHealth);
-
-        // any further ticks (for a limited time) should not result in battle
-        // as the mercenary should run away
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == initialPlayerHealth);
-
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == initialPlayerHealth);
-
+        // if the player was near the mercenary when the player drank the potion,
+        // in the next move it should not be in the adjacent tile
         assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
+        
+        // mercenary should not come near the player - until the effects of the potion have weared away
+        // and so, the player's health should not reduce
+        while(!(player.getState() instanceof PlayerInvincibleState)) {
+            game.tick(null, Direction.NONE);
+            assertTrue(player.getHealth() == initialPlayerHealth);
+            assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
+        }
     }
 
     @Test
