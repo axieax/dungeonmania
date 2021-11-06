@@ -1,10 +1,12 @@
 package dungeonmania.statics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
@@ -143,6 +145,22 @@ public class ZombieToastSpawnerTest {
         
         // Check that the zombie toast spawner has been destroyed
         assertTrue(game.getEntity(spawner.getId()) == null);
+    }
+
+    /**
+     * Interact with a zombie spawner without a weapon - should raise exception.
+     */
+    @Test
+    public void zombieToastDestroySpawnerWithoutWeapon() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
+        game.addEntity(spawner);
+        
+        Player player = new Player(new Position(1, 0));
+        game.addEntity(player);
+        
+        assertThrows(InvalidActionException.class, () -> game.interact(spawner.getId()));
     }
 
 }

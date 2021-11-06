@@ -96,6 +96,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             if (m.getId().equals(ally.getId())) return;
         }
         allies.add(ally);
+        ally.setEnemy(false);
     }
 
     /********************************

@@ -19,3 +19,6 @@
 * Goals have a quantity next to them which states how many conditions remain for the condition to be satisfied, e.g. :enemies(3) means there are still three more enemies remaining.
 * In Peaceful Mode and Standard Mode, players begin with 100 health. In Hard Mode, players begin with 80 health.
 * When a game is saved, the name String provided should not be empty.
+* Assume that there exist a corresponding portal. If there is no corresponding portal to teleport, the entity stays on the same position.
+* Assume that bomb explosions will also destroy floor switches.
+* Bombs can only explode once it has been placed by the user - meaning that bombs spawned next to a switch cannot explode initially.
