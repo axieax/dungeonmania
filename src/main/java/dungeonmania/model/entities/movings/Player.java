@@ -7,7 +7,7 @@ import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.buildables.BuildableEquipment;
+import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.equipment.Sword;
@@ -96,6 +96,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             if (m.getId().equals(ally.getId())) return;
         }
         allies.add(ally);
+        ally.setEnemy(false);
     }
 
     /********************************
@@ -335,7 +336,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param equipment
      */
-    public void craft(BuildableEquipment equipment) {
+    public void craft(Buildable equipment) {
         if (equipment.isBuildable(inventory)) equipment.craft(inventory);
     }
 
@@ -345,8 +346,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param equipment
      * @return boolean
      */
-    public boolean checkBuildable(BuildableEquipment equipment) {
-        return equipment.isBuildable(this.inventory);
+    public boolean checkBuildable(Buildable item) {
+        return item.isBuildable(this.inventory);
     }
 
     /********************************
@@ -359,14 +360,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @return int a positive integer indicating the amount of attack
      */
-    public int getTotalAttackDamage() {
+    public int getTotalAttackDamage(MovingEntity opponent) {
         // Normal damage inflicted by player
         int damageToOpponent = this.getBaseAttackDamage();
 
         // Any extra attack damage provided by equipment
         for (Equipment e : getAttackEquipmentList()) {
             if (e instanceof AttackEquipment) damageToOpponent +=
-                e.getMultiplier() * ((AttackEquipment) e).getAttackDamage();
+                e.getMultiplier() * ((AttackEquipment) e).getAttackDamage(opponent);
         }
 
         // Any extra attack damage provided by allies

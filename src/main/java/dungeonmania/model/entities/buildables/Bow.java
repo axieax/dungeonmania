@@ -2,9 +2,11 @@ package dungeonmania.model.entities.buildables;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.AttackEquipment;
+import dungeonmania.model.entities.Equipment;
+import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.Inventory;
-import dungeonmania.util.Position;
-public class Bow extends BuildableEquipment implements AttackEquipment {
+import dungeonmania.model.entities.movings.MovingEntity;
+public class Bow extends Equipment implements AttackEquipment, Buildable {
 
     private static final int WOOD_NEEDED = 1;
     private static final int ARROWS_NEEDED = 3;
@@ -35,12 +37,12 @@ public class Bow extends BuildableEquipment implements AttackEquipment {
     }
 
     @Override
-    public int getAttackDamage() {
+    public int getAttackDamage(MovingEntity entity) {
         return this.ATTACK_DAMAGE;
     }
 
     @Override
-    public BuildableEquipment clone() {
+    public Buildable clone() {
         return new Bow();
     }
 }

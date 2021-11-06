@@ -2,7 +2,7 @@ package dungeonmania;
 
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.Bow;
-import dungeonmania.model.entities.buildables.BuildableEquipment;
+import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
@@ -170,20 +170,20 @@ public class EntityFactory {
         return null;
     }
 
-    private static Map<String, BuildableEquipment> buildableMap() {
+    private static Map<String, Buildable> buildableMap() {
         // dummy objects
-        Map<String, BuildableEquipment> map = new HashMap<>();
+        Map<String, Buildable> map = new HashMap<>();
         map.put("bow", new Bow());
         map.put("shield", new Shield());
         return map;
     }
 
-    public static List<BuildableEquipment> allBuildables() {
+    public static List<Buildable> allBuildables() {
         return new ArrayList<>(buildableMap().values());
     }
 
-    public static BuildableEquipment getBuildable(String buildable) {
-        BuildableEquipment item = buildableMap().get(buildable);
+    public static Buildable getBuildable(String buildable) {
+        Buildable item = buildableMap().get(buildable);
         return item.clone();
     }
 

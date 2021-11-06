@@ -1,13 +1,11 @@
 package dungeonmania.model.entities.statics;
 
-import java.util.List;
-
-import org.json.JSONObject;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
+import java.util.List;
+import org.json.JSONObject;
 
 public class Portal extends Entity {
 
@@ -36,8 +34,8 @@ public class Portal extends Entity {
         return game
             .getAllPortals()
             .stream()
-            .filter(portal ->
-                portal.getColour().equals(this.colour) && portal.getId() != this.getId()
+            .filter(
+                portal -> portal.getColour().equals(this.colour) && portal.getId() != this.getId()
             )
             .findFirst()
             .orElse(null);
@@ -49,21 +47,22 @@ public class Portal extends Entity {
      */
     public void teleport(Game game, MovingEntity character) {
         Portal portal = this.findPortal(game);
-        Position teleportedPosition = portal.getPosition().translateBy(character.getDirection());
-        List<Entity> entities = game.getEntities(teleportedPosition);
         if (portal != null) {
+            Position teleportedPosition = portal
+                .getPosition()
+                .translateBy(character.getDirection());
             boolean collision = false;
-            for (Entity entity : entities) {
-                if (character.collision(entity)) collision = true;
+            for (Entity e : game.getEntities(teleportedPosition)) {
+                if (character.collision(e)) collision = true;
             }
             if (!collision) character.moveTo(portal.getPosition());
         }
     }
 
-    @Override 
+    @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put ("colour", colour);
+        info.put("colour", colour);
         return info;
     }
 }

@@ -1,9 +1,6 @@
 package dungeonmania.model.entities;
 
-import org.json.JSONObject;
-
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.response.models.ItemResponse;

@@ -30,7 +30,7 @@ public class PlayerDefaultState implements PlayerState {
         // Battles only last a single tick
         while (player.getHealth() > 0 && opponent.getHealth() > 0) {
 
-            int playerAttackDamage = player.getTotalAttackDamage();
+            int playerAttackDamage = player.getTotalAttackDamage(opponent);
             int opponentAttackDamage = player.applyDefenceToOpponentAttack(opponent.getBaseAttackDamage());
             int originalHealth = player.getHealth();
             

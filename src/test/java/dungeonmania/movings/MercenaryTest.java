@@ -5,7 +5,6 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -129,7 +128,7 @@ public class MercenaryTest {
         game.tick(null, Direction.NONE);
         assertTrue(mercenary.getX() == 2);
         game.tick(null, Direction.NONE);
-        assertTrue(mercenary.getX() == 1); // same position as player
+        assertTrue(mercenary.getX() == 1); // same position as player but mercenary should be killed
     }
 
     @Test
@@ -220,8 +219,8 @@ public class MercenaryTest {
         
         // mercenary should not be able to go in the door position
         for(int i = 0; i < 100; i ++) {
-            game.tick(null, Direction.NONE);       
-            assertTrue(game.getEntities(doorPos).size() == 1);
+            game.tick(null, Direction.NONE);   
+            assertTrue(!game.getEntity(mercenary.getId()).getPosition().equals(doorPos));
         }
     }
 

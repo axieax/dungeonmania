@@ -3,8 +3,9 @@ package dungeonmania.model;
 import dungeonmania.EntityFactory;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
-import dungeonmania.model.entities.buildables.BuildableEquipment;
+import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
@@ -194,8 +195,8 @@ public final class Game {
         return EntityFactory
             .allBuildables()
             .stream()
-            .filter(eq -> player.checkBuildable(eq))
-            .map(eq -> eq.getPrefix())
+            .filter(item -> item instanceof Item && player.checkBuildable(item))
+            .map(item -> ((Item) item).getPrefix())
             .collect(Collectors.toList());
     }
 
@@ -227,7 +228,7 @@ public final class Game {
 
     public final DungeonResponse build(String buildable) {
         Player player = getCharacter();
-        BuildableEquipment item = EntityFactory.getBuildable(buildable);
+        Buildable item = EntityFactory.getBuildable(buildable);
         player.craft(item);
         return getDungeonResponse();
     }
