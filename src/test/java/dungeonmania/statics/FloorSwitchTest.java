@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.goal.ExitCondition;
@@ -42,7 +42,7 @@ public class FloorSwitchTest {
         FloorSwitch floorSwitch = new FloorSwitch(new Position(1, 1));
         game.addEntity(floorSwitch);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);
@@ -65,7 +65,7 @@ public class FloorSwitchTest {
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 0));
         game.addEntity(floorSwitch);
 
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
 
         Boulder boulder = new Boulder(new Position(1, 0));

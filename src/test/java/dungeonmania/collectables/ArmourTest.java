@@ -6,7 +6,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
@@ -39,7 +39,7 @@ public class ArmourTest {
         Armour armour = new Armour(new Position(1, 1));
         game.addEntity(armour);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));
@@ -59,7 +59,7 @@ public class ArmourTest {
         Armour armour = new Armour(new Position(1, 1));
         game.addEntity(armour);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 

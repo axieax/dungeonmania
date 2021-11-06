@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Bomb;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Wall;
@@ -42,7 +42,7 @@ public class BoulderTest {
         Boulder boulder = new Boulder(new Position(1, 1));
         game.addEntity(boulder);
 
-        Player player = new Player(new Position(2, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(2, 1));
 
         game.addEntity(player);
         player.move(game, Direction.LEFT);
@@ -64,7 +64,7 @@ public class BoulderTest {
         game.addEntity(boulder1);
         game.addEntity(boulder2);
 
-        Player player = new Player(new Position(3, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(3, 1));
 
         game.addEntity(player);
         player.move(game, Direction.LEFT);
@@ -86,7 +86,7 @@ public class BoulderTest {
         Boulder boulder = new Boulder(new Position(1, 2));
         game.addEntity(boulder);
 
-        Player player = new Player(new Position(0, 2), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 2));
         game.addEntity(player);
 
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 2));

@@ -1,4 +1,4 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
@@ -10,8 +10,11 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Observer;
+import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -29,11 +32,11 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private PlayerState state;
     private boolean inBattle;
     private Inventory inventory = new Inventory();
-    private List<MovingEntity> allies = new ArrayList<>();
+    private List<Enemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
-    public Player(Position position, int damageMultiplier) {
-        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false, damageMultiplier);
+    public Player(Position position) {
+        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
     }
@@ -75,9 +78,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Get a list of all allies that the player has.
      *
-     * @return List<MovingEntity>
+     * @return List<Enemy>
      */
-    public List<MovingEntity> getAllies() {
+    public List<Enemy> getAllies() {
         return this.allies;
     }
 
@@ -90,8 +93,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param ally
      */
-    public void addAlly(MovingEntity ally) {
-        for (MovingEntity m : allies) {
+    public void addAlly(Enemy ally) {
+        for (Enemy m : allies) {
             // Entity is already ally
             if (m.getId().equals(ally.getId())) return;
         }
@@ -238,8 +241,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void tick(Game game) {
         List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
-            if (e instanceof MovingEntity) {
-                MovingEntity opponent = (MovingEntity) e;
+            if (e instanceof Enemy) {
+                Enemy opponent = (Enemy) e;
                 if (opponent.isEnemy()) this.battle(game, opponent);
             }
         }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Arrow;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
@@ -38,7 +38,7 @@ public class ArrowTest {
         Arrow arrow = new Arrow(new Position(1, 1));
         game.addEntity(arrow);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        

@@ -5,7 +5,7 @@ import java.util.List;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 

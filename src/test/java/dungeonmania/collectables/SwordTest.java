@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -36,11 +36,11 @@ public class SwordTest {
     @Test
     public void collectTest() {
         Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Sword sword = new Sword(new Position(1, 1));
         game.addEntity(sword);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));
@@ -59,7 +59,7 @@ public class SwordTest {
         Sword sword = new Sword(new Position(1, 1));
         game.addEntity(sword);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 

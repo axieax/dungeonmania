@@ -16,9 +16,9 @@ import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -156,7 +156,7 @@ public class GameLoader {
             return new TheOneRing(position);
         } else if (type.startsWith("player")) {
             position = position.asLayer(0);
-            Player player = new Player (position, mode.damageMultiplier());
+            Player player = new Player (position);
             int health = entityInfo.getInt("health");
             player.setHealth(health);
             JSONArray inventory = entityInfo.getJSONArray("inventory");

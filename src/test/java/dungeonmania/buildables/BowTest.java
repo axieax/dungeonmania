@@ -9,7 +9,7 @@ import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -39,7 +39,7 @@ public class BowTest {
         game.addEntity(arrow3);
 
         // Player picks up the wood and arrows
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -77,7 +77,7 @@ public class BowTest {
         game.addEntity(arrow2);
         game.addEntity(arrow3);
 
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -120,7 +120,7 @@ public class BowTest {
         game.addEntity(arrow2);
         game.addEntity(arrow3);
 
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);

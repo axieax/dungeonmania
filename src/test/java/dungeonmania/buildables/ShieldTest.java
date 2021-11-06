@@ -9,8 +9,8 @@ import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -40,7 +40,7 @@ public class ShieldTest {
         game.addEntity(treasure);
 
         // Player picks up the wood and treasure
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -77,7 +77,7 @@ public class ShieldTest {
         game.addEntity(key);
 
         // Player picks up the wood and key
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -121,7 +121,7 @@ public class ShieldTest {
         game.addEntity(wood2);
         game.addEntity(key);
 
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -160,7 +160,7 @@ public class ShieldTest {
         game.addEntity(wood2);
         game.addEntity(key);
 
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);

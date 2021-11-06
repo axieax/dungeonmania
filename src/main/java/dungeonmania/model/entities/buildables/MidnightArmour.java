@@ -2,7 +2,7 @@ package dungeonmania.model.entities.buildables;
 
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Equipment;
-import dungeonmania.model.entities.movings.Inventory;
+import dungeonmania.model.entities.movings.player.Inventory;
 import dungeonmania.util.Position;
 
 public class MidnightArmour extends Equipment implements DefenceEquipment, Buildable {

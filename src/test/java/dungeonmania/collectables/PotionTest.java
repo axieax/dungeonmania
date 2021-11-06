@@ -8,7 +8,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
@@ -64,7 +64,7 @@ public class PotionTest {
         HealthPotion healthPotion = new HealthPotion(new Position(1, 1));
         game.addEntity(healthPotion);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
@@ -83,7 +83,7 @@ public class PotionTest {
         InvincibilityPotion invincibilityPotion = new InvincibilityPotion(new Position(1, 1));
         game.addEntity(invincibilityPotion);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
@@ -102,7 +102,7 @@ public class PotionTest {
         InvisibilityPotion invisibilityPotion = new InvisibilityPotion(new Position(1, 1));
         game.addEntity(invisibilityPotion);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        

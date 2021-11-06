@@ -9,8 +9,8 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -80,6 +80,8 @@ public class SpiderTest {
         assertTrue(spiderPos.equals(spiderSpawnPos.translateBy(Direction.UP)));
     }
 
+    // TODO: this may involved a bit of RNG? This test may fail depending on where
+    // the spider spawns
     @Test
     public void testSpiderNeverMovesToInitalBlock() {
         // the distinguished movement of a spider never allows it go
@@ -177,7 +179,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 2);
@@ -233,7 +235,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position doorPos = new Position(2, 1);
@@ -257,7 +259,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position switchPos = new Position(2, 1);
@@ -280,7 +282,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position portalPos = new Position(2, 1);
@@ -303,7 +305,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position exitPos = new Position(2, 1);
@@ -333,7 +335,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 2);
@@ -372,7 +374,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 4);
@@ -417,7 +419,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position boulderPos = new Position(2, 4);
@@ -469,7 +471,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position boulder1Pos = new Position(2, 2);
@@ -511,7 +513,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position boulder1Pos = new Position(2, 2);
@@ -553,7 +555,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position boulderPos = new Position(3, 2);
@@ -577,7 +579,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(5, 5), mode.damageMultiplier());
+        Player player = new Player(new Position(5, 5));
         game.addEntity(player);
 
         Position initialSpiderPos = new Position(0, 0);
@@ -606,7 +608,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 4);
@@ -689,7 +691,7 @@ public class SpiderTest {
         );
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos, mode.damageMultiplier());
+        Player player = new Player(playerPos);
         game.addEntity(player);
 
         int numEntitiesAtPlayerPos = game.getEntities(playerPos).size();

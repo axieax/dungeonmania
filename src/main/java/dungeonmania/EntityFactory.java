@@ -16,9 +16,9 @@ import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -165,7 +165,7 @@ public class EntityFactory {
             return new Mercenary(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("player")) {
             position = position.asLayer(21);
-            return new Player(position, mode.damageMultiplier());
+            return new Player(position);
         }
         return null;
     }

@@ -10,8 +10,8 @@ import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
@@ -46,7 +46,7 @@ public class ZombieToastSpawnerTest {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
-        game.addEntity(new Player(new Position(10, 10), mode.damageMultiplier()));
+        game.addEntity(new Player(new Position(10, 10)));
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
             game.tick("", Direction.NONE);
@@ -132,7 +132,7 @@ public class ZombieToastSpawnerTest {
         
         game.addEntity(new Sword(new Position(2, 1)));
 
-        Player player = new Player(new Position(2, 2), mode.damageMultiplier());
+        Player player = new Player(new Position(2, 2));
         game.addEntity(player);
         
         // Player picks up sword
@@ -156,7 +156,7 @@ public class ZombieToastSpawnerTest {
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
         
-        Player player = new Player(new Position(1, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 0));
         game.addEntity(player);
         
         assertThrows(InvalidActionException.class, () -> game.interact(spawner.getId()));

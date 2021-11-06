@@ -1,6 +1,6 @@
 * Potions are consumed once. However, the effect lasts for a certain amount of in game ticks (depending for the type of potion). In our implementation, InvincibilityPotion lasts 2 in game ticks, InvisibilityPotion lasts for 6 in game ticks and HealthPotion are just simply consumed to regain to full health.
 * If a player is invisible, they cannot attack another entity. Rather they can just pass through the enemy undetected.
-* Spiders are unable to run away if a player is invincible. Only Zombie and Mercenary will run away.
+* All enemies will run away if a player is invincible. For spiders, if a player is no longer invincible, it will reset it's circular movement on its last position.
 * Spiders can move out of the map if they spawn on the edge and their ‘circular' path causes them to go beyond the map.
 * Zombies cannot move a boulder as this action is only conducted by a player.
 * Durability of any weapon is not reduced if a player is invincible.
@@ -22,3 +22,4 @@
 * Assume that there exist a corresponding portal. If there is no corresponding portal to teleport, the entity stays on the same position.
 * Assume that bomb explosions will also destroy floor switches.
 * Bombs can only explode once it has been placed by the user - meaning that bombs spawned next to a switch cannot explode initially.
+* Mercenaries can only move twice if mercenary is aiming to attack the player.

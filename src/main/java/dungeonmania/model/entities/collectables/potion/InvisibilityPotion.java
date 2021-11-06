@@ -1,8 +1,8 @@
 package dungeonmania.model.entities.collectables.potion;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.Player;
-import dungeonmania.model.entities.movings.PlayerInvisibleState;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.util.Position;
 
 public class InvisibilityPotion extends Potion {

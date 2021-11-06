@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -38,7 +38,7 @@ public class ExitTest {
         Exit exit = new Exit(new Position(1, 1));
         game.addEntity(exit);
                 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);
