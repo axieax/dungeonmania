@@ -37,7 +37,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         // mercenaries only spawn in dungeons with at least one enemy
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
@@ -52,7 +52,7 @@ public class MercenaryTest {
         // Distance between the mercenary and player should decrease per tick/movement
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
@@ -69,7 +69,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 10), mode.damageMultiplier(), player);
@@ -91,7 +91,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
@@ -111,7 +111,7 @@ public class MercenaryTest {
         // outside/go through the gap
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         // create horizontal wall with 1 gap near the right game border between the player and mercenary
@@ -136,7 +136,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
@@ -178,7 +178,7 @@ public class MercenaryTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(),player);
@@ -199,7 +199,7 @@ public class MercenaryTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(5, 5);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(),player);
@@ -230,7 +230,7 @@ public class MercenaryTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         game.addEntity(player);
         
         Position mercenaryPos = new Position(2, 1);
@@ -255,7 +255,7 @@ public class MercenaryTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         game.addEntity(player);
         
         Position mercenaryPos = new Position(5, 5);
@@ -271,7 +271,7 @@ public class MercenaryTest {
         // character attemps to bribe mercenary without any treasure should throw an exception
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(2, 1), mode.damageMultiplier(), player);

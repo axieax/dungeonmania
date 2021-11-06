@@ -32,8 +32,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
-    public Player(Position position) {
-        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false);
+    public Player(Position position, int damageMultiplier) {
+        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false, damageMultiplier);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
     }
@@ -283,15 +283,16 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         this.setDirection(direction);
 
-        // interact with all entities in that direction
+        // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(
             entity -> {
-                // cannot interact with moving entities when moving
+                // Cannot interact with moving entities when moving
                 if (!(entity instanceof MovingEntity)) entity.interact(game, this);
             }
         );
 
+        // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
         boolean canMove = updatedEntities.stream().allMatch(e -> !this.collision(e));
 
@@ -316,22 +317,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
         // Notify the observers that the player is in battle
         this.setInBattle(true);
         this.notifyObservers();
-
-        if (this.getHealth() <= 0) {
-            Item item = this.findInventoryItem("one_ring");
-            if (item != null && (item instanceof Consumable)) {
-                // Use one ring if it is in inventory
-                ((Consumable) item).consume(game, this);
-            } else {
-                // Entity is dead, remove it
-                game.removeEntity(this);
-            }
-        }
-
-        // If either entity is dead, remove it
-        if (opponent.getHealth() <= 0) {
-            game.removeEntity(opponent);
-        }
 
         // Notify the observers that the player is no longer in battle
         this.setInBattle(false);

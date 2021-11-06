@@ -27,7 +27,8 @@ public class ShieldTest {
      */
     @Test
     public void buildTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         // To build a shield, we need 2 wood and 1 treasure
         Wood wood1 = new Wood(new Position(1, 0));
@@ -39,7 +40,7 @@ public class ShieldTest {
         game.addEntity(treasure);
 
         // Player picks up the wood and treasure
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -63,7 +64,8 @@ public class ShieldTest {
      */
     @Test
     public void buildTestAlternate() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         // To build a shield, we need 2 wood and 1 key
         Wood wood1 = new Wood(new Position(1, 0));
@@ -75,7 +77,7 @@ public class ShieldTest {
         game.addEntity(key);
 
         // Player picks up the wood and key
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -119,7 +121,7 @@ public class ShieldTest {
         game.addEntity(wood2);
         game.addEntity(key);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -132,7 +134,7 @@ public class ShieldTest {
         Shield shield = (Shield) player.findInventoryItem("shield");
         assertTrue(shield.getDurability() == initialDurability);
 
-        Spider spider = new Spider(new Position(3, 1));
+        Spider spider = new Spider(new Position(3, 1), mode.damageMultiplier());
         game.addEntity(spider);
 
         // Player moves to defend against the spider with the shield
@@ -158,7 +160,7 @@ public class ShieldTest {
         game.addEntity(wood2);
         game.addEntity(key);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);

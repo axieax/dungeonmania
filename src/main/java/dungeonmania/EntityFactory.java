@@ -156,7 +156,7 @@ public class EntityFactory {
             // Moving Entities
         } else if (type.startsWith("spider")) {
             position = position.asLayer(18);
-            return new Spider(position);
+            return new Spider(position, mode.damageMultiplier());
         } else if (type.startsWith("zombie_toast")) {
             position = position.asLayer(19);
             return new ZombieToast(position, mode.damageMultiplier(), player);
@@ -165,7 +165,7 @@ public class EntityFactory {
             return new Mercenary(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("player")) {
             position = position.asLayer(21);
-            return new Player(position);
+            return new Player(position, mode.damageMultiplier());
         }
         return null;
     }

@@ -10,7 +10,6 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
-import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
@@ -213,7 +212,7 @@ public final class Game {
             }
         });
 
-        Spider.spawnSpider(this);
+        Spider.spawnSpider(this, this.mode.damageMultiplier());
         return getDungeonResponse();
     }
 

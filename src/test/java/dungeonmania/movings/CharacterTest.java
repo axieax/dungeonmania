@@ -16,7 +16,6 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.PlayerInvincibleState;
 import dungeonmania.model.entities.movings.PlayerInvisibleState;
@@ -425,14 +424,15 @@ public class CharacterTest {
     public void testItemsUsedToCraftRemoved() {
         // any items that are used to craft another buildable entity should be
         // removed from the player's inventory, and are replaced with the built item
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         game.addEntity(new Wood(new Position(2, 1)));
@@ -460,14 +460,15 @@ public class CharacterTest {
     @Test
     public void testCharacterCannotPickUpBombsItPlaced() {
         // removed from the player's inventory, and are replaced with the built item
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Bomb bomb = new Bomb(new Position(2, 1));
@@ -498,6 +499,7 @@ public class CharacterTest {
 
     @Test
     public void testMovementDoesNotAffectHealth() {
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
@@ -505,7 +507,7 @@ public class CharacterTest {
             new Peaceful()
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         int playerHealth = player.getHealth();
@@ -527,7 +529,7 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
         game.addEntity(player);
 
@@ -551,7 +553,7 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
@@ -584,7 +586,7 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
@@ -618,15 +620,16 @@ public class CharacterTest {
 
     @Test
     public void testCanPickUpMultiplePotions() {
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
@@ -650,6 +653,7 @@ public class CharacterTest {
 
     @Test
     public void testCanDrinkTwoPotions() {
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
@@ -658,7 +662,7 @@ public class CharacterTest {
         );
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);

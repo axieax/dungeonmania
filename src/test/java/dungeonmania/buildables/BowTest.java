@@ -24,7 +24,8 @@ public class BowTest {
      */
     @Test
     public void buildTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         // To build a bow, we need 1 wood and 3 arrows
         Wood wood = new Wood(new Position(1, 0));
@@ -38,7 +39,7 @@ public class BowTest {
         game.addEntity(arrow3);
 
         // Player picks up the wood and arrows
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -76,7 +77,7 @@ public class BowTest {
         game.addEntity(arrow2);
         game.addEntity(arrow3);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -119,7 +120,7 @@ public class BowTest {
         game.addEntity(arrow2);
         game.addEntity(arrow3);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
