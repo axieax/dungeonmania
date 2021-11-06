@@ -71,8 +71,9 @@ public class DungeonManiaController {
 
         // determine game mode
         Mode mode = null;
-        if (gameMode.equals("Hard")) mode = new Hard(); else if (gameMode.equals("Standard")) mode =
-            new Standard(); else if (gameMode.equals("Peaceful")) mode = new Peaceful();
+        if (gameMode.equals("Hard")) mode = new Hard(); 
+        else if (gameMode.equals("Standard")) mode = new Standard(); 
+        else if (gameMode.equals("Peaceful")) mode = new Peaceful();
         
         // get game entities
         List<Entity> entities = EntityFactory.extractEntities (dungeonName, mode);
@@ -183,6 +184,10 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
+            List<String>  validItems = Arrays.asList("bomb", "health_potion", "invisibility_potion", "invincibility_potion");
+        if (itemUsed != null && !validItems.contains(itemUsed)) {
+            throw new IllegalArgumentException ();
+        }
         return currentGame.tick(itemUsed, movementDirection);
     }
 
