@@ -5,6 +5,7 @@ import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Inventory;
+
 public class Bow extends Equipment implements AttackEquipment, Buildable {
 
     private static final int WOOD_NEEDED = 1;
@@ -37,7 +38,7 @@ public class Bow extends Equipment implements AttackEquipment, Buildable {
 
     @Override
     public int getAttackDamage(MovingEntity entity) {
-        return this.ATTACK_DAMAGE;
+        return (int) (this.ATTACK_DAMAGE * MULTIPLIER);
     }
 
     @Override
