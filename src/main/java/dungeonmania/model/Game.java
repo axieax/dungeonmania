@@ -155,13 +155,7 @@ public final class Game {
      * @return DungeonResponse for the Dungeon
      */
     public final DungeonResponse getDungeonResponse() {
-<<<<<<< HEAD
-        // if (this.getCharacter() == null) {
-        //     System.out.println("You have the one ring");
-        // }
-=======
         Player player = getCharacter();
->>>>>>> master
         return new DungeonResponse(
             dungeonId,
             dungeonName,
