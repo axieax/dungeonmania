@@ -175,16 +175,15 @@ public class DungeonManiaController {
      *
      * @param itemUsed
      * @param movementDirection
-     * @param damageMultiplier
      * @return
      * @throws IllegalArgumentException If itemUsed is not a bomb, health_potion
      *                                  invincibility_potion, or an
      *                                  invisibility_potion
      * @throws InvalidActionException   If itemUsed is not in the player's inventory
      */
-    public DungeonResponse tick(String itemUsed, Direction movementDirection, int damageMultiplier)
+    public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        return currentGame.tick(itemUsed, movementDirection, damageMultiplier);
+        return currentGame.tick(itemUsed, movementDirection);
     }
 
     /**

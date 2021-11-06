@@ -199,7 +199,7 @@ public final class Game {
             .collect(Collectors.toList());
     }
 
-    public final DungeonResponse tick(String itemUsedId, Direction movementDirection, int damageMultiplier)
+    public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
         this.tick += 1;
 
@@ -221,7 +221,7 @@ public final class Game {
             }
         );
 
-        Spider.spawnSpider(this, damageMultiplier);
+        Spider.spawnSpider(this, this.mode.damageMultiplier());
         return getDungeonResponse();
     }
 
