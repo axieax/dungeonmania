@@ -81,6 +81,8 @@ public class SpiderTest {
         assertTrue(spiderPos.equals(spiderSpawnPos.translateBy(Direction.UP)));
     }
 
+    // TODO: this may involved a bit of RNG? This test may fail depending on where
+    // the spider spawns
     @Test
     public void testSpiderNeverMovesToInitalBlock() {
         // the distinguished movement of a spider never allows it go

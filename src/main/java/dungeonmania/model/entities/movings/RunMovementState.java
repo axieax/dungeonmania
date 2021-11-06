@@ -5,11 +5,11 @@ import java.util.List;
 import dungeonmania.model.Game;
 import dungeonmania.util.Position;
 
-public class RunState implements MovementState {
+public class RunMovementState implements MovementState {
     
     private MovingEntity enemy;
 
-    public RunState(MovingEntity enemy) {
+    public RunMovementState(MovingEntity enemy) {
         this.enemy = enemy;
     }
 
@@ -17,7 +17,7 @@ public class RunState implements MovementState {
      * Enemy runs away from player
      */
     @Override
-    public void move(Game game, Position playerPos) {
+    public void move(Game game) {
         Position currPos = enemy.getPosition();
 
         List<Position> possiblePositionsToMove = game.getMoveablePositions(enemy, currPos);
@@ -26,10 +26,10 @@ public class RunState implements MovementState {
         Position optimalPathPosition = currPos;
 
         PositionGraph positionGraph = new PositionGraph(game, enemy);
-
+        Player player = game.getCharacter();
         // Move the enemy to the furthest possible position to the player
         for (Position position: possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(enemy.getPosition(), playerPos);
+            int pathLen = positionGraph.BFS(enemy.getPosition(), player.getPosition());
             if (pathLen > optimalPathLength) {
                 optimalPathLength = pathLen;
                 optimalPathPosition = position;

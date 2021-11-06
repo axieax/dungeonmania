@@ -16,26 +16,25 @@ public class Mercenary extends MovingEntity implements Observer {
     private static final int BATTLE_RADIUS = 5;
     public final double ARMOUR_DROP_RATE = 0.2;
     
-    private MovementState state;
+    private MovementState movementState;
     private boolean moveTwice;
 
     public Mercenary(Position position, int damageMultiplier, SubjectPlayer player) {
         super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, true, damageMultiplier);
-        this.state = new DefaultState(this);
+        this.state = new AttackMovementState(this);
         this.moveTwice = false;
         player.attach(this);
     }
 
     @Override
     public void tick(Game game) {
+        movementState.move(game);
+        
         Player player = (Player) game.getCharacter();
-        Position playerPos = player.getPosition();
-        state.move(game, playerPos);
-
         // If a player is fighting an enemy within the battle radius, mercenary moves twice as fast
-        if (this.isAlive() && moveTwice && getDistanceToPlayer(game, playerPos) <= BATTLE_RADIUS) {
-            state.move(game, playerPos);
+        if (this.isAlive() && moveTwice && getDistanceToPlayer(game, player.getPosition()) <= BATTLE_RADIUS) {
             moveTwice = false;
+            movementState.move(game);
         }
     }
 
@@ -45,16 +44,14 @@ public class Mercenary extends MovingEntity implements Observer {
      */
     @Override
     public void update(SubjectPlayer player) { 
-        if (!(player instanceof Player)) {
-            return;
-        }
+        if (!(player instanceof Player)) return;
 
         Player character = (Player) player; 
         if (character.getInBattle()) moveTwice = true;
-        if (character.getState() instanceof PlayerInvincibleState && character.getAllies() == null) {
-            this.setState(new RunState(this));
+        if (character.getState() instanceof PlayerInvincibleState && this.isEnemy()) {
+            this.setMovementState(new RunMovementState(this));
         } else {
-            this.setState(new DefaultState(this));
+            this.setMovementState(new AttackMovementState(this));
         }
     }
 
@@ -78,8 +75,8 @@ public class Mercenary extends MovingEntity implements Observer {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
-    public void setState(MovementState state) {
-        this.state = state;
+    public void setMovementState(MovementState state) {
+        this.movementState = state;
     }
 
     public int getDistanceToPlayer(Game game, Position playerPos) {
@@ -87,37 +84,4 @@ public class Mercenary extends MovingEntity implements Observer {
         return positionGraph.BFS(this.getPosition(), playerPos);
     }
 
-    public void move(Game game, Position playerPos) {
-        Position currPos = this.getPosition();
-
-        List<Position> possiblePositionsToMove = game.getMoveablePositions(this, currPos);
-
-        int optimalPathLength = Integer.MAX_VALUE;
-        Position optimalPathPosition = currPos;
-
-        PositionGraph positionGraph = new PositionGraph(game, this);
-
-        // Move the mercenary to the closest possible position to the player
-        for (Position position : possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(position, playerPos);
-            if (pathLen < optimalPathLength) {
-                optimalPathLength = pathLen;
-                optimalPathPosition = position;
-            }
-        }
-
-        // If the player is invisible, move the mercenary randomly (will not follow player)
-        Player player = (Player) game.getCharacter();
-        if (player.getState() instanceof PlayerInvisibleState) {
-            Random rand = new Random();
-            int randomIndex = rand.nextInt(possiblePositionsToMove.size());
-            optimalPathPosition = possiblePositionsToMove.get(randomIndex);
-        }
-
-        this.setPosition(optimalPathPosition);
-
-        if (player.getPosition().equals(this.getPosition())){
-            player.battle(game, this);
-        }
-    }
 }

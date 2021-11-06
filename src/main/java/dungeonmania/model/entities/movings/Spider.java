@@ -2,6 +2,9 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.statics.Door;
+import dungeonmania.model.entities.statics.Exit;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -9,39 +12,25 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Spider extends MovingEntity {
+public class Spider extends MovingEntity implements Observer {
 
     public static final int MAX_SPIDER_HEALTH = 20;
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
     public static final int MAX_SPIDERS = 4;
-    private boolean isInitialMove;
-    private List<Direction> spiderMovementPath;
-    private boolean isMovementReverse;
-    private int indexOfNextMove;
+
+    private MovementState movementState;
 
     public Spider(Position position) {
         this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG);
+        this.movementState = new CircularMovementState(this);
     }
 
     public Spider(Position position, int health, int attackDamage) {
         super("spider", position, health, attackDamage, true);
-        this.isInitialMove = true;
-        // Default "circling" movement of spider
-        this.spiderMovementPath =
-            Arrays.asList(
-                Direction.RIGHT,
-                Direction.DOWN,
-                Direction.DOWN,
-                Direction.LEFT,
-                Direction.LEFT,
-                Direction.UP,
-                Direction.UP,
-                Direction.RIGHT
-            );
+    }
 
-        // index of spiderMovementPath
-        this.indexOfNextMove = 0;
-        this.isMovementReverse = false;
+    public void setMovementState(MovementState movementState) {
+        this.movementState = movementState;
     }
 
     /**
@@ -49,17 +38,24 @@ public class Spider extends MovingEntity {
      */
     @Override
     public void tick(Game game) {
-        Position currentPos = this.getPosition();
+        movementState.move(game);
+    }
 
-        if (getIsInitialMove()) {
-            doInitialSpiderMove(game, currentPos);
-        } else {
-            moveSpider(game, currentPos);
+    /**
+     * If a player drinks an invincibility potion, change the state
+     * of the spider to make sure it runs away
+     */
+    @Override
+    public void update(SubjectPlayer player) {
+        if (!(player instanceof Player)) {
+            return;
         }
 
-        Player player = game.getCharacter();
-        if (this.getPosition().equals(player.getPosition())) {
-            player.battle(game, this);
+        Player character = (Player) player;
+        if (character.getState() instanceof PlayerInvincibleState) {
+            this.setMovementState(new RunMovementState(this));
+        } else {
+            this.setMovementState(new CircularMovementState(this));
         }
     }
 
@@ -132,64 +128,15 @@ public class Spider extends MovingEntity {
     }
 
     //////////////////////////////////////////////////////////////////////////////
-    /**
-     *
-     * @param game dungeon the spider is contained in
-     * @param currentPos of spider
-     */
-    private void doInitialSpiderMove(Game game, Position currentPos) {
-        // initially always move up if possible, else stay in spot
-        Position newPos = currentPos.translateBy(Direction.UP);
-        List<Entity> entitiesNewPos = game.getEntities(newPos);
-        if (entitiesNewPos == null || canSpiderMoveOntoPosition(entitiesNewPos)) {
-            this.setPosition(newPos);
-            setIsInitialMove(false);
-        }
-    }
-
-    /**
-     * Given the current position of a spider, moves a spider onto the next tile,
-     * ensuring that the spider maintains a "circular path" and reverses direction
-     * if necessary.
-     * @param game dungeon the spider is contained in
-     * @param currentPos of spider
-     */
-    private void moveSpider(Game game, Position currentPos) {
-        Direction nextMoveInPath = spiderMovementPath.get(indexOfNextMove);
-
-        Position newPos = currentPos.translateBy(nextMoveInPath);
-        List<Entity> entitiesNewPos = game.getEntities(newPos);
-        if (entitiesNewPos == null || canSpiderMoveOntoPosition(entitiesNewPos)) {
-            this.setPosition(newPos);
-        } else { // reverse direction
-            if (this.isMovementReverse) {
-                this.isMovementReverse = false;
-            } else {
-                this.isMovementReverse = true;
-            }
-            indexOfNextMove =  Math.abs(spiderMovementPath.size() - (indexOfNextMove + 4)) % 8;
-            Collections.reverse(this.spiderMovementPath);
-            return; // no movement occurs if blocked
-        }
-
-        if (indexOfNextMove >= spiderMovementPath.size() - 1) { // end of movement path
-            indexOfNextMove = 0;
-        } else {
-            indexOfNextMove += 1;
-        }
-    }
-
-    public boolean getIsInitialMove() {
-        return this.isInitialMove;
-    }
-
-    public void setIsInitialMove(boolean isInitialMove) {
-        this.isInitialMove = isInitialMove;
-    }
 
     @Override
     public boolean collision(Entity entity) {
-        if (entity instanceof Wall) return false;
+        if (
+            entity instanceof Wall ||
+            entity instanceof Door ||
+            entity instanceof Portal ||
+            entity instanceof Exit
+        ) return false;
         return !entity.isPassable();
     }
 }

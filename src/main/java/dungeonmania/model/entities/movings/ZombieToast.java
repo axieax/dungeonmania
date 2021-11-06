@@ -11,7 +11,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     public static final int MAX_ZOMBIE_HEALTH = 20;
     public static final int MAX_ZOMBIE_ATTACK_DMG = 2;
     public final double ARMOUR_DROP_RATE = 0.2;
-    private MovementState state;
+    private MovementState movementState;
 
     public ZombieToast(Position position, int damageMultiplier, SubjectPlayer player) {
         super(
@@ -22,14 +22,13 @@ public class ZombieToast extends MovingEntity implements Observer {
             true,
             damageMultiplier
         );
-        this.state = new DefaultState(this);
+        this.movementState = new RandomMovementState(this);
         player.attach(this);
     }
 
     @Override
     public void tick(Game game) {
-        Position playerPos = game.getCharacter().getPosition();
-        state.move(game, playerPos);
+        movementState.move(game);
     }
 
     /**
@@ -44,9 +43,9 @@ public class ZombieToast extends MovingEntity implements Observer {
 
         Player character = (Player) player;
         if (character.getState() instanceof PlayerInvincibleState) {
-            this.setState(new RunState(this));
+            this.setMovementState(new RunMovementState(this));
         } else {
-            this.setState(new DefaultState(this));
+            this.setMovementState(new RandomMovementState(this));
         }
     }
 
@@ -59,24 +58,7 @@ public class ZombieToast extends MovingEntity implements Observer {
     }
 
     //////////////////////////////////////////////////////////////////
-    public void setState(MovementState state) {
-        this.state = state;
-    }
-
-    public void move(Game game, Position playerPos) {
-        List<Position> possiblePositions = game.getMoveablePositions(this, this.getPosition());
-
-        // All 4 directions are blocked, do not move anywhere
-        if (!possiblePositions.isEmpty()) {
-            Random rand = new Random();
-            Position randPosition = possiblePositions.get(rand.nextInt(possiblePositions.size()));
-            Position offset = Position.calculatePositionBetween(this.getPosition(), randPosition);
-            if (Direction.LEFT.getOffset().equals(offset)) this.setDirection(Direction.LEFT);
-            else if (Direction.UP.getOffset().equals(offset)) this.setDirection(Direction.UP);
-            else if (Direction.RIGHT.getOffset().equals(offset)) this.setDirection(Direction.RIGHT);
-            else if (Direction.DOWN.getOffset().equals(offset)) this.setDirection(Direction.DOWN);
-            this.setPosition(randPosition);
-        }
-        else this.setDirection(Direction.NONE);
+    public void setMovementState(MovementState state) {
+        this.movementState = state;
     }
 }
