@@ -156,24 +156,26 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Get a list of all attackable equipments from the inventory.
      *
-     * @return List<Equipment>
+     * @return List<AttackEquipment>
      */
-    public List<Equipment> getAttackEquipmentList() {
+    public List<AttackEquipment> getAttackEquipmentList() {
         return this.getEquipmentList()
             .stream()
             .filter(equipment -> equipment instanceof AttackEquipment)
+            .map(equipment -> (AttackEquipment) equipment)
             .collect(Collectors.toList());
     }
 
     /**
      * Get a list of all defensable eqipments from the inventory.
      *
-     * @return List<Equipment>
+     * @return List<DefenceEquipment>
      */
-    public List<Equipment> getDefenceEquipmentList() {
+    public List<DefenceEquipment> getDefenceEquipmentList() {
         return this.getEquipmentList()
             .stream()
             .filter(equipment -> equipment instanceof DefenceEquipment)
+            .map(equipment -> (DefenceEquipment) equipment)
             .collect(Collectors.toList());
     }
 
@@ -276,7 +278,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
             );
             // check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
-            if (item != null && !(item instanceof Bomb || item instanceof Potion)) throw new IllegalArgumentException(
+            if (
+                item != null && !(item instanceof Bomb || item instanceof Potion)
+            ) throw new IllegalArgumentException(
                 "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
             );
 
@@ -368,9 +372,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
         int damageToOpponent = this.getBaseAttackDamage();
 
         // Any extra attack damage provided by equipment
-        for (Equipment e : getAttackEquipmentList()) {
-            if (e instanceof AttackEquipment) damageToOpponent +=
-                e.getMultiplier() * ((AttackEquipment) e).getAttackDamage(opponent);
+        for (AttackEquipment e : getAttackEquipmentList()) {
+            damageToOpponent += e.getHitRate() * e.getAttackDamage();
         }
 
         // Any extra attack damage provided by allies
@@ -390,8 +393,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public int applyDefenceToOpponentAttack(int opponentAttackDamage) {
         int finalAttackDamage = opponentAttackDamage;
-        for (Equipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage = (int) (finalAttackDamage * e.getMultiplier());
+        for (DefenceEquipment e : this.getDefenceEquipmentList()) {
+            finalAttackDamage = (int) (finalAttackDamage * e.getDefenceMultiplier());
         }
         return finalAttackDamage;
     }
