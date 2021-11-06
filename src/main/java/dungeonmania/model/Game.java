@@ -42,7 +42,6 @@ public final class Game {
         this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
-        // TODO: attach observers
     }
 
     public final void addEntity(Entity entity) {

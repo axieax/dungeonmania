@@ -69,7 +69,7 @@ public class GoalTest {
      * @return DungeonResponse of the last tick
      */
     private final DungeonResponse move(DungeonManiaController dmc, Direction direction, int ticks) {
-        return move(dmc, direction, "", ticks);
+        return move(dmc, direction, null, ticks);
     }
 
     /**
@@ -200,7 +200,7 @@ public class GoalTest {
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
 
         // place the bomb
-        resp = move(dmc, Direction.NONE, resp.getInventory().get(0).getId(), 1);
+        resp = move(dmc, Direction.NONE, resp.getInventory().get(0).getPrefix(), 1);
         assertEquals(switchGoal, resp.getGoals());
         assertFalse(resp.getInventory().stream().anyMatch(item -> item.getPrefix().equals("bomb")));
 
@@ -208,7 +208,7 @@ public class GoalTest {
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
         assertEquals("", move(dmc, Direction.RIGHT, 1).getGoals());
-    }
+    } 
 
     @Test
     public final void testSimpleExit() {
@@ -419,10 +419,12 @@ public class GoalTest {
         DungeonResponse stateOne = controller.tick("", Direction.NONE);
         assertEquals(stateOne.getGoals(), "");
     }
-
+    
     /**
      * This tests the completion of goals in the advanced dungeon
      */
+
+    /*
     @Test
     public void testAdvancedGoal() {
         DungeonManiaController controller = new DungeonManiaController();
@@ -436,5 +438,184 @@ public class GoalTest {
         assertEquals(":treasure(1)", move(controller, Direction.DOWN, 7).getGoals());
         assertEquals(":treasure(1)", move(controller, Direction.RIGHT, 6).getGoals());
         assertEquals("", move(controller, Direction.DOWN, 1).getGoals());
+    } */
+
+    /**
+     * This tests the completion of goals in the advanced dungeon
+     */
+    @Test
+    public void testAdvancedGoal() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));
+
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        DungeonResponse vanquished = controller.tick (null, Direction.DOWN);
+        assertEquals(":treasure(1)", vanquished.getGoals());
+
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        
+        DungeonResponse secondState = controller.tick (null, Direction.DOWN);
+        assertEquals(":treasure(1)", secondState.getGoals());
+        
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN); //Got treasure
+    
+        DungeonResponse thirdState = controller.tick (null, Direction.DOWN);
+        assertEquals(thirdState.getGoals(), ""); 
     }
+
+    /**
+     * This tests the completion of boulders goal in the boulders dungeon
+     */
+    @Test 
+    public void testBouldersGoal() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame ("boulders", "Standard"));
+    
+
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.DOWN);
+
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.UP);
+
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.LEFT);
+
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.DOWN);
+
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.DOWN);
+
+        controller.tick (null, Direction.LEFT);
+        controller.tick (null, Direction.LEFT);
+
+        DungeonResponse stateOne = controller.tick (null, Direction.UP);
+        assertEquals(":switch(1)", stateOne.getGoals());    
+
+
+        DungeonResponse stateTwo = controller.tick (null, Direction.RIGHT);
+        assertEquals(stateTwo.getGoals(), ""); // game is won   
+    }
+
+    /**
+     * Checks the exit goal is satisfied in the maze dungeon
+     */
+    @Test 
+    public void testMazeGoal() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame ("maze", "Standard"));
+
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.RIGHT);
+    
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+        controller.tick (null, Direction.UP);
+    
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+        controller.tick (null, Direction.RIGHT);
+
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        controller.tick (null, Direction.DOWN);
+        DungeonResponse stateOne = controller.tick (null, Direction.DOWN);
+        assertEquals(":exit(1)", stateOne.getGoals());  
+
+        DungeonResponse stateTwo = controller.tick (null, Direction.DOWN);
+        assertEquals(stateTwo.getGoals(), "");  
+    }
+
 }

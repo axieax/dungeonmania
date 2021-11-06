@@ -182,13 +182,10 @@ public class DungeonManiaController {
      *                                  invisibility_potion
      * @throws InvalidActionException   If itemUsed is not in the player's inventory
      */
-    public DungeonResponse tick(String itemUsed, Direction movementDirection)
+    public DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-            List<String>  validItems = Arrays.asList("bomb", "health_potion", "invisibility_potion", "invincibility_potion");
-        if (itemUsed != null && !validItems.contains(itemUsed)) {
-            throw new IllegalArgumentException ();
-        }
-        return currentGame.tick(itemUsed, movementDirection);
+        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException (itemUsedId);
+        return currentGame.tick(itemUsedId, movementDirection);
     }
 
     /**
