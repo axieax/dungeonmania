@@ -102,9 +102,10 @@ public class PortalTest {
      */
     @Test
     public void testNoPortal() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.damageMultiplier());
 
         Portal portal = new Portal(new Position(0, 0), "BLUE");
         game.addEntity(player);
@@ -122,9 +123,10 @@ public class PortalTest {
      */
     @Test
     public void teleportWithBloackableEntity() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.damageMultiplier());
 
         Portal portalStart = new Portal(new Position(0, 0), "BLUE");
         Portal portalEnd = new Portal(new Position(2, 2), "BLUE");

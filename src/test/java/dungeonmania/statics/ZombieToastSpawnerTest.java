@@ -156,7 +156,7 @@ public class ZombieToastSpawnerTest {
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
         
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.damageMultiplier());
         game.addEntity(player);
         
         assertThrows(InvalidActionException.class, () -> game.interact(spawner.getId()));

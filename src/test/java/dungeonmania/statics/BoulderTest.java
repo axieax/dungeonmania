@@ -81,11 +81,12 @@ public class BoulderTest {
      */
     @Test
     public void boulderExplodeBombs() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Boulder boulder = new Boulder(new Position(1, 2));
         game.addEntity(boulder);
 
-        Player player = new Player(new Position(0, 2));
+        Player player = new Player(new Position(0, 2), mode.damageMultiplier());
         game.addEntity(player);
 
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 2));

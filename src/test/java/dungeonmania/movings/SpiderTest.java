@@ -177,7 +177,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 2);
@@ -185,7 +185,7 @@ public class SpiderTest {
         game.addEntity(boulder);
 
         Position initialSpiderPos = new Position(3, 3);
-        Spider spider = new Spider(initialSpiderPos);
+        Spider spider = new Spider(initialSpiderPos, mode.damageMultiplier());
         
         game.addEntity(spider);
         assertTrue(spider.getPosition().equals(new Position(3, 3)));
@@ -372,7 +372,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 4);
@@ -380,7 +380,7 @@ public class SpiderTest {
         game.addEntity(boulder);
 
         Position initialSpiderPos = new Position(3, 3);
-        Spider spider = new Spider(initialSpiderPos);
+        Spider spider = new Spider(initialSpiderPos, mode.damageMultiplier());
         
         game.addEntity(spider);
         assertTrue(spider.getPosition().equals(new Position(3, 3)));
@@ -417,7 +417,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position boulderPos = new Position(2, 4);
@@ -425,7 +425,7 @@ public class SpiderTest {
         game.addEntity(boulder);
 
         Position initialSpiderPos = new Position(3, 3);
-        Spider spider = new Spider(initialSpiderPos);
+        Spider spider = new Spider(initialSpiderPos, mode.damageMultiplier());
         
         game.addEntity(spider);
         assertTrue(spider.getPosition().equals(new Position(3, 3)));
@@ -469,7 +469,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position boulder1Pos = new Position(2, 2);
@@ -481,7 +481,7 @@ public class SpiderTest {
         game.addEntity(boulder2);
 
         Position initialSpiderPos = new Position(3, 3);
-        Spider spider = new Spider(initialSpiderPos);
+        Spider spider = new Spider(initialSpiderPos, mode.damageMultiplier());
         
         game.addEntity(spider);
         assertTrue(spider.getPosition().equals(new Position(3, 3)));
@@ -511,7 +511,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position boulder1Pos = new Position(2, 2);
@@ -523,7 +523,7 @@ public class SpiderTest {
         game.addEntity(boulder2);
 
         Position initialSpiderPos = new Position(3, 3);
-        Spider spider = new Spider(initialSpiderPos);
+        Spider spider = new Spider(initialSpiderPos, mode.damageMultiplier());
         
         game.addEntity(spider);
         assertTrue(spider.getPosition().equals(new Position(3, 3)));
@@ -606,7 +606,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 4);
@@ -614,7 +614,7 @@ public class SpiderTest {
         game.addEntity(boulder);
 
         Position initialSpiderPos = new Position(3, 3);
-        Spider spider = new Spider(initialSpiderPos);
+        Spider spider = new Spider(initialSpiderPos, mode.damageMultiplier());
         
         game.addEntity(spider);
         assertTrue(spider.getPosition().equals(new Position(3, 3)));
@@ -689,7 +689,7 @@ public class SpiderTest {
         );
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         game.addEntity(player);
 
         int numEntitiesAtPlayerPos = game.getEntities(playerPos).size();
@@ -699,7 +699,7 @@ public class SpiderTest {
         game.addEntity(boulder);
 
         Position initialSpiderPos = new Position(3, 3);
-        Spider spider = new Spider(initialSpiderPos);
+        Spider spider = new Spider(initialSpiderPos, mode.damageMultiplier());
         game.addEntity(spider);
 
         int numEntitiesAtSpiderPos = game.getEntities(initialSpiderPos).size();

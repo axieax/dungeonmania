@@ -199,13 +199,8 @@ public class GoalTest {
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 3).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
 
-<<<<<<< HEAD
-        // Place the bomb
-        resp = move(dmc, Direction.NONE, "bomb", 1);
-=======
         // place the bomb
         resp = move(dmc, Direction.NONE, resp.getInventory().get(0).getId(), 1);
->>>>>>> master
         assertEquals(switchGoal, resp.getGoals());
         assertFalse(resp.getInventory().stream().anyMatch(item -> item.getPrefix().equals("bomb")));
 
