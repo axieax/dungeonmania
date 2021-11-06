@@ -2,9 +2,10 @@ package dungeonmania.model.entities.buildables;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.DefenceEquipment;
+import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.movings.Inventory;
 
-public class Shield extends BuildableEquipment implements DefenceEquipment {
+public class Shield extends Equipment implements DefenceEquipment, Buildable {
 
     private static final int WOOD_NEEDED = 2;
     private static final int TREASURE_NEEDED = 1;
@@ -43,7 +44,7 @@ public class Shield extends BuildableEquipment implements DefenceEquipment {
     }
 
     @Override
-    public BuildableEquipment clone() {
+    public Buildable clone() {
         return new Shield();
     }
 }
