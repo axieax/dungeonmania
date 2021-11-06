@@ -16,6 +16,7 @@ import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
@@ -155,11 +156,12 @@ public final class Game {
      * @return DungeonResponse for the Dungeon
      */
     public final DungeonResponse getDungeonResponse() {
+        Player player = getCharacter();
         return new DungeonResponse(
             dungeonId,
             dungeonName,
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
-            this.getCharacter().getInventoryResponses(),
+            (player != null) ? player.getInventoryResponses() : new ArrayList<ItemResponse>(),
             this.getBuildables(),
             formatGoal()
         );
@@ -182,6 +184,7 @@ public final class Game {
 
     private final List<String> getBuildables() {
         Player player = getCharacter();
+        if (player == null) return new ArrayList<String>();
         return EntityFactory
             .allBuildables()
             .stream()
