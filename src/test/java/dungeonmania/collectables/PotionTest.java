@@ -8,8 +8,9 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -58,7 +59,8 @@ public class PotionTest {
      */
     @Test
     public void collectHealthPotionTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         HealthPotion healthPotion = new HealthPotion(new Position(1, 1));
         game.addEntity(healthPotion);
 
@@ -76,7 +78,8 @@ public class PotionTest {
      */
     @Test
     public void collectInvincibilityPotionTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         InvincibilityPotion invincibilityPotion = new InvincibilityPotion(new Position(1, 1));
         game.addEntity(invincibilityPotion);
 
@@ -94,7 +97,8 @@ public class PotionTest {
      */
     @Test
     public void collectInvisibilityPotionTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         InvisibilityPotion invisibilityPotion = new InvisibilityPotion(new Position(1, 1));
         game.addEntity(invisibilityPotion);
 

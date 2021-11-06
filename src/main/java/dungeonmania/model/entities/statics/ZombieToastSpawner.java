@@ -11,9 +11,9 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
 public class ZombieToastSpawner extends Entity implements Tickable {

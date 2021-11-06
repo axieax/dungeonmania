@@ -15,8 +15,11 @@ import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -119,6 +122,12 @@ public class DungeonManiaController {
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
         try { // write the json string to a file
+            String directoryPath = "./src/main/java/dungeonmania/savedGames";
+            File pathAsFile = new File(directoryPath);
+            if (!pathAsFile.exists()) {
+                pathAsFile.mkdir();
+            }
+
             String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
             FileWriter myFileWriter = new FileWriter (path, false);
             myFileWriter.write(prettyString);

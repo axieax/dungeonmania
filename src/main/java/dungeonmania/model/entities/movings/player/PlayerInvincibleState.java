@@ -1,6 +1,7 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.MovingEntity;
 
 public class PlayerInvincibleState implements PlayerState {
     

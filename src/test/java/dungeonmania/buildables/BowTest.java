@@ -9,7 +9,7 @@ import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -24,7 +24,8 @@ public class BowTest {
      */
     @Test
     public void buildTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         // To build a bow, we need 1 wood and 3 arrows
         Wood wood = new Wood(new Position(1, 0));

@@ -6,9 +6,10 @@ import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -33,7 +34,8 @@ public class KeyTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Key key = new Key(new Position(1, 1), 1);
         game.addEntity(key);
 
@@ -51,7 +53,8 @@ public class KeyTest {
      */
     @Test
     public void carryLimit() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         Key key1 = new Key(new Position(1, 1), 1);
         Key key2 = new Key(new Position(2, 1), 2);
@@ -83,7 +86,8 @@ public class KeyTest {
      */
     @Test
     public void keyDisappears() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 

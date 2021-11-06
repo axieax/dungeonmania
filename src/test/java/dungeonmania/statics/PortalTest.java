@@ -3,10 +3,11 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -32,7 +33,8 @@ public class PortalTest {
      */
     @Test
     public void teleportSuccess() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 0));
 
@@ -63,7 +65,8 @@ public class PortalTest {
      */
     @Test
     public void teleportMultiplePortals() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 0));
 
@@ -99,7 +102,8 @@ public class PortalTest {
      */
     @Test
     public void testNoPortal() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 0));
 
@@ -119,7 +123,8 @@ public class PortalTest {
      */
     @Test
     public void teleportWithBloackableEntity() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 0));
 

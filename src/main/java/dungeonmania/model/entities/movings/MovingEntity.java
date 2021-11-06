@@ -13,28 +13,12 @@ public abstract class MovingEntity extends Entity implements Tickable {
     private int health;
     private int attackDamage;
     private Direction movingDirection;
-    private boolean enemy;
-    private int damageMultiplier;
-
-    public final double ARMOUR_DROP_RATE = 0;
-    public final double THE_ONE_RING_DROP_RATE = 0.1; // 10% of dropping one_ring
     
-    public MovingEntity(String prefix, Position position, int health, int attackDamage, boolean enemy) {
+    public MovingEntity(String prefix, Position position, int health, int attackDamage) {
         super(prefix, position, true, true);
         this.health = health;
         this.attackDamage = attackDamage;
-        this.enemy = enemy;
-        this.damageMultiplier = 1;
     }
-
-    public MovingEntity(String prefix, Position position, int health, int attackDamage, boolean enemy, int damageMultiplier) {
-        super(prefix, position, true, true);
-        this.health = health;
-        this.attackDamage = attackDamage;
-        this.enemy = enemy;
-        this.damageMultiplier = damageMultiplier;
-    }
-
 
     public Direction getDirection() {
         return this.movingDirection;
@@ -43,15 +27,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
         this.movingDirection = direction;
     }
 
-    public boolean isEnemy() {
-        return enemy;
-    }
-
-    public void setEnemy(boolean enemy) {
-        this.enemy = enemy;
-    }
-
-    public void interact(Game game, MovingEntity character) { return; }
+    public void interact(Game game, MovingEntity character) {}
     
     public void kill() {
         this.health = 0;

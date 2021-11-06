@@ -9,8 +9,8 @@ import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -27,7 +27,8 @@ public class ShieldTest {
      */
     @Test
     public void buildTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         // To build a shield, we need 2 wood and 1 treasure
         Wood wood1 = new Wood(new Position(1, 0));
@@ -63,7 +64,8 @@ public class ShieldTest {
      */
     @Test
     public void buildTestAlternate() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         // To build a shield, we need 2 wood and 1 key
         Wood wood1 = new Wood(new Position(1, 0));
@@ -132,7 +134,7 @@ public class ShieldTest {
         Shield shield = (Shield) player.findInventoryItem("shield");
         assertTrue(shield.getDurability() == initialDurability);
 
-        Spider spider = new Spider(new Position(3, 1));
+        Spider spider = new Spider(new Position(3, 1), mode.damageMultiplier());
         game.addEntity(spider);
 
         // Player moves to defend against the spider with the shield

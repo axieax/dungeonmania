@@ -2,19 +2,18 @@ package dungeonmania.model.entities.buildables;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.AttackEquipment;
-import dungeonmania.model.entities.Equipment;
-import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.movings.Inventory;
-import dungeonmania.model.entities.movings.MovingEntity;
-public class Bow extends Equipment implements AttackEquipment, Buildable {
+import dungeonmania.model.entities.movings.player.Inventory;
+
+public class Bow extends AttackEquipment implements Buildable {
 
     private static final int WOOD_NEEDED = 1;
     private static final int ARROWS_NEEDED = 3;
-    private final double MULTIPLIER = 2;
-    public final int ATTACK_DAMAGE = 30;
+
+    private static final int ATTACK_DAMAGE = 30;
+    private static final int HIT_RATE = 2;
 
     public Bow() {
-        super("bow", null);
+        super("bow", ATTACK_DAMAGE, HIT_RATE);
     }
 
     @Override
@@ -34,11 +33,6 @@ public class Bow extends Equipment implements AttackEquipment, Buildable {
         } else {
             throw new InvalidActionException("You don't have enough resources to build a Bow.");
         }
-    }
-
-    @Override
-    public int getAttackDamage(MovingEntity entity) {
-        return this.ATTACK_DAMAGE;
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;

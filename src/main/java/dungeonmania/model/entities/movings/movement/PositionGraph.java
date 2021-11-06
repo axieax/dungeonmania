@@ -1,7 +1,8 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.movement;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
 import java.util.HashMap;
 import java.util.LinkedList;

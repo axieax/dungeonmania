@@ -6,8 +6,9 @@ import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Arrow;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -32,7 +33,8 @@ public class ArrowTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Arrow arrow = new Arrow(new Position(1, 1));
         game.addEntity(arrow);
 
