@@ -38,7 +38,7 @@ public class ExitTest {
         Exit exit = new Exit(new Position(1, 1));
         game.addEntity(exit);
                 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);

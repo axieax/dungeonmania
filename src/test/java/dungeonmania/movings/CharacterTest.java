@@ -9,21 +9,15 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
-<<<<<<< HEAD
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
-=======
-import dungeonmania.model.entities.movings.Player;
-import dungeonmania.model.entities.movings.PlayerInvincibleState;
-import dungeonmania.model.entities.movings.PlayerInvisibleState;
->>>>>>> master
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
+import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -37,7 +31,6 @@ import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jetty.util.DateCache.Tick;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -437,7 +430,7 @@ public class CharacterTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         game.addEntity(new Wood(new Position(2, 1)));
@@ -473,7 +466,7 @@ public class CharacterTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         Bomb bomb = new Bomb(new Position(2, 1));
@@ -512,7 +505,7 @@ public class CharacterTest {
             new Peaceful()
         );
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         int playerHealth = player.getHealth();
@@ -534,7 +527,7 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos, mode.damageMultiplier());
+        Player player = new Player(playerPos);
         int initialPlayerHealth = player.getHealth();
         game.addEntity(player);
 
@@ -558,7 +551,7 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos, mode.damageMultiplier());
+        Player player = new Player(playerPos);
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
@@ -591,7 +584,7 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos, mode.damageMultiplier());
+        Player player = new Player(playerPos);
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
@@ -634,7 +627,7 @@ public class CharacterTest {
         );
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos, mode.damageMultiplier());
+        Player player = new Player(playerPos);
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
@@ -667,7 +660,7 @@ public class CharacterTest {
         );
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos, mode.damageMultiplier());
+        Player player = new Player(playerPos);
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);

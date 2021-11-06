@@ -38,7 +38,7 @@ public class BombTest {
         Bomb bomb = new Bomb(new Position(1, 1));
         game.addEntity(bomb);
 
-        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 1));
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        

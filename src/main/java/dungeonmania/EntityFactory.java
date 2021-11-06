@@ -165,7 +165,7 @@ public class EntityFactory {
             return new Mercenary(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("player")) {
             position = position.asLayer(21);
-            return new Player(position, mode.damageMultiplier());
+            return new Player(position);
         }
         return null;
     }

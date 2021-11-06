@@ -46,7 +46,7 @@ public class WallTest {
         game.addEntity(new Wall(new Position(2, 1)));
         game.addEntity(new Wall(new Position(2, 2)));
 
-        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
         // If movement is blocked by wall, the player should remain in the same position
@@ -81,7 +81,7 @@ public class WallTest {
         game.addEntity(new Wall(new Position(2, 2)));
 
         // Put player out of map since a game requires a player
-        Player player = new Player(new Position(5, 5), mode.damageMultiplier());
+        Player player = new Player(new Position(5, 5));
         game.addEntity(player);
 
         ZombieToast zombie = new ZombieToast(new Position(1, 1), mode.damageMultiplier(), player);
@@ -112,7 +112,7 @@ public class WallTest {
         Boulder boulder = new Boulder(new Position(1, 0));
         game.addEntity(boulder);
 
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);

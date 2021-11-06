@@ -27,13 +27,11 @@ import dungeonmania.model.goal.ToggleSwitch;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 public class GoalTest {
@@ -214,7 +212,7 @@ public class GoalTest {
     public final void testSimpleExit() {
         Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Player(new Position(0, 0)),
             new Exit(new Position(0, 2))
         );
         Game game = new Game("test", entities, new ExitCondition(), mode);
@@ -226,7 +224,7 @@ public class GoalTest {
     public final void testSimpleBoulders() {
         Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Player(new Position(0, 0)),
             // Setup boulder to be pushed onto switch
             new Boulder(new Position(0, 2)),
             new FloorSwitch(new Position(0, 3)),
@@ -242,7 +240,7 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesMercenaryKilled() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         List<Entity> entities = Arrays.asList(
             player,
             new Mercenary(new Position(0, 3), mode.damageMultiplier(), player)
@@ -255,7 +253,7 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesMercenaryBribed() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         Entity mercenary = new Mercenary(new Position(0, 4), mode.damageMultiplier(), player);
         List<Entity> entities = Arrays.asList(player, new Treasure(new Position(0, 1)), mercenary);
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
@@ -269,7 +267,7 @@ public class GoalTest {
     public final void testSimpleEnemiesSpider() {
         Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Player(new Position(0, 0)),
             new Spider(new Position(0, -2), mode.damageMultiplier())
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
@@ -281,7 +279,7 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesZombie() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
+        Player player = new Player(new Position(0, 0));
         ZombieToast zombie = new ZombieToast(new Position(0, -1), mode.damageMultiplier(), player);
         List<Entity> entities = new ArrayList<>();
         entities.add(player);
@@ -298,7 +296,7 @@ public class GoalTest {
         Mode mode = new Standard();
         Entity spawner = new ZombieToastSpawner(new Position(0, 2), mode.tickRate());
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Player(new Position(0, 0)),
             new Sword(new Position(0, 1)),
             spawner
         );
@@ -313,7 +311,7 @@ public class GoalTest {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Player(new Position(0, 0)),
             // Boulder can be pushed onto the switch
             new Boulder(new Position(0, 4)),
             new FloorSwitch(new Position(0, 5)),
@@ -325,7 +323,7 @@ public class GoalTest {
         and.addGoal(new ExitCondition());
         and.addGoal(new ToggleSwitch());
         // Check goal reached first
-        Game game = new Game("test", entities, and, new Standard());
+        Game game = new Game("test", entities, and, mode);
         List<String> expected = Arrays.asList(":exit(1) AND :switch(1)", ":switch(1) AND :exit(1)");
         assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
         // Move onto exit
@@ -345,7 +343,7 @@ public class GoalTest {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Player(new Position(0, 0)),
             new Treasure(new Position(-1, 1)),
             new Exit(new Position(1, 1))
         );
@@ -354,7 +352,7 @@ public class GoalTest {
         and.addGoal(new ExitCondition());
         and.addGoal(new CollectTreasure());
         // Check goal reached first
-        Game game = new Game("test", entities, and, new Standard());
+        Game game = new Game("test", entities, and, mode);
         List<String> expected = Arrays.asList(
             ":treasure(1) AND :exit(1)",
             ":exit(1) AND :treasure(1)"
@@ -372,7 +370,7 @@ public class GoalTest {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Player(new Position(0, 0)),
             new Treasure(new Position(-1, 1)), // go left to get Treasure
             new Exit(new Position(1, 1))
         );
@@ -381,7 +379,7 @@ public class GoalTest {
         or.addGoal(new ExitCondition());
         or.addGoal(new CollectTreasure());
         // Check goal reached first
-        Game game = new Game("test", entities, or, new Standard());
+        Game game = new Game("test", entities, or, mode);
         List<String> expected = Arrays.asList(
             ":treasure(1) OR :exit(1)",
             ":exit(1) OR :treasure(1)"
@@ -396,7 +394,7 @@ public class GoalTest {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Player(new Position(0, 0)),
             new Treasure(new Position(-1, 1)),
             new Exit(new Position(1, 1)) // go right to reach exit
         );
@@ -405,7 +403,7 @@ public class GoalTest {
         or.addGoal(new ExitCondition());
         or.addGoal(new CollectTreasure());
         // Check goal reached first
-        Game game = new Game("test", entities, or, new Standard());
+        Game game = new Game("test", entities, or, mode);
         List<String> expected = Arrays.asList(
             ":treasure(1) OR :exit(1)",
             ":exit(1) OR :treasure(1)"

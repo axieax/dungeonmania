@@ -40,7 +40,7 @@ public class DoorTest {
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player(new Position(1, 2), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 2));
         game.addEntity(player);
 
         player.move(game, Direction.UP);
@@ -59,7 +59,7 @@ public class DoorTest {
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player(new Position(1, 3), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 3));
 
         Key key = new Key(new Position(1, 2), 1);
         game.addEntity(key);
@@ -84,7 +84,7 @@ public class DoorTest {
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player(new Position(1, 3), mode.damageMultiplier());
+        Player player = new Player(new Position(1, 3));
         game.addEntity(player);
 
         Key key = new Key(new Position(1, 2), 2);
@@ -116,7 +116,7 @@ public class DoorTest {
         Key key2 = new Key(new Position(1, 3), 2);
         game.addEntity(key2);
 
-        Player player = new Player(new Position(3, 3), mode.damageMultiplier());
+        Player player = new Player(new Position(3, 3));
         game.addEntity(player);
 
         // __  __  __  __

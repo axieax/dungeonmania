@@ -156,7 +156,7 @@ public class GameLoader {
             return new TheOneRing(position);
         } else if (type.startsWith("player")) {
             position = position.asLayer(0);
-            Player player = new Player (position, mode.damageMultiplier());
+            Player player = new Player (position);
             int health = entityInfo.getInt("health");
             player.setHealth(health);
             JSONArray inventory = entityInfo.getJSONArray("inventory");

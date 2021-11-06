@@ -14,7 +14,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     private int attackDamage;
     private Direction movingDirection;
     
-    public MovingEntity(String prefix, Position position, int health, int attackDamage, boolean enemy) {
+    public MovingEntity(String prefix, Position position, int health, int attackDamage) {
         super(prefix, position, true, true);
         this.health = health;
         this.attackDamage = attackDamage;
@@ -50,7 +50,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     }
     
     public int getBaseAttackDamage() {
-        return attackDamage * damageMultiplier;
+        return attackDamage;
     }
     
     
