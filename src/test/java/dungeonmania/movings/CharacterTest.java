@@ -497,7 +497,6 @@ public class CharacterTest {
 
     @Test
     public void testMovementDoesNotAffectHealth() {
-        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
@@ -628,7 +627,6 @@ public class CharacterTest {
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
-        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
@@ -651,7 +649,6 @@ public class CharacterTest {
 
     @Test
     public void testCanDrinkTwoPotions() {
-        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
@@ -661,7 +658,6 @@ public class CharacterTest {
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
-        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 

@@ -1,7 +1,8 @@
 package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Equipment;
+import dungeonmania.model.entities.AttackEquipment;
+import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;
@@ -37,7 +38,7 @@ public class PlayerDefaultState implements PlayerState {
             int originalHealth = player.getHealth();
 
             // Use defensive equipment
-            List<Equipment> defenseEquipments = player.getDefenceEquipmentList();
+            List<DefenceEquipment> defenseEquipments = player.getDefenceEquipmentList();
             defenseEquipments.forEach(defenseEquipment -> defenseEquipment.useEquipment(player));
             player.setHealth(originalHealth - ((opponent.getHealth() * opponentAttackDamage) / 10));
 
@@ -49,9 +50,9 @@ public class PlayerDefaultState implements PlayerState {
              */
 
             // Use attack equipment
-            List<Equipment> attackEquipments = player.getAttackEquipmentList();
+            List<AttackEquipment> attackEquipments = player.getAttackEquipmentList();
             while (!attackEquipments.isEmpty()) {
-                Equipment currEquipment = attackEquipments.get(0);
+                AttackEquipment currEquipment = attackEquipments.get(0);
                 currEquipment.useEquipment(player);
                 attackEquipments.remove(currEquipment);
             }

@@ -1,15 +1,15 @@
 package dungeonmania.model.entities.buildables;
 
 import dungeonmania.model.entities.DefenceEquipment;
-import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.movings.player.Inventory;
-import dungeonmania.util.Position;
 
-public class MidnightArmour extends Equipment implements DefenceEquipment, Buildable {
+public class MidnightArmour extends DefenceEquipment implements Buildable {
 
-    public MidnightArmour(String prefix, Position position) {
-        super(prefix, position);
-        //TODO Auto-generated constructor stub
+    private static final double DEFENCE_MULTIPLIER = 0.25;
+    public static final int BONUS_ATTACK_DAMAGE = 25;
+
+    public MidnightArmour() {
+        super("midnight_armour", DEFENCE_MULTIPLIER);
     }
 
     @Override

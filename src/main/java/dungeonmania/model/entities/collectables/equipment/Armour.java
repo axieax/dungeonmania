@@ -1,18 +1,17 @@
 package dungeonmania.model.entities.collectables.equipment;
 
 import dungeonmania.model.entities.DefenceEquipment;
-import dungeonmania.model.entities.Equipment;
 import dungeonmania.util.Position;
 
-public class Armour extends Equipment implements DefenceEquipment {
+public class Armour extends DefenceEquipment {
 
-    public final double MULTIPLIER = 0.5;
+    private static final double DEFENCE_MULTIPLIER = 0.5;
 
     public Armour() {
-        super("armour", null);
+        this(null);
     }
 
     public Armour(Position position) {
-        super("armour", position);
+        super("armour", DEFENCE_MULTIPLIER, position);
     }
 }
