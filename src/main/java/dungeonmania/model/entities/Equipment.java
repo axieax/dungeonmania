@@ -1,6 +1,6 @@
 package dungeonmania.model.entities;
 
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 import org.json.JSONObject;
 

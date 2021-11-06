@@ -1,9 +1,12 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.movement;
 
 import java.util.List;
 import java.util.Random;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.util.Position;
 
 public class AttackMovementState implements MovementState {

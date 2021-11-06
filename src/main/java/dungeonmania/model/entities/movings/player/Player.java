@@ -1,4 +1,4 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
@@ -11,6 +11,10 @@ import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Observer;
+import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;

@@ -3,7 +3,7 @@ package dungeonmania.model.entities.buildables;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Equipment;
-import dungeonmania.model.entities.movings.Inventory;
+import dungeonmania.model.entities.movings.player.Inventory;
 
 public class Shield extends Equipment implements DefenceEquipment, Buildable {
 

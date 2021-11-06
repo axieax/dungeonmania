@@ -3,7 +3,7 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;

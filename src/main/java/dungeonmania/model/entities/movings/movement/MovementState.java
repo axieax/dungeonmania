@@ -1,4 +1,4 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.movement;
 
 import dungeonmania.model.Game;
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Standard;

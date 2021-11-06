@@ -1,6 +1,10 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.movement.RandomMovementState;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.util.Position;
 
 public class ZombieToast extends Enemy {

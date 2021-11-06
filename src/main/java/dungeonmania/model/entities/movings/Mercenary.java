@@ -2,6 +2,11 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.movement.AttackMovementState;
+import dungeonmania.model.entities.movings.movement.PositionGraph;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.util.Position;
 
 public class Mercenary extends Enemy {

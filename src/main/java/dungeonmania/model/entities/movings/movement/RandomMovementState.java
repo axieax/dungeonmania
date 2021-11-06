@@ -1,9 +1,10 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.movement;
 
 import java.util.List;
 import java.util.Random;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 

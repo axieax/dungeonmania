@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.movement.MovementState;
 import dungeonmania.util.Position;
 
 public abstract class Enemy extends MovingEntity implements Observer {

@@ -1,9 +1,12 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;
+import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.MovingEntity;
+
 import java.util.List;
 import java.util.Random;
 

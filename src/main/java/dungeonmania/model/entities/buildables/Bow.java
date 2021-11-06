@@ -3,8 +3,8 @@ package dungeonmania.model.entities.buildables;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.Equipment;
-import dungeonmania.model.entities.movings.Inventory;
 import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.player.Inventory;
 public class Bow extends Equipment implements AttackEquipment, Buildable {
 
     private static final int WOOD_NEEDED = 1;

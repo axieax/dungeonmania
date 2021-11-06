@@ -2,6 +2,10 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.movings.movement.CircularMovementState;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.Portal;
