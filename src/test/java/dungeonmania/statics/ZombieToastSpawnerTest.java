@@ -40,12 +40,11 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastSpawnEveryCycle() {
-      
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
-        game.addEntity(new Player(new Position(10, 10)));
+        game.addEntity(new Player(new Position(10, 10), mode.damageMultiplier()));
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
             game.tick("", Direction.NONE);
@@ -131,7 +130,7 @@ public class ZombieToastSpawnerTest {
         
         game.addEntity(new Sword(new Position(2, 1)));
 
-        Player player = new Player(new Position(2, 2));
+        Player player = new Player(new Position(2, 2), mode.damageMultiplier());
         game.addEntity(player);
         
         // Player picks up sword

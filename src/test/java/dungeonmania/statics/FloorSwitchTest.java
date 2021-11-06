@@ -10,6 +10,7 @@ import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -36,11 +37,12 @@ public class FloorSwitchTest {
      */
     @Test
     public void floorSwitchEmptySquare() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         FloorSwitch floorSwitch = new FloorSwitch(new Position(1, 1));
         game.addEntity(floorSwitch);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);
@@ -58,11 +60,12 @@ public class FloorSwitchTest {
      */
     @Test
     public void wallBlockEnemies() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 0));
         game.addEntity(floorSwitch);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         game.addEntity(player);
 
         Boulder boulder = new Boulder(new Position(1, 0));
