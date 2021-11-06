@@ -1,20 +1,13 @@
 {
-  "mode": "Standard",
+  "mode": "Peaceful",
   "entities": [
     {
       "PlayerDefaultState": 0,
-      "x": 7,
+      "x": 1,
       "y": 1,
       "health": 100,
       "type": "player",
-      "inventory": [
-        {
-          "durability": 5,
-          "x": 0,
-          "y": 0,
-          "type": "sword"
-        }
-      ]
+      "inventory": []
     },
     {
       "x": 0,
@@ -110,6 +103,12 @@
       "x": 0,
       "y": 1,
       "type": "wall"
+    },
+    {
+      "durability": 5,
+      "x": 6,
+      "y": 1,
+      "type": "sword"
     },
     {
       "x": 17,
@@ -222,8 +221,8 @@
       "type": "wall"
     },
     {
-      "x": 2,
-      "y": 10,
+      "x": 3,
+      "y": 5,
       "health": 50,
       "type": "mercenary"
     },
