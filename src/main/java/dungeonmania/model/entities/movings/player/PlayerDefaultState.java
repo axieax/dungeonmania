@@ -5,6 +5,7 @@ import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;
+import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.statics.Consumable;
@@ -23,7 +24,7 @@ public class PlayerDefaultState implements PlayerState {
     @Override
     public void battle(Game game, MovingEntity opponent) {
         // Do not battle opponent if it is an ally
-        List<Enemy> allies = player.getAllies();
+        List<BribableEnemy> allies = player.getAllies();
         if (allies.contains(opponent)) {
             return;
         }
