@@ -335,7 +335,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Given a buildableItem, builds it if it is craftable
+     * Given a buildableItem, builds it if it is buildable
      *
      * @param equipment
      */

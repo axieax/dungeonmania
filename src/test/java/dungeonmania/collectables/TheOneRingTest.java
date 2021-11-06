@@ -114,15 +114,14 @@ public class TheOneRingTest {
 
         // Spawn mercenaries next to the player - upon ticking, the mercenary would move to the player
         // Since this is peaceful mode, the player's health will not change, so mercenaries will always die
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 50; i++) {
             Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
             game.addEntity(mercenary);
-            // TODO: Will
-            // game.tick(null, Direction.NONE);
+            game.tick(null, Direction.NONE);
         }
 
         assertTrue(player.getHealth() == 100);
-        // Check that TheOneRing is in the player's inventory (there's a 0.9^100 = 0.0027% otherwise)
+        // Check that TheOneRing is in the player's inventory (there's a 0.9^50 = 0.5% otherwise)
         assertTrue(player.findInventoryItem("one_ring") != null);
     }
 }
