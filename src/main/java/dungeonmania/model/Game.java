@@ -15,6 +15,7 @@ import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
@@ -106,21 +107,18 @@ public final class Game {
         positions.add(new Position(x, y - 1));
         getCardinallyAdjacentEntities(position)
             .stream()
-            .forEach(
-                e -> {
-                    if (from.collision(e)) positions.remove(e.getPosition());
-                }
-            );
+            .forEach(e -> {
+                if (from.collision(e)) positions.remove(e.getPosition());
+            });
         return positions
             .stream()
-            .filter(
-                pos ->
-                    (
-                        pos.getX() >= 0 &&
-                        pos.getX() < MAX_WIDTH &&
-                        pos.getY() >= 0 &&
-                        pos.getY() < MAX_HEIGHT
-                    )
+            .filter(pos ->
+                (
+                    pos.getX() >= 0 &&
+                    pos.getX() < MAX_WIDTH &&
+                    pos.getY() >= 0 &&
+                    pos.getY() < MAX_HEIGHT
+                )
             )
             .collect(Collectors.toList());
     }
@@ -135,24 +133,19 @@ public final class Game {
     public final List<Entity> getCardinallyAdjacentEntities(Position position) {
         return getAdjacentEntities(position)
             .stream()
-            .filter(
-                e -> {
-                    // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                    Position difference = Position.calculatePositionBetween(
-                        e.getPosition(),
-                        position
-                    );
-                    int xDiff = Math.abs(difference.getX());
-                    int yDiff = Math.abs(difference.getY());
-                    return (
-                        // ensure both xDiff and yDiff are either 0 or 1
-                        (xDiff == (xDiff & 1)) &&
-                        (yDiff == (yDiff & 1)) &&
-                        // logical XOR to check x and y are different
-                        ((xDiff == 1) ^ (yDiff == 1))
-                    );
-                }
-            )
+            .filter(e -> {
+                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                Position difference = Position.calculatePositionBetween(e.getPosition(), position);
+                int xDiff = Math.abs(difference.getX());
+                int yDiff = Math.abs(difference.getY());
+                return (
+                    // ensure both xDiff and yDiff are either 0 or 1
+                    (xDiff == (xDiff & 1)) &&
+                    (yDiff == (yDiff & 1)) &&
+                    // logical XOR to check x and y are different
+                    ((xDiff == 1) ^ (yDiff == 1))
+                );
+            })
             .collect(Collectors.toList());
     }
 
@@ -162,14 +155,18 @@ public final class Game {
      * @return DungeonResponse for the Dungeon
      */
     public final DungeonResponse getDungeonResponse() {
+<<<<<<< HEAD
         // if (this.getCharacter() == null) {
         //     System.out.println("You have the one ring");
         // }
+=======
+        Player player = getCharacter();
+>>>>>>> master
         return new DungeonResponse(
             dungeonId,
             dungeonName,
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
-            this.getCharacter().getInventoryResponses(),
+            (player != null) ? player.getInventoryResponses() : new ArrayList<ItemResponse>(),
             this.getBuildables(),
             formatGoal()
         );
@@ -181,7 +178,7 @@ public final class Game {
      * @return Goal string for DungeonResponse
      */
     private final String formatGoal() {
-        if (goal == null) return "";
+        if (goal == null || getCharacter() == null) return "";
         String goalString = goal.toString(this);
         // remove starting and closing brackets
         if (goalString.startsWith("(") && goalString.endsWith(")")) {
@@ -192,6 +189,7 @@ public final class Game {
 
     private final List<String> getBuildables() {
         Player player = getCharacter();
+        if (player == null) return new ArrayList<String>();
         return EntityFactory
             .allBuildables()
             .stream()
@@ -212,15 +210,13 @@ public final class Game {
 
         // separate loop to avoid concurrency issues when zombie spawner adds new entity
         // to entities
-        tickables.forEach(
-            e -> {
-                if (e instanceof Player) {
-                    ((Player) e).move(this, movementDirection, itemUsedId);
-                } else {
-                    ((Tickable) e).tick(this);
-                }
+        tickables.forEach(e -> {
+            if (e instanceof Player) {
+                ((Player) e).move(this, movementDirection, itemUsedId);
+            } else {
+                ((Tickable) e).tick(this);
             }
-        );
+        });
 
         Spider.spawnSpider(this, this.mode.damageMultiplier());
         return getDungeonResponse();
