@@ -18,7 +18,14 @@ public class DestroyEnemies extends GoalLeaf {
             .getEntities()
             .stream()
             .filter(e ->
-                (e != character) && (e instanceof MovingEntity || e instanceof ZombieToastSpawner)
+                // ignore character
+                (e != character) &&
+                (
+                    // ZombieToastSpawner counts
+                    e instanceof ZombieToastSpawner ||
+                    // MovingEntities which are enemies
+                    (e instanceof MovingEntity && ((MovingEntity) e).isEnemy())
+                )
             )
             .count();
     }
