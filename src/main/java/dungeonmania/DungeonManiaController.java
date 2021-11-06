@@ -7,10 +7,6 @@ import com.google.gson.JsonParser;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.collectables.Bomb;
-import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
-import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
@@ -21,14 +17,9 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -184,15 +175,16 @@ public class DungeonManiaController {
      *
      * @param itemUsed
      * @param movementDirection
+     * @param damageMultiplier
      * @return
      * @throws IllegalArgumentException If itemUsed is not a bomb, health_potion
      *                                  invincibility_potion, or an
      *                                  invisibility_potion
      * @throws InvalidActionException   If itemUsed is not in the player's inventory
      */
-    public DungeonResponse tick(String itemUsed, Direction movementDirection)
+    public DungeonResponse tick(String itemUsed, Direction movementDirection, int damageMultiplier)
         throws IllegalArgumentException, InvalidActionException {
-        return currentGame.tick(itemUsed, movementDirection);
+        return currentGame.tick(itemUsed, movementDirection, damageMultiplier);
     }
 
     /**

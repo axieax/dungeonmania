@@ -5,7 +5,6 @@ import java.util.Random;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
-import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Mercenary extends MovingEntity implements Observer {

@@ -9,7 +9,6 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
-import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
@@ -200,7 +199,7 @@ public final class Game {
             .collect(Collectors.toList());
     }
 
-    public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
+    public final DungeonResponse tick(String itemUsedId, Direction movementDirection, int damageMultiplier)
         throws IllegalArgumentException, InvalidActionException {
         this.tick += 1;
 
@@ -222,7 +221,7 @@ public final class Game {
             }
         );
 
-        Spider.spawnSpider(this);
+        Spider.spawnSpider(this, damageMultiplier);
         return getDungeonResponse();
     }
 

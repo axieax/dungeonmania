@@ -32,8 +32,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private List<MovingEntity> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
-    public Player(Position position) {
-        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false);
+    public Player(Position position, int damageMultiplier) {
+        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false, damageMultiplier);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
     }

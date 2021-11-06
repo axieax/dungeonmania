@@ -19,12 +19,12 @@ public class Spider extends MovingEntity {
     private boolean isMovementReverse;
     private int indexOfNextMove;
 
-    public Spider(Position position) {
-        this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG);
+    public Spider(Position position, int damageMultiplier) {
+        this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, damageMultiplier);
     }
 
-    public Spider(Position position, int health, int attackDamage) {
-        super("spider", position, health, attackDamage, true);
+    public Spider(Position position, int health, int attackDamage, int damageMultiplier) {
+        super("spider", position, health, attackDamage, true, damageMultiplier);
         this.isInitialMove = true;
         // Default "circling" movement of spider
         this.spiderMovementPath =
@@ -84,7 +84,7 @@ public class Spider extends MovingEntity {
     /**
      * Spawns a spider on an entity depending on the tick rate
      */
-    public static void spawnSpider(Game game) {
+    public static void spawnSpider(Game game, int damageMultiplier) {
         int numSpidersInGame = getNumSpiderInGame(game);
         if (numSpidersInGame == MAX_SPIDERS) {
             return;
@@ -109,7 +109,7 @@ public class Spider extends MovingEntity {
             }
 
             if (canSpawn) {
-                game.addEntity(new Spider(position));
+                game.addEntity(new Spider(position, damageMultiplier));
             }
         }
     }
@@ -123,7 +123,7 @@ public class Spider extends MovingEntity {
         List<Entity> entities = game.getEntities();
         int spiders = 0;
         for (Entity e : entities) {
-            if (e.getPrefix() == "spider") {
+            if (e.getPrefix().equals("spider")) {
                 spiders++;
             }
         }
