@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public final class Position {
+
     private final int x, y, layer;
 
     public Position(int x, int y, int layer) {
@@ -26,12 +27,9 @@ public final class Position {
 
     @Override
     public final boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         Position other = (Position) obj;
 
         // z doesn't matter
@@ -77,10 +75,11 @@ public final class Position {
         return new Position(b.x - a.x, b.y - a.y);
     }
 
-    public  static final boolean isAdjacent(Position a, Position b) {
+    public static final boolean isAdjacent(Position a, Position b) {
         int x = a.x - b.x;
         int y = a.y - b.y;
-        return x + y == 1;
+        // check for strict adjacent (up, down, left, right) and diagonal adjacent
+        return Math.abs(x) + Math.abs(y) == 1 || (Math.abs(x) == 1 && Math.abs(y) == 1);
     }
 
     // (Note: doesn't include z)
@@ -99,14 +98,14 @@ public final class Position {
     // 6 5 4
     public List<Position> getAdjacentPositions() {
         List<Position> adjacentPositions = new ArrayList<>();
-        adjacentPositions.add(new Position(x-1, y-1));
-        adjacentPositions.add(new Position(x  , y-1));
-        adjacentPositions.add(new Position(x+1, y-1));
-        adjacentPositions.add(new Position(x+1, y));
-        adjacentPositions.add(new Position(x+1, y+1));
-        adjacentPositions.add(new Position(x  , y+1));
-        adjacentPositions.add(new Position(x-1, y+1));
-        adjacentPositions.add(new Position(x-1, y));
+        adjacentPositions.add(new Position(x - 1, y - 1));
+        adjacentPositions.add(new Position(x, y - 1));
+        adjacentPositions.add(new Position(x + 1, y - 1));
+        adjacentPositions.add(new Position(x + 1, y));
+        adjacentPositions.add(new Position(x + 1, y + 1));
+        adjacentPositions.add(new Position(x, y + 1));
+        adjacentPositions.add(new Position(x - 1, y + 1));
+        adjacentPositions.add(new Position(x - 1, y));
         return adjacentPositions;
     }
 }

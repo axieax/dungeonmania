@@ -1,21 +1,32 @@
 package dungeonmania;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
+import dungeonmania.model.goal.Goal;
+import dungeonmania.model.mode.Hard;
+import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Peaceful;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
-import dungeonmania.util.Position;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class DungeonManiaController {
 
-
-    public DungeonManiaController() {}
+    private List<Game> games = new ArrayList<>();
+    private Game currentGame;
 
     public String getSkin() {
         return "default";
@@ -45,7 +56,7 @@ public class DungeonManiaController {
     /**
      * Creates a new game, where dungeonName is the name of the dungeon map
      * (corresponding to a JSON file stored in the model) and gameMode is one of
-     * "standard", "peaceful" or "hard".
+     * "Standard", "Peaceful" or "Hard".
      *
      * @param dungeonName
      * @param gameMode
@@ -54,52 +65,25 @@ public class DungeonManiaController {
      *                                  dungeonName is not a dungeon that exists
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
-        throws IllegalArgumentException {
+    throws IllegalArgumentException {
+        if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException();
         if (!getGameModes().contains(gameMode)) throw new IllegalArgumentException();
 
-
-        /* Stub from FRONTEND.md */
-
-        List<EntityResponse> entities = new ArrayList<>();
-
-        // let's generate some walls
-        // all maps have to be fully surrounded by walls
-        // so the map we'll genreate is going to be
-        /**
-         *
-         * WWWWW W P W W D W WWWWW
-         *
-         * where P is the player, D is a door, and W is some walls
-         */
-
-        for (int x = 0; x < 5; x++) {
-            for (int y = 0; y < 4; y++) {
-                if (x == 0 || y == 0 || x == 4 || y == 3) {
-                    // only generate borders
-                    entities.add(
-                        new EntityResponse(
-                            "entity-" + x + " - " + y,
-                            "wall",
-                            new Position(x, y, 2),
-                            false
-                        )
-                    );
-                }
-            }
-        }
-
-        // now to add the player and coin
-        entities.add(new EntityResponse("entity-player", "player", new Position(2, 1, 2), false));
-        entities.add(new EntityResponse("entity-door", "door", new Position(2, 2, 2), false));
-
-        return new DungeonResponse(
-            "some-random-id",
-            dungeonName,
-            entities,
-            Arrays.asList(new ItemResponse("item-1", "bow"), new ItemResponse("item-2", "sword")),
-            new ArrayList<>(),
-            ""
-        );
+        // determine game mode
+        Mode mode = null;
+        if (gameMode.equals("Hard")) mode = new Hard(); else if (gameMode.equals("Standard")) mode =
+            new Standard(); else if (gameMode.equals("Peaceful")) mode = new Peaceful();
+        
+        // get game entities
+        List<Entity> entities = EntityFactory.extractEntities (dungeonName, mode);
+        // get goal
+        Goal goal = EntityFactory.extractGoal (dungeonName);
+        
+        // create new game
+        Game newGame = new Game(dungeonName, entities, goal, mode);
+        games.add(newGame);
+        currentGame = newGame;
+        return newGame.getDungeonResponse();
     }
 
     /**
@@ -110,7 +94,39 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        return null;
+        if (name.length() == 0) throw new IllegalArgumentException("Invalid name");
+
+        JSONObject currGame = new JSONObject();
+
+        // save all entities in the game
+        JSONArray entities = new JSONArray();
+        for (Entity entity : currentGame.getEntities()) {
+            entities.put(entity.toJSON());
+        }
+        currGame.put("entities", entities);
+
+        // save the mode of the game and the goal of the game
+        currGame.put("mode", currentGame.getMode().getClass().getSimpleName());
+        Goal goal = currentGame.getGoal();
+        if (goal != null) currGame.put("goal-condition", goal.toJSON());
+
+        // save the dungeon name of the game
+        currGame.put("dungeonName", currentGame.getDungeonName());
+
+        // get a pretty printed json string
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonElement je = JsonParser.parseString(currGame.toString());
+        String prettyString = gson.toJson(je);
+        try { // write the json string to a file
+            String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
+            FileWriter myFileWriter = new FileWriter (path, false);
+            myFileWriter.write(prettyString);
+            myFileWriter.close();            
+        } catch (IOException e) {
+            return null;
+        }
+
+        return currentGame.getDungeonResponse();
     }
 
     /**
@@ -121,7 +137,21 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException - If id is not a valid game id
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-        return null;
+        // name must not have length = 0 and not be contained already in saved games
+        if (name.length() == 0) throw new IllegalArgumentException();
+        if (!allGames().contains(name)) throw new IllegalArgumentException();
+
+        // extract details of the game
+        Mode mode = GameLoader.extractMode(name);
+        List<Entity> entities = GameLoader.extractEntities(name, mode);
+        Goal goal = GameLoader.extractGoal(name);
+        String dungeonName = GameLoader.extractDungeonName(name);
+
+        // load game and set this game as the current game
+        Game newGame = new Game(dungeonName, entities, goal, mode);
+        games.add(newGame);
+        currentGame = newGame;
+        return newGame.getDungeonResponse();
     }
 
     /**
@@ -130,7 +160,12 @@ public class DungeonManiaController {
      * @return
      */
     public List<String> allGames() {
-        return new ArrayList<>();
+        try { // the name of files in a directory
+            String directory = "./src/main/java/dungeonmania/savedGames/";
+            return FileLoader.listFileNamesInDirectoryOutsideOfResources(directory);
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -141,14 +176,14 @@ public class DungeonManiaController {
      * @param itemUsed
      * @param movementDirection
      * @return
-     * @throws IllegalArgumentException If itemUsed is not a bomb,
+     * @throws IllegalArgumentException If itemUsed is not a bomb, health_potion
      *                                  invincibility_potion, or an
      *                                  invisibility_potion
      * @throws InvalidActionException   If itemUsed is not in the player's inventory
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        return null;
+        return currentGame.tick(itemUsed, movementDirection);
     }
 
     /**
@@ -166,7 +201,7 @@ public class DungeonManiaController {
      */
     public DungeonResponse interact(String entityId)
         throws IllegalArgumentException, InvalidActionException {
-        return null;
+        return currentGame.interact(entityId);
     }
 
     /**
@@ -180,6 +215,9 @@ public class DungeonManiaController {
      */
     public DungeonResponse build(String buildable)
         throws IllegalArgumentException, InvalidActionException {
-        return null;
+        if (!(buildable.equals("bow") || buildable.equals("shield"))) {
+            throw new IllegalArgumentException();
+        }
+        return currentGame.build(buildable);
     }
 }

@@ -1,0 +1,60 @@
+package dungeonmania.model.entities.collectables;
+
+import org.json.JSONObject;
+
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.response.models.EntityResponse;
+import dungeonmania.util.Position;
+
+public class Key extends Item implements Consumable {
+
+    private int key;
+
+    public Key(Position position, int key) {
+        super("key", position);
+        this.key = key;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    /**
+     * If the Player interacts with the Key, collect the Key into the player's
+     * inventory if there are no keys. Since the Player can only hold one key at
+     * a time.
+     */
+    @Override
+    public void interact(Game game, MovingEntity character) {
+        if (character instanceof Player && !((Player) character).hasKey()) {
+            ((Player) character).collect(this);
+            game.removeEntity(this);
+        }
+    }
+
+    @Override
+    public void consume(Game game, Player player) {
+        player.removeInventoryItem(this.getId());
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("key", key);
+        return info;
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        return new EntityResponse(
+            getId(),
+            String.format("%s_%d", getPrefix(), key),
+            getPosition(),
+            isInteractable()
+        );
+    }
+}

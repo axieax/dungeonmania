@@ -21,12 +21,10 @@ import dungeonmania.util.Position;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 
-//import static dungeonmania.TestHelpers.assertListAreEqualIgnoringOrder;
-
 public class ControllerTest {
-
+    
     //////////////////
-    /// Test new Game
+    /// Test New Game
     //////////////////
     /**
      * This test ensures that an exception is thrown when an invalid game mode
@@ -54,7 +52,7 @@ public class ControllerTest {
     @Test
     public void testGameIsCreated() {
         DungeonManiaController controller = new DungeonManiaController();    
-        DungeonResponse gameResponse = controller.newGame ("advanced", "standard");
+        DungeonResponse gameResponse = controller.newGame ("advanced", "Standard");
         assertEquals(gameResponse.getDungeonName(), "advanced");
 
     }
@@ -94,21 +92,21 @@ public class ControllerTest {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));
 
-        // player moves to battle mercenary
+        // Player moves to battle mercenary
         controller.tick (null, Direction.RIGHT);
         controller.tick (null, Direction.RIGHT);
         DungeonResponse currGame = controller.tick (null, Direction.RIGHT);
 
-        // find current position of the player
+        // Find current position of the player
         Position playerPosition = new Position(0, 0);
         for (EntityResponse entity: currGame.getEntities()) {
-            if (entity.getType().equals ("player")) playerPosition = entity.getPosition();
+            if (entity.getPrefix().startsWith("player")) playerPosition = entity.getPosition();
         }
 
         // Save the current game
         assertDoesNotThrow(() -> controller.saveGame ("GameOne"));
 
-        // new controller is made
+        // New controller is made
         DungeonManiaController controllerNew = new DungeonManiaController();
         DungeonResponse loadedGame = controllerNew.loadGame("GameOne");  
         // There should be only one goal left
@@ -116,7 +114,7 @@ public class ControllerTest {
 
         // Player should be in the same position as when the game was saved
         for (EntityResponse entity: loadedGame.getEntities()) {
-            if (entity.getType().equals ("player")) {
+            if (entity.getPrefix().equals ("player")) {
                 assertEquals(entity.getPosition(), playerPosition);
             }
         }
@@ -160,7 +158,7 @@ public class ControllerTest {
     public void testItemNotInInventory () {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
-        // invisibility poition is not in inventory
+        // Invisibility poition is not in inventory
         assertThrows (InvalidActionException.class, () ->controller.tick ("invisibility_potion", Direction.NONE));    
     }
 
@@ -174,18 +172,6 @@ public class ControllerTest {
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
         assertThrows (IllegalArgumentException.class, () ->controller.tick ("shield", Direction.NONE));    
     }
-    
-    /**
-     * Test using an invincibility potion does not throw an exception
-     */
-    /*
-    @Test
-    public void tickUsingInvincibilityPotion () {
-        DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));
-        
-        assertDoesNotThrow(() -> controller.tick ("invincibility_potion", Direction.NONE));
-    }*/
 
     //////////////////
     /// Test Buildable
@@ -271,19 +257,19 @@ public class ControllerTest {
     public void testTooFarFromMercenary() {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse gameResponse = controller.newGame ("advanced", "Standard");
-        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getType().equals("mercenary")).findFirst().orElse(null);
+        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getPrefix().equals("mercenary")).findFirst().orElse(null);
         String mercenaryId = mercenary != null ?  mercenary.getId() : "";
         assertThrows (InvalidActionException.class, ()->controller.interact(mercenaryId));
     }
 
     /**
-     * Test a player cannot bribe a mercenary if not adjacent
+     * Test a player cannot bribe a mercenary if not have gold
      */
     @Test
     public void testNoGoldBribe() {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse gameResponse = controller.newGame ("advanced", "Standard");  
-        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getType().equals("mercenary")).findFirst().orElse(null);
+        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getPrefix().equals("mercenary")).findFirst().orElse(null);
         String mercenaryId = mercenary != null ?  mercenary.getId() : "";
         controller.tick (null, Direction.DOWN);
         controller.tick (null, Direction.DOWN);
