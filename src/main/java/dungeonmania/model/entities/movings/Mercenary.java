@@ -1,13 +1,10 @@
 package dungeonmania.model.entities.movings;
 
-import java.util.List;
-import java.util.Random;
-
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.util.Position;
 
-public class Mercenary extends MovingEntity implements Observer {
+public class Mercenary extends Enemy {
     
     public static final int MAX_MERCENARY_HEALTH = 50;
     public static final int MAX_MERCENARY_ATTACK_DMG = 5;
@@ -16,25 +13,24 @@ public class Mercenary extends MovingEntity implements Observer {
     private static final int BATTLE_RADIUS = 5;
     public final double ARMOUR_DROP_RATE = 0.2;
     
-    private MovementState movementState;
     private boolean moveTwice;
 
     public Mercenary(Position position, int damageMultiplier, SubjectPlayer player) {
-        super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, true, damageMultiplier);
-        this.state = new AttackMovementState(this);
+        super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, damageMultiplier);
+        this.setMovementState(new AttackMovementState(this));
         this.moveTwice = false;
         player.attach(this);
     }
 
     @Override
     public void tick(Game game) {
-        movementState.move(game);
+        this.move(game);
         
         Player player = (Player) game.getCharacter();
         // If a player is fighting an enemy within the battle radius, mercenary moves twice as fast
         if (this.isAlive() && moveTwice && getDistanceToPlayer(game, player.getPosition()) <= BATTLE_RADIUS) {
             moveTwice = false;
-            movementState.move(game);
+            this.move(game);
         }
     }
 
@@ -72,11 +68,6 @@ public class Mercenary extends MovingEntity implements Observer {
         } else {
             throw new InvalidActionException("You don't have enough treasure to bribe the mercenary");
         }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////
-    public void setMovementState(MovementState state) {
-        this.movementState = state;
     }
 
     public int getDistanceToPlayer(Game game, Position playerPos) {

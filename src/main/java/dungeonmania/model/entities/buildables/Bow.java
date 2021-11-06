@@ -3,7 +3,6 @@ package dungeonmania.model.entities.buildables;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.Equipment;
-import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.Inventory;
 import dungeonmania.model.entities.movings.MovingEntity;
 public class Bow extends Equipment implements AttackEquipment, Buildable {

@@ -10,7 +10,6 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
@@ -29,7 +28,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private PlayerState state;
     private boolean inBattle;
     private Inventory inventory = new Inventory();
-    private List<MovingEntity> allies = new ArrayList<>();
+    private List<Enemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
     public Player(Position position) {
@@ -75,9 +74,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Get a list of all allies that the player has.
      *
-     * @return List<MovingEntity>
+     * @return List<Enemy>
      */
-    public List<MovingEntity> getAllies() {
+    public List<Enemy> getAllies() {
         return this.allies;
     }
 
@@ -90,8 +89,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param ally
      */
-    public void addAlly(MovingEntity ally) {
-        for (MovingEntity m : allies) {
+    public void addAlly(Enemy ally) {
+        for (Enemy m : allies) {
             // Entity is already ally
             if (m.getId().equals(ally.getId())) return;
         }
@@ -238,8 +237,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void tick(Game game) {
         List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
-            if (e instanceof MovingEntity) {
-                MovingEntity opponent = (MovingEntity) e;
+            if (e instanceof Enemy) {
+                Enemy opponent = (Enemy) e;
                 if (opponent.isEnemy()) this.battle(game, opponent);
             }
         }

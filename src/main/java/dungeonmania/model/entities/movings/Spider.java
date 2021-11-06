@@ -6,31 +6,26 @@ import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
-import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Spider extends MovingEntity implements Observer {
+public class Spider extends Enemy {
 
     public static final int MAX_SPIDER_HEALTH = 20;
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
     public static final int MAX_SPIDERS = 4;
 
-    private MovementState movementState;
-
     public Spider(Position position) {
+        // TODO: add player observer in constructor??
         this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG);
-        this.movementState = new CircularMovementState(this);
+        this.setMovementState(new CircularMovementState(this));
     }
 
     public Spider(Position position, int health, int attackDamage) {
-        super("spider", position, health, attackDamage, true);
-    }
-
-    public void setMovementState(MovementState movementState) {
-        this.movementState = movementState;
+        // TODO: William to add damage modifier
+        super("spider", position, health, attackDamage, 1);
+        this.setMovementState(new CircularMovementState(this));
     }
 
     /**
@@ -38,7 +33,7 @@ public class Spider extends MovingEntity implements Observer {
      */
     @Override
     public void tick(Game game) {
-        movementState.move(game);
+        this.move(game);
     }
 
     /**
