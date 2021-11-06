@@ -103,7 +103,6 @@ public class MercenaryTest {
 
         // mercenary should battle player
         assertTrue(!game.getEntities().contains(mercenary) || !game.getEntities().contains(player));
-
     }
 
     @Test
@@ -151,9 +150,9 @@ public class MercenaryTest {
         Position updatedPlayerPos = new Position(1, 4);
         
         // make player collect all 3 coins
-        player.move(game, Direction.DOWN);
-        player.move(game, Direction.DOWN);
-        player.move(game, Direction.DOWN);
+        game.tick(null, Direction.DOWN);
+        game.tick(null, Direction.DOWN);
+        game.tick(null, Direction.DOWN);
 
         while(!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
@@ -164,6 +163,7 @@ public class MercenaryTest {
 
         game.interact(mercenary.getId());
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1); // player still at tile
+        assertTrue(player.getAllies().size() > 0);  // player now has a new ally
         
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);

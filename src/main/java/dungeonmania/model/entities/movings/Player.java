@@ -99,6 +99,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
         ally.setEnemy(false);
     }
 
+    public void removeAlly(MovingEntity ally) {
+        MovingEntity toRemove = null;
+        for (MovingEntity m : allies) {
+            if (m.getId().equals(ally.getId())) toRemove = m;
+        }
+
+        if(toRemove != null) {
+            allies.remove(toRemove);
+        }
+    }
+
     /********************************
      *  Inventory Methods           *
      ********************************/
