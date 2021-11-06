@@ -184,7 +184,6 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException (itemUsedId);
         return currentGame.tick(itemUsedId, movementDirection);
     }
 

@@ -199,6 +199,7 @@ public final class Game {
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
+        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException (itemUsedId);
         this.tick += 1;
 
         List<Tickable> tickables = entities
