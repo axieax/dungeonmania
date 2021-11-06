@@ -10,6 +10,7 @@ import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -34,11 +35,12 @@ public class DoorTest {
      */
     @Test
     public void doorBlockWithoutKey() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player(new Position(1, 2));
+        Player player = new Player(new Position(1, 2), mode.damageMultiplier());
         game.addEntity(player);
 
         player.move(game, Direction.UP);
@@ -52,11 +54,12 @@ public class DoorTest {
     */
     @Test
     public void doorUnlockWithKey() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player(new Position(1, 3));
+        Player player = new Player(new Position(1, 3), mode.damageMultiplier());
 
         Key key = new Key(new Position(1, 2), 1);
         game.addEntity(key);
@@ -76,11 +79,12 @@ public class DoorTest {
      */
     @Test
     public void doorLockWithIncorrectKey() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player(new Position(1, 3));
+        Player player = new Player(new Position(1, 3), mode.damageMultiplier());
         game.addEntity(player);
 
         Key key = new Key(new Position(1, 2), 2);
@@ -100,7 +104,8 @@ public class DoorTest {
     */
     @Test
     public void multipleDoorUnlocking() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Door door1 = new Door(new Position(1, 1), 1);
         game.addEntity(door1);
         Door door2 = new Door(new Position(2, 1), 2);
@@ -111,7 +116,7 @@ public class DoorTest {
         Key key2 = new Key(new Position(1, 3), 2);
         game.addEntity(key2);
 
-        Player player = new Player(new Position(3, 3));
+        Player player = new Player(new Position(3, 3), mode.damageMultiplier());
         game.addEntity(player);
 
         // __  __  __  __

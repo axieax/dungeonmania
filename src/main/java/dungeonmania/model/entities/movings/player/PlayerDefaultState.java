@@ -2,11 +2,12 @@ package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Equipment;
+import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
-
+import dungeonmania.model.entities.statics.Consumable;
 import java.util.List;
 import java.util.Random;
 
@@ -55,13 +56,18 @@ public class PlayerDefaultState implements PlayerState {
                 attackEquipments.remove(currEquipment);
             }
             opponent.setHealth(opponent.getHealth() - ((originalHealth * playerAttackDamage) / 5));
+
+            if (!player.isAlive()) {
+                Item item = player.findInventoryItem("one_ring");
+                if (item != null && (item instanceof Consumable)) {
+                    // Use one ring if it is in inventory
+                    ((Consumable) item).consume(game, player);
+                }
+            }
         }
 
         // Remove the entity from the game if dead after battle.
         if (player.isAlive()) game.removeEntity(opponent); else game.removeEntity(player);
-
-        // If a player wins a battle, there is a small chance that items could be
-        // dropped and be added to the character's inventory.
 
         // An opponent can have the potential to drop multiple items.
 

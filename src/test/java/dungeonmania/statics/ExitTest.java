@@ -8,6 +8,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -32,11 +33,12 @@ public class ExitTest {
      */
     @Test
     public void exitMoveTo() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Exit exit = new Exit(new Position(1, 1));
         game.addEntity(exit);
                 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);

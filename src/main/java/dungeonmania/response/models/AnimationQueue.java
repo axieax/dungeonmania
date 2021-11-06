@@ -3,7 +3,7 @@ package dungeonmania.response.models;
 import java.util.List;
 
 public class AnimationQueue {
-    private final String when;
+    private final String when;         
     private final String entityId;
     private final List<String> queue;
     private final boolean loop;

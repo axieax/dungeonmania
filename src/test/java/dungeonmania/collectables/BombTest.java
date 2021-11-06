@@ -8,6 +8,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -32,11 +33,12 @@ public class BombTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Bomb bomb = new Bomb(new Position(1, 1));
         game.addEntity(bomb);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.damageMultiplier());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        

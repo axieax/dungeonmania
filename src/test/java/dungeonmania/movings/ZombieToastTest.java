@@ -32,7 +32,7 @@ public class ZombieToastTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(5, 5), mode.tickRate());
@@ -54,7 +54,7 @@ public class ZombieToastTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position zombiePos = new Position(5, 5);
@@ -74,7 +74,7 @@ public class ZombieToastTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(5, 5), mode.tickRate());
@@ -102,7 +102,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position zombiePos = new Position(5, 5);
@@ -127,7 +127,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Position zombiePos = new Position(5, 5);
@@ -162,7 +162,7 @@ public class ZombieToastTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(4, 2));
+        Player player = new Player(new Position(4, 2), mode.damageMultiplier());
         game.addEntity(player);
         game.addEntity(new Key(new Position(4, 3), 1));
         Door door = new Door(new Position(4, 4), 1);
@@ -204,7 +204,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
@@ -234,7 +234,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);

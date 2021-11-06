@@ -156,7 +156,7 @@ public class GameLoader {
             return new TheOneRing(position);
         } else if (type.startsWith("player")) {
             position = position.asLayer(0);
-            Player player = new Player (position);
+            Player player = new Player (position, mode.damageMultiplier());
             int health = entityInfo.getInt("health");
             player.setHealth(health);
             JSONArray inventory = entityInfo.getJSONArray("inventory");
@@ -178,7 +178,7 @@ public class GameLoader {
             return newShield;
         } else if (type.startsWith("spider")) {
             position = position.asLayer(18);
-            Spider newSpider = new Spider(position);
+            Spider newSpider = new Spider(position, mode.damageMultiplier());
             int health = entityInfo.getInt("health");
             newSpider.setHealth (health);
             return newSpider;

@@ -79,7 +79,7 @@ public class GoalTest {
     public final void mazeExitTest() {
         DungeonManiaController dmc = new DungeonManiaController();
         dmc.newGame("maze", "Standard");
-        // navigate the maze
+        // Navigate the maze
         String exitGoal = ":exit(1)";
         assertEquals(exitGoal, move(dmc, Direction.DOWN, 2).getGoals());
         assertEquals(exitGoal, move(dmc, Direction.RIGHT, 5).getGoals());
@@ -104,7 +104,7 @@ public class GoalTest {
     public final void bouldersSwitchTest() {
         DungeonManiaController dmc = new DungeonManiaController();
         dmc.newGame("boulders", "Standard");
-        // navigate the maze
+        // Navigate the maze
         String switchGoal = ":switch(6)";
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 1).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
@@ -152,9 +152,9 @@ public class GoalTest {
     public final void bombsSwitchTest() {
         DungeonManiaController dmc = new DungeonManiaController();
         dmc.newGame("bombs", "Standard");
-        // navigate the maze
+        // Navigate the maze
         String switchGoal = ":switch(6)";
-        // pick up the bomb
+        // Pick up the bomb
         DungeonResponse resp = move(dmc, Direction.RIGHT, 1);
         assertEquals(switchGoal, resp.getGoals());
         assertEquals("bomb", resp.getInventory().get(0).getPrefix());
@@ -212,27 +212,29 @@ public class GoalTest {
 
     @Test
     public final void testSimpleExit() {
+        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.damageMultiplier()),
             new Exit(new Position(0, 2))
         );
-        Game game = new Game("test", entities, new ExitCondition(), new Standard());
+        Game game = new Game("test", entities, new ExitCondition(), mode);
         assertEquals(":exit(1)", game.tick("", Direction.DOWN).getGoals());
         assertEquals("", game.tick("", Direction.DOWN).getGoals());
     }
 
     @Test
     public final void testSimpleBoulders() {
+        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
-            // setup boulder to be pushed onto switch
+            new Player(new Position(0, 0), mode.damageMultiplier()),
+            // Setup boulder to be pushed onto switch
             new Boulder(new Position(0, 2)),
             new FloorSwitch(new Position(0, 3)),
-            // boulder already on switch
+            // Boulder already on switch
             new Boulder(new Position(1, 0)),
             new FloorSwitch(new Position(1, 0))
         );
-        Game game = new Game("test", entities, new ToggleSwitch(), new Standard());
+        Game game = new Game("test", entities, new ToggleSwitch(), mode);
         assertEquals(":switch(1)", game.tick("", Direction.DOWN).getGoals());
         assertEquals("", game.tick("", Direction.DOWN).getGoals());
     }
@@ -240,7 +242,7 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesMercenaryKilled() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         List<Entity> entities = Arrays.asList(
             player,
             new Mercenary(new Position(0, 3), mode.damageMultiplier(), player)
@@ -253,13 +255,13 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesMercenaryBribed() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         Entity mercenary = new Mercenary(new Position(0, 4), mode.damageMultiplier(), player);
         List<Entity> entities = Arrays.asList(player, new Treasure(new Position(0, 1)), mercenary);
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
-        // pick up treasure
+        // Pick up treasure
         assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
-        // bribe mercenary
+        // Bribe mercenary
         assertEquals("", game.interact(mercenary.getId()).getGoals());
     }
 
@@ -267,19 +269,19 @@ public class GoalTest {
     public final void testSimpleEnemiesSpider() {
         Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
-            new Spider(new Position(0, -2))
+            new Player(new Position(0, 0), mode.damageMultiplier()),
+            new Spider(new Position(0, -2), mode.damageMultiplier())
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
         assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
-        // spider moves up
+        // Spider moves up
         assertEquals("", game.tick("", Direction.UP).getGoals());
     }
 
     @Test
     public final void testSimpleEnemiesZombie() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.damageMultiplier());
         ZombieToast zombie = new ZombieToast(new Position(0, -1), mode.damageMultiplier(), player);
         List<Entity> entities = new ArrayList<>();
         entities.add(player);
@@ -287,7 +289,7 @@ public class GoalTest {
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
         DungeonResponse resp = game.getDungeonResponse();
         assertEquals(":enemies(1)", resp.getGoals());
-        // zombie toast moves up
+        // Zombie toast moves up
         assertEquals("", game.tick("", Direction.UP).getGoals());
     }
 
@@ -296,116 +298,120 @@ public class GoalTest {
         Mode mode = new Standard();
         Entity spawner = new ZombieToastSpawner(new Position(0, 2), mode.tickRate());
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.damageMultiplier()),
             new Sword(new Position(0, 1)),
             spawner
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
         assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
-        // destroy spawner
+        // Destroy spawner
         assertEquals("", game.interact(spawner.getId()).getGoals());
     }
 
     @Test
     public final void testAndComposite() {
-        // setup entities
+        Mode mode = new Standard();
+        // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
-            // boulder can be pushed onto the switch
+            new Player(new Position(0, 0), mode.damageMultiplier()),
+            // Boulder can be pushed onto the switch
             new Boulder(new Position(0, 4)),
             new FloorSwitch(new Position(0, 5)),
-            // exit is nearby
+            // Exit is nearby
             new Exit(new Position(0, 2))
         );
-        // setup goals
+        // Setup goals
         GoalComposite and = new AndComposite();
         and.addGoal(new ExitCondition());
         and.addGoal(new ToggleSwitch());
-        // check goal reached first
+        // Check goal reached first
         Game game = new Game("test", entities, and, new Standard());
         List<String> expected = Arrays.asList(":exit(1) AND :switch(1)", ":switch(1) AND :exit(1)");
         assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
-        // move onto exit
+        // Move onto exit
         assertEquals(":switch(1)", game.tick("", Direction.DOWN).getGoals());
-        // move off exit
+        // Move off exit
         assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
-        // push boulder onto switch
+        // Push boulder onto switch
         assertEquals(":exit(1)", game.tick("", Direction.DOWN).getGoals());
-        // move down
+        // Move down
         assertEquals(":exit(1)", game.tick("", Direction.UP).getGoals());
-        // all goals satisfied
+        // All goals satisfied
         assertEquals("", game.tick("", Direction.UP).getGoals());
     }
 
     @Test
     public final void testAndCompositeOrder() {
-        // setup entities
+        Mode mode = new Standard();
+        // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.damageMultiplier()),
             new Treasure(new Position(-1, 1)),
             new Exit(new Position(1, 1))
         );
-        // setup goals
+        // Setup goals
         GoalComposite and = new AndComposite();
         and.addGoal(new ExitCondition());
         and.addGoal(new CollectTreasure());
-        // check goal reached first
+        // Check goal reached first
         Game game = new Game("test", entities, and, new Standard());
         List<String> expected = Arrays.asList(
             ":treasure(1) AND :exit(1)",
             ":exit(1) AND :treasure(1)"
         );
         assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
-        // take treasure
+        // Take treasure
         assertEquals(":exit(1)", game.tick("", Direction.LEFT).getGoals());
-        // take exit
+        // Take exit
         assertEquals(":exit(1)", game.tick("", Direction.RIGHT).getGoals());
         assertEquals("", game.tick("", Direction.RIGHT).getGoals());
     }
 
     @Test
     public final void testOrComposite1() {
-        // setup entities
+        Mode mode = new Standard();
+        // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.damageMultiplier()),
             new Treasure(new Position(-1, 1)), // go left to get Treasure
             new Exit(new Position(1, 1))
         );
-        // setup goals
+        // Setup goals
         GoalComposite or = new OrComposite();
         or.addGoal(new ExitCondition());
         or.addGoal(new CollectTreasure());
-        // check goal reached first
+        // Check goal reached first
         Game game = new Game("test", entities, or, new Standard());
         List<String> expected = Arrays.asList(
             ":treasure(1) OR :exit(1)",
             ":exit(1) OR :treasure(1)"
         );
         assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
-        // take treasure
+        // Take treasure
         assertEquals("", game.tick("", Direction.LEFT).getGoals());
     }
 
     @Test
     public final void testOrComposite2() {
-        // setup entities
+        Mode mode = new Standard();
+        // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.damageMultiplier()),
             new Treasure(new Position(-1, 1)),
             new Exit(new Position(1, 1)) // go right to reach exit
         );
-        // setup goals
+        // Setup goals
         GoalComposite or = new OrComposite();
         or.addGoal(new ExitCondition());
         or.addGoal(new CollectTreasure());
-        // check goal reached first
+        // Check goal reached first
         Game game = new Game("test", entities, or, new Standard());
         List<String> expected = Arrays.asList(
             ":treasure(1) OR :exit(1)",
             ":exit(1) OR :treasure(1)"
         );
         assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
-        // reach exit
+        // Reach exit
         assertEquals("", game.tick("", Direction.RIGHT).getGoals());
     }
 
@@ -432,7 +438,7 @@ public class GoalTest {
             ":treasure(1) AND :enemies(1)"
         );
         assertTrue(expected.contains(move(controller, Direction.DOWN, 1).getGoals()));
-        // mercenary should have died
+        // Mercenary should have died
         assertEquals(":treasure(1)", move(controller, Direction.DOWN, 7).getGoals());
         assertEquals(":treasure(1)", move(controller, Direction.RIGHT, 6).getGoals());
         assertEquals("", move(controller, Direction.DOWN, 1).getGoals());

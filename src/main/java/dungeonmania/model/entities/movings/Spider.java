@@ -30,6 +30,7 @@ public class Spider extends Enemy {
         // TODO: William to add damage modifier
         super("spider", position, health, attackDamage, 1);
         this.setMovementState(new CircularMovementState(this));
+
     }
 
     /**
@@ -79,7 +80,7 @@ public class Spider extends Enemy {
     /**
      * Spawns a spider on an entity depending on the tick rate
      */
-    public static void spawnSpider(Game game) {
+    public static void spawnSpider(Game game, int damageMultiplier) {
         int numSpidersInGame = getNumSpiderInGame(game);
         if (numSpidersInGame == MAX_SPIDERS) {
             return;
@@ -104,7 +105,7 @@ public class Spider extends Enemy {
             }
 
             if (canSpawn) {
-                game.addEntity(new Spider(position));
+                game.addEntity(new Spider(position, damageMultiplier));
             }
         }
     }
@@ -118,7 +119,7 @@ public class Spider extends Enemy {
         List<Entity> entities = game.getEntities();
         int spiders = 0;
         for (Entity e : entities) {
-            if (e.getPrefix() == "spider") {
+            if (e.getPrefix().equals("spider")) {
                 spiders++;
             }
         }

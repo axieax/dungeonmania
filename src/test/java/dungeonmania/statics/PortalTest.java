@@ -7,6 +7,7 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -32,9 +33,10 @@ public class PortalTest {
      */
     @Test
     public void teleportSuccess() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.damageMultiplier());
 
         Portal portalStart = new Portal(new Position(0, 0), "BLUE");
         Portal portalEnd = new Portal(new Position(2, 2), "BLUE");
@@ -63,9 +65,10 @@ public class PortalTest {
      */
     @Test
     public void teleportMultiplePortals() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.damageMultiplier());
 
         Portal portal1 = new Portal(new Position(0, 0), "BLUE");
         Portal portal2 = new Portal(new Position(2, 2), "BLUE");
@@ -99,9 +102,10 @@ public class PortalTest {
      */
     @Test
     public void testNoPortal() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.damageMultiplier());
 
         Portal portal = new Portal(new Position(0, 0), "BLUE");
         game.addEntity(player);
@@ -119,9 +123,10 @@ public class PortalTest {
      */
     @Test
     public void teleportWithBloackableEntity() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.damageMultiplier());
 
         Portal portalStart = new Portal(new Position(0, 0), "BLUE");
         Portal portalEnd = new Portal(new Position(2, 2), "BLUE");

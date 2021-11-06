@@ -9,14 +9,21 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
+<<<<<<< HEAD
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
+=======
+import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.PlayerInvincibleState;
+import dungeonmania.model.entities.movings.PlayerInvisibleState;
+>>>>>>> master
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -29,6 +36,8 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.jetty.util.DateCache.Tick;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -420,14 +429,15 @@ public class CharacterTest {
     public void testItemsUsedToCraftRemoved() {
         // any items that are used to craft another buildable entity should be
         // removed from the player's inventory, and are replaced with the built item
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         game.addEntity(new Wood(new Position(2, 1)));
@@ -455,14 +465,15 @@ public class CharacterTest {
     @Test
     public void testCharacterCannotPickUpBombsItPlaced() {
         // removed from the player's inventory, and are replaced with the built item
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         Bomb bomb = new Bomb(new Position(2, 1));
@@ -493,6 +504,7 @@ public class CharacterTest {
 
     @Test
     public void testMovementDoesNotAffectHealth() {
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
@@ -500,7 +512,7 @@ public class CharacterTest {
             new Peaceful()
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.damageMultiplier());
         game.addEntity(player);
 
         int playerHealth = player.getHealth();
@@ -522,7 +534,7 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
         game.addEntity(player);
 
@@ -546,31 +558,31 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
-        Position mercenaryPos = new Position(1, 4);
+        Position mercenaryPos = new Position(1, 5);
         Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-
+        
         Position potionPos = new Position(2, 2);
-        game.addEntity(new InvisibilityPotion(potionPos));
+        InvisibilityPotion potion = new InvisibilityPotion(potionPos);
+        game.addEntity(potion);
+
         game.tick(null, Direction.RIGHT); // player picks up potion
 
-        game.tick("invisibility_potion", Direction.NONE); // drink potion
-
-        // at this point, the mercenary should be adjacent to the player
-        assertTrue(game.getAdjacentEntities(potionPos).size() > 0);
+        game.tick(potion.getId(), Direction.NONE); // drink potion
+        assertTrue(player.getState() instanceof PlayerInvisibleState);
+        
         assertTrue(player.getHealth() == initialPlayerHealth);
-
-        // any further ticks (for a limited time) should not result in battle
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == initialPlayerHealth);
-
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == initialPlayerHealth);
+        
+        // mercenary should not fight the player - until the effects of the potion have weared away
+        while(!(player.getState() instanceof PlayerInvisibleState)) {
+            game.tick(null, Direction.NONE);
+            assertTrue(player.getHealth() == initialPlayerHealth);
+        }
     }
 
     @Test
@@ -579,47 +591,50 @@ public class CharacterTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
-        Position mercenaryPos = new Position(1, 4);
+        Position mercenaryPos = new Position(1, 5);
         Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-
+        
         Position potionPos = new Position(2, 2);
-        game.addEntity(new InvincibilityPotion(potionPos));
+        InvincibilityPotion potion = new InvincibilityPotion(potionPos);
+        game.addEntity(potion);
+
         game.tick(null, Direction.RIGHT); // player picks up potion
 
-        game.tick("invisibility_potion", Direction.NONE); // drink potion
-
-        // at this point, the mercenary should be adjacent to the player
-        assertTrue(game.getAdjacentEntities(potionPos).size() > 0);
+        game.tick(potion.getId(), Direction.NONE); // drink potion
+        assertTrue(player.getState() instanceof PlayerInvincibleState);
+        
         assertTrue(player.getHealth() == initialPlayerHealth);
-
-        // any further ticks (for a limited time) should not result in battle
-        // as the mercenary should run away
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == initialPlayerHealth);
-
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == initialPlayerHealth);
-
+        // if the player was near the mercenary when the player drank the potion,
+        // in the next move it should not be in the adjacent tile
         assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
+        
+        // mercenary should not come near the player - until the effects of the potion have weared away
+        // and so, the player's health should not reduce
+        while(!(player.getState() instanceof PlayerInvincibleState)) {
+            game.tick(null, Direction.NONE);
+            assertTrue(player.getHealth() == initialPlayerHealth);
+            assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
+        }
     }
 
     @Test
     public void testCanPickUpMultiplePotions() {
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
@@ -643,6 +658,7 @@ public class CharacterTest {
 
     @Test
     public void testCanDrinkTwoPotions() {
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
@@ -651,7 +667,7 @@ public class CharacterTest {
         );
 
         Position playerPos = new Position(1, 2);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.damageMultiplier());
         int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
