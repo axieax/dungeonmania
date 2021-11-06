@@ -5,11 +5,11 @@ import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
 
-public class Sword extends Equipment implements AttackEquipment {
+public class Anduril extends Equipment implements AttackEquipment {
 
     private final int ATTACK_DAMAGE = 50;
 
-    public Sword(Position position) {
+    public Anduril(Position position) {
         super("sword", position);
     }
 
