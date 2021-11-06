@@ -3,6 +3,7 @@ package dungeonmania.model.entities.movings;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.movement.AttackMovementState;
 import dungeonmania.model.entities.movings.movement.PositionGraph;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
@@ -70,25 +71,18 @@ public class Mercenary extends BribableEnemy {
     @Override
     public void bribe(Game game, Player player) throws InvalidActionException {
         // Player must be within 2 cardinal tiles to the mercenary and 
-        // have sufficient treasure (gold) in order to bribe the mercenary
-        if (player.hasItemQuantity("treasure", TREASURE_REQUIRED_TO_BRIBE)) {
+        // have 1 treasure (gold) in order to bribe the mercenary
+        Item item = player.findInventoryItem("treasure");
+        if (item != null && item instanceof Treasure) {
             if (getDistanceToPlayer(game, player.getPosition()) <= MAX_DISTANCE_TO_BRIBE) {
                 player.addAlly(this);
-                consume(player, player.findInventoryItem("treasure"));
+                ((Treasure) item).consume(game, player);
             } else {
                 throw new InvalidActionException("You are too far away to bribe this mercenary");
             }
         } else {
             throw new InvalidActionException("You don't have enough treasure to bribe the mercenary");
         }
-    }
-
-    /**
-     * Player using up the treasure upon successful bribing
-     */
-    @Override
-    public void consume(Player player, Item item) {
-        player.removeInventoryItem(item.getId());
     }
 
     /**
