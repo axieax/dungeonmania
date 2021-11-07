@@ -202,8 +202,7 @@ public final class Game {
             .map(e -> (Tickable) e)
             .collect(Collectors.toList());
 
-        // separate loop to avoid concurrency issues when zombie spawner adds new entity
-        // to entities
+        // Separate loop to avoid concurrency issues when zombie spawner adds new entity
         tickables.forEach(e -> {
             if (e instanceof Player) {
                 ((Player) e).move(this, movementDirection, itemUsedId);

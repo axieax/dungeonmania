@@ -280,21 +280,22 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param direction
      */
     public void move(Game game, Direction direction, String itemId)
-        throws IllegalArgumentException {
+        throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
-            // check if itemId is not it player inventory
-            if (game.getEntity(itemId) != null) throw new InvalidActionException(
-                "At Player move method - itemUsed is not in the player's inventory"
-            );
-            // check if itemUsed can be consumed
+            // Check if item can be consumed
             Item item = getInventoryItem(itemId);
             if (
                 item != null && !(item instanceof Bomb || item instanceof Potion)
             ) throw new IllegalArgumentException(
-                "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
+                "At Player move method - item used is not a bomb, health potion, invincibility potion, invisibility potion or null"
             );
-
-            // consume item
+            
+            // Check if item is in player's inventory
+            if (item == null) throw new InvalidActionException(
+                "At Player move method - item used is not in the player's inventory"
+            );
+            
+            // Consume item
             if (item != null && item instanceof Consumable) ((Consumable) item).consume(game, this);
         }
 

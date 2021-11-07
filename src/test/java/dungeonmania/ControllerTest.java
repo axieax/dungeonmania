@@ -195,27 +195,27 @@ public class ControllerTest {
     /**
      * Test an InvalidActionException is thrown if item used is not in inventory
      */
-    /*
+    
     @Test
     public void testItemNotInInventory () {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
         // Invisibility poition is not in inventory
         assertThrows (InvalidActionException.class, () ->controller.tick ("invisibility_potion", Direction.NONE));    
-    } */
+    } 
 
 
     /**
      * Test an IllegalArgumentException is thrown if item used is not bomb,
      * invincibility potion, invisibility potion or health potion
      */
-    /*
+    
     @Test
     public void testItemNotValid() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
         assertThrows (IllegalArgumentException.class, () ->controller.tick ("item-not-exist", Direction.NONE));    
-    } */
+    }
     
     /**
      * Test potions can be used in a game
