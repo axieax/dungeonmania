@@ -17,7 +17,7 @@ public class Mercenary extends BribableEnemy {
     public static final int MAX_MERCENARY_ATTACK_DMG = 5;
     public static final int MAX_DISTANCE_TO_BRIBE = 2;
     private static final int BATTLE_RADIUS = 5;
-    public final double ARMOUR_DROP_RATE = 0.2;
+    public final double ARMOUR_DROP_RATE = 0.25;
     
     private boolean moveTwice;
 
