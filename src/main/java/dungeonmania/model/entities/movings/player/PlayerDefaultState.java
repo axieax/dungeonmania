@@ -8,7 +8,9 @@ import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Consumable;
 import java.util.List;
 import java.util.Random;
@@ -82,8 +84,10 @@ public class PlayerDefaultState implements PlayerState {
          */
         Random armourRand = new Random();
         if (
-            opponent instanceof Enemy &&
-            armourRand.nextDouble() <= ((Enemy) opponent).ARMOUR_DROP_RATE
+            (opponent instanceof Mercenary &&
+            armourRand.nextDouble() <= ((Mercenary) opponent).ARMOUR_DROP_RATE) ||
+            (opponent instanceof ZombieToast &&
+            armourRand.nextDouble() <= ((ZombieToast) opponent).ARMOUR_DROP_RATE)
         ) {
             player.addInventoryItem(new Armour());
         }

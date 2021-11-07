@@ -280,22 +280,24 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param direction
      */
     public void move(Game game, Direction direction, String itemId)
-        throws IllegalArgumentException {
+        throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
-            // check if itemId is not it player inventory
-            if (game.getEntity(itemId) != null) throw new InvalidActionException(
-                "At Player move method - itemUsed is not in the player's inventory"
-            );
-            // check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
-            if (
-                item != null && !(item instanceof Bomb || item instanceof Potion)
-            ) throw new IllegalArgumentException(
-                "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
-            );
 
-            // consume item
-            if (item != null && item instanceof Consumable) ((Consumable) item).consume(game, this);
+            // Item is not null, and it's not a bomb or any potion
+            if (item != null && !(item instanceof Bomb || item instanceof Potion)) {
+                throw new IllegalArgumentException("Not a valid item to use");
+            }
+
+            // Item is in the game but not in the player's inventory, or doesn't exist in either
+            if (item == null) {
+                throw new InvalidActionException("Item not found in player inventory");
+            }
+            
+            // Consume item
+            if (item instanceof Consumable) {
+                ((Consumable) item).consume(game, this);
+            }
         }
 
         this.setDirection(direction);
@@ -353,8 +355,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param equipment
      */
-    public void craft(Buildable equipment) {
-        if (equipment.isBuildable(inventory)) equipment.craft(inventory);
+    public void craft(Buildable equipment) throws InvalidActionException {
+        if (equipment.isBuildable(inventory)) {
+            equipment.craft(inventory);
+        } else {
+            throw new InvalidActionException("You don't have enough resources to build this equipment");
+        }
     }
 
     /**

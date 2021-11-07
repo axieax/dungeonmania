@@ -6,13 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
-import dungeonmania.util.Position;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;  
 
@@ -21,7 +20,7 @@ import dungeonmania.response.models.ItemResponse;
 
 public class ControllerTest {
     /**
-     * Given a dungeonResponse returns the id of an object of type objectType
+     * Given a dungeonResponse returns the id of an object within the player's inventory
      * @param resp
      * @param objectType
      * @return
@@ -29,6 +28,19 @@ public class ControllerTest {
     public static String getInventoryId (DungeonResponse resp, String objectType) {
         for (ItemResponse item: resp.getInventory()) {
             if (objectType.equals(item.getPrefix())) return item.getId();
+        }
+        return null;
+    }
+
+    /**
+     * Given a dungeonResponse returns the id of an object within the game entity
+     * @param resp
+     * @param objectType
+     * @return
+     */
+    public static String getEntityId (DungeonResponse resp, String objectType) {
+        for (EntityResponse entity : resp.getEntities()) {
+            if (objectType.equals(entity.getPrefix())) return entity.getId();
         }
         return null;
     }
@@ -194,29 +206,42 @@ public class ControllerTest {
 
 
     /**
-     * Test an InvalidActionException is thrown if item used is not in inventory
+     * Test an IllegalArgumentException is thrown if non-null item used is not bomb,
+     * invincibility potion, invisibility potion or health potion
      */
-    /*
     @Test
-    public void testItemNotInInventory () {
+    public void testItemIllegal() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
-        // Invisibility poition is not in inventory
-        assertThrows (InvalidActionException.class, () ->controller.tick ("invisibility_potion", Direction.NONE));    
-    } */
+        DungeonResponse resp = controller.newGame ("advanced", "Standard");
+        for (int i = 0; i < 5; i++) {
+            controller.tick (null, Direction.RIGHT);            
+        }
+        assertThrows (IllegalArgumentException.class, () ->controller.tick (ControllerTest.getEntityId(resp, "sword"), Direction.NONE));    
+    }
 
 
     /**
-     * Test an IllegalArgumentException is thrown if item used is not bomb,
+     * Test an InvalidActionException is thrown if item used is not in inventory
+     */
+    @Test
+    public void testItemNotInInventory () {
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse resp = controller.newGame ("bombs", "Standard");
+        // Bomb is not in inventory
+        assertThrows (InvalidActionException.class, () ->controller.tick (ControllerTest.getEntityId(resp, "bomb"), Direction.NONE));    
+    }
+
+
+    /**
+     * Test an InvalidActionException is thrown if non-null item used is not bomb,
      * invincibility potion, invisibility potion or health potion
      */
-    /*
     @Test
     public void testItemNotValid() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
-        assertThrows (IllegalArgumentException.class, () ->controller.tick ("item-not-exist", Direction.NONE));    
-    } */
+        assertThrows (InvalidActionException.class, () ->controller.tick ("id-does-not-exist", Direction.NONE));    
+    }
     
     /**
      * Test potions can be used in a game
@@ -275,14 +300,14 @@ public class ControllerTest {
      * Test invalid action exception is thrown when player does not have sufficient
      * items to craft buildable
      */
-    /*
+    
     @Test
     public void testInsufficientMaterialsToBuild() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
         assertThrows (InvalidActionException.class, () -> controller.build ("bow"));  
         assertThrows (InvalidActionException.class, () -> controller.build ("shield"));      
-    } */
+    } 
 
     /**
      *  Test can craft buildable
@@ -341,7 +366,7 @@ public class ControllerTest {
             controller.tick (null, Direction.LEFT);           
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             controller.tick (null, Direction.UP);            
         }
         

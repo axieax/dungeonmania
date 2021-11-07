@@ -28,7 +28,7 @@ public class Shield extends DefenceEquipment implements Buildable {
     }
 
     @Override
-    public void craft(Inventory inventory) throws InvalidActionException {
+    public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
             inventory.removeItemQuantity("wood", WOOD_NEEDED);
             if (inventory.hasItemQuantity("treasure", TREASURE_NEEDED)) {
@@ -37,8 +37,6 @@ public class Shield extends DefenceEquipment implements Buildable {
                 inventory.removeItemQuantity("key", KEY_NEEDED);
             }
             inventory.addItem(new Shield());
-        } else {
-            throw new InvalidActionException("You don't have enough resources to build a Shield.");
         }
     }
 

@@ -49,7 +49,7 @@ public class ZombieToastSpawnerTest {
         game.addEntity(new Player(new Position(10, 10)));
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
-            game.tick("", Direction.NONE);
+            game.tick(null, Direction.NONE);
         }
 
         // Check that only one zombie toast has spawned

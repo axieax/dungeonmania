@@ -42,7 +42,7 @@ public class ZombieToastTest {
 
         // Zombie should spawn
         for (int i = 0; i < 20; i++) {
-            game.tick("", Direction.NONE);
+            game.tick(null, Direction.NONE);
         }
 
         assertTrue(game.getEntities().size() > numEntities);
@@ -61,7 +61,7 @@ public class ZombieToastTest {
         ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
         game.addEntity(zombie);
 
-        game.tick("", Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
         List<Entity> entitiesAtOldZombiePos = game.getEntities(zombiePos);
 
         // zombie should change position as there exists an open tile
@@ -90,7 +90,7 @@ public class ZombieToastTest {
         // zombie should spawn in 20 ticks
         for (int i = 0; i < 20; i++) {
             assertTrue(game.getEntities(expectedZombieSpawnTile).size() == 0);
-            game.tick("", Direction.NONE);
+            game.tick(null, Direction.NONE);
         }
 
         List<Entity> entitesAtTileAdjacentToSpawner = game.getEntities(expectedZombieSpawnTile);
@@ -167,14 +167,14 @@ public class ZombieToastTest {
         game.addEntity(new Key(new Position(4, 3), 1));
         Door door = new Door(new Position(4, 4), 1);
         game.addEntity(door);
-        game.tick("", Direction.DOWN);
+        game.tick(null, Direction.DOWN);
 
         assertTrue(player.hasItemQuantity("key", 1));
-        game.tick("", Direction.DOWN);
+        game.tick(null, Direction.DOWN);
         assertTrue(door.getPosition().equals(player.getPosition()));
         assertTrue(door.isOpen());
 
-        game.tick("", Direction.UP);
+        game.tick(null, Direction.UP);
 
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(5, 5), mode.tickRate());
         game.addEntity(spawner);
@@ -188,13 +188,13 @@ public class ZombieToastTest {
         // zombie should spawn in 20 ticks
         for (int i = 0; i < 20; i++) {
             assertTrue(game.getEntities(expectedZombieSpawnTile).size() == 0);
-            game.tick("", Direction.NONE);
+            game.tick(null, Direction.NONE);
         }
 
         List<Entity> entitesAtTileAdjacentToSpawner = game.getEntities(expectedZombieSpawnTile);
         assertTrue(entitesAtTileAdjacentToSpawner.size() == 1);
 
-        game.tick("", Direction.NONE);
+        game.tick(null, Direction.NONE);
         assertTrue(door.getPosition().equals(entitesAtTileAdjacentToSpawner.get(0).getPosition()));
     }
 
@@ -223,7 +223,7 @@ public class ZombieToastTest {
         Position portalPos = new Position(5, 4);
         Portal portal = new Portal(portalPos, "blue");
         game.addEntity(portal);
-        game.tick("", Direction.NONE);
+        game.tick(null, Direction.NONE);
         
         // the only option for the zombie is to move to the portal which cant pass through
         assertTrue(zombie.getPosition().equals(zombiePos)); // portal has no effect
@@ -254,7 +254,7 @@ public class ZombieToastTest {
         Boulder boulder = new Boulder(boulderPos);
         game.addEntity(boulder);
 
-        game.tick("", Direction.NONE);
+        game.tick(null, Direction.NONE);
         
         // zombie should stay in its position, as it cannot move a boulder
         assertTrue(zombie.getPosition().equals(zombiePos));

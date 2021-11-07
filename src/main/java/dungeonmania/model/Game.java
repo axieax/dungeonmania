@@ -202,8 +202,7 @@ public final class Game {
             .map(e -> (Tickable) e)
             .collect(Collectors.toList());
 
-        // separate loop to avoid concurrency issues when zombie spawner adds new entity
-        // to entities
+        // Separate loop to avoid concurrency issues when zombie spawner adds new entity
         tickables.forEach(e -> {
             if (e instanceof Player) {
                 ((Player) e).move(this, movementDirection, itemUsedId);
@@ -216,7 +215,7 @@ public final class Game {
         return getDungeonResponse();
     }
 
-    public final DungeonResponse build(String buildable) {
+    public final DungeonResponse build(String buildable) throws InvalidActionException {
         Player player = getCharacter();
         Buildable item = EntityFactory.getBuildable(buildable);
         player.craft(item);
