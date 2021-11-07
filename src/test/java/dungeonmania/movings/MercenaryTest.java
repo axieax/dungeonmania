@@ -58,7 +58,7 @@ public class MercenaryTest {
         Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
-        game.tick("", Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
 
         // mercenary should move upwards or stay in the same horizontal line
         assertTrue(mercenary.getY() <= 3);
@@ -75,12 +75,12 @@ public class MercenaryTest {
         Mercenary mercenary = new Mercenary(new Position(1, 10), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
-        game.tick("", Direction.NONE);
+        game.tick(null, Direction.NONE);
 
         // mercenary should move to the left to follow the player
         assertTrue(mercenary.getPosition().equals(new Position(1, 9)));
 
-        game.tick("", Direction.NONE);
+        game.tick(null, Direction.NONE);
 
         // mercenary should move to the left to follow the player
         assertTrue(mercenary.getPosition().equals(new Position(1, 8)));
@@ -97,7 +97,7 @@ public class MercenaryTest {
         Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
-        game.tick("", Direction.NONE);
+        game.tick(null, Direction.NONE);
 
         // mercenary should battle player
         assertTrue(!game.getEntities().contains(mercenary) || !game.getEntities().contains(player));

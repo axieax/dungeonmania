@@ -123,7 +123,7 @@ public class BoulderTest {
         game.tick(null, Direction.DOWN);
 
         // move boulder to trigger bomb explosion
-        game.tick("", Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
 
         // boulder explodes
         assertTrue(game.getEntity(wall1.getId()) == null);
