@@ -20,7 +20,7 @@ import dungeonmania.response.models.ItemResponse;
 
 public class ControllerTest {
     /**
-     * Given a dungeonResponse returns the id of an object of type objectType
+     * Given a dungeonResponse returns the id of an object within the player's inventory
      * @param resp
      * @param objectType
      * @return
@@ -28,6 +28,19 @@ public class ControllerTest {
     public static String getInventoryId (DungeonResponse resp, String objectType) {
         for (ItemResponse item: resp.getInventory()) {
             if (objectType.equals(item.getPrefix())) return item.getId();
+        }
+        return null;
+    }
+
+    /**
+     * Given a dungeonResponse returns the id of an object within the game entity
+     * @param resp
+     * @param objectType
+     * @return
+     */
+    public static String getEntityId (DungeonResponse resp, String objectType) {
+        for (EntityResponse entity : resp.getEntities()) {
+            if (objectType.equals(entity.getPrefix())) return entity.getId();
         }
         return null;
     }
@@ -193,28 +206,41 @@ public class ControllerTest {
 
 
     /**
-     * Test an InvalidActionException is thrown if item used is not in inventory
-     */
-    
-    @Test
-    public void testItemNotInInventory () {
-        DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
-        // Invisibility potion is not in inventory
-        assertThrows (InvalidActionException.class, () ->controller.tick ("invisibility_potion", Direction.NONE));    
-    } 
-
-
-    /**
      * Test an IllegalArgumentException is thrown if non-null item used is not bomb,
      * invincibility potion, invisibility potion or health potion
      */
-    
+    @Test
+    public void testItemIllegal() {
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse resp = controller.newGame ("advanced", "Standard");
+        for (int i = 0; i < 5; i++) {
+            controller.tick (null, Direction.RIGHT);            
+        }
+        assertThrows (IllegalArgumentException.class, () ->controller.tick (ControllerTest.getEntityId(resp, "sword"), Direction.NONE));    
+    }
+
+
+    /**
+     * Test an InvalidActionException is thrown if item used is not in inventory
+     */
+    @Test
+    public void testItemNotInInventory () {
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse resp = controller.newGame ("bombs", "Standard");
+        // Bomb is not in inventory
+        assertThrows (InvalidActionException.class, () ->controller.tick (ControllerTest.getEntityId(resp, "bomb"), Direction.NONE));    
+    }
+
+
+    /**
+     * Test an InvalidActionException is thrown if non-null item used is not bomb,
+     * invincibility potion, invisibility potion or health potion
+     */
     @Test
     public void testItemNotValid() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
-        assertThrows (IllegalArgumentException.class, () ->controller.tick ("boulder", Direction.NONE));    
+        assertThrows (InvalidActionException.class, () ->controller.tick ("id-does-not-exist", Direction.NONE));    
     }
     
     /**
@@ -340,7 +366,7 @@ public class ControllerTest {
             controller.tick (null, Direction.LEFT);           
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             controller.tick (null, Direction.UP);            
         }
         

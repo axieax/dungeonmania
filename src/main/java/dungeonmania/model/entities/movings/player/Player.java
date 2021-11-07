@@ -284,15 +284,15 @@ public class Player extends MovingEntity implements SubjectPlayer {
         if (itemId != null && itemId.length() > 0) {
             Item item = getInventoryItem(itemId);
 
-            // Check if item is in player's inventory
-            if (item == null && (itemId.equals("bomb") || itemId.contains("potion"))) throw new InvalidActionException(
-                "At Player move method - item used is not in the player's inventory"
-            );
+            // Item is not null, and it's not a bomb or any potion
+            if (item != null && !(item instanceof Bomb || item instanceof Potion)) {
+                throw new IllegalArgumentException("Not a valid item to use");
+            }
 
-            // Check if item can be consumed
-            if (!(item instanceof Bomb || item instanceof Potion)) throw new IllegalArgumentException(
-                "At Player move method - item used is not a bomb, health potion, invincibility potion, invisibility potion or null"
-            );
+            // Item is in the game but not in the player's inventory, or doesn't exist in either
+            if (item == null) {
+                throw new InvalidActionException("Item not found in player inventory");
+            }
             
             // Consume item
             if (item instanceof Consumable) {
