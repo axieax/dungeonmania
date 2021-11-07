@@ -11,6 +11,7 @@ import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
@@ -32,7 +33,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private PlayerState state;
     private boolean inBattle;
     private Inventory inventory = new Inventory();
-    private List<Enemy> allies = new ArrayList<>();
+    private List<BribableEnemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
     public Player(Position position) {
@@ -80,7 +81,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @return List<Enemy>
      */
-    public List<Enemy> getAllies() {
+    public List<BribableEnemy> getAllies() {
         return this.allies;
     }
 
@@ -93,13 +94,13 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param ally
      */
-    public void addAlly(Enemy ally) {
-        for (Enemy m : allies) {
+    public void addAlly(BribableEnemy ally) {
+        for (BribableEnemy m : allies) {
             // Entity is already ally
             if (m.getId().equals(ally.getId())) return;
         }
         allies.add(ally);
-        ally.setEnemy(false);
+        ally.setBribed(true);
     }
 
     /********************************
@@ -245,7 +246,16 @@ public class Player extends MovingEntity implements SubjectPlayer {
         for (Entity e : entities) {
             if (e instanceof Enemy) {
                 Enemy opponent = (Enemy) e;
-                if (opponent.isEnemy()) this.battle(game, opponent);
+
+                // Ignore if the opponent is an ally
+                if (opponent instanceof BribableEnemy) {
+                    BribableEnemy bribableEnemy = (BribableEnemy) opponent;
+                    if (bribableEnemy.isBribed()) {
+                        continue;
+                    }
+                }
+                
+                this.battle(game, opponent);
             }
         }
         this.state.updateState(this);
@@ -339,7 +349,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Given a buildableItem, builds it if it is craftable
+     * Given a buildableItem, builds it if it is buildable
      *
      * @param equipment
      */

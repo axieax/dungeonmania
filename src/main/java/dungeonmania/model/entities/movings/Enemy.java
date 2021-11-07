@@ -8,7 +8,6 @@ public abstract class Enemy extends MovingEntity implements Observer {
 
     private int damageMultiplier;
     private MovementState movementState;
-    private boolean enemy;
 
     public final double ARMOUR_DROP_RATE = 0;
     public final double THE_ONE_RING_DROP_RATE = 0.1; // 10% of dropping one_ring
@@ -16,15 +15,6 @@ public abstract class Enemy extends MovingEntity implements Observer {
     public Enemy(String prefix, Position position, int health, int attackDamage, int damageMultiplier) {
         super(prefix, position, health, attackDamage);
         this.damageMultiplier = damageMultiplier;
-        this.enemy = true;
-    }
-
-    public boolean isEnemy() {
-        return enemy;
-    }
-
-    public void setEnemy(boolean enemy) {
-        this.enemy = enemy;
     }
 
     public int getBaseAttackDamage() {
