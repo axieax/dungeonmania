@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;  
 
@@ -275,14 +274,14 @@ public class ControllerTest {
      * Test invalid action exception is thrown when player does not have sufficient
      * items to craft buildable
      */
-    /*
+    
     @Test
     public void testInsufficientMaterialsToBuild() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
         assertThrows (InvalidActionException.class, () -> controller.build ("bow"));  
         assertThrows (InvalidActionException.class, () -> controller.build ("shield"));      
-    } */
+    } 
 
     /**
      *  Test can craft buildable

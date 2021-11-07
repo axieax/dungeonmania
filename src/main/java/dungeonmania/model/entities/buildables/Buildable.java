@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.movings.player.Inventory;
 
 public interface Buildable {

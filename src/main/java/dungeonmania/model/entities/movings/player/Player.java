@@ -353,8 +353,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param equipment
      */
-    public void craft(Buildable equipment) {
-        if (equipment.isBuildable(inventory)) equipment.craft(inventory);
+    public void craft(Buildable equipment) throws InvalidActionException {
+        if (equipment.isBuildable(inventory)) {
+            equipment.craft(inventory);
+        } else {
+            throw new InvalidActionException("You don't have enough resources to build this equipment");
+        }
     }
 
     /**
