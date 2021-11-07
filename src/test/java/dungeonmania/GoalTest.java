@@ -67,7 +67,7 @@ public class GoalTest {
      * @return DungeonResponse of the last tick
      */
     private final DungeonResponse move(DungeonManiaController dmc, Direction direction, int ticks) {
-        return move(dmc, direction, "", ticks);
+        return move(dmc, direction, null, ticks);
     }
 
     /**
@@ -206,23 +206,27 @@ public class GoalTest {
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.UP, 1).getGoals());
         assertEquals("", move(dmc, Direction.RIGHT, 1).getGoals());
-    }
+    } 
 
+    /**
+     * Test exit condition is satisfied when player moves through exit
+     */
     @Test
     public final void testSimpleExit() {
-        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
             new Exit(new Position(0, 2))
         );
-        Game game = new Game("test", entities, new ExitCondition(), mode);
-        assertEquals(":exit(1)", game.tick("", Direction.DOWN).getGoals());
-        assertEquals("", game.tick("", Direction.DOWN).getGoals());
+        Game game = new Game("test", entities, new ExitCondition(), new Standard());
+        assertEquals(":exit(1)", game.tick(null, Direction.DOWN).getGoals());
+        assertEquals("", game.tick(null, Direction.DOWN).getGoals());
     }
 
+    /**
+     * Test switch condition is satisfied when boulder is moved onto a switch
+     */
     @Test
     public final void testSimpleBoulders() {
-        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
             // Setup boulder to be pushed onto switch
@@ -232,11 +236,14 @@ public class GoalTest {
             new Boulder(new Position(1, 0)),
             new FloorSwitch(new Position(1, 0))
         );
-        Game game = new Game("test", entities, new ToggleSwitch(), mode);
-        assertEquals(":switch(1)", game.tick("", Direction.DOWN).getGoals());
-        assertEquals("", game.tick("", Direction.DOWN).getGoals());
+        Game game = new Game("test", entities, new ToggleSwitch(), new Standard());
+        assertEquals(":switch(1)", game.tick(null, Direction.DOWN).getGoals());
+        assertEquals("", game.tick(null, Direction.DOWN).getGoals());
     }
-
+    /**
+     * Test enemy condition is satisfied when player engages in battle with mercenary
+     * and wins
+     */
     @Test
     public final void testSimpleEnemiesMercenaryKilled() {
         Mode mode = new Standard();
@@ -246,10 +253,13 @@ public class GoalTest {
             new Mercenary(new Position(0, 3), mode.damageMultiplier(), player)
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
-        assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
-        assertEquals("", game.tick("", Direction.DOWN).getGoals());
+        assertEquals(":enemies(1)", game.tick(null, Direction.DOWN).getGoals());
+        assertEquals("", game.tick(null, Direction.DOWN).getGoals());
     }
 
+    /**
+     * Test enemy condition is satisfied when a player bribes a mercenary
+     */
     @Test
     public final void testSimpleEnemiesMercenaryBribed() {
         Mode mode = new Standard();
@@ -258,11 +268,14 @@ public class GoalTest {
         List<Entity> entities = Arrays.asList(player, new Treasure(new Position(0, 1)), mercenary);
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
         // Pick up treasure
-        assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
+        assertEquals(":enemies(1)", game.tick(null, Direction.DOWN).getGoals());
         // Bribe mercenary
         assertEquals("", game.interact(mercenary.getId()).getGoals());
     }
-
+    
+    /**
+     * Test enemies goal is satisfied when spider is killed
+     */
     @Test
     public final void testSimpleEnemiesSpider() {
         Mode mode = new Standard();
@@ -271,11 +284,14 @@ public class GoalTest {
             new Spider(new Position(0, -2), mode.damageMultiplier())
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
-        assertEquals(":enemies(1)", game.tick("", Direction.UP).getGoals());
+        assertEquals(":enemies(1)", game.tick(null, Direction.UP).getGoals());
         // Spider moves up
-        assertEquals("", game.tick("", Direction.UP).getGoals());
+        assertEquals("", game.tick(null, Direction.UP).getGoals());
     }
-
+    
+    /**
+     * Test enemy goal is satisfied when zombie is killed
+     */
     @Test
     public final void testSimpleEnemiesZombie() {
         Mode mode = new Standard();
@@ -288,9 +304,12 @@ public class GoalTest {
         DungeonResponse resp = game.getDungeonResponse();
         assertEquals(":enemies(1)", resp.getGoals());
         // Zombie toast moves up
-        assertEquals("", game.tick("", Direction.UP).getGoals());
+        assertEquals("", game.tick(null, Direction.UP).getGoals());
     }
 
+    /**
+     * Test enemy goal is satisfied when zombie spawner is killed
+     */
     @Test
     public final void testSimpleEnemiesZombieSpawner() {
         Mode mode = new Standard();
@@ -301,11 +320,14 @@ public class GoalTest {
             spawner
         );
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
-        assertEquals(":enemies(1)", game.tick("", Direction.DOWN).getGoals());
-        // Destroy spawner
+        assertEquals(":enemies(1)", game.tick(null, Direction.DOWN).getGoals());
+        // Destroy Spawner
         assertEquals("", game.interact(spawner.getId()).getGoals());
     }
 
+    /**
+     * Test composite AND goals require both goals to be satisfied
+     */
     @Test
     public final void testAndComposite() {
         Mode mode = new Standard();
@@ -325,19 +347,24 @@ public class GoalTest {
         // Check goal reached first
         Game game = new Game("test", entities, and, mode);
         List<String> expected = Arrays.asList(":exit(1) AND :switch(1)", ":switch(1) AND :exit(1)");
-        assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
+        assertTrue(expected.contains(game.tick(null, Direction.DOWN).getGoals()));
         // Move onto exit
-        assertEquals(":switch(1)", game.tick("", Direction.DOWN).getGoals());
+        assertEquals(":switch(1)", game.tick(null, Direction.DOWN).getGoals());
         // Move off exit
-        assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
+        assertTrue(expected.contains(game.tick(null, Direction.DOWN).getGoals()));
         // Push boulder onto switch
-        assertEquals(":exit(1)", game.tick("", Direction.DOWN).getGoals());
+        assertEquals(":exit(1)", game.tick(null, Direction.DOWN).getGoals());
         // Move down
-        assertEquals(":exit(1)", game.tick("", Direction.UP).getGoals());
+        assertEquals(":exit(1)", game.tick(null, Direction.UP).getGoals());
         // All goals satisfied
-        assertEquals("", game.tick("", Direction.UP).getGoals());
+        assertEquals("", game.tick(null, Direction.UP).getGoals());
     }
 
+    /**
+     * Test that composite and goals require a certain order. 
+     * You must collect the treasure before you exit the dungeon to 
+     * satisfy the goal.
+     */
     @Test
     public final void testAndCompositeOrder() {
         Mode mode = new Standard();
@@ -357,21 +384,27 @@ public class GoalTest {
             ":treasure(1) AND :exit(1)",
             ":exit(1) AND :treasure(1)"
         );
-        assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
+        assertTrue(expected.contains(game.tick(null, Direction.DOWN).getGoals()));
         // Take treasure
-        assertEquals(":exit(1)", game.tick("", Direction.LEFT).getGoals());
+        assertEquals(":exit(1)", game.tick(null, Direction.LEFT).getGoals());
         // Take exit
-        assertEquals(":exit(1)", game.tick("", Direction.RIGHT).getGoals());
-        assertEquals("", game.tick("", Direction.RIGHT).getGoals());
+        assertEquals(":exit(1)", game.tick(null, Direction.RIGHT).getGoals());
+        assertEquals("", game.tick(null, Direction.RIGHT).getGoals());
     }
 
+    /**
+     * Test composite or goal is satisfied when one of the child goals is 
+     * satisfied. 
+     * You do not have to collect the treasure to exit the dungeon and complete
+     * the game.
+     */
     @Test
     public final void testOrComposite1() {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
-            new Treasure(new Position(-1, 1)), // go left to get Treasure
+            new Treasure(new Position(-1, 1)), // Go left to get Treasure
             new Exit(new Position(1, 1))
         );
         // Setup goals
@@ -384,11 +417,18 @@ public class GoalTest {
             ":treasure(1) OR :exit(1)",
             ":exit(1) OR :treasure(1)"
         );
-        assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
+        assertTrue(expected.contains(game.tick(null, Direction.DOWN).getGoals()));
         // Take treasure
-        assertEquals("", game.tick("", Direction.LEFT).getGoals());
+        assertEquals("", game.tick(null, Direction.LEFT).getGoals());
     }
 
+    /**
+     * Test composite or goal is satisfied when one of the child goals is 
+     * satisfied.
+     * 
+     * Once you take the treasure you have won the game and the dungeon is completed 
+     * without the player having to reach the exit.
+     */
     @Test
     public final void testOrComposite2() {
         Mode mode = new Standard();
@@ -396,7 +436,7 @@ public class GoalTest {
         List<Entity> entities = Arrays.asList(
             new Player(new Position(0, 0)),
             new Treasure(new Position(-1, 1)),
-            new Exit(new Position(1, 1)) // go right to reach exit
+            new Exit(new Position(1, 1)) //Go right to reach exit
         );
         // Setup goals
         GoalComposite or = new OrComposite();
@@ -408,9 +448,9 @@ public class GoalTest {
             ":treasure(1) OR :exit(1)",
             ":exit(1) OR :treasure(1)"
         );
-        assertTrue(expected.contains(game.tick("", Direction.DOWN).getGoals()));
+        assertTrue(expected.contains(game.tick(null, Direction.DOWN).getGoals()));
         // Reach exit
-        assertEquals("", game.tick("", Direction.RIGHT).getGoals());
+        assertEquals("", game.tick(null, Direction.RIGHT).getGoals());
     }
 
     /**
@@ -420,7 +460,7 @@ public class GoalTest {
     public void testPortalsGoal() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame("portals", "Standard"));
-        DungeonResponse stateOne = controller.tick("", Direction.NONE);
+        DungeonResponse stateOne = controller.tick(null, Direction.NONE);
         assertEquals(stateOne.getGoals(), "");
     }
 
@@ -430,15 +470,72 @@ public class GoalTest {
     @Test
     public void testAdvancedGoal() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame("advanced", "Standard"));
-        List<String> expected = Arrays.asList(
-            ":enemies(1) AND :treasure(1)",
-            ":treasure(1) AND :enemies(1)"
-        );
-        assertTrue(expected.contains(move(controller, Direction.DOWN, 1).getGoals()));
-        // Mercenary should have died
-        assertEquals(":treasure(1)", move(controller, Direction.DOWN, 7).getGoals());
+        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));
+        assertEquals(":treasure(1)", move(controller, Direction.DOWN, 3).getGoals());
         assertEquals(":treasure(1)", move(controller, Direction.RIGHT, 6).getGoals());
+        assertEquals(":treasure(1)", move(controller, Direction.DOWN, 5).getGoals());
+        assertEquals("", move(controller, Direction.DOWN, 1).getGoals());
+    }
+
+    /**
+     * This tests the completion of boulders goal in the boulders dungeon
+     */
+    @Test 
+    public void testBouldersGoal() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame ("boulders", "Standard"));
+        assertEquals(":switch(6)", move(controller, Direction.RIGHT, 1).getGoals()); 
+        assertEquals(":switch(6)", move(controller, Direction.UP, 1).getGoals());
+        assertEquals(":switch(6)", move(controller, Direction.RIGHT, 2).getGoals());
+        assertEquals(":switch(6)", move(controller, Direction.DOWN, 4).getGoals());
+        assertEquals(":switch(6)", move(controller, Direction.LEFT, 1).getGoals());
+        assertEquals(":switch(5)", move(controller, Direction.DOWN, 1).getGoals());
+        assertEquals(":switch(6)", move(controller, Direction.LEFT, 1).getGoals());
+        assertEquals(":switch(6)", move(controller, Direction.DOWN, 1).getGoals());
+        assertEquals(":switch(6)", move(controller, Direction.LEFT, 2).getGoals());
+        assertEquals(":switch(6)", move(controller, Direction.UP, 1).getGoals());
+        assertEquals(":switch(5)", move(controller, Direction.UP, 1).getGoals());
+        assertEquals(":switch(5)", move(controller, Direction.DOWN, 2).getGoals());
+        assertEquals(":switch(5)", move(controller, Direction.RIGHT, 2).getGoals());
+        assertEquals(":switch(5)", move(controller, Direction.UP, 1).getGoals());
+        assertEquals(":switch(5)", move(controller, Direction.RIGHT, 1).getGoals());
+        assertEquals(":switch(4)", move(controller, Direction.RIGHT, 1).getGoals());
+        assertEquals(":switch(4)", move(controller, Direction.UP, 4).getGoals());
+        assertEquals(":switch(4)", move(controller, Direction.LEFT, 2).getGoals());
+        assertEquals(":switch(3)", move(controller, Direction.LEFT, 1).getGoals());
+        assertEquals(":switch(3)", move(controller, Direction.RIGHT, 1).getGoals());
+        assertEquals(":switch(3)", move(controller, Direction.DOWN, 1).getGoals());
+        assertEquals(":switch(2)", move(controller, Direction.RIGHT, 1).getGoals());
+        assertEquals(":switch(1)", move(controller, Direction.DOWN, 1).getGoals());
+        assertEquals(":switch(1)", move(controller, Direction.RIGHT, 1).getGoals());
+        assertEquals(":switch(1)", move(controller, Direction.DOWN, 2).getGoals());
+        assertEquals(":switch(1)", move(controller, Direction.LEFT, 2).getGoals());      
+        assertEquals(":switch(1)", move(controller, Direction.DOWN, 1).getGoals()); 
+        assertEquals(":switch(1)", move(controller, Direction.LEFT, 2).getGoals()); 
+        assertEquals(":switch(1)", move(controller, Direction.UP, 1).getGoals()); 
+        assertEquals("", move(controller, Direction.RIGHT, 1).getGoals()); 
+    }
+
+    /**
+     * Checks the exit goal is satisfied in the maze dungeon
+     */
+    @Test 
+    public void testMazeGoal() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame ("maze", "Standard"));
+        assertEquals(":exit(1)", move(controller, Direction.DOWN, 2).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.RIGHT, 5).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.DOWN, 1).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.RIGHT, 5).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.DOWN, 1).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.RIGHT, 5).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.DOWN, 6).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.RIGHT, 2).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.DOWN, 5).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.RIGHT, 4).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.UP, 10).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.RIGHT, 4).getGoals());
+        assertEquals(":exit(1)", move(controller, Direction.DOWN, 9).getGoals());
         assertEquals("", move(controller, Direction.DOWN, 1).getGoals());
     }
 }

@@ -42,7 +42,6 @@ public final class Game {
         this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
-        // TODO: attach observers
     }
 
     public final void addEntity(Entity entity) {
@@ -194,6 +193,7 @@ public final class Game {
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
+        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException (itemUsedId);
         this.tick += 1;
 
         List<Tickable> tickables = entities

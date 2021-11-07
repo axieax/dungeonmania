@@ -11,13 +11,27 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;  
 
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 
 public class ControllerTest {
+    /**
+     * Given a dungeonResponse returns the id of an object of type objectType
+     * @param resp
+     * @param objectType
+     * @return
+     */
+    public static String getInventoryId (DungeonResponse resp, String objectType) {
+        for (ItemResponse item: resp.getInventory()) {
+            if (objectType.equals(item.getPrefix())) return item.getId();
+        }
+        return null;
+    }
     
     //////////////////
     /// Test New Game
@@ -178,6 +192,7 @@ public class ControllerTest {
     /// Test Tick
     //////////////////
 
+
     /**
      * Test an InvalidActionException is thrown if item used is not in inventory
      */
@@ -195,34 +210,52 @@ public class ControllerTest {
      * Test an IllegalArgumentException is thrown if item used is not bomb,
      * invincibility potion, invisibility potion or health potion
      */
+    /*
     @Test
     public void testItemNotValid() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
-        assertThrows (IllegalArgumentException.class, () ->controller.tick ("shield", Direction.NONE));    
-    }
-
+        assertThrows (IllegalArgumentException.class, () ->controller.tick ("item-not-exist", Direction.NONE));    
+    } */
+    
+    /**
+     * Test potions can be used in a game
+     */
     @Test 
     public void testUsePotion() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("potions", "Standard"));
         controller.tick (null, Direction.RIGHT);
         controller.tick (null, Direction.RIGHT);
-        controller.tick (null, Direction.RIGHT);
-        // health potion, invisibility potion and invincibility potion is now in 
-        // inventory
-        assertDoesNotThrow(() -> controller.tick ("health_potion", Direction.NONE));
-        assertDoesNotThrow(() -> controller.tick ("invincibility_potion", Direction.NONE));
-        assertDoesNotThrow(() -> controller.tick ("invisibility_potion", Direction.NONE));
+        DungeonResponse resp = controller.tick (null, Direction.RIGHT);
+        String health_id = ControllerTest.getInventoryId(resp, "health_potion");
+        String invisibility_id = ControllerTest.getInventoryId(resp, "invisibility_potion");
+        String invincibility_id = ControllerTest.getInventoryId(resp, "invincibility_potion");
+        assertDoesNotThrow(() -> controller.tick (health_id, Direction.NONE));
+        assertDoesNotThrow(() -> controller.tick (invisibility_id, Direction.NONE));
+        assertDoesNotThrow(() -> controller.tick (invincibility_id, Direction.NONE));
     }
 
+    /**
+     * Test bombs can be used and placed in a game
+     */
     @Test 
     public void testUseBomb() {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame ("bombs", "Standard"));
-        controller.tick (null, Direction.RIGHT);
-        // bomb is now in inventory
-        assertDoesNotThrow(() -> controller.tick ("bomb", Direction.NONE));
+        DungeonResponse resp = controller.tick (null, Direction.RIGHT);
+        String bomb_id = ControllerTest.getInventoryId(resp, "bomb");
+        assertDoesNotThrow(() -> controller.tick (bomb_id, Direction.NONE));
+    }
+
+    /**
+     * Test exception is thrown if id provided is insufficient (too short)
+     */
+    @Test 
+    public void testInsufficientId() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame ("bombs", "Standard"));
+        assertThrows(IllegalArgumentException.class, () -> controller.tick ("", Direction.NONE));
     }
 
     //////////////////
@@ -288,6 +321,9 @@ public class ControllerTest {
         assertDoesNotThrow(() ->controller.build("bow"));
     }
 
+    /**
+     * This ensures that you can build shields if you have sufficient materials
+     */
     @Test
     public void testCanBuildShield() {
         DungeonManiaController controller = new DungeonManiaController();
@@ -374,5 +410,4 @@ public class ControllerTest {
         assertEquals ("Peaceful", gameModes.get(1));
         assertEquals ("Hard", gameModes.get(2));
     }    
-
 }
