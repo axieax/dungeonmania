@@ -16,6 +16,7 @@ import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
+import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
@@ -665,16 +666,18 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position invisPotionPos = new Position(2, 2);
-        game.addEntity(new InvisibilityPotion(invisPotionPos));
+        Potion invis = new InvisibilityPotion(invisPotionPos);
+        game.addEntity(invis);
         Position invincPotionPos = new Position(3, 2);
-        game.addEntity(new InvincibilityPotion(invincPotionPos));
+        Potion invinc = new InvincibilityPotion(invincPotionPos);
+        game.addEntity(invinc);
 
         game.tick(null, Direction.RIGHT); // player picks up invis potion
-        game.tick("invisibility_potion", Direction.NONE); // drinks poitoin
+        game.tick(invis.getId(), Direction.NONE); // drinks poitoin
 
         game.tick(null, Direction.RIGHT); // player picks up invinc potion
         // player can drink two potions while still having the effect of another
-        assertDoesNotThrow(() -> game.tick("invincibility_potion", Direction.NONE));
+        assertDoesNotThrow(() -> game.tick(invinc.getId(), Direction.NONE));
     }
 
     @Test
