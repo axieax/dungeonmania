@@ -20,7 +20,6 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -183,7 +182,11 @@ public final class Game {
         return goalString;
     }
 
-    // TODO: add to UML
+    /**
+     * Generates animations for the Dungeon
+     *
+     * @return animations for all Entities which can be animated
+     */
     private final List<AnimationQueue> generateAnimations() {
         return entities
             .stream()
@@ -192,6 +195,11 @@ public final class Game {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Gets a list of items which the Player can build
+     *
+     * @return list of buildable items (String)
+     */
     private final List<String> getBuildables() {
         Player player = getCharacter();
         if (player == null) return new ArrayList<String>();
