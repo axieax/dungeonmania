@@ -10,8 +10,8 @@ import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
@@ -42,7 +42,6 @@ public class ZombieToastSpawnerTest {
      */
     @Test
     public void zombieToastSpawnEveryCycle() {
-      
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
@@ -50,7 +49,7 @@ public class ZombieToastSpawnerTest {
         game.addEntity(new Player(new Position(10, 10)));
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
-            game.tick("", Direction.NONE);
+            game.tick(null, Direction.NONE);
         }
 
         // Check that only one zombie toast has spawned

@@ -1,4 +1,4 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;

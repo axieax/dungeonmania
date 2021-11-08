@@ -1,6 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
-import dungeonmania.model.entities.movings.Inventory;
+import dungeonmania.model.entities.movings.player.Inventory;
 
 public interface Buildable {
     

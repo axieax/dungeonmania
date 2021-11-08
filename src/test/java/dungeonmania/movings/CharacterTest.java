@@ -10,7 +10,6 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Treasure;
@@ -18,10 +17,9 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.Player;
-import dungeonmania.model.entities.movings.PlayerInvincibleState;
-import dungeonmania.model.entities.movings.PlayerInvisibleState;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
+import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -36,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jetty.util.DateCache.Tick;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -428,11 +425,12 @@ public class CharacterTest {
     public void testItemsUsedToCraftRemoved() {
         // any items that are used to craft another buildable entity should be
         // removed from the player's inventory, and are replaced with the built item
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
         Player player = new Player(new Position(1, 1));
@@ -463,11 +461,12 @@ public class CharacterTest {
     @Test
     public void testCharacterCannotPickUpBombsItPlaced() {
         // removed from the player's inventory, and are replaced with the built item
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
         Player player = new Player(new Position(1, 1));
@@ -621,16 +620,16 @@ public class CharacterTest {
 
     @Test
     public void testCanPickUpMultiplePotions() {
+        Mode mode = new Peaceful();
         Game game = new Game(
             "game",
             sevenBySevenWallBoundary(),
             new ExitCondition(),
-            new Peaceful()
+            mode
         );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
-        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 
@@ -662,7 +661,6 @@ public class CharacterTest {
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos);
-        int initialPlayerHealth = player.getHealth();
 
         game.addEntity(player);
 

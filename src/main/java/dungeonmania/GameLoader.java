@@ -16,9 +16,9 @@ import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -178,7 +178,7 @@ public class GameLoader {
             return newShield;
         } else if (type.startsWith("spider")) {
             position = position.asLayer(18);
-            Spider newSpider = new Spider(position);
+            Spider newSpider = new Spider(position, mode.damageMultiplier());
             int health = entityInfo.getInt("health");
             newSpider.setHealth (health);
             return newSpider;

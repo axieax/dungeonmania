@@ -6,9 +6,10 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Peaceful;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -34,7 +35,8 @@ public class ArmourTest {
      */
     @Test
     public void collectTest() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Armour armour = new Armour(new Position(1, 1));
         game.addEntity(armour);
 
@@ -74,5 +76,30 @@ public class ArmourTest {
         player.move(game, Direction.RIGHT);
         Entity item = player.findInventoryItem("armour");
         assertTrue(item == null || ((Armour) item).getDurability() != initialDurability);
+    }
+
+    /**
+     * Test Armour drop rate after winning a battle.
+     */
+    @Test
+    public void dropRateTest() {
+        Mode mode = new Peaceful();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+        player.move(game, Direction.RIGHT);
+
+        // Spawn mercenaries next to the player - upon ticking, the mercenary would move to the player
+        // Since this is peaceful mode, the player's health will not change, so mercenaries will always die
+        for (int i = 0; i < 50; i++) {
+            Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+            game.addEntity(mercenary);
+            game.tick(null, Direction.NONE);
+        }
+
+        // Check that armour is in the player's inventory
+        // Since mercenaries have a 50% chance of dropping armour, there's a 0.75^50 = 0.00006% otherwise
+        assertTrue(player.findInventoryItem("armour") != null);
     }
 }

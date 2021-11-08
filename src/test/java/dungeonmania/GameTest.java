@@ -2,15 +2,16 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ public class GameTest {
     @Test
     public void testPeacefulGameMode() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame("advanced", "Peaceful"));
+        assertDoesNotThrow(() -> controller.newGame("zombie", "Peaceful"));
 
         DungeonResponse responseOne = controller.tick(null, Direction.NONE);
         assertEquals(
@@ -112,13 +113,11 @@ public class GameTest {
     /**
      * This test ensures the game adopts the features of a hard game mode.
      * Such as zombies spawning every 15 ticks
-     * Players having less health points
-     * Invincibility potions have no effect
      */
     @Test
     public void testHardGameMode() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame("advanced", "Hard"));
+        assertDoesNotThrow(() -> controller.newGame("zombie", "Hard"));
         DungeonResponse responseOne = controller.tick(null, Direction.NONE);
         assertEquals(
             0,
@@ -157,6 +156,10 @@ public class GameTest {
         );
     }
 
+    /**
+     * Tests that game produces the correct number of cardinally adjacent entities
+     * in the advanced dungeon
+     */
     @Test
     public void testCardinallyAdjacentEntitiesInAdvancedDungeon() {
         Mode gameMode = new Standard();
@@ -174,25 +177,28 @@ public class GameTest {
             }
         }
 
-        List<Entity> cardinallyAdjacentEntities = newGame.getAdjacentEntities(
+        List<Entity> cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(
             gamePlayer.getPosition()
         );
-        assert (cardinallyAdjacentEntities.size() == 2);
+        assertEquals (2, cardinallyAdjacentEntities.size());
 
         newGame.tick(null, Direction.DOWN);
 
-        cardinallyAdjacentEntities = newGame.getAdjacentEntities(gamePlayer.getPosition());
-        assert (cardinallyAdjacentEntities.size() == 1);
+        cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
+        assertEquals (1, cardinallyAdjacentEntities.size());
 
         newGame.tick(null, Direction.DOWN);
         newGame.tick(null, Direction.DOWN);
         newGame.tick(null, Direction.DOWN);
         newGame.tick(null, Direction.RIGHT);
 
-        cardinallyAdjacentEntities = newGame.getAdjacentEntities(gamePlayer.getPosition());
-        assert (cardinallyAdjacentEntities.size() == 0);
+        cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
+        assertEquals (0, cardinallyAdjacentEntities.size());
     }
 
+    /**
+     * This tests that the correct number of cardinally adjacent entities are produced in the boulders dungeon
+     */
     @Test
     public void testCardinallyAdjacentEntities() {
         Mode gameMode = new Standard();
@@ -210,18 +216,22 @@ public class GameTest {
             }
         }
         // player is surrounded on all sides
-        List<Entity> cardinallyAdjacentEntities = newGame.getAdjacentEntities(
+        List<Entity> cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(
             gamePlayer.getPosition()
         );
-        assert (cardinallyAdjacentEntities.size() == 4);
+        assertEquals (4, cardinallyAdjacentEntities.size());
 
         newGame.tick(null, Direction.RIGHT);
 
         // player is only cardinally adjacent to boulder
-        cardinallyAdjacentEntities = newGame.getAdjacentEntities(gamePlayer.getPosition());
-        assert (cardinallyAdjacentEntities.size() == 1);
+        cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
+        assertEquals (1, cardinallyAdjacentEntities.size());
     }
 
+    /**
+     * This tests that a buildable (bow) can be crafted if sufficient materials are
+     * present
+     */
     @Test
     public void testBuild() {
         Mode gameMode = new Standard();
@@ -252,14 +262,15 @@ public class GameTest {
         }
 
         DungeonResponse gameResponseOne = newGame.tick(null, Direction.UP);
-        assert (gameResponseOne.getBuildables().contains("bow"));
+        assertTrue(gameResponseOne.getBuildables().contains("bow"));
 
         assertDoesNotThrow(() -> newGame.build("bow"));
 
         // bow is in inventory
-        assert (gamePlayer.getInventoryResponses().size() == 1);
+        assertEquals (1, gamePlayer.getInventoryResponses().size());
     }
-
+    
+    /*
     @Test
     public void testInteract() {
         Mode gameMode = new Standard();
@@ -304,6 +315,6 @@ public class GameTest {
         }
 
         assertDoesNotThrow(() -> newGame.interact(mercenaryId));
-        assert (gamePlayer.getAllies().size() == 1);
-    }
+        assertEquals (1, gamePlayer.getAllies().size());
+    } */
 }

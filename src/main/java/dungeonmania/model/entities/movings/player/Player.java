@@ -1,4 +1,4 @@
-package dungeonmania.model.entities.movings;
+package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
@@ -10,8 +10,12 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.model.entities.movings.BribableEnemy;
+import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Observer;
+import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -29,11 +33,11 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private PlayerState state;
     private boolean inBattle;
     private Inventory inventory = new Inventory();
-    private List<MovingEntity> allies = new ArrayList<>();
+    private List<BribableEnemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
     public Player(Position position) {
-        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG, false);
+        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
     }
@@ -75,9 +79,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Get a list of all allies that the player has.
      *
-     * @return List<MovingEntity>
+     * @return List<Enemy>
      */
-    public List<MovingEntity> getAllies() {
+    public List<BribableEnemy> getAllies() {
         return this.allies;
     }
 
@@ -90,13 +94,13 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param ally
      */
-    public void addAlly(MovingEntity ally) {
-        for (MovingEntity m : allies) {
+    public void addAlly(BribableEnemy ally) {
+        for (BribableEnemy m : allies) {
             // Entity is already ally
             if (m.getId().equals(ally.getId())) return;
         }
         allies.add(ally);
-        ally.setEnemy(false);
+        ally.setBribed(true);
     }
 
     public void removeAlly(MovingEntity ally) {
@@ -164,24 +168,26 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Get a list of all attackable equipments from the inventory.
      *
-     * @return List<Equipment>
+     * @return List<AttackEquipment>
      */
-    public List<Equipment> getAttackEquipmentList() {
+    public List<AttackEquipment> getAttackEquipmentList() {
         return this.getEquipmentList()
             .stream()
             .filter(equipment -> equipment instanceof AttackEquipment)
+            .map(equipment -> (AttackEquipment) equipment)
             .collect(Collectors.toList());
     }
 
     /**
      * Get a list of all defensable eqipments from the inventory.
      *
-     * @return List<Equipment>
+     * @return List<DefenceEquipment>
      */
-    public List<Equipment> getDefenceEquipmentList() {
+    public List<DefenceEquipment> getDefenceEquipmentList() {
         return this.getEquipmentList()
             .stream()
             .filter(equipment -> equipment instanceof DefenceEquipment)
+            .map(equipment -> (DefenceEquipment) equipment)
             .collect(Collectors.toList());
     }
 
@@ -249,9 +255,18 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void tick(Game game) {
         List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
-            if (e instanceof MovingEntity) {
-                MovingEntity opponent = (MovingEntity) e;
-                if (opponent.isEnemy()) this.battle(game, opponent);
+            if (e instanceof Enemy) {
+                Enemy opponent = (Enemy) e;
+
+                // Ignore if the opponent is an ally
+                if (opponent instanceof BribableEnemy) {
+                    BribableEnemy bribableEnemy = (BribableEnemy) opponent;
+                    if (bribableEnemy.isBribed()) {
+                        continue;
+                    }
+                }
+                
+                this.battle(game, opponent);
             }
         }
         this.state.updateState(this);
@@ -276,7 +291,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param direction
      */
     public void move(Game game, Direction direction, String itemId)
-        throws IllegalArgumentException {
+        throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
             // check if itemId is not it player inventory
             if (getInventoryItem(itemId) == null) throw new InvalidActionException(
@@ -285,25 +300,35 @@ public class Player extends MovingEntity implements SubjectPlayer {
             
             // check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
-            if (item != null && !(item instanceof Bomb || item instanceof Potion)) throw new IllegalArgumentException(
-                "At Player move method - itemUsed is not a bomb, health_potion, invincibility_potion, or an invisibility_potion, or null"
-            );
 
-            // consume item
-            if (item != null && item instanceof Consumable) ((Consumable) item).consume(game, this);
+            // Item is not null, and it's not a bomb or any potion
+            if (item != null && !(item instanceof Bomb || item instanceof Potion)) {
+                throw new IllegalArgumentException("Not a valid item to use");
+            }
+
+            // Item is in the game but not in the player's inventory, or doesn't exist in either
+            if (item == null) {
+                throw new InvalidActionException("Item not found in player inventory");
+            }
+            
+            // Consume item
+            if (item instanceof Consumable) {
+                ((Consumable) item).consume(game, this);
+            }
         }
 
         this.setDirection(direction);
 
-        // interact with all entities in that direction
+        // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(
             entity -> {
-                // cannot interact with moving entities when moving
+                // Cannot interact with moving entities when moving
                 if (!(entity instanceof MovingEntity)) entity.interact(game, this);
             }
         );
 
+        // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
         boolean canMove = updatedEntities.stream().allMatch(e -> !this.collision(e));
 
@@ -329,22 +354,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
         this.setInBattle(true);
         this.notifyObservers();
 
-        if (this.getHealth() <= 0) {
-            Item item = this.findInventoryItem("one_ring");
-            if (item != null && (item instanceof Consumable)) {
-                // Use one ring if it is in inventory
-                ((Consumable) item).consume(game, this);
-            } else {
-                // Entity is dead, remove it
-                game.removeEntity(this);
-            }
-        }
-
-        // If either entity is dead, remove it
-        if (opponent.getHealth() <= 0) {
-            game.removeEntity(opponent);
-        }
-
         // Notify the observers that the player is no longer in battle
         this.setInBattle(false);
     }
@@ -359,12 +368,16 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Given a buildableItem, builds it if it is craftable
+     * Given a buildableItem, builds it if it is buildable
      *
      * @param equipment
      */
-    public void craft(Buildable equipment) {
-        if (equipment.isBuildable(inventory)) equipment.craft(inventory);
+    public void craft(Buildable equipment) throws InvalidActionException {
+        if (equipment.isBuildable(inventory)) {
+            equipment.craft(inventory);
+        } else {
+            throw new InvalidActionException("You don't have enough resources to build this equipment");
+        }
     }
 
     /**
@@ -392,9 +405,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
         int damageToOpponent = this.getBaseAttackDamage();
 
         // Any extra attack damage provided by equipment
-        for (Equipment e : getAttackEquipmentList()) {
-            if (e instanceof AttackEquipment) damageToOpponent +=
-                e.getMultiplier() * ((AttackEquipment) e).getAttackDamage(opponent);
+        for (AttackEquipment e : getAttackEquipmentList()) {
+            damageToOpponent += e.getHitRate() * e.getAttackDamage();
         }
 
         // Any extra attack damage provided by allies
@@ -414,8 +426,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public int applyDefenceToOpponentAttack(int opponentAttackDamage) {
         int finalAttackDamage = opponentAttackDamage;
-        for (Equipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage = (int) (finalAttackDamage * e.getMultiplier());
+        for (DefenceEquipment e : this.getDefenceEquipmentList()) {
+            finalAttackDamage = (int) (finalAttackDamage * e.getDefenceMultiplier());
         }
         return finalAttackDamage;
     }

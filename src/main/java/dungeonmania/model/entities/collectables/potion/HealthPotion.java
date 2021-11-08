@@ -1,7 +1,7 @@
 package dungeonmania.model.entities.collectables.potion;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
 public class HealthPotion extends Potion {

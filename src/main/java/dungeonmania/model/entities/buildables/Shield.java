@@ -2,19 +2,18 @@ package dungeonmania.model.entities.buildables;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.DefenceEquipment;
-import dungeonmania.model.entities.Equipment;
-import dungeonmania.model.entities.movings.Inventory;
+import dungeonmania.model.entities.movings.player.Inventory;
 
-public class Shield extends Equipment implements DefenceEquipment, Buildable {
+public class Shield extends DefenceEquipment implements Buildable {
 
     private static final int WOOD_NEEDED = 2;
     private static final int TREASURE_NEEDED = 1;
     private static final int KEY_NEEDED = 1;
 
-    public final double MULTIPLIER = 0.25;
+    private static final double DEFENCE_MULTIPLIER = 0.25;
 
     public Shield() {
-        super("shield", null);
+        super("shield", DEFENCE_MULTIPLIER, null);
     }
 
     @Override
@@ -29,7 +28,7 @@ public class Shield extends Equipment implements DefenceEquipment, Buildable {
     }
 
     @Override
-    public void craft(Inventory inventory) throws InvalidActionException {
+    public void craft(Inventory inventory) {
         if (isBuildable(inventory)) {
             inventory.removeItemQuantity("wood", WOOD_NEEDED);
             if (inventory.hasItemQuantity("treasure", TREASURE_NEEDED)) {
@@ -38,8 +37,6 @@ public class Shield extends Equipment implements DefenceEquipment, Buildable {
                 inventory.removeItemQuantity("key", KEY_NEEDED);
             }
             inventory.addItem(new Shield());
-        } else {
-            throw new InvalidActionException("You don't have enough resources to build a Shield.");
         }
     }
 

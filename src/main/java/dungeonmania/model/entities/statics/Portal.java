@@ -4,7 +4,6 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
-import java.util.List;
 import org.json.JSONObject;
 
 public class Portal extends Entity {

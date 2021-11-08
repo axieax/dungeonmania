@@ -8,9 +8,8 @@ import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.Player;
 import dungeonmania.model.entities.movings.Spider;
-import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
@@ -43,7 +42,6 @@ public final class Game {
         this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
-        // TODO: attach observers
     }
 
     public final void addEntity(Entity entity) {
@@ -195,6 +193,7 @@ public final class Game {
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
+        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException (itemUsedId);
         this.tick += 1;
 
         List<Tickable> tickables = entities
@@ -203,8 +202,7 @@ public final class Game {
             .map(e -> (Tickable) e)
             .collect(Collectors.toList());
 
-        // separate loop to avoid concurrency issues when zombie spawner adds new entity
-        // to entities
+        // Separate loop to avoid concurrency issues when zombie spawner adds new entity
         tickables.forEach(e -> {
             if (e instanceof Player) {
                 ((Player) e).move(this, movementDirection, itemUsedId);
@@ -213,11 +211,11 @@ public final class Game {
             }
         });
 
-        Spider.spawnSpider(this);
+        Spider.spawnSpider(this, this.mode.damageMultiplier());
         return getDungeonResponse();
     }
 
-    public final DungeonResponse build(String buildable) {
+    public final DungeonResponse build(String buildable) throws InvalidActionException {
         Player player = getCharacter();
         Buildable item = EntityFactory.getBuildable(buildable);
         player.craft(item);

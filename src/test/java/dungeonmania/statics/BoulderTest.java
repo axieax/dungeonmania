@@ -6,11 +6,12 @@ import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Bomb;
-import dungeonmania.model.entities.movings.Player;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -36,7 +37,8 @@ public class BoulderTest {
      */
     @Test
     public void boulderMoveByPlayer() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Boulder boulder = new Boulder(new Position(1, 1));
         game.addEntity(boulder);
 
@@ -55,7 +57,8 @@ public class BoulderTest {
      */
     @Test
     public void boulderBlocksBoulderMovement() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Boulder boulder1 = new Boulder(new Position(1, 1));
         Boulder boulder2 = new Boulder(new Position(2, 1));
         game.addEntity(boulder1);
@@ -78,7 +81,8 @@ public class BoulderTest {
      */
     @Test
     public void boulderExplodeBombs() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Boulder boulder = new Boulder(new Position(1, 2));
         game.addEntity(boulder);
 
@@ -119,7 +123,7 @@ public class BoulderTest {
         game.tick(null, Direction.DOWN);
 
         // move boulder to trigger bomb explosion
-        game.tick("", Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
 
         // boulder explodes
         assertTrue(game.getEntity(wall1.getId()) == null);

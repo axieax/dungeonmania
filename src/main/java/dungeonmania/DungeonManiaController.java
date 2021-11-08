@@ -15,6 +15,8 @@ import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,8 +73,9 @@ public class DungeonManiaController {
 
         // determine game mode
         Mode mode = null;
-        if (gameMode.equals("Hard")) mode = new Hard(); else if (gameMode.equals("Standard")) mode =
-            new Standard(); else if (gameMode.equals("Peaceful")) mode = new Peaceful();
+        if (gameMode.equals("Hard")) mode = new Hard(); 
+        else if (gameMode.equals("Standard")) mode = new Standard(); 
+        else if (gameMode.equals("Peaceful")) mode = new Peaceful();
         
         // get game entities
         List<Entity> entities = EntityFactory.extractEntities (dungeonName, mode);
@@ -118,6 +121,12 @@ public class DungeonManiaController {
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
         try { // write the json string to a file
+            String directoryPath = "./src/main/java/dungeonmania/savedGames";
+            File pathAsFile = new File(directoryPath);
+            if (!pathAsFile.exists()) {
+                pathAsFile.mkdir();
+            }
+
             String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
             FileWriter myFileWriter = new FileWriter (path, false);
             myFileWriter.write(prettyString);
@@ -181,9 +190,9 @@ public class DungeonManiaController {
      *                                  invisibility_potion
      * @throws InvalidActionException   If itemUsed is not in the player's inventory
      */
-    public DungeonResponse tick(String itemUsed, Direction movementDirection)
+    public DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        return currentGame.tick(itemUsed, movementDirection);
+        return currentGame.tick(itemUsedId, movementDirection);
     }
 
     /**
