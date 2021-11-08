@@ -662,16 +662,18 @@ public class CharacterTest {
         game.addEntity(player);
 
         Position invisPotionPos = new Position(2, 2);
-        game.addEntity(new InvisibilityPotion(invisPotionPos));
+        InvincibilityPotion potion1 = new InvincibilityPotion(invisPotionPos);
+        game.addEntity(potion1);
         Position invincPotionPos = new Position(3, 2);
-        game.addEntity(new InvincibilityPotion(invincPotionPos));
+        InvincibilityPotion potion2 = new InvincibilityPotion(invincPotionPos);
+        game.addEntity(potion2);
 
         game.tick(null, Direction.RIGHT); // player picks up invis potion
-        game.tick("invisibility_potion", Direction.NONE); // drinks poitoin
+        assertDoesNotThrow(() -> game.tick(potion1.getId(), Direction.NONE)); // drinks poitoin
 
         game.tick(null, Direction.RIGHT); // player picks up invinc potion
         // player can drink two potions while still having the effect of another
-        assertDoesNotThrow(() -> game.tick("invincibility_potion", Direction.NONE));
+        assertDoesNotThrow(() -> game.tick(potion2.getId(), Direction.NONE));
     }
 
     public Position getCharacterPosition(List<EntityResponse> entities)

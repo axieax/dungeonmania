@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
@@ -43,7 +44,7 @@ public class ZombieToast extends Enemy {
     }
 
     @Override
-    public void interact(Game game, MovingEntity character) {}
+    public void interact(Game game, Entity character) {}
 
     @Override
     public void moveTo(Position position) {

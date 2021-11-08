@@ -3,7 +3,6 @@ package dungeonmania.model.entities.statics;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Bomb;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class FloorSwitch extends Entity {
     }
 
     @Override
-    public void interact(Game game, MovingEntity character) {}
+    public void interact(Game game, Entity character) {}
 
     /**
      * When called, trigger the switch so that cardinally adjacent bombs explode, destroying

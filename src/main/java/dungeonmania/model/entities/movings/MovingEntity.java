@@ -27,7 +27,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
         this.movingDirection = direction;
     }
 
-    public void interact(Game game, MovingEntity character) {}
+    public void interact(Game game, Entity character) {}
     
     public void kill() {
         this.health = 0;

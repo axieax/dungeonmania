@@ -10,7 +10,6 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Tickable;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.player.Player;
@@ -32,7 +31,7 @@ public class ZombieToastSpawner extends Entity implements Tickable {
      * the player destroys the spawner and the weapon loses durability.
      */
     @Override
-    public void interact(Game game, MovingEntity character) throws InvalidActionException {
+    public void interact(Game game, Entity character) throws InvalidActionException {
         if (character instanceof Player) {
             Player player = (Player) character;
             if (player.hasWeapon()) {
