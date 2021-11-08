@@ -1,6 +1,7 @@
 {
     "main_menu": {
         "background_image": "images/backgrounds/main_menu.png",
+        "background_music": "audio/bonfire.mp3",
         "text_color": "white"
     },
     "game": {
@@ -10,6 +11,7 @@
             "images/tileset/walls/wooden/wood_floor_2.png": 10,
             "images/tileset/walls/wooden/wood_floor_3.png": 2
         },
+        "background_music": "audio/dungeons_and_dragons.mp3",
         "resolution_px": 16,
         "item_box": "images/ui/box.png",
         "text_color": "white"
