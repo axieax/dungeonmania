@@ -1,13 +1,11 @@
 package dungeonmania.model.entities.statics;
 
-import java.util.List;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.List;
 
 public class Boulder extends Entity {
 
@@ -20,9 +18,9 @@ public class Boulder extends Entity {
      * tile.
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
+    public void interact(Game game, Entity character) {
         if (character instanceof Player) {
-            this.moveBoulder(game, character.getDirection());
+            this.moveBoulder(game, ((Player) character).getDirection());
         }
     }
 

@@ -3,7 +3,6 @@ package dungeonmania.model.entities.statics;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
@@ -47,7 +46,7 @@ public class Door extends Entity {
      * @param character
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
+    public void interact(Game game, Entity character) {
         if (character instanceof Player) {
             Player player = (Player) character;
             Key key = player.getKey();

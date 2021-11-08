@@ -3,8 +3,8 @@ package dungeonmania.model.entities.collectables;
 import org.json.JSONObject;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.EntityResponse;
@@ -29,7 +29,7 @@ public class Key extends Item implements Consumable {
      * a time.
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
+    public void interact(Game game, Entity character) {
         if (character instanceof Player && !((Player) character).hasKey()) {
             ((Player) character).collect(this);
             game.removeEntity(this);

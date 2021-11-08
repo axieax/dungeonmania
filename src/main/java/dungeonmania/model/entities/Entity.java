@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.json.JSONObject;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -93,5 +92,5 @@ public abstract class Entity {
         return entity;
     }
 
-    public abstract void interact(Game game, MovingEntity character);
+    public abstract void interact(Game game, Entity character);
 }

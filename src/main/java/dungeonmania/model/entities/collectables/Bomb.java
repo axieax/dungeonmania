@@ -3,7 +3,6 @@ package dungeonmania.model.entities.collectables;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.util.Position;
@@ -34,7 +33,7 @@ public class Bomb extends Item implements Consumable {
      * inventory.
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
+    public void interact(Game game, Entity character) {
         if (!isPlaced) {
             super.interact(game, character);
         }
