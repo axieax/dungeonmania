@@ -27,7 +27,7 @@ public class ZombieToast extends Enemy {
     /**
      * If a player drinks an invincibility potion, change the state
      * of the zombie to make sure it runs away
-     */
+     */ 
     @Override
     public void update(SubjectPlayer player) {
         if (!(player instanceof Player)) {

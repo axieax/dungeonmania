@@ -1,12 +1,19 @@
 package dungeonmania.movings;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
+import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.movement.RandomMovementState;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Portal;
@@ -258,6 +265,61 @@ public class ZombieToastTest {
         
         // zombie should stay in its position, as it cannot move a boulder
         assertTrue(zombie.getPosition().equals(zombiePos));
+    }
+
+    @Test
+    public void testZombieRunAway() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+        
+        InvincibilityPotion invinc = new InvincibilityPotion(new Position(1, 2));
+        game.addEntity(invinc);
+
+        game.tick(null, Direction.DOWN); // collect potion
+        game.tick(invinc.getId(), Direction.NONE); // drink potion
+        
+        assertTrue(player.getState() instanceof PlayerInvincibleState);
+        
+        // spawn zombie next to player
+        Position zombiePos = new Position(1, 1);
+        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        assertTrue(game.getEntities(zombiePos).size() == 0);
+        
+        int entitiesBeforeZombie = game.getEntities().size();
+        game.addEntity(zombie);
+        assertTrue(game.getEntities(zombiePos).size() > 0);
+        
+        // zombie should now run away
+        game.tick(null, Direction.NONE);
+        assertTrue(zombie.getHealth() > 0);
+        assertTrue(player.getState() instanceof PlayerInvincibleState);
+        assertTrue(zombie.getMovementState() instanceof RunMovementState);
+        assertTrue(game.getCardinallyAdjacentEntities(player.getPosition()).size() < entitiesBeforeZombie);
+    }
+    
+    @Test
+    public void testZombieInteractIdempotence() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+    
+        // spawn zombie next to player
+        Position zombiePos = new Position(1, 1);
+        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
+        
+        game.addEntity(zombie);
+        int numEntitesAtZombiePos = game.getEntities(zombiePos).size();
+        assertTrue(game.getEntities(zombiePos).size() > 0);
+        
+        assertDoesNotThrow(() -> {
+            zombie.interact(game, player);
+            assertEquals(numEntitesAtZombiePos, game.getEntities(zombiePos).size());
+        });
     }
 
     private List<Entity> sevenBySevenWallBoundary() {

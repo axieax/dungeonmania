@@ -335,8 +335,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
         if (canMove) {
             this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
-            this.notifyObservers();
         }
+
+        // should be notified regardless of if player can move e.g. if player drinks invincibility potion
+        this.notifyObservers();
     }
 
     /**
