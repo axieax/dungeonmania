@@ -14,11 +14,13 @@ import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -161,7 +163,8 @@ public final class Game {
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
             (player != null) ? player.getInventoryResponses() : new ArrayList<ItemResponse>(),
             this.getBuildables(),
-            formatGoal()
+            formatGoal(),
+            generateAnimations()
         );
     }
 
@@ -180,6 +183,15 @@ public final class Game {
         return goalString;
     }
 
+    // TODO: add to UML
+    private final List<AnimationQueue> generateAnimations() {
+        return entities
+            .stream()
+            .filter(e -> e.getAnimation() != null)
+            .map(e -> e.getAnimation())
+            .collect(Collectors.toList());
+    }
+
     private final List<String> getBuildables() {
         Player player = getCharacter();
         if (player == null) return new ArrayList<String>();
@@ -193,7 +205,9 @@ public final class Game {
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException (itemUsedId);
+        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException(
+            itemUsedId
+        );
         this.tick += 1;
 
         List<Tickable> tickables = entities

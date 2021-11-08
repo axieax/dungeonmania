@@ -47,6 +47,18 @@
         "zombie_toast_spawner": "images/tileset/entities/zombie_spawner.png",
         "zombie_toast": "images/tileset/entities/zombie_00.png",
         "health_potion": "images/tileset/items/potion_4.png",
-        "invisibility_potion": "images/tileset/items/potion_2.png"
+        "invisibility_potion": "images/tileset/items/potion_2.png",
+        "assassin": "images/tileset/entities/assassin.png",
+        "hydra": "images/tileset/entities/hydra.png",
+        "swamp_tile": "images/tileset/entities/swamp_tile.png",
+        "sun_stone": "images/tileset/entities/sun_stone.png",
+        "anduril": "images/tileset/entities/anduril.png",
+        "sceptre": "images/tileset/entities/sceptre.png",
+        "midnight_armour": "images/tileset/entities/midnight_armour.png",
+        "time_turner": "images/tileset/entities/time_turner.png",
+        "time_travelling_portal": "images/tileset/entities/time_travelling_portal.png",
+        "light_bulb_on": "images/tileset/entities/light_bulb_on.png",
+        "light_bulb_off": "images/tileset/entities/light_bulb_off.png",
+        "wire": "images/tileset/entities/wire.png"
     }
 }
