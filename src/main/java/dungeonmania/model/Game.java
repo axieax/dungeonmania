@@ -6,6 +6,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.Buildable;
+import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Spider;
@@ -212,6 +213,7 @@ public final class Game {
         });
 
         Spider.spawnSpider(this, this.mode.damageMultiplier());
+        Hydra.spawnHydra(this, this.mode.damageMultiplier());
         return getDungeonResponse();
     }
 

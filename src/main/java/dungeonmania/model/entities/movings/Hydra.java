@@ -1,15 +1,20 @@
 package dungeonmania.model.entities.movings;
 
+import java.util.Collections;
+import java.util.List;
+
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 
 public class Hydra extends Enemy {
-    private static final int MAX_HYDRA_HEALTH = 0;
-    private static final int MAX_HYDRA_ATTACK_DMG = 0;
+    private static final int MAX_HYDRA_HEALTH = 30;
+    private static final int MAX_HYDRA_ATTACK_DMG = 5;
 
     public Hydra(Position position, int damageMultiplier, SubjectPlayer player) {
         super("hydra", position, MAX_HYDRA_HEALTH, MAX_HYDRA_ATTACK_DMG, damageMultiplier);
@@ -38,5 +43,49 @@ public class Hydra extends Enemy {
     @Override
     public void tick(Game game) {
         this.move(game);
-    }    
+    }
+    
+    public static void spawnHydra(Game game, int damageMultiplier) {
+        int tick = game.getTick();
+        int tickRate = game.getTickRate();
+        if (tick != 0 && tick % tickRate == 0) {
+            // choose a random entity and spawn on it
+            List<Entity> entities = game.getEntities(); // all entities in the dungeon
+            Collections.shuffle(entities); // random order
+
+            boolean canSpawn = false;
+            Position position = null;
+            for (Entity e : entities) {
+                position = e.getPosition();
+                List<Entity> entitiesAtPos = game.getEntities(position);
+                if (canHydraMoveOntoPosition(entitiesAtPos)) {
+                    canSpawn = true;
+                    break;
+                }
+            }
+
+            if (canSpawn) {
+                game.addEntity(new Hydra(position, damageMultiplier, game.getCharacter()));
+            }
+        }
+
+    }
+
+	private static boolean canHydraMoveOntoPosition(List<Entity> entitiesAtPos) {
+        for (Entity e : entitiesAtPos) {
+            if (!e.isPassable()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean collision(Entity entity) {
+        if(
+            entity instanceof Portal
+        ) return false;
+        return !entity.isPassable();
+    }
 }
