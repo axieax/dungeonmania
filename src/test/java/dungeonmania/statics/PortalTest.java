@@ -1,8 +1,11 @@
 package dungeonmania.statics;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.Spider;
+import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
@@ -145,5 +148,161 @@ public class PortalTest {
         // player cannot teleport since a wall is blocking the teleport position
         player.move(game, Direction.LEFT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
+    }
+
+    /**
+     * Test if a spider can teleport through a portal and resumes in a circular movement.
+     */
+    @Test
+    public void testSpiderTeleport() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Player player = new Player(new Position(3, 6));
+
+        Portal portalStart = new Portal(new Position(5, 5), "BLUE");
+        Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
+        Spider spider = new Spider(new Position(4, 5), mode.damageMultiplier());
+        game.addEntity(player);
+        game.addEntity(portalStart);
+        game.addEntity(portalEnd);
+        game.addEntity(spider);
+
+        // spider move up
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(4, 4), spider.getPosition());
+
+        // spider move right
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(5, 4), spider.getPosition());
+
+        // spider goes through portal and move down
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(7, 6), spider.getPosition());
+
+        // spider moves down
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(7, 7), spider.getPosition());
+
+        // spider moves left
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(6, 7), spider.getPosition());
+    }
+
+    /**
+     * Test if a spider can teleport through a portal and resumes in a circular movement.
+     * Spider starts next to portal and moves up (initial direction) and continues in
+     * a circular movement
+     */
+    @Test
+    public void testSpiderTeleportStart() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Player player = new Player(new Position(3, 6));
+
+        Portal portalStart = new Portal(new Position(5, 5), "BLUE");
+        Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
+        Spider spider = new Spider(new Position(5, 6), mode.damageMultiplier());
+        game.addEntity(player);
+        game.addEntity(portalStart);
+        game.addEntity(portalEnd);
+        game.addEntity(spider);
+
+        // spider move up into the portal
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(7, 4), spider.getPosition());
+
+        // spider move right
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(8, 4), spider.getPosition());
+
+        // spider moves down
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(8, 5), spider.getPosition());
+
+        // spider moves down
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(8, 6), spider.getPosition());
+
+        // spider moves left
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(7, 6), spider.getPosition());
+    }
+
+    /**
+     * Test if zombie can teleport through a portal
+     */
+    @Test
+    public void testZombieTeleport() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Player player = new Player(new Position(3, 6));
+
+        Portal portalStart = new Portal(new Position(5, 5), "BLUE");
+        Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
+        // spawn zombie next to portal
+        ZombieToast zombie = new ZombieToast(new Position(4, 5), mode.damageMultiplier(), player);
+
+        game.addEntity(player);
+        game.addEntity(portalStart);
+        game.addEntity(portalEnd);
+        game.addEntity(zombie);
+
+        // create walls around zombie
+        game.addEntity(new Wall(new Position(3, 5)));
+        game.addEntity(new Wall(new Position(4, 4)));
+        game.addEntity(new Wall(new Position(4, 6)));
+
+        // create walls around portal location
+        game.addEntity(new Wall(new Position(9, 5)));
+        game.addEntity(new Wall(new Position(8, 4)));
+        game.addEntity(new Wall(new Position(8, 6)));
+
+        // zombie can only move right since walls are blocking the zombie's movement
+        game.tick(null, Direction.NONE);
+        // zombie gets teleported to portal
+        assertEquals(new Position(8, 5), zombie.getPosition());
+
+        // zombie gets teleported back since there is no space to move besides portal
+        game.tick(null, Direction.NONE);
+        assertEquals(new Position(4, 5), zombie.getPosition());
+
+    }
+
+    /**
+     * Test if zombie cannot teleport if there is something blocking on the teleported
+     * position
+     */
+    @Test
+    public void testZombieNoTeleport() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Player player = new Player(new Position(3, 6));
+
+        Portal portalStart = new Portal(new Position(5, 5), "BLUE");
+        Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
+        // spawn zombie next to portal
+        ZombieToast zombie = new ZombieToast(new Position(4, 5), mode.damageMultiplier(), player);
+
+        game.addEntity(player);
+        game.addEntity(portalStart);
+        game.addEntity(portalEnd);
+        game.addEntity(zombie);
+
+        // create walls around zombie
+        game.addEntity(new Wall(new Position(3, 5)));
+        game.addEntity(new Wall(new Position(4, 4)));
+        game.addEntity(new Wall(new Position(4, 6)));
+
+        // create walls around portal location
+        game.addEntity(new Wall(new Position(9, 5)));
+        game.addEntity(new Wall(new Position(8, 4)));
+        game.addEntity(new Wall(new Position(8, 6)));
+        game.addEntity(new Wall(new Position(8, 5)));
+
+        // zombie can only move right since walls are blocking the zombie's movement
+        game.tick(null, Direction.NONE);
+        // zombie stays on same position
+        assertEquals(new Position(4, 5), zombie.getPosition());
+
     }
 }

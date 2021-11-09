@@ -108,7 +108,8 @@ public final class Game {
         getCardinallyAdjacentEntities(position)
             .stream()
             .forEach(e -> {
-                if (from.collision(e)) positions.remove(e.getPosition());
+                // consider portals as moveable positions since all moving entities can teleport
+                if (from.collision(e) && !(e instanceof Portal)) positions.remove(e.getPosition());
             });
         return positions
             .stream()
