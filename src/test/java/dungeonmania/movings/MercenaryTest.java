@@ -131,26 +131,6 @@ public class MercenaryTest {
         // Same position as player but mercenary should be killed
         assertTrue(mercenary.getX() == 1);
     }
-
-    @Test
-    public void testInteractMercenaryNotAdjacent() {
-        // InvalidActionException if the player is not within 2 cardinal
-        // tiles to the mercenary, if they are bribing
-        Mode mode = new Standard();
-
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
-        Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
-        game.addEntity(player);
-        
-        Position mercenaryPos = new Position(5, 5);
-        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
-        game.addEntity(mercenary);
-
-        // Mercenary too far away from character
-        assertThrows(InvalidActionException.class, () -> game.interact(mercenary.getId()));
-    }
     
     @Test
     public void testBribeWithoutTreasure() {
@@ -206,8 +186,30 @@ public class MercenaryTest {
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == playerHealth);
+        assertTrue(player.getHealth() == playerHealth);   
+    }
+
+    @Test
+    public void testInteractMercenaryNotAdjacent() {
+        // InvalidActionException if the player is not within 2 cardinal
+        // tiles to the mercenary, if they are bribing
+        Mode mode = new Standard();
+
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+    
+        Position playerPos = new Position(1, 1);
+        Player player = new Player(playerPos);
+        game.addEntity(player);
+
+        game.addEntity(new Treasure(new Position(1, 2)));
+        player.move(game, Direction.DOWN);
         
+        Position mercenaryPos = new Position(5, 5);
+        Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        // Mercenary too far away from character
+        assertThrows(InvalidActionException.class, () -> game.interact(mercenary.getId()));
     }
 
     @Test

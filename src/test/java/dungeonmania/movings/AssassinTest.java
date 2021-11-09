@@ -176,6 +176,32 @@ public class AssassinTest {
     }
 
     @Test
+    public void testInteractAssassinNotAdjacent() {
+        // InvalidActionException if the player is not within 2 cardinal
+        // tiles to the assassin, if they are bribing
+        Mode mode = new Standard();
+
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+    
+        Position playerPos = new Position(1, 1);
+        Player player = new Player(playerPos);
+        game.addEntity(player);
+
+        game.addEntity(new Treasure(new Position(1, 2)));
+        game.addEntity(new TheOneRing(new Position(1, 3)));
+
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        
+        Position assassinPos = new Position(5, 5);
+        Assassin assassin = new Assassin(assassinPos, mode.damageMultiplier(), player);
+        game.addEntity(assassin);
+
+        // Assassin too far away from character
+        assertThrows(InvalidActionException.class, () -> game.interact(assassin.getId()));
+    }
+
+    @Test
     public void testBribedAssassinDoesNotAttack() {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
@@ -219,7 +245,6 @@ public class AssassinTest {
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
-        
     }
 
     @Test
@@ -294,26 +319,6 @@ public class AssassinTest {
         // Assassin should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntities(assassinPos).size() == 0); // assassin should die
-    }
-
-    @Test
-    public void testInteractAssassinNotAdjacent() {
-        // InvalidActionException if the player is not within 2 cardinal
-        // tiles to the assassin, if they are bribing
-        Mode mode = new Standard();
-
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
-        Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
-        game.addEntity(player);
-        
-        Position assassinPos = new Position(5, 5);
-        Assassin assassin = new Assassin(assassinPos, mode.damageMultiplier(), player);
-        game.addEntity(assassin);
-
-        // Assassin too far away from character
-        assertThrows(InvalidActionException.class, () -> game.interact(assassin.getId()));
     }
 
     private List<Entity> sevenBySevenWallBoundary() {
