@@ -1,6 +1,7 @@
 package dungeonmania.movings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.time.Duration.ofMinutes;
@@ -13,8 +14,21 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import dungeonmania.DungeonManiaController;
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.movings.Hydra;
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Boulder;
+import dungeonmania.model.entities.statics.Door;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
+import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Hard;
+import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Peaceful;
+import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
@@ -24,10 +38,13 @@ import dungeonmania.util.Position;
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class HydraTest {
     public static final String HYDRA = "hydra";
+    public static final int HYDRA_TICK_RATE = 50;
     public static final String DUNGEON_ADVANCED = "advanced";
     public static final String DUNGEON_MAZE = "maze";
     public static final String DUNGEON_PORTAL = "portal";
     public static final String GAME_MODE_HARD = "Hard";
+
+    public static final String SPIDER = "spider";
 
     @Test
     public void testEnsureHydraSpawns() {
@@ -49,7 +66,246 @@ public class HydraTest {
             }
         );
     }
+
     
+    @Test
+    public void testHydraSpawnRateNormalMode() {
+        Mode mode = new Hard();
+        
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+        int numEntities = game.getEntities().size();
+        
+        // Hydra should spawn
+        for (int i = 0; i < HYDRA_TICK_RATE; i++) {
+            game.tick(null, Direction.NONE);
+        }
+        
+        // Any other movingEntites that spawn will be removed
+        List<Entity> toRemove = new ArrayList<>();
+        for(Entity e: game.getEntities()) {
+            if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA)) {
+                toRemove.add(e);
+            }
+        }
+
+        for(Entity e: toRemove) {
+            game.removeEntity(e);
+        }
+
+        int numEntitesAfterFiftyTicks = game.getEntities().size();
+        assertTrue(numEntitesAfterFiftyTicks == numEntities + 1);
+    }
+    
+    @Test
+    public void testHydraOnlySpawnsHardMode() {
+        List<Mode> modes = Arrays.asList(new Peaceful(), new Standard());
+
+        for(Mode m: modes) {
+            Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), m);
+            
+            Player player = new Player(new Position(1, 1));
+            game.addEntity(player);
+            int numEntities = game.getEntities().size();
+            
+            // Hydra should not spawn after 50 ticks
+            for (int i = 0; i < HYDRA_TICK_RATE; i++) {
+                game.tick(null, Direction.NONE);
+            }
+            
+            // Any other movingEntites that spawn will be removed
+            List<Entity> toRemove = new ArrayList<>();
+            for(Entity e: game.getEntities()) {
+                if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA)) {
+                    toRemove.add(e);
+                }
+            }
+    
+            for(Entity e: toRemove) {
+                game.removeEntity(e);
+            }
+    
+            int numEntitesAfterFiftyTicks = game.getEntities().size();
+            assertTrue(numEntitesAfterFiftyTicks == numEntities);
+        }
+    }
+
+    @Test
+    public void testBasicMovement() {
+        Mode mode = new Hard();
+
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Position hydraPos = new Position(5, 5);
+        Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
+        game.addEntity(hydra);
+
+        game.tick(null, Direction.RIGHT);
+        List<Entity> entitiesAtOldZombiePos = game.getEntities(hydraPos);
+
+        // zombie should change position as there exists an open tile
+        assertTrue(entitiesAtOldZombiePos.size() == 0);
+    }
+
+    @Test
+    public void testWallBlockingMovement() {
+        // if a hydra is surrounded by a wall, it should not move anywhere
+        Mode mode = new Hard();
+
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Position hydraPos = new Position(5, 5);
+        Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
+        game.addEntity(hydra);
+        int numEnties = game.getEntities(hydraPos).size();
+
+        // surround hydra with a wall
+        game.addEntity(new Wall(new Position(4, 4)));
+        game.addEntity(new Wall(new Position(4, 5)));
+        game.addEntity(new Wall(new Position(5, 4)));
+
+        
+        // hydra should stay in the tile at all times
+        for (int i = 0; i < 10; i++) {
+            game.tick(null, Direction.NONE);
+            assertTrue(game.getEntities(hydraPos).size() == numEnties);
+        }
+    }
+
+    @Test
+    public void testHydraCannotWalkThroughClosedDoor() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Position hydraPos = new Position(5, 5);
+        Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
+
+        assertTrue(game.getEntities(hydraPos).size() == 0);
+        game.addEntity(hydra);
+        assertTrue(game.getEntities(hydraPos).size() > 0);
+
+        game.addEntity(new Wall(new Position(4, 3)));
+        game.addEntity(new Wall(new Position(4, 4)));
+        game.addEntity(new Wall(new Position(4, 5)));
+
+        Position doorPos = new Position(5, 4);
+        Key key = new Key(new Position(1, 5), 1);
+        game.addEntity(new Door(doorPos, 1));
+        game.addEntity(key);
+
+        // hydra is trapped in the corner and should not move in further ticks
+        for (int i = 0; i < 5; i++) {
+            hydra.tick(game);
+            assertTrue(game.getEntities(hydraPos).size() > 0);
+        }
+    }
+
+    @Test
+    public void testZombieCanWalkThroughOpenDoor() {
+        Mode mode = new Hard();
+
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(4, 2));
+        game.addEntity(player);
+        game.addEntity(new Key(new Position(4, 3), 1));
+
+        Position doorPos = new Position(4, 4);
+        Door door = new Door(doorPos, 1);
+        game.addEntity(door);
+        game.tick(null, Direction.DOWN);
+
+        assertTrue(player.hasItemQuantity("key", 1));
+        game.tick(null, Direction.DOWN);
+        assertTrue(door.getPosition().equals(player.getPosition()));
+        assertTrue(door.isOpen());
+
+        game.tick(null, Direction.UP);
+
+        // surround door with walls, so the only direction that Hydra can move is up
+        game.addEntity(new Wall(new Position(3, 4)));
+        game.addEntity(new Wall(new Position(3, 5)));
+        game.addEntity(new Wall(new Position(5, 4)));
+        game.addEntity(new Wall(new Position(5, 5)));
+        
+        Hydra hydra = new Hydra(new Position(4, 5), mode.damageMultiplier(), player);
+        game.addEntity(hydra);
+
+        game.tick(null, Direction.NONE);
+        assertTrue(game.getEntities(doorPos).size() == 2);
+    }
+
+    @Test
+    public void testPortalNoEffect() {
+        // portals have no effect on hydra
+        Mode mode = new Hard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+        
+        Position hydraPos = new Position(5, 5);
+        Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
+
+        assertTrue(game.getEntities(hydraPos).size() == 0);
+        game.addEntity(hydra);
+        assertTrue(game.getEntities(hydraPos).size() > 0);
+
+        game.addEntity(new Wall(new Position(4, 3)));
+        game.addEntity(new Wall(new Position(4, 4)));
+        game.addEntity(new Wall(new Position(4, 5)));
+        game.addEntity(new Wall(new Position(5, 4)));
+
+        Position portalPos = new Position(5, 4);
+        Portal portal = new Portal(portalPos, "blue");
+        game.addEntity(portal);
+        game.tick(null, Direction.NONE);
+        
+        // the only option for the hydra is to move to the portal which it cannot pass through
+        assertTrue(hydra.getPosition().equals(portalPos)); // portal has no effect
+    }
+
+    @Test
+    public void testHydraCannotMoveBoulder() {
+        Mode mode = new Hard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+        
+        Position hydraPos = new Position(5, 5);
+        Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
+
+        assertTrue(game.getEntities(hydraPos).size() == 0);
+        game.addEntity(hydra);
+        assertTrue(game.getEntities(hydraPos).size() > 0);
+        
+        game.addEntity(new Wall(new Position(4, 3)));
+        game.addEntity(new Wall(new Position(4, 4)));
+        game.addEntity(new Wall(new Position(4, 5)));
+        game.addEntity(new Wall(new Position(5, 4)));
+
+        Position boulderPos = new Position(5, 4);
+        Boulder boulder = new Boulder(boulderPos);
+        game.addEntity(boulder);
+
+        game.tick(null, Direction.NONE);
+        
+        // zombie should stay in its position, as it cannot move a boulder
+        assertTrue(hydra.getPosition().equals(hydraPos));
+    }
+
     private List<Entity> sevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
         
