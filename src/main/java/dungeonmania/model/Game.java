@@ -205,12 +205,12 @@ public final class Game {
 
         // Separate loop to avoid concurrency issues when zombie spawner adds new entity
         tickables.forEach(e -> {
-            if (e instanceof Player) {
-                ((Player) e).move(this, movementDirection, itemUsedId);
-            } else {
+            if (!(e instanceof Player)) {
                 ((Tickable) e).tick(this);
             }
         });
+        
+        getCharacter().move(this, movementDirection, itemUsedId);
 
         Spider.spawnSpider(this, this.mode.damageMultiplier());
         Hydra.spawnHydra(this, this.mode.damageMultiplier());
