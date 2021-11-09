@@ -2,6 +2,9 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.util.Position;
 
 public class Hydra extends Enemy {
@@ -14,15 +17,26 @@ public class Hydra extends Enemy {
         player.attach(this);
     }
 
+    /**
+     * If a player drinks an invincibility potion, change the state
+     * of the hydra to make sure it runs away
+     */
     @Override
     public void update(SubjectPlayer player) {
-        // TODO Auto-generated method stub
-        
+        if (!(player instanceof Player)) {
+            return;
+        }
+
+        Player character = (Player) player;
+        if (character.getState() instanceof PlayerInvincibleState) {
+            this.setMovementState(new RunMovementState(this));
+        } else {
+            this.setMovementState(new RandomMovementState(this));
+        }
     }
 
     @Override
     public void tick(Game game) {
-        // TODO Auto-generated method stub
-        
+        this.move(game);
     }    
 }
