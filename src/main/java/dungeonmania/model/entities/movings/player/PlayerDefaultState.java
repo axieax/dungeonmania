@@ -71,7 +71,15 @@ public class PlayerDefaultState implements PlayerState {
         }
 
         // Remove the entity from the game if dead after battle.
-        if (player.isAlive()) game.removeEntity(opponent); else game.removeEntity(player);
+        if (player.isAlive()) {
+            player.removeAlly(opponent);
+            game.removeEntity(opponent);
+        } else {
+            game.removeEntity(player);    
+        }
+
+        // If a player wins a battle, there is a small chance that items could be 
+        // dropped and be added to the character's inventory.
 
         // An opponent can have the potential to drop multiple items.
         Random armourRand = new Random();

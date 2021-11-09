@@ -122,6 +122,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
         ally.setBribed(true);
     }
 
+    public void removeAlly(MovingEntity ally) {
+        MovingEntity toRemove = null;
+        for (MovingEntity m : allies) {
+            if (m.getId().equals(ally.getId())) toRemove = m;
+        }
+
+        if(toRemove != null) {
+            allies.remove(toRemove);
+        }
+    }
+
     /********************************
      *  Inventory Methods           *
      ********************************/
@@ -313,6 +324,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void move(Game game, Direction direction, String itemId)
         throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
+            // check if itemId is not it player inventory
+            if (getInventoryItem(itemId) == null) throw new InvalidActionException(
+                "At Player move method - itemUsed is not in the player's inventory"
+            );
+            
+            // check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
 
             // Item is not null, and it's not a bomb or any potion
@@ -347,8 +364,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
         if (canMove) {
             this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
-            this.notifyObservers();
         }
+
+        // should be notified regardless of if player can move e.g. if player drinks invincibility potion
+        this.notifyObservers();
     }
 
     /**

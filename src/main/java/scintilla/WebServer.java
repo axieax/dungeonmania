@@ -11,7 +11,7 @@ final class WebServer {
 
     public void initialize() {
         port(port);
-        ipAddress(ipAddress);
+        ipAddress("0.0.0.0");
 
         staticFiles.location("/");
 
