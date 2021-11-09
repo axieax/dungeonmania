@@ -28,7 +28,7 @@ public class Mercenary extends BribableEnemy {
         // Player must be within 2 cardinal tiles to the mercenary and 
         // have 1 treasure (gold) in order to bribe the mercenary
         Item item = player.findInventoryItem("treasure");
-        if (item != null && item instanceof Treasure) {
+        if (item != null) {
             if (getDistanceToPlayer(game, player.getPosition()) <= MAX_DISTANCE_TO_BRIBE) {
                 player.addAlly(this);
                 ((Treasure) item).consume(game, player);

@@ -29,7 +29,7 @@ public class Assassin extends BribableEnemy {
         // have 1 treasure (gold) and TheOneRing in order to bribe the assassin
         Item item = player.findInventoryItem("treasure");
         Item ring = player.findInventoryItem("one_ring");
-        if (item != null && item instanceof Treasure && ring != null && ring instanceof TheOneRing) {
+        if (item != null && ring != null) {
             if (getDistanceToPlayer(game, player.getPosition()) <= MAX_DISTANCE_TO_BRIBE) {
                 player.addAlly(this);
                 ((Treasure) item).consume(game, player);

@@ -146,6 +146,7 @@ public class MercenaryTest {
 
         // Mercenary in adjacent tile, so attempt bribe
         assertThrows(InvalidActionException.class, () -> game.interact(mercenary.getId()));
+    
     }
 
     @Test
@@ -192,7 +193,7 @@ public class MercenaryTest {
     @Test
     public void testInteractMercenaryNotAdjacent() {
         // InvalidActionException if the player is not within 2 cardinal
-        // tiles to the mercenary, if they are bribing
+        // tiles to the mercenary and they are bribing
         Mode mode = new Standard();
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);

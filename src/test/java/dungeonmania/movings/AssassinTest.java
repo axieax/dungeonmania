@@ -178,7 +178,7 @@ public class AssassinTest {
     @Test
     public void testInteractAssassinNotAdjacent() {
         // InvalidActionException if the player is not within 2 cardinal
-        // tiles to the assassin, if they are bribing
+        // tiles to the assassin and they are bribing
         Mode mode = new Standard();
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
