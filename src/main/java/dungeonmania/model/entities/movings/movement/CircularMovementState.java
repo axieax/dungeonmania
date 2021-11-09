@@ -45,11 +45,22 @@ public class CircularMovementState implements MovementState {
      */
     private void initialCircularMove(Game game) {
         // initially always move up if possible, else stay in spot
+        Direction nextMoveInPath = Direction.UP;
         Position newPos = enemy.getPosition().translateBy(Direction.UP);
         List<Entity> entitiesAtNewPos = game.getEntities(newPos);
         boolean canMove = entitiesAtNewPos.stream().allMatch(e -> !enemy.collision(e));
         if (canMove) {
-            enemy.setPosition(newPos);
+            enemy.setDirection(nextMoveInPath);
+            
+            // Interact with all entities in that direction
+            List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(nextMoveInPath));
+            entities.forEach(
+                entity -> {
+                    // Cannot interact with moving entities when moving
+                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
+                }
+            );
+            enemy.setPosition(enemy.getPosition().translateBy(nextMoveInPath));
             this.initialMovement = false;
         }
     }
@@ -81,11 +92,22 @@ public class CircularMovementState implements MovementState {
         List<Entity> entitiesAtNewPos = game.getEntities(newPos);
         boolean canMove = entitiesAtNewPos.stream().allMatch(e -> !enemy.collision(e));
         if (canMove) {
-            enemy.setPosition(newPos);
+            enemy.setDirection(nextMoveInPath);
+
+            // Interact with all entities in that direction
+            List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(nextMoveInPath));
+            entities.forEach(
+                entity -> {
+                    // Cannot interact with moving entities when moving
+                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
+                }
+            );
+            enemy.setPosition(enemy.getPosition().translateBy(nextMoveInPath));
         } else { // reverse direction
             this.reverseMovement = !this.reverseMovement;
             indexOfNextMove =  Math.abs(circularMovementPath.size() - (indexOfNextMove + 4)) % 8;
             Collections.reverse(this.circularMovementPath);
+            enemy.setDirection(Direction.NONE);
             return; // no movement occurs if blocked
         }
 

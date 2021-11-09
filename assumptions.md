@@ -3,11 +3,12 @@
 * All enemies will run away if a player is invincible. For spiders, if a player is no longer invincible, it will reset it's circular movement on its last position.
 * Spiders can move out of the map if they spawn on the edge and their ‘circular' path causes them to go beyond the map.
 * Zombies cannot move a boulder as this action is only conducted by a player.
+* Zombies will only randomly pick a free tile to move to.
 * Durability of any weapon is not reduced if a player is invincible.
 * If the player is invisible, the mercenary will not follow them.
 * There's no notion of holding an item vs having it in your inventory, so if a player has multiple instances of an item e.g. 3 swords, it will attack the enemy three times.
-* Portals can also teleport enemies as well.
-* Entities can only use portals if a) there is a free tile in the direction of the entity's movement when passing the portal and b) if the tile is occupied by an entity, it must be a collectable item or an entity that can be passed through.
+* Portals teleports all moving entities. Moving entities that teleport will still follow their original moving pattern. i.e. A spider will resume moving in a circular motion after it has been teleported.
+* Entities can only use portals if a) there is a free tile in the direction of the entity's movement when passing the portal and b) if the tile is occupied by an entity, it must be a collectable item or an entity that can be passed through. Otherwise, it will stay on the same position for the tick.
 * If a bomb explodes by a switch, and there are other bombs in the vicinity of the explosion, those bombs can also explode forming a chain reaction.
 * There can only be one exit in a given dungeon.
 * The bomb explosion has a radius of one tile i.e. entities in adjacent tiles of the bomb are exploded.
