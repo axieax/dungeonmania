@@ -297,7 +297,7 @@ public class MercenaryTest {
     @Test
     public void testBribedMovement() {
         Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<Entity>(), new ExitCondition(), mode);
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
@@ -310,35 +310,34 @@ public class MercenaryTest {
         game.addEntity(new Treasure(new Position(1, 4)));
 
         
-        // make player collect all 3 coins
+        // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
         Position updatedPlayerPos = new Position(1, 4);
 
-        while(!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
         }
 
-        // mercenary in adjacent tile, so bribe
+        // Mercenary in adjacent tile, so bribe (player still at original tile)
         game.interact(mercenary.getId());
-        assertTrue(game.getEntities(updatedPlayerPos).size() == 1); // player still at tile
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
 
-        // mercenary stays either on top of player or adjacent to the player
-        // regardless of where the player moves
+        // Mercenary stays either next to or on top of the player regardless of where the latter moves
         List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
         Random rand = new Random(5);
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             int index = rand.nextInt(100) % 4;
             Direction movementDirection = possibleDirections.get(index); 
 
             game.tick(null, movementDirection);
 
-            int numAdjacentEntites = game.getAdjacentEntities(player.getPosition()).size();
+            List<Entity> numAdjacentEntites = game.getAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
-            // either on top of player, or adjacent to character
-            assertTrue(numAdjacentEntites == 1 || numEntitesAtPlayerPos == 2);
+            // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
+            assertTrue(numAdjacentEntites.contains(mercenary) || numEntitesAtPlayerPos == 2);
         }
     }
 
