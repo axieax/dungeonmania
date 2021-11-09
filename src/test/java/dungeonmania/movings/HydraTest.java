@@ -2,7 +2,10 @@ package dungeonmania.movings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,6 +20,7 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
@@ -69,7 +73,7 @@ public class HydraTest {
 
     
     @Test
-    public void testHydraSpawnRateNormalMode() {
+    public void testHydraSpawnRate() {
         Mode mode = new Hard();
         
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
@@ -86,7 +90,7 @@ public class HydraTest {
         // Any other movingEntites that spawn will be removed
         List<Entity> toRemove = new ArrayList<>();
         for(Entity e: game.getEntities()) {
-            if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA)) {
+            if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA) && !(e instanceof Player)) {
                 toRemove.add(e);
             }
         }
@@ -115,7 +119,7 @@ public class HydraTest {
                 game.tick(null, Direction.NONE);
             }
             
-            // Any other movingEntites that spawn will be removed
+            // Any other movingEntites that spawn will be removed (other than player)
             List<Entity> toRemove = new ArrayList<>();
             for(Entity e: game.getEntities()) {
                 if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA) && !(e instanceof Player)) {
@@ -293,7 +297,6 @@ public class HydraTest {
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
-        game.addEntity(new Wall(new Position(5, 4)));
 
         Position boulderPos = new Position(5, 4);
         Boulder boulder = new Boulder(boulderPos);
@@ -303,6 +306,93 @@ public class HydraTest {
         
         // zombie should stay in its position, as it cannot move a boulder
         assertTrue(hydra.getPosition().equals(hydraPos));
+    }
+
+    @Test
+    public void testHydraHealthInBattle() {
+        // Test the head regrowing ability of of a hydra during battle by
+        // conducting 1000 consecutive battles.
+        // The battles are exactly the same but should result in different
+        // player healths (as the hydra can grow/regrow its head).
+        // There is still a small chance that the player will have the
+        // same health after every battle - but this is very unlikely
+        // and will mean that the hydra is not regrowing its head randomly.
+        Set<Integer> playerHealthAfterBattle = new HashSet<>();
+
+        for(int i = 0; i < 1000; i++) {
+            Mode mode = new Hard();
+            Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+    
+            Position playerPos = new Position(1, 1);
+            Player player = new Player(playerPos);
+            game.addEntity(player);
+            
+            Position hydraPos = new Position(1, 2);
+            Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
+            game.addEntity(hydra);
+
+            // block hydra so the only direction that it can move is up, into the player
+            game.addEntity(new Wall(new Position(1, 3)));
+            game.addEntity(new Wall(new Position(2, 1)));
+            game.addEntity(new Wall(new Position(2, 2)));
+            game.addEntity(new Wall(new Position(2, 3)));
+
+            // battle should occur in next tick, and the player will be left with a certain
+            // health
+            game.tick(null, Direction.NONE);
+            assertTrue(game.getEntities(hydraPos).size() == 0);
+            assertTrue(game.getEntities(playerPos).size() == 1);
+            playerHealthAfterBattle.add(player.getHealth());
+        }
+
+        // out of 1000 battles, player must be at least different once
+        assertTrue(playerHealthAfterBattle.size() > 1);
+    }
+
+    @Test
+    public void testAndurilBattle() {
+        // since the player has an anduril in their inventory,
+        // every battle should result in the same outcome
+        // i.e. player health is the same after every battle
+        Set<Integer> playerHealthAfterBattle = new HashSet<>();
+
+        for(int i = 0; i < 1000; i++) {
+            Mode mode = new Hard();
+            Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+    
+            Position playerPos = new Position(1, 1);
+            Player player = new Player(playerPos);
+            game.addEntity(player);
+            
+            Position andurilPos = new Position(1, 2);
+            Anduril anduril = new Anduril(andurilPos);
+            game.addEntity(anduril);
+
+            // move player downwards and pick up the anduril
+            game.tick(null, Direction.DOWN);
+
+            Position hydraPos = new Position(1, 3);
+            Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
+            game.addEntity(hydra);
+
+            // block hydra so the only direction that it can move is up, into the player
+            game.addEntity(new Wall(new Position(1, 4)));
+            game.addEntity(new Wall(new Position(2, 1)));
+            game.addEntity(new Wall(new Position(2, 2)));
+            game.addEntity(new Wall(new Position(2, 3)));
+            game.addEntity(new Wall(new Position(2, 4)));
+
+            // battle should occur in next tick, and the player will be left with a certain
+            // health
+            game.tick(null, Direction.NONE);
+            assertTrue(game.getEntities(hydraPos).size() == 0);
+            assertTrue(game.getEntities(playerPos).size() == 0);
+            assertTrue(game.getEntities(playerPos.translateBy(Direction.DOWN)).size() == 1);
+            playerHealthAfterBattle.add(player.getHealth());
+        }
+
+        // hydra cannot regrow it's head, and so, every battle results in the same player health
+        assertTrue(playerHealthAfterBattle.size() == 1);
     }
 
     private List<Entity> sevenBySevenWallBoundary() {
