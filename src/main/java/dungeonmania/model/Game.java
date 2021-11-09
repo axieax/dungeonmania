@@ -202,6 +202,11 @@ public final class Game {
         return animations;
     }
 
+    /**
+     * Generates animations for boulders on switches
+     *
+     * @return list of boulder animations
+     */
     private final List<AnimationQueue> boulderAnimations() {
         // locate switch positions
         Set<Position> switchPositions = new HashSet<>();
@@ -220,7 +225,7 @@ public final class Game {
                 new AnimationQueue(
                     "PostTick",
                     e.getId(),
-                    Arrays.asList("sprite boulder_10"),
+                    Arrays.asList("sprite boulder_on_switch"),
                     false,
                     -1
                 )
