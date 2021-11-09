@@ -6,8 +6,8 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.Buildable;
+import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Hydra;
-import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.player.Player;
@@ -292,8 +292,8 @@ public final class Game {
         }
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
-        if (entity instanceof Mercenary) {
-            ((Mercenary) entity).interact(this, (Player) player);
+        if (entity instanceof BribableEnemy) {
+            ((BribableEnemy) entity).interact(this, (Player) player);
         } else if (entity instanceof MovingEntity) {
             player.interact(this, (MovingEntity) entity);
         } else if (entity instanceof ZombieToastSpawner) {

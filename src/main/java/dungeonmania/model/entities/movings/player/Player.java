@@ -10,7 +10,6 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
