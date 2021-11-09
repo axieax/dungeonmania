@@ -31,7 +31,7 @@ public class Spider extends Enemy {
     }
 
     /**
-     * Moves the spider onto the next tile, maintaining a "circular" path
+     * Moves the spider onto the next tile, as per its current movement type
      */
     @Override
     public void tick(Game game) {
