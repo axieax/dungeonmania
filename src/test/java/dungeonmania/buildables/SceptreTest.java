@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.SunStone;
