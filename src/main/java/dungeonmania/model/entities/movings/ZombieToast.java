@@ -1,11 +1,14 @@
 package dungeonmania.model.entities.movings;
 
+import javax.sound.sampled.Port;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.util.Position;
 import java.util.Arrays;
@@ -32,7 +35,7 @@ public class ZombieToast extends Enemy {
     /**
      * If a player drinks an invincibility potion, change the state
      * of the zombie to make sure it runs away
-     */
+     */ 
     @Override
     public void update(SubjectPlayer player) {
         if (!(player instanceof Player)) {
@@ -56,6 +59,13 @@ public class ZombieToast extends Enemy {
     }
 
     @Override
+    public boolean collision(Entity entity) {
+        if(
+            entity instanceof Portal
+        ) return false;
+        return !entity.isPassable();
+    }
+    
     public AnimationQueue getAnimation() {
         final int skin = animationTick % 15;
         return new AnimationQueue(

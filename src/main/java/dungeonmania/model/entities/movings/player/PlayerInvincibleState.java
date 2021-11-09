@@ -6,7 +6,7 @@ import dungeonmania.model.entities.movings.MovingEntity;
 public class PlayerInvincibleState implements PlayerState {
     
     private Player player;
-    private int timeLimit = 2;
+    private int timeLimit = 3;
 
     public PlayerInvincibleState(Player player) {
         this.player = player;

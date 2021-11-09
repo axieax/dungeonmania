@@ -21,7 +21,10 @@ import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -287,6 +290,56 @@ public class MercenaryTest {
         // Mercenary should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntities(mercenaryPos).size() == 0); // mercenary should die
+    }
+    
+    
+
+    @Test
+    public void testBribedMovement() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<Entity>(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        game.addEntity(new Treasure(new Position(1, 2)));
+        game.addEntity(new Treasure(new Position(1, 3)));
+        game.addEntity(new Treasure(new Position(1, 4)));
+
+        
+        // make player collect all 3 coins
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        Position updatedPlayerPos = new Position(1, 4);
+
+        while(!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+            game.tick(null, Direction.NONE);
+        }
+
+        // mercenary in adjacent tile, so bribe
+        game.interact(mercenary.getId());
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1); // player still at tile
+
+        // mercenary stays either on top of player or adjacent to the player
+        // regardless of where the player moves
+        List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
+        Random rand = new Random(5);
+        for(int i = 0; i < 100; i++) {
+            int index = rand.nextInt(100) % 4;
+            Direction movementDirection = possibleDirections.get(index); 
+
+            game.tick(null, movementDirection);
+
+            int numAdjacentEntites = game.getAdjacentEntities(player.getPosition()).size();
+            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
+
+            // either on top of player, or adjacent to character
+            assertTrue(numAdjacentEntites == 1 || numEntitesAtPlayerPos == 2);
+        }
     }
 
     private List<Entity> sevenBySevenWallBoundary() {
