@@ -15,7 +15,6 @@ import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,6 +34,7 @@ public class DungeonManiaController {
     }
 
     public String getLocalisation() {
+        // return "zh_CN";
         return "en_US";
     }
 
@@ -67,21 +67,20 @@ public class DungeonManiaController {
      *                                  dungeonName is not a dungeon that exists
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
-    throws IllegalArgumentException {
+        throws IllegalArgumentException {
         if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException();
         if (!getGameModes().contains(gameMode)) throw new IllegalArgumentException();
 
         // determine game mode
         Mode mode = null;
-        if (gameMode.equals("Hard")) mode = new Hard(); 
-        else if (gameMode.equals("Standard")) mode = new Standard(); 
-        else if (gameMode.equals("Peaceful")) mode = new Peaceful();
-        
+        if (gameMode.equals("Hard")) mode = new Hard(); else if (gameMode.equals("Standard")) mode =
+            new Standard(); else if (gameMode.equals("Peaceful")) mode = new Peaceful();
+
         // get game entities
-        List<Entity> entities = EntityFactory.extractEntities (dungeonName, mode);
+        List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
         // get goal
-        Goal goal = EntityFactory.extractGoal (dungeonName);
-        
+        Goal goal = EntityFactory.extractGoal(dungeonName);
+
         // create new game
         Game newGame = new Game(dungeonName, entities, goal, mode);
         games.add(newGame);
@@ -128,9 +127,9 @@ public class DungeonManiaController {
             }
 
             String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
-            FileWriter myFileWriter = new FileWriter (path, false);
+            FileWriter myFileWriter = new FileWriter(path, false);
             myFileWriter.write(prettyString);
-            myFileWriter.close();            
+            myFileWriter.close();
         } catch (IOException e) {
             return null;
         }

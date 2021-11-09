@@ -9,13 +9,16 @@ import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.util.Position;
+import java.util.Arrays;
 
 public class ZombieToast extends Enemy {
 
     public static final int MAX_ZOMBIE_HEALTH = 20;
     public static final int MAX_ZOMBIE_ATTACK_DMG = 2;
     public final double ARMOUR_DROP_RATE = 0.2;
+    private int animationTick = 0;
 
     public ZombieToast(Position position, int damageMultiplier, SubjectPlayer player) {
         super("zombie_toast", position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG, damageMultiplier);
@@ -25,6 +28,7 @@ public class ZombieToast extends Enemy {
 
     @Override
     public void tick(Game game) {
+        animationTick += 1;
         this.move(game);
     }
 
@@ -60,5 +64,16 @@ public class ZombieToast extends Enemy {
             entity instanceof Portal
         ) return false;
         return !entity.isPassable();
+    }
+    
+    public AnimationQueue getAnimation() {
+        final int skin = animationTick % 15;
+        return new AnimationQueue(
+            "PostTick",
+            getId(),
+            Arrays.asList("sprite zombie_toast_" + ((skin < 10) ? "0" + skin : skin)),
+            false,
+            -1
+        );
     }
 }

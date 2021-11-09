@@ -10,7 +10,6 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.potion.Potion;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
@@ -18,10 +17,12 @@ import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
@@ -239,6 +240,18 @@ public class Player extends MovingEntity implements SubjectPlayer {
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 
+    @Override
+    public AnimationQueue getAnimation() {
+        double health = (double) getHealth() / MAX_CHARACTER_HEALTH;
+        return new AnimationQueue(
+            "PostTick",
+            getId(),
+            Arrays.asList("healthbar set " + health, "healthbar tint 0xff0000, over 0.5s"),
+            false,
+            10
+        );
+    }
+
     /**
      * Checks if the inventory has the specified quantity of the item.
      *
@@ -283,7 +296,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
                         continue;
                     }
                 }
-                
+
                 this.battle(game, opponent);
             }
         }
@@ -328,7 +341,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             if (item == null) {
                 throw new InvalidActionException("Item not found in player inventory");
             }
-            
+
             // Consume item
             if (item instanceof Consumable) {
                 ((Consumable) item).consume(game, this);
@@ -339,12 +352,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(
-            entity -> {
-                // Cannot interact with moving entities when moving
-                if (!(entity instanceof MovingEntity)) entity.interact(game, this);
-            }
-        );
+        entities.forEach(entity -> {
+            // Cannot interact with moving entities when moving
+            if (!(entity instanceof MovingEntity)) entity.interact(game, this);
+        });
 
         // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
@@ -397,7 +408,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
         if (equipment.isBuildable(inventory)) {
             equipment.craft(inventory);
         } else {
-            throw new InvalidActionException("You don't have enough resources to build this equipment");
+            throw new InvalidActionException(
+                "You don't have enough resources to build this equipment"
+            );
         }
     }
 

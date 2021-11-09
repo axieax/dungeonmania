@@ -6,21 +6,27 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.Buildable;
+import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Hydra;
-import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Boulder;
+import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -163,7 +169,8 @@ public final class Game {
             entities.stream().map(Entity::getEntityResponse).collect(Collectors.toList()),
             (player != null) ? player.getInventoryResponses() : new ArrayList<ItemResponse>(),
             this.getBuildables(),
-            formatGoal()
+            formatGoal(),
+            generateAnimations()
         );
     }
 
@@ -182,6 +189,57 @@ public final class Game {
         return goalString;
     }
 
+    /**
+     * Generates animations for the Dungeon
+     *
+     * @return animations for all Entities which can be animated
+     */
+    private final List<AnimationQueue> generateAnimations() {
+        List<AnimationQueue> animations = entities
+            .stream()
+            .filter(e -> e.getAnimation() != null)
+            .map(e -> e.getAnimation())
+            .collect(Collectors.toList());
+        animations.addAll(boulderAnimations());
+        return animations;
+    }
+
+    /**
+     * Generates animations for boulders on switches
+     *
+     * @return list of boulder animations
+     */
+    private final List<AnimationQueue> boulderAnimations() {
+        // locate switch positions
+        Set<Position> switchPositions = new HashSet<>();
+        for (Entity e : entities) {
+            Position pos = e.getPosition();
+            if (e instanceof FloorSwitch) switchPositions.add(pos.asLayer(0));
+        }
+
+        // different skins for boulders on switches
+        return entities
+            .stream()
+            .filter(e ->
+                e instanceof Boulder && switchPositions.contains(e.getPosition().asLayer(0))
+            )
+            .map(e ->
+                new AnimationQueue(
+                    "PostTick",
+                    e.getId(),
+                    Arrays.asList("sprite boulder_on_switch"),
+                    false,
+                    -1
+                )
+            )
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets a list of items which the Player can build
+     *
+     * @return list of buildable items (String)
+     */
     private final List<String> getBuildables() {
         Player player = getCharacter();
         if (player == null) return new ArrayList<String>();
@@ -195,7 +253,9 @@ public final class Game {
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException (itemUsedId);
+        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException(
+            itemUsedId
+        );
         this.tick += 1;
 
         List<Tickable> tickables = entities
@@ -232,8 +292,8 @@ public final class Game {
         }
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
-        if (entity instanceof Mercenary) {
-            ((Mercenary) entity).interact(this, (Player) player);
+        if (entity instanceof BribableEnemy) {
+            ((BribableEnemy) entity).interact(this, (Player) player);
         } else if (entity instanceof MovingEntity) {
             player.interact(this, (MovingEntity) entity);
         } else if (entity instanceof ZombieToastSpawner) {
