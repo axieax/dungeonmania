@@ -1,7 +1,6 @@
 package dungeonmania.model.entities;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
@@ -25,7 +24,7 @@ public abstract class Item extends Entity {
      * inventory.
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
+    public void interact(Game game, Entity character) {
         if (character instanceof Player) {
             ((Player) character).collect(this);
             game.removeEntity(this);

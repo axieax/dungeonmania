@@ -3,6 +3,7 @@ package dungeonmania.model.entities.statics;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 import org.json.JSONObject;
 
@@ -25,8 +26,8 @@ public class Portal extends Entity {
      * the entity to go through by.
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
-        this.teleport(game, character);
+    public void interact(Game game, Entity character) {
+        if (character instanceof Player) this.teleport(game, (MovingEntity) character);
     }
 
     public Portal findPortal(Game game) {

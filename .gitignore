@@ -13,3 +13,5 @@ bin/
 .project
 .settings
 yarn.lock
+
+savedGames

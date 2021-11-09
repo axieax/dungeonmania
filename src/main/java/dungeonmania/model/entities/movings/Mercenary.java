@@ -2,6 +2,7 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.movement.AttackMovementState;
@@ -61,7 +62,7 @@ public class Mercenary extends BribableEnemy {
      * Player interacting with mercenary will check the bribing
      */
     @Override
-    public void interact(Game game, MovingEntity character) {
+    public void interact(Game game, Entity character) {
         bribe(game, (Player) character);
     }
 
