@@ -60,7 +60,8 @@ public class PlayerDefaultState implements PlayerState {
                 currEquipment.useEquipment(player);
                 attackEquipments.remove(currEquipment);
             }
-            opponent.setHealth(opponent.getHealth() - ((originalHealth * playerAttackDamage) / 5));
+            
+            opponent.reduceHealthFromBattle(((originalHealth * playerAttackDamage) / 5));
 
             // Check if player is dead
             if (!player.isAlive()) {

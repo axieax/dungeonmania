@@ -6,9 +6,8 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.Buildable;
-import dungeonmania.model.entities.movings.Assassin;
 import dungeonmania.model.entities.movings.BribableEnemy;
-import dungeonmania.model.entities.movings.Mercenary;
+import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.player.Player;
@@ -206,14 +205,15 @@ public final class Game {
 
         // Separate loop to avoid concurrency issues when zombie spawner adds new entity
         tickables.forEach(e -> {
-            if (e instanceof Player) {
-                ((Player) e).move(this, movementDirection, itemUsedId);
-            } else {
+            if (!(e instanceof Player)) {
                 ((Tickable) e).tick(this);
             }
         });
+        
+        getCharacter().move(this, movementDirection, itemUsedId);
 
         Spider.spawnSpider(this, this.mode.damageMultiplier());
+        Hydra.spawnHydra(this, this.mode.damageMultiplier());
         return getDungeonResponse();
     }
 
