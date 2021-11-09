@@ -76,8 +76,8 @@ public class PlayerDefaultState implements PlayerState {
         // An opponent can have the potential to drop multiple items.
         Random armourRand = new Random();
         if (
-            (opponent instanceof Enemy &&
-            armourRand.nextDouble() <= ((Enemy) opponent).ARMOUR_DROP_RATE)
+            opponent instanceof Enemy &&
+            armourRand.nextDouble() <= ((Enemy) opponent).getArmourDropRate()
         ) {
             player.addInventoryItem(new Armour());
         }
