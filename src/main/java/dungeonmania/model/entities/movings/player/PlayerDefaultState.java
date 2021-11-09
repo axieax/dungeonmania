@@ -6,6 +6,7 @@ import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;
+import dungeonmania.model.entities.movings.Assassin;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.Mercenary;
@@ -61,6 +62,7 @@ public class PlayerDefaultState implements PlayerState {
             }
             opponent.setHealth(opponent.getHealth() - ((originalHealth * playerAttackDamage) / 5));
 
+            // Check if player is dead
             if (!player.isAlive()) {
                 Item item = player.findInventoryItem("one_ring");
                 if (item != null && (item instanceof Consumable)) {
@@ -86,6 +88,8 @@ public class PlayerDefaultState implements PlayerState {
         if (
             (opponent instanceof Mercenary &&
             armourRand.nextDouble() <= ((Mercenary) opponent).ARMOUR_DROP_RATE) ||
+            (opponent instanceof Assassin &&
+            armourRand.nextDouble() <= ((Assassin) opponent).ARMOUR_DROP_RATE) ||
             (opponent instanceof ZombieToast &&
             armourRand.nextDouble() <= ((ZombieToast) opponent).ARMOUR_DROP_RATE)
         ) {
