@@ -87,10 +87,8 @@ public class PlayerDefaultState implements PlayerState {
          */
         Random armourRand = new Random();
         if (
-            (opponent instanceof Mercenary &&
-            armourRand.nextDouble() <= ((Mercenary) opponent).ARMOUR_DROP_RATE) ||
-            (opponent instanceof Assassin &&
-            armourRand.nextDouble() <= ((Assassin) opponent).ARMOUR_DROP_RATE) ||
+            (opponent instanceof BribableEnemy &&
+            armourRand.nextDouble() <= ((BribableEnemy) opponent).ARMOUR_DROP_RATE) ||
             (opponent instanceof ZombieToast &&
             armourRand.nextDouble() <= ((ZombieToast) opponent).ARMOUR_DROP_RATE)
         ) {
