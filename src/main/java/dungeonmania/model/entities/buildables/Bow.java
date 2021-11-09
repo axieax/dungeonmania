@@ -6,7 +6,7 @@ import dungeonmania.model.entities.movings.player.Inventory;
 public class Bow extends AttackEquipment implements Buildable {
 
     private static final int WOOD_NEEDED = 1;
-    private static final int ARROWS_NEEDED = 3;
+    private static final int ARROW_NEEDED = 3;
 
     private static final int ATTACK_DAMAGE = 30;
     private static final int HIT_RATE = 2;
@@ -19,17 +19,15 @@ public class Bow extends AttackEquipment implements Buildable {
     public boolean isBuildable(Inventory inventory) {
         return (
             inventory.hasItemQuantity("wood", WOOD_NEEDED) &&
-            inventory.hasItemQuantity("arrow", ARROWS_NEEDED)
+            inventory.hasItemQuantity("arrow", ARROW_NEEDED)
         );
     }
 
     @Override
     public void craft(Inventory inventory) {
-        if (isBuildable(inventory)) {
-            inventory.removeItemQuantity("wood", WOOD_NEEDED);
-            inventory.removeItemQuantity("arrow", ARROWS_NEEDED);
-            inventory.addItem(new Bow());
-        }
+        inventory.removeItemQuantity("wood", WOOD_NEEDED);
+        inventory.removeItemQuantity("arrow", ARROW_NEEDED);
+        inventory.addItem(new Bow());
     }
 
     @Override
