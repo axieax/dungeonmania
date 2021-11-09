@@ -1,7 +1,5 @@
 package dungeonmania.model.entities.collectables;
 
-import org.json.JSONObject;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
@@ -9,13 +7,14 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
+import org.json.JSONObject;
 
 public class Key extends Item implements Consumable {
 
     private int key;
 
     public Key(Position position, int key) {
-        super("key", position);
+        super("key_" + key, position);
         this.key = key;
     }
 
@@ -44,17 +43,12 @@ public class Key extends Item implements Consumable {
     @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put ("key", key);
+        info.put("key", key);
         return info;
     }
 
     @Override
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(
-            getId(),
-            String.format("%s_%d", getPrefix(), key),
-            getPosition(),
-            isInteractable()
-        );
+        return new EntityResponse(getId(), getPrefix(), getPosition(), isInteractable());
     }
 }
