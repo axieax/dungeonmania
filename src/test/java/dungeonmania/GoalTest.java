@@ -10,7 +10,6 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.movings.Mercenary;
-import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;

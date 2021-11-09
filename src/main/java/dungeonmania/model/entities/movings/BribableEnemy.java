@@ -14,7 +14,7 @@ public abstract class BribableEnemy extends Enemy {
     public static final int TREASURE_REQUIRED_TO_BRIBE = 1;
     public static final int BATTLE_RADIUS = 5;
     public static final int MAX_DISTANCE_TO_BRIBE = 2;
-    public final double ARMOUR_DROP_RATE = 0.25;
+    public static final double ARMOUR_DROP_RATE = 0.25;
 
     private boolean bribed;
     private boolean moveTwice;
@@ -34,11 +34,16 @@ public abstract class BribableEnemy extends Enemy {
     }
 
     @Override
+    public double getArmourDropRate() {
+        return ARMOUR_DROP_RATE;
+    }
+
+    @Override
     public void tick(Game game) {
         this.move(game);
         
         Player player = (Player) game.getCharacter();
-        // If a player is fighting an enemy within the battle radius, assassin moves twice as fast
+        // If a player is fighting an enemy within the battle radius, BribableEnemy moves twice as fast
         if (this.isAlive() && moveTwice && getDistanceToPlayer(game, player.getPosition()) <= BATTLE_RADIUS) {
             moveTwice = false;
             this.move(game);

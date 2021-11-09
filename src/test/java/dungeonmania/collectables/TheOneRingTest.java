@@ -118,6 +118,8 @@ public class TheOneRingTest {
             Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
             game.addEntity(mercenary);
             game.tick(null, Direction.NONE);
+
+            if (player.findInventoryItem("one_ring") != null) break;
         }
 
         assertTrue(player.getHealth() == 100);
