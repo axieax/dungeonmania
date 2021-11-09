@@ -1,17 +1,16 @@
 package dungeonmania.model.entities.movings.movement;
 
-import java.util.List;
-import java.util.Random;
-
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
-import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.List;
+import java.util.Map;
 
 public class AttackMovementState implements MovementState {
-    
+
     private MovingEntity enemy;
 
     public AttackMovementState(MovingEntity enemy) {
@@ -25,39 +24,39 @@ public class AttackMovementState implements MovementState {
     public void move(Game game) {
         Player player = (Player) game.getCharacter();
 
-        List<Position> possiblePositionsToMove = game.getMoveablePositions(enemy, enemy.getPosition());
-
-        int optimalPathLength = Integer.MAX_VALUE;
         Position optimalPathPosition = enemy.getPosition();
 
         PositionGraph positionGraph = new PositionGraph(game, enemy);
 
         // Move the mercenary to the closest possible position to the player
-        for (Position position : possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(position, player.getPosition());
-            if (pathLen < optimalPathLength) {
-                optimalPathLength = pathLen;
-                optimalPathPosition = position;
+        Map<Position, Position> prev = positionGraph.dijkstra(enemy.getPosition());
+
+        // traverse back path
+        if (prev.get(player.getPosition()) == optimalPathPosition) {
+            optimalPathPosition = player.getPosition();
+        } else {
+            Position curr = prev.get(player.getPosition());
+            while (curr != enemy.getPosition()) {
+                optimalPathPosition = curr;
+                curr = prev.get(curr);
             }
         }
 
-        // If the player is invisible, move the mercenary randomly (will not follow player)
-        if (player.getState() instanceof PlayerInvisibleState) {
-            Random rand = new Random();
-            int randomIndex = rand.nextInt(possiblePositionsToMove.size());
-            optimalPathPosition = possiblePositionsToMove.get(randomIndex);
-        }
-
-        enemy.setPosition(optimalPathPosition);
-        Position offset = Position.calculatePositionBetween(enemy.getPosition(), optimalPathPosition);
-            if (Direction.LEFT.getOffset().equals(offset)) enemy.setDirection(Direction.LEFT);
-            else if (Direction.UP.getOffset().equals(offset)) enemy.setDirection(Direction.UP);
-            else if (Direction.RIGHT.getOffset().equals(offset)) enemy.setDirection(Direction.RIGHT);
-            else if (Direction.DOWN.getOffset().equals(offset)) enemy.setDirection(Direction.DOWN);
-            else enemy.setDirection(Direction.NONE);
-
-        if (player.getPosition().equals(enemy.getPosition())){
-            player.battle(game, enemy);
+        Position offset = Position.calculatePositionBetween(
+            enemy.getPosition(),
+            optimalPathPosition
+        );
+        if (Direction.LEFT.getOffset().equals(offset)) enemy.setDirection(Direction.LEFT);
+        else if (Direction.UP.getOffset().equals(offset)) enemy.setDirection(Direction.UP);
+        else if (Direction.RIGHT.getOffset().equals(offset)) enemy.setDirection(Direction.RIGHT);
+        else if (Direction.DOWN.getOffset().equals(offset)) enemy.setDirection(Direction.DOWN);
+        else enemy.setDirection(Direction.NONE);
+        
+        if (!enemy.getDirection().equals(Direction.NONE)) {
+            // Interact with all entities in that direction
+            List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(enemy.getDirection()));
+            entities.forEach(entity -> entity.interact(game, enemy));
+            enemy.setPosition(enemy.getPosition().translateBy(enemy.getDirection()));
         }
     }
 }

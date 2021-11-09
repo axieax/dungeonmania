@@ -54,12 +54,7 @@ public class CircularMovementState implements MovementState {
             
             // Interact with all entities in that direction
             List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(nextMoveInPath));
-            entities.forEach(
-                entity -> {
-                    // Cannot interact with moving entities when moving
-                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
-                }
-            );
+            entities.forEach(entity -> entity.interact(game, enemy));
             enemy.setPosition(enemy.getPosition().translateBy(nextMoveInPath));
             this.initialMovement = false;
         }
@@ -96,12 +91,7 @@ public class CircularMovementState implements MovementState {
 
             // Interact with all entities in that direction
             List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(nextMoveInPath));
-            entities.forEach(
-                entity -> {
-                    // Cannot interact with moving entities when moving
-                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
-                }
-            );
+            entities.forEach(entity -> entity.interact(game, enemy));
             enemy.setPosition(enemy.getPosition().translateBy(nextMoveInPath));
         } else { // reverse direction
             this.reverseMovement = !this.reverseMovement;

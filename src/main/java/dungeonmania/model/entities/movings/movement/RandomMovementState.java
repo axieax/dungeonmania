@@ -36,12 +36,7 @@ public class RandomMovementState implements MovementState {
             else if (Direction.DOWN.getOffset().equals(offset)) enemy.setDirection(Direction.DOWN);
             // Interact with all entities in that direction
             List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(enemy.getDirection()));
-            entities.forEach(
-                entity -> {
-                    // Cannot interact with moving entities when moving
-                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
-                }
-            );
+            entities.forEach(entity -> entity.interact(game, enemy));
             enemy.setPosition(enemy.getPosition().translateBy(enemy.getDirection()));
         }
         else enemy.setDirection(Direction.NONE);

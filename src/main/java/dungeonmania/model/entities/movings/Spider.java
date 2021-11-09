@@ -57,9 +57,6 @@ public class Spider extends Enemy {
         }
     }
 
-    @Override
-    public void interact(Game game, Entity character) {}
-
     /**
      * Determines if a spider can move onto a position that contains the given entities
      * @param entitiesAtPos list of entities on the new position

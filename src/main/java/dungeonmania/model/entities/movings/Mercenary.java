@@ -63,7 +63,7 @@ public class Mercenary extends BribableEnemy {
      */
     @Override
     public void interact(Game game, Entity character) {
-        bribe(game, (Player) character);
+        if (character instanceof Player) bribe(game, (Player) character);
     }
 
     /**
@@ -94,6 +94,6 @@ public class Mercenary extends BribableEnemy {
      */
     public int getDistanceToPlayer(Game game, Position playerPos) {
         PositionGraph positionGraph = new PositionGraph(game, this);
-        return positionGraph.BFS(this.getPosition(), playerPos);
+        return positionGraph.bfs(this.getPosition(), playerPos);
     }
 }

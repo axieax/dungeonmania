@@ -302,14 +302,11 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         this.setDirection(direction);
 
-        // Interact with all entities in that direction
-        List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(
-            entity -> {
-                // Cannot interact with moving entities when moving
-                if (!(entity instanceof MovingEntity)) entity.interact(game, this);
-            }
-        );
+        if (!direction.equals(Direction.NONE)) {
+            // Interact with all entities in that direction
+            List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
+            entities.forEach(entity -> entity.interact(game, this));
+        }
 
         // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
