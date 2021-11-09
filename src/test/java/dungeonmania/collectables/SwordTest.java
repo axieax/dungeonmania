@@ -67,10 +67,7 @@ public class SwordTest {
         int initialDurability = 5;
         assertTrue(sword.getDurability() == initialDurability);
 
-        ZombieToastSpawner spawner = new ZombieToastSpawner(
-            new Position(3, 1),
-            mode.damageMultiplier()
-        );
+        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(3, 1), mode.damageMultiplier());
         game.addEntity(spawner);
 
         player.move(game, Direction.RIGHT);
