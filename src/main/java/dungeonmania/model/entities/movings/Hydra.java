@@ -117,8 +117,8 @@ public class Hydra extends Enemy {
         Random rand = new Random();
         if(!preventHeadRespawn && rand.nextInt(100) % 2 == 0) {
             super.reduceHealthFromBattle(-amount);
-            preventHeadRespawn = false;
         } else {
+            preventHeadRespawn = false;
             super.reduceHealthFromBattle(amount);
         }
     }
