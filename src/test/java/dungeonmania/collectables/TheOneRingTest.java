@@ -50,11 +50,10 @@ public class TheOneRingTest {
     }
 
     /**
-     * Test if TheOneRing respawns the character back to full health when the Player
-     * is defeated.
+     * Test if TheOneRing restores the character's health.
      */
     @Test
-    public void respawnHealthTest() {
+    public void restoreHealthTest() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         TheOneRing ring = new TheOneRing(new Position(1, 1));
@@ -70,33 +69,58 @@ public class TheOneRingTest {
         // Initially, the player's health is 100
         assertTrue(player.getHealth() == 100);
 
-        Mercenary mercenary1 = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
-        game.addEntity(mercenary1);
-        player.move(game, Direction.DOWN);
+        // Spawn mercenaries next to the player - upon ticking, the mercenary would move to the player
+        // Note that the during the first three ticks, the player is guaranteed have less than 100 health by the formula:
+        // Player health - (50 * 5) / 10 --> e.g. 100 - 25 = 75.
+        int previousHealth = 100;
+        for (int i = 0; i < 3; i++) {
+            Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+            game.addEntity(mercenary);
+            game.tick(null, Direction.NONE);
 
-        // Player's health is 100 - ((50 * 5) / 10) = 75
-        assertTrue(player.getHealth() < 100);
+            assertTrue(player.getHealth() < previousHealth);
+            previousHealth = player.getHealth();
+        }
 
-        Mercenary mercenary2 = new Mercenary(new Position(1, 3), mode.damageMultiplier(), player);
-        game.addEntity(mercenary2);
-        player.move(game, Direction.DOWN);
+        // Continue spawning mercenaries until the player is 'defeated'.
+        // Since the player has the one ring, they should respawn to full health and continue battling.
+        for (int i = 0; i < 20; i++) {
+            Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+            game.addEntity(mercenary);
+            game.tick(null, Direction.NONE);
 
-        // Player's health is 75 - ((50 * 5) / 10) = 50
-        assertTrue(player.getHealth() < 100);
+            if (player.getHealth() > previousHealth) break;
+            previousHealth = player.getHealth();
+        }
 
-        Mercenary mercenary3 = new Mercenary(new Position(2, 3), mode.damageMultiplier(), player);
-        game.addEntity(mercenary3);
+        assertTrue(player.getHealth() > previousHealth);
+    }
+
+    /**
+     * Test if TheOneRing respawns the character back to full health when the Player
+     * is defeated as a confirmation.
+     */
+    @Test
+    public void respawnFullHealthTest() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        TheOneRing ring = new TheOneRing(new Position(1, 1));
+        game.addEntity(ring);
+
+        Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
         player.move(game, Direction.RIGHT);
+        assertTrue(player.getInventoryItem(ring.getId()).equals(ring));
+        
+        Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+        
 
-        // Player's health is 50 - ((50 * 5) / 10) = 25
-        assertTrue(player.getHealth() < 100);
-
-        Mercenary mercenary4 = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
-        game.addEntity(mercenary4);
-        player.move(game, Direction.RIGHT);
-
-        // Player's health is 25 - ((50 * 5) / 10) = 0
-        // However, since TheOneRing is in the player's inventory, their health should be set back to 100
+        // Set the player's health to 25.
+        // Normally, player's health upon battling the mercenary would be 25 - (50 * 5) / 10 = 0
+        // However, since the player has the one ring, the player's health is restored to 100.
+        player.setHealth(25);
+        game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == 100);
     }
 
