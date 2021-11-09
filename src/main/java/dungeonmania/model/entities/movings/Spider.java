@@ -21,6 +21,7 @@ public class Spider extends Enemy {
     public static final int MAX_SPIDERS = 4;
 
     public Spider(Position position, int damageMultiplier) {
+        // TODO: attack player
         this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, damageMultiplier);
     }
 
