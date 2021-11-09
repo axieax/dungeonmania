@@ -6,7 +6,8 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.Buildable;
-import dungeonmania.model.entities.movings.Mercenary;
+import dungeonmania.model.entities.movings.BribableEnemy;
+import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.player.Player;
@@ -113,7 +114,8 @@ public final class Game {
         getCardinallyAdjacentEntities(position)
             .stream()
             .forEach(e -> {
-                if (from.collision(e)) positions.remove(e.getPosition());
+                // consider portals as moveable positions since all moving entities can teleport
+                if (from.collision(e) && !(e instanceof Portal)) positions.remove(e.getPosition());
             });
         return positions
             .stream()
@@ -264,14 +266,15 @@ public final class Game {
 
         // Separate loop to avoid concurrency issues when zombie spawner adds new entity
         tickables.forEach(e -> {
-            if (e instanceof Player) {
-                ((Player) e).move(this, movementDirection, itemUsedId);
-            } else {
+            if (!(e instanceof Player)) {
                 ((Tickable) e).tick(this);
             }
         });
+        
+        getCharacter().move(this, movementDirection, itemUsedId);
 
         Spider.spawnSpider(this, this.mode.damageMultiplier());
+        Hydra.spawnHydra(this, this.mode.damageMultiplier());
         return getDungeonResponse();
     }
 
@@ -289,8 +292,8 @@ public final class Game {
         }
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);
-        if (entity instanceof Mercenary) {
-            ((Mercenary) entity).interact(this, (Player) player);
+        if (entity instanceof BribableEnemy) {
+            ((BribableEnemy) entity).interact(this, (Player) player);
         } else if (entity instanceof MovingEntity) {
             player.interact(this, (MovingEntity) entity);
         } else if (entity instanceof ZombieToastSpawner) {

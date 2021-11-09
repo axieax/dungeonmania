@@ -34,6 +34,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     private PlayerState state;
     private boolean inBattle;
+    private MovingEntity currentBattleOpponent;
     private Inventory inventory = new Inventory();
     private List<BribableEnemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
@@ -42,6 +43,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
+        this.currentBattleOpponent = null;
     }
 
     /********************************
@@ -76,6 +78,21 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public void setInBattle(boolean inBattle) {
         this.inBattle = inBattle;
+    }
+
+    /**
+     * @return true if in battle, false otherwise
+     */
+    public MovingEntity getCurrentBattleOpponent() {
+        return currentBattleOpponent;
+    }
+    
+    /**
+     * Sets the current opponent that the player is fighting against.
+     * @return
+     */
+    public void setCurrentBattleOpponent(MovingEntity opponent) {
+        this.currentBattleOpponent = opponent;
     }
 
     /**
@@ -343,14 +360,15 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param opponent entity the character is fighting
      */
     public void battle(Game game, MovingEntity opponent) {
-        state.battle(game, opponent);
-
         // Notify the observers that the player is in battle
         this.setInBattle(true);
+        this.setCurrentBattleOpponent(opponent);
         this.notifyObservers();
 
-        // Notify the observers that the player is no longer in battle
+        state.battle(game, opponent);
+
         this.setInBattle(false);
+        this.setCurrentBattleOpponent(null);
     }
 
     /**

@@ -5,11 +5,11 @@
         "subtitle_1": "前端開發者:\n Braedon Wooding, George Litsas, Nick Patrikeos, Noa Challis",
         "subtitle_2": "後端開發者: 牛油果 🥑",
         "buttons": {
-            "generate_game": "生成遊戲",
-            "new_game": "新遊戲",
+            "generate_game": "創造遊戲",
+            "new_game": "開始新遊戲",
             "load_game": "加載遊戲",
             "quit_game": "退出遊戲",
-            "credits": "字幕"
+            "credits": "参考"
         },
         "game_mode": "遊戲模式",
         "on_exit": {
