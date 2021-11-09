@@ -7,6 +7,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class AttackMovementState implements MovementState {
@@ -48,6 +49,12 @@ public class AttackMovementState implements MovementState {
         }
 
         enemy.setPosition(optimalPathPosition);
+        Position offset = Position.calculatePositionBetween(enemy.getPosition(), optimalPathPosition);
+            if (Direction.LEFT.getOffset().equals(offset)) enemy.setDirection(Direction.LEFT);
+            else if (Direction.UP.getOffset().equals(offset)) enemy.setDirection(Direction.UP);
+            else if (Direction.RIGHT.getOffset().equals(offset)) enemy.setDirection(Direction.RIGHT);
+            else if (Direction.DOWN.getOffset().equals(offset)) enemy.setDirection(Direction.DOWN);
+            else enemy.setDirection(Direction.NONE);
 
         if (player.getPosition().equals(enemy.getPosition())){
             player.battle(game, enemy);
