@@ -1,0 +1,27 @@
+{
+    "main_menu": {
+        "font": "alagard.ttf",
+        "title": "地牢狂熱",
+        "subtitle_1": "前端開發者:\n Braedon Wooding, George Litsas, Nick Patrikeos, Noa Challis",
+        "subtitle_2": "後端開發者: 牛油果 🥑",
+        "buttons": {
+            "generate_game": "創造遊戲",
+            "new_game": "開始新遊戲",
+            "load_game": "加載遊戲",
+            "quit_game": "退出遊戲",
+            "credits": "参考"
+        },
+        "game_mode": "遊戲模式",
+        "on_exit": {
+            "title": "電腦五秒後關機",
+            "message": "這是一個網絡遊戲，你期望會發生什麼呢? 你可以重新加載頁面重啟遊戲。"
+        }
+    },
+    "game": {
+        "font": "alagard.ttf",
+        "build": "建立",
+        "inventory": "庫存清單",
+        "main_menu": "主菜單",
+        "save": "保存遊戲"
+    }
+}

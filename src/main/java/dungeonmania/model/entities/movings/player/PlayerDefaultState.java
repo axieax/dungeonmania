@@ -9,7 +9,6 @@ import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.statics.Consumable;
 import java.util.List;
 import java.util.Random;
@@ -72,23 +71,21 @@ public class PlayerDefaultState implements PlayerState {
         }
 
         // Remove the entity from the game if dead after battle.
-        if (player.isAlive()) game.removeEntity(opponent); else game.removeEntity(player);
+        if (player.isAlive()) {
+            player.removeAlly(opponent);
+            game.removeEntity(opponent);
+        } else {
+            game.removeEntity(player);    
+        }
+
+        // If a player wins a battle, there is a small chance that items could be 
+        // dropped and be added to the character's inventory.
 
         // An opponent can have the potential to drop multiple items.
-
-        /**
-         * TODO: Instead of making a random chance of dropping an item after battle,
-         * perhaps the opponent could have their own inventory instead.
-         *
-         * i.e. A ZombieToast with an armour can apply the defensive effects.
-         * Note: Possible bonus feature for Milestone 3.
-         */
         Random armourRand = new Random();
         if (
-            (opponent instanceof BribableEnemy &&
-            armourRand.nextDouble() <= ((BribableEnemy) opponent).ARMOUR_DROP_RATE) ||
-            (opponent instanceof ZombieToast &&
-            armourRand.nextDouble() <= ((ZombieToast) opponent).ARMOUR_DROP_RATE)
+            opponent instanceof Enemy &&
+            armourRand.nextDouble() <= ((Enemy) opponent).getArmourDropRate()
         ) {
             player.addInventoryItem(new Armour());
         }

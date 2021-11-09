@@ -1,5 +1,9 @@
 package dungeonmania.movings;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -12,14 +16,14 @@ import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
+import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -41,7 +45,7 @@ public class MercenaryTest {
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
-        for(int i = 0; i < 200; i++) {
+        for (int i = 0; i < 200; i++) {
             assertTrue(game.getEntities().size() == numEntities);
         }
     }
@@ -101,7 +105,6 @@ public class MercenaryTest {
 
         // Mercenary should battle player
         assertTrue(!game.getEntities().contains(mercenary) || !game.getEntities().contains(player));
-
     }
 
     @Test
@@ -115,7 +118,7 @@ public class MercenaryTest {
         game.addEntity(player);
 
         // Create horizontal wall with 1 gap near the right game border between the player and mercenary
-        for(int i = 0; i < 4; i ++) {
+        for (int i = 0; i < 4; i++) {
             game.addEntity(new Wall(new Position(i + 1, 2)));
         }
 
@@ -131,22 +134,24 @@ public class MercenaryTest {
         // Same position as player but mercenary should be killed
         assertTrue(mercenary.getX() == 1);
     }
-    
+
     @Test
     public void testBribeWithoutTreasure() {
-        Mode mode = new Standard();
-        // Character attemps to bribe mercenary without any treasure should throw an exception
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        DungeonManiaController dmc = new DungeonManiaController();
+        dmc.newGame("advanced", "Standard");
 
-        Player player = new Player(new Position(1, 1));
-        game.addEntity(player);
-
-        Mercenary mercenary = new Mercenary(new Position(2, 1), mode.damageMultiplier(), player);
-        game.addEntity(mercenary);
+        dmc.tick(null, Direction.RIGHT);
+        DungeonResponse resp = dmc.tick(null, Direction.DOWN);
+        String mercenaryId = resp
+            .getEntities()
+            .stream()
+            .filter(e -> e.getPrefix().equals("mercenary"))
+            .findFirst()
+            .map(EntityResponse::getId)
+            .orElse(null);
 
         // Mercenary in adjacent tile, so attempt bribe
-        assertThrows(InvalidActionException.class, () -> game.interact(mercenary.getId()));
-    
+        assertThrows(InvalidActionException.class, () -> dmc.interact(mercenaryId));
     }
 
     @Test
@@ -165,13 +170,13 @@ public class MercenaryTest {
         game.addEntity(new Treasure(new Position(1, 4)));
 
         Position updatedPlayerPos = new Position(1, 4);
-        
+
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
 
-        while(!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -181,13 +186,13 @@ public class MercenaryTest {
         game.interact(mercenary.getId());
         // Player still at tile
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
-        
+
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == playerHealth);   
+        assertTrue(player.getHealth() == playerHealth);
     }
 
     @Test
@@ -197,14 +202,14 @@ public class MercenaryTest {
         Mode mode = new Standard();
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
         game.addEntity(player);
 
         game.addEntity(new Treasure(new Position(1, 2)));
         player.move(game, Direction.DOWN);
-        
+
         Position mercenaryPos = new Position(5, 5);
         Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
@@ -222,28 +227,28 @@ public class MercenaryTest {
         Player player = new Player(playerPos);
         game.addEntity(player);
 
-        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(),player);
+        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         Position exitPos = new Position(1, 2);
         Exit exit = new Exit(exitPos);
         game.addEntity(exit);
-        
+
         assertTrue(game.getEntities(exitPos).size() == 1);
         mercenary.moveTo(exitPos);
         assertTrue(game.getEntities(exitPos).size() == 2);
     }
-    
+
     @Test
     public void testCannotMoveThroughClosedDoor() {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+
         Position playerPos = new Position(5, 5);
         Player player = new Player(playerPos);
         game.addEntity(player);
 
-        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(),player);
+        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         // Surround mercenary and door with wall
@@ -251,16 +256,16 @@ public class MercenaryTest {
         game.addEntity(new Wall(new Position(2, 2)));
         game.addEntity(new Wall(new Position(3, 2)));
         game.addEntity(new Wall(new Position(3, 1)));
-    
+
         Position doorPos = new Position(2, 1);
         Door door = new Door(doorPos, 0);
         game.addEntity(door);
-        
+
         assertTrue(game.getEntities(doorPos).size() == 1);
-        
+
         // Mercenary should not be able to go in the door position
-        for(int i = 0; i < 100; i ++) {
-            game.tick(null, Direction.NONE);   
+        for (int i = 0; i < 100; i++) {
+            game.tick(null, Direction.NONE);
             assertTrue(!game.getEntity(mercenary.getId()).getPosition().equals(doorPos));
         }
     }
@@ -269,15 +274,15 @@ public class MercenaryTest {
     public void testSimpleFight() {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
         game.addEntity(player);
-        
+
         Position mercenaryPos = new Position(2, 1);
         Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-    
+
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntities(mercenaryPos).size() == 1);
         game.tick(null, Direction.NONE);
@@ -286,16 +291,65 @@ public class MercenaryTest {
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntities(mercenaryPos).size() == 0); // mercenary should die
     }
+    
+    
+
+    @Test
+    public void testBribedMovement() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        game.addEntity(new Treasure(new Position(1, 2)));
+        game.addEntity(new Treasure(new Position(1, 3)));
+        game.addEntity(new Treasure(new Position(1, 4)));
+
+        
+        // Make player collect all 3 coins
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        Position updatedPlayerPos = new Position(1, 4);
+
+        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+            game.tick(null, Direction.NONE);
+        }
+
+        // Mercenary in adjacent tile, so bribe (player still at original tile)
+        game.interact(mercenary.getId());
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
+
+        // Mercenary stays either next to or on top of the player regardless of where the latter moves
+        List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
+        Random rand = new Random(5);
+        for (int i = 0; i < 100; i++) {
+            int index = rand.nextInt(100) % 4;
+            Direction movementDirection = possibleDirections.get(index); 
+
+            game.tick(null, movementDirection);
+
+            List<Entity> numAdjacentEntites = game.getAdjacentEntities(player.getPosition());
+            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
+
+            // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
+            assertTrue(numAdjacentEntites.contains(mercenary) || numEntitesAtPlayerPos == 2);
+        }
+    }
 
     private List<Entity> sevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
-        
+
         // Left border
         for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(0, i));
             wallBorder.add(wall);
         }
-        
+
         // Right border
         for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(6, i));
