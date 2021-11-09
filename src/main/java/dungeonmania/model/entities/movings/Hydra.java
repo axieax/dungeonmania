@@ -10,6 +10,7 @@ import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.mode.Hard;
 import dungeonmania.util.Position;
 
 public class Hydra extends Enemy {
@@ -46,6 +47,11 @@ public class Hydra extends Enemy {
     }
     
     public static void spawnHydra(Game game, int damageMultiplier) {
+        // Hydra only spawns in hard mode
+        if(!(game.getMode() instanceof Hard)) {
+            return;
+        }
+
         int tick = game.getTick();
         int tickRate = game.getTickRate();
         if (tick != 0 && tick % tickRate == 0) {

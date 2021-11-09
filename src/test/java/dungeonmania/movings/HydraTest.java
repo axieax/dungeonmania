@@ -118,7 +118,7 @@ public class HydraTest {
             // Any other movingEntites that spawn will be removed
             List<Entity> toRemove = new ArrayList<>();
             for(Entity e: game.getEntities()) {
-                if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA)) {
+                if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA) && !(e instanceof Player)) {
                     toRemove.add(e);
                 }
             }
@@ -265,7 +265,6 @@ public class HydraTest {
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
-        game.addEntity(new Wall(new Position(5, 4)));
 
         Position portalPos = new Position(5, 4);
         Portal portal = new Portal(portalPos, "blue");
