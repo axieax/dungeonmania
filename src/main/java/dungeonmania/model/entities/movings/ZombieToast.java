@@ -1,11 +1,14 @@
 package dungeonmania.model.entities.movings;
 
+import javax.sound.sampled.Port;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 
 public class ZombieToast extends Enemy {
@@ -51,4 +54,11 @@ public class ZombieToast extends Enemy {
         this.setPosition(position);
     }
 
+    @Override
+    public boolean collision(Entity entity) {
+        if(
+            entity instanceof Portal
+        ) return false;
+        return !entity.isPassable();
+    }
 }
