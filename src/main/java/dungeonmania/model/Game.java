@@ -10,6 +10,8 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Boulder;
+import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
@@ -20,7 +22,10 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -188,10 +193,38 @@ public final class Game {
      * @return animations for all Entities which can be animated
      */
     private final List<AnimationQueue> generateAnimations() {
-        return entities
+        List<AnimationQueue> animations = entities
             .stream()
             .filter(e -> e.getAnimation() != null)
             .map(e -> e.getAnimation())
+            .collect(Collectors.toList());
+        animations.addAll(boulderAnimations());
+        return animations;
+    }
+
+    private final List<AnimationQueue> boulderAnimations() {
+        // locate switch positions
+        Set<Position> switchPositions = new HashSet<>();
+        for (Entity e : entities) {
+            Position pos = e.getPosition();
+            if (e instanceof FloorSwitch) switchPositions.add(pos.asLayer(0));
+        }
+
+        // different skins for boulders on switches
+        return entities
+            .stream()
+            .filter(e ->
+                e instanceof Boulder && switchPositions.contains(e.getPosition().asLayer(0))
+            )
+            .map(e ->
+                new AnimationQueue(
+                    "PostTick",
+                    e.getId(),
+                    Arrays.asList("sprite boulder_10"),
+                    false,
+                    -1
+                )
+            )
             .collect(Collectors.toList());
     }
 
