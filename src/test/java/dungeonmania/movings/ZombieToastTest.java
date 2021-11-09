@@ -224,7 +224,7 @@ public class ZombieToastTest {
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
-        game.addEntity(new Wall(new Position(5, 4)));
+        game.addEntity(new Wall(new Position(5, 3)));
 
         Position portalPos = new Position(5, 4);
         Portal portal = new Portal(portalPos, "blue");
