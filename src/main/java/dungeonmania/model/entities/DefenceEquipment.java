@@ -1,5 +1,7 @@
 package dungeonmania.model.entities;
 
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
 public abstract class DefenceEquipment extends Equipment {
@@ -14,7 +16,14 @@ public abstract class DefenceEquipment extends Equipment {
         this.defenceMultiplier = defenceMultiplier;
     }
 
-    public double getDefenceMultiplier() {
-        return defenceMultiplier;
+    @Override
+    public double useEquipment(Player player, Entity enemy) {
+        super.useEquipment(player, enemy);
+        if(enemy instanceof MovingEntity) {
+            MovingEntity movingEnemy = (MovingEntity) enemy;
+            return movingEnemy.getBaseAttackDamage() * defenceMultiplier;
+        }
+
+        return 0;
     }
 }
