@@ -333,11 +333,11 @@ public class MercenaryTest {
 
             game.tick(null, movementDirection);
 
-            List<Entity> numAdjacentEntites = game.getAdjacentEntities(player.getPosition());
+            List<Entity> adjacentEntites = game.getAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
-            assertTrue(numAdjacentEntites.contains(mercenary) || numEntitesAtPlayerPos == 2);
+            assertTrue(adjacentEntites.contains(mercenary) || numEntitesAtPlayerPos == 2);
         }
     }
 
