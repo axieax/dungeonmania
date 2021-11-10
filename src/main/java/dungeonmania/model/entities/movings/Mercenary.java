@@ -27,16 +27,15 @@ public class Mercenary extends BribableEnemy {
     public void bribe(Game game, Player player) throws InvalidActionException {
         // Player must be within 2 cardinal tiles to the mercenary and 
         // have 1 treasure (gold) in order to bribe the mercenary
+        if (getDistanceToPlayer(game, player.getPosition()) > MAX_DISTANCE_TO_BRIBE)
+            throw new InvalidActionException("You are too far away to bribe this mercenary");
+
         Item item = player.findInventoryItem("treasure");
-        if (item != null) {
-            if (getDistanceToPlayer(game, player.getPosition()) <= MAX_DISTANCE_TO_BRIBE) {
-                player.addAlly(this);
-                ((Treasure) item).consume(game, player);
-            } else {
-                throw new InvalidActionException("You are too far away to bribe this mercenary");
-            }
-        } else {
+        
+        if (item == null)
             throw new InvalidActionException("You don't have enough treasure to bribe this mercenary");
-        }
+        
+        player.addAlly(this);
+        ((Treasure) item).consume(game, player);
     }
 }
