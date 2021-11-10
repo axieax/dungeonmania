@@ -156,7 +156,6 @@ public class MercenaryTest {
 
     @Test
     public void testBribedMercenaryDoesNotAttack() {
-        fail();
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 

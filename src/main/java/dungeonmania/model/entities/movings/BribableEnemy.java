@@ -72,7 +72,7 @@ public abstract class BribableEnemy extends Enemy {
      */
     @Override
     public void interact(Game game, Entity character) {
-        bribe(game, (Player) character);
+        if (character instanceof Player) bribe(game, (Player) character);
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class BribableEnemy extends Enemy {
      */
     public int getDistanceToPlayer(Game game, Position playerPos) {
         PositionGraph positionGraph = new PositionGraph(game, this);
-        return positionGraph.BFS(this.getPosition(), playerPos);
+        return positionGraph.bfs(this.getPosition(), playerPos);
     }
 
     /**

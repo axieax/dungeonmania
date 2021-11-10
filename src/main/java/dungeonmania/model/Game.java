@@ -2,6 +2,7 @@ package dungeonmania.model;
 
 import dungeonmania.EntityFactory;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.exceptions.PlayerDeadException;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
@@ -60,7 +61,6 @@ public final class Game {
         for (Entity e : entities) if (e.getY() > maxY) maxY = e.getY();
         return maxY;
     }
-
 
     public final void addEntity(Entity entity) {
         entities.add(entity);
@@ -241,17 +241,18 @@ public final class Game {
         // different skins for boulders on switches
         return entities
             .stream()
-            .filter(e ->
-                e instanceof Boulder && switchPositions.contains(e.getPosition().asLayer(0))
+            .filter(
+                e -> e instanceof Boulder && switchPositions.contains(e.getPosition().asLayer(0))
             )
-            .map(e ->
-                new AnimationQueue(
-                    "PostTick",
-                    e.getId(),
-                    Arrays.asList("sprite boulder_on_switch"),
-                    false,
-                    -1
-                )
+            .map(
+                e ->
+                    new AnimationQueue(
+                        "PostTick",
+                        e.getId(),
+                        Arrays.asList("sprite boulder_on_switch"),
+                        false,
+                        -1
+                    )
             )
             .collect(Collectors.toList());
     }
@@ -274,29 +275,40 @@ public final class Game {
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException(
-            itemUsedId
-        );
-        this.tick += 1;
+        try {
+            if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException(
+                itemUsedId
+            );
+            this.tick += 1;
 
-        List<Tickable> tickables = entities
-            .stream()
-            .filter(e -> e instanceof Tickable)
-            .map(e -> (Tickable) e)
-            .collect(Collectors.toList());
-
-        // Player moves before other entities (so that bribable enemies can follow the player)
-        getCharacter().move(this, movementDirection, itemUsedId);
-
-        // Separate loop to avoid concurrency issues when zombie spawner adds new entity
-        tickables.forEach(e -> {
-            if (!(e instanceof Player)) {
-                ((Tickable) e).tick(this);
+            if (getCharacter() == null) {
+                System.out.println("dead");
             }
-        );
+            // Player moves before other entities (so that bribable enemies can follow the player)
+            getCharacter().move(this, movementDirection, itemUsedId);
+            if (!getCharacter().isAlive()) {
+                System.out.println("dead");
+            }
 
-        Spider.spawnSpider(this, this.mode.damageMultiplier());
-        Hydra.spawnHydra(this, this.mode.damageMultiplier());
+            List<Tickable> tickables = entities
+                .stream()
+                .filter(e -> e instanceof Tickable)
+                .map(e -> (Tickable) e)
+                .collect(Collectors.toList());
+
+            // Separate loop to avoid concurrency issues when zombie spawner adds new entity
+            tickables.forEach(
+                e -> {
+                    if (!(e instanceof Player)) {
+                        ((Tickable) e).tick(this);
+                    }
+                }
+            );
+
+            Spider.spawnSpider(this, this.mode.damageMultiplier());
+            Hydra.spawnHydra(this, this.mode.damageMultiplier());
+        } catch (PlayerDeadException e) {}
+
         return getDungeonResponse();
     }
 

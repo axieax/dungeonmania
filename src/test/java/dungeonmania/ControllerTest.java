@@ -431,8 +431,8 @@ public class ControllerTest {
         assertEquals ("default", controller.getSkin());
         assertEquals ("en_US", controller.getLocalisation());
         List<String> gameModes = controller.getGameModes();
-        assertEquals ("Standard", gameModes.get(0));
-        assertEquals ("Peaceful", gameModes.get(1));
-        assertEquals ("Hard", gameModes.get(2));
+        assertEquals ("standard", gameModes.get(0));
+        assertEquals ("peaceful", gameModes.get(1));
+        assertEquals ("hard", gameModes.get(2));
     }    
 }

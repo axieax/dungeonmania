@@ -701,7 +701,7 @@ public class CharacterTest {
 
         assertDoesNotThrow(() -> {
             // attack player until it dies
-            while(player != null) {
+            while(game.getEntities().contains(player)) {
                 // mercenaries should all attack character and character should die
                 game.tick(null, Direction.NONE);
     

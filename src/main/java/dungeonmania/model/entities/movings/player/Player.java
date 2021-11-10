@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.exceptions.PlayerDeadException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
@@ -86,7 +87,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public MovingEntity getCurrentBattleOpponent() {
         return currentBattleOpponent;
     }
-    
+
     /**
      * Sets the current opponent that the player is fighting against.
      * @return
@@ -128,7 +129,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             if (m.getId().equals(ally.getId())) toRemove = m;
         }
 
-        if(toRemove != null) {
+        if (toRemove != null) {
             allies.remove(toRemove);
         }
     }
@@ -277,6 +278,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *  Action Methods              *
      ********************************/
 
+    public void interact(Game game, Entity character) {
+        if (character instanceof Enemy) this.battle(game, (Enemy) character);
+    }
+
     /**
      * Conduct any required tasks for a player after it has moved into its new position
      *
@@ -328,7 +333,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             if (getInventoryItem(itemId) == null) throw new InvalidActionException(
                 "At Player move method - itemUsed is not in the player's inventory"
             );
-            
+
             // check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
 
@@ -352,7 +357,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(entity -> entity.interact(game, this));
+        entities.forEach(entity -> {
+            if (!(entity instanceof Enemy)) entity.interact(game, this);
+        });
 
         // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
@@ -375,18 +382,11 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param opponent entity the character is fighting
      */
-    public void battle(Game game, MovingEntity opponent) {
-        // Notify the observers that the player is in battle
-        this.setInBattle(true);
-        this.setCurrentBattleOpponent(opponent);
-        this.notifyObservers();
-
+    public void battle(Game game, Enemy opponent) {
         state.battle(game, opponent);
-
-        this.setInBattle(false);
-        this.setCurrentBattleOpponent(null);
+        if (!this.isAlive()) throw new PlayerDeadException("Player has died... Ending game...");
     }
-
+    
     /**
      * Given an item, places it in the player's inventory
      *

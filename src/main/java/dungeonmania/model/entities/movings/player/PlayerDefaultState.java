@@ -8,7 +8,6 @@ import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.statics.Consumable;
 import java.util.List;
 import java.util.Random;
@@ -23,12 +22,17 @@ public class PlayerDefaultState implements PlayerState {
     }
 
     @Override
-    public void battle(Game game, MovingEntity opponent) {
+    public void battle(Game game, Enemy opponent) {
         // Do not battle opponent if it is an ally
         List<BribableEnemy> allies = player.getAllies();
         if (allies.contains(opponent)) {
             return;
         }
+
+        // Notify the observers that the player is in battle
+        player.setInBattle(true);
+        player.setCurrentBattleOpponent(opponent);
+        player.notifyObservers();
 
         // Battles only last a single tick
         while (player.getHealth() > 0 && opponent.getHealth() > 0) {
@@ -96,6 +100,9 @@ public class PlayerDefaultState implements PlayerState {
         ) {
             player.addInventoryItem(new TheOneRing());
         }
+
+        player.setInBattle(false);
+        player.setCurrentBattleOpponent(null);
     }
 
     public int ticksLeft() {
