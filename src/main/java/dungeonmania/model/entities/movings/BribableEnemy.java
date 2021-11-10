@@ -16,9 +16,10 @@ public abstract class BribableEnemy extends Enemy {
     public static final int BATTLE_RADIUS = 5;
     public static final int MAX_DISTANCE_TO_BRIBE = 2;
     public static final double ARMOUR_DROP_RATE = 0.25;
-
+    
     private boolean bribed;
     private boolean moveTwice;
+    private int mindControlTicks = 10;
 
     public BribableEnemy(String prefix, Position position, int health, int attackDamage, int damageMultiplier) {
         super(prefix, position, health, attackDamage, damageMultiplier);
@@ -34,6 +35,10 @@ public abstract class BribableEnemy extends Enemy {
         this.bribed = bribed;
     }
 
+    public int getMindControlTicks() {
+        return mindControlTicks;
+    }
+
     @Override
     public double getArmourDropRate() {
         return ARMOUR_DROP_RATE;
@@ -41,9 +46,15 @@ public abstract class BribableEnemy extends Enemy {
 
     @Override
     public void tick(Game game) {
+        Player player = (Player) game.getCharacter();
+
+        // Check that the effects for a mind controlled enemy will only last 10 ticks
+        // After 10 ticks, the enemy will return to its normal state (no longer an ally)
+        this.mindControlTicks--;
+        if (this.getMindControlTicks() == 0) player.removeAlly(this);
+        
         this.move(game);
         
-        Player player = (Player) game.getCharacter();
         // If a player is fighting an enemy within the battle radius, BribableEnemy moves twice as fast
         if (this.isAlive() && moveTwice && getDistanceToPlayer(game, player.getPosition()) <= BATTLE_RADIUS) {
             moveTwice = false;
@@ -104,6 +115,7 @@ public abstract class BribableEnemy extends Enemy {
             return false;
         
         player.addAlly(this);
+        this.mindControlTicks = 10;
         return true;
     }
 

@@ -124,12 +124,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     public void removeAlly(MovingEntity ally) {
         MovingEntity toRemove = null;
-        for (MovingEntity m : allies) {
-            if (m.getId().equals(ally.getId())) toRemove = m;
+        for (MovingEntity curr : allies) {
+            if (curr.getId().equals(ally.getId())) toRemove = ally;
         }
 
-        if(toRemove != null) {
+        if (toRemove != null) {
             allies.remove(toRemove);
+        }   if (toRemove instanceof BribableEnemy) {
+            ((BribableEnemy) toRemove).setBribed(false);
         }
     }
 
