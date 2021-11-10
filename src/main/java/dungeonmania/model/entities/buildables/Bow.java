@@ -1,6 +1,5 @@
 package dungeonmania.model.entities.buildables;
 
-import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.movings.player.Inventory;
 

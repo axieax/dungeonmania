@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -17,7 +18,7 @@ public class RandomMovementState implements MovementState {
     }
 
     /**
-     * Enemy runs away from player
+     * Enemy makes a random movement choice
      */
     @Override
     public void move(Game game) {
@@ -32,7 +33,15 @@ public class RandomMovementState implements MovementState {
             else if (Direction.UP.getOffset().equals(offset)) enemy.setDirection(Direction.UP);
             else if (Direction.RIGHT.getOffset().equals(offset)) enemy.setDirection(Direction.RIGHT);
             else if (Direction.DOWN.getOffset().equals(offset)) enemy.setDirection(Direction.DOWN);
-            enemy.setPosition(randPosition);
+            // Interact with all entities in that direction
+            List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(enemy.getDirection()));
+            entities.forEach(
+                entity -> {
+                    // Cannot interact with moving entities when moving
+                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
+                }
+            );
+            enemy.setPosition(enemy.getPosition().translateBy(enemy.getDirection()));
         }
         else enemy.setDirection(Direction.NONE);
     }

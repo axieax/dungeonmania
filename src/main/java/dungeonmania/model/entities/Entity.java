@@ -1,13 +1,12 @@
 package dungeonmania.model.entities;
 
-import java.util.UUID;
-
-import org.json.JSONObject;
-
 import dungeonmania.model.Game;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.UUID;
+import org.json.JSONObject;
 
 public abstract class Entity {
 
@@ -76,19 +75,18 @@ public abstract class Entity {
     }
 
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(
-            id,
-            this.getPrefix(),
-            position,
-            interactable
-        );
+        return new EntityResponse(id, this.getPrefix(), position, interactable);
+    }
+
+    public AnimationQueue getAnimation() {
+        return null;
     }
 
     public JSONObject toJSON() {
         JSONObject entity = new JSONObject();
-        entity.put ("x", (position != null) ? getX() : 0);
-        entity.put ("y", (position != null) ? getY() : 0);
-        entity.put ("type", getPrefix());
+        entity.put("x", (position != null) ? getX() : 0);
+        entity.put("y", (position != null) ? getY() : 0);
+        entity.put("type", getPrefix());
         return entity;
     }
 

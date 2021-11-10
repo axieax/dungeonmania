@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Armour;
+import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.ExitCondition;
@@ -96,10 +97,12 @@ public class ArmourTest {
             Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
             game.addEntity(mercenary);
             game.tick(null, Direction.NONE);
+
+            if (player.findInventoryItem("armour") != null) break;
         }
 
         // Check that armour is in the player's inventory
-        // Since mercenaries have a 50% chance of dropping armour, there's a 0.75^50 = 0.00006% otherwise
+        // Since mercenaries have a 25% chance of dropping armour, there's a 0.75^50 = 0.00006% otherwise
         assertTrue(player.findInventoryItem("armour") != null);
     }
 }

@@ -21,6 +21,7 @@ public class Spider extends Enemy {
     public static final int MAX_SPIDERS = 4;
 
     public Spider(Position position, int damageMultiplier) {
+        // TODO: attack player
         this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, damageMultiplier);
     }
 
@@ -31,7 +32,7 @@ public class Spider extends Enemy {
     }
 
     /**
-     * Moves the spider onto the next tile, maintaining a "circular" path
+     * Moves the spider onto the next tile, as per its current movement type
      */
     @Override
     public void tick(Game game) {
@@ -42,18 +43,26 @@ public class Spider extends Enemy {
      * If a player drinks an invincibility potion, change the state
      * of the spider to make sure it runs away
      */
+    // @Override
+    // public void update(SubjectPlayer player) {
+    //     if (!(player instanceof Player)) {
+    //         return;
+    //     }
+
+    //     Player character = (Player) player;
+    //     if (character.getState() instanceof PlayerInvincibleState) {
+    //         this.setMovementState(new RunMovementState(this));
+    //     } else {
+    //         this.setMovementState(new CircularMovementState(this));
+    //     }
+    // }
+
+    /**
+     * Spider does not track player as it is assumed that the spider only moves in a circular motion
+     */
     @Override
     public void update(SubjectPlayer player) {
-        if (!(player instanceof Player)) {
-            return;
-        }
-
-        Player character = (Player) player;
-        if (character.getState() instanceof PlayerInvincibleState) {
-            this.setMovementState(new RunMovementState(this));
-        } else {
-            this.setMovementState(new CircularMovementState(this));
-        }
+        return;
     }
 
     @Override

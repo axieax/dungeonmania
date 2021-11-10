@@ -2,8 +2,9 @@ package dungeonmania.model.entities.statics;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.json.JSONObject;
 
@@ -16,7 +17,7 @@ public class Portal extends Entity {
     }
 
     public Portal(Position position, String colour) {
-        super("portal", position);
+        super("portal", position, false, false);
         this.colour = colour;
     }
 
@@ -27,7 +28,7 @@ public class Portal extends Entity {
      */
     @Override
     public void interact(Game game, Entity character) {
-        if (character instanceof Player) this.teleport(game, (MovingEntity) character);
+        if (character instanceof MovingEntity) this.teleport(game, (MovingEntity) character);
     }
 
     public Portal findPortal(Game game) {
@@ -56,6 +57,8 @@ public class Portal extends Entity {
                 if (character.collision(e)) collision = true;
             }
             if (!collision) character.moveTo(portal.getPosition());
+            // Their is a collision on the teleported position so do no move.
+            else if (character instanceof Enemy) ((Enemy) character).setDirection(Direction.NONE);
         }
     }
 
