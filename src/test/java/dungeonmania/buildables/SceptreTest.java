@@ -248,11 +248,11 @@ public class SceptreTest {
         Sceptre sceptre = (Sceptre) player.findInventoryItem("sceptre");
         assertTrue(sceptre.getDurability() == initialDurability);
 
-        Mercenary mercenary = new Mercenary(new Position(2, 3), mode.damageMultiplier(), player);
+        Mercenary mercenary = new Mercenary(new Position(0, 2), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
         // Player moves to attack the mercenary with the sceptre
-        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.DOWN);
 
         // Either the player or the mercenary should be dead
         // Durability of sceptre decreases by 1 each time it battles (within one tick)
