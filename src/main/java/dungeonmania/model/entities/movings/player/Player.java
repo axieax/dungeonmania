@@ -254,7 +254,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
                         continue;
                     }
                 }
-                
+
                 this.battle(game, opponent);
             }
         }
@@ -293,7 +293,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             if (item == null) {
                 throw new InvalidActionException("Item not found in player inventory");
             }
-            
+
             // Consume item
             if (item instanceof Consumable) {
                 ((Consumable) item).consume(game, this);
@@ -302,11 +302,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         this.setDirection(direction);
 
-        if (!direction.equals(Direction.NONE)) {
-            // Interact with all entities in that direction
-            List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-            entities.forEach(entity -> entity.interact(game, this));
-        }
+        // Interact with all entities in that direction
+        List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
+        entities.forEach(entity -> entity.interact(game, this));
 
         // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
@@ -356,7 +354,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
         if (equipment.isBuildable(inventory)) {
             equipment.craft(inventory);
         } else {
-            throw new InvalidActionException("You don't have enough resources to build this equipment");
+            throw new InvalidActionException(
+                "You don't have enough resources to build this equipment"
+            );
         }
     }
 

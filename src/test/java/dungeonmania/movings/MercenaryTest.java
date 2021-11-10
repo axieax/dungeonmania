@@ -193,32 +193,31 @@ public class MercenaryTest {
 
     @Test
     public void testCannotMoveThroughClosedDoor() {
-        // Mode mode = new Standard();
-        // Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        // Position playerPos = new Position(5, 5);
-        // Player player = new Player(playerPos);
-        // game.addEntity(player);
+        Position playerPos = new Position(5, 5);
+        Player player = new Player(playerPos);
+        game.addEntity(player);
 
-        // Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(), player);
-        // game.addEntity(mercenary);
+        Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
 
-        // // surround mercenary and door with wall
-        // game.addEntity(new Wall(new Position(1, 2)));
-        // game.addEntity(new Wall(new Position(2, 2)));
-        // game.addEntity(new Wall(new Position(3, 2)));
-        // game.addEntity(new Wall(new Position(3, 1)));
+        // surround mercenary and door with wall
+        game.addEntity(new Wall(new Position(1, 2)));
+        game.addEntity(new Wall(new Position(2, 2)));
+        game.addEntity(new Wall(new Position(3, 2)));
+        game.addEntity(new Wall(new Position(3, 1)));
 
-        // Position doorPos = new Position(2, 1);
-        // Door door = new Door(doorPos, 0);
-        // game.addEntity(door);
+        Position doorPos = new Position(2, 1);
+        Door door = new Door(doorPos, 0);
+        game.addEntity(door);
 
-        // assertTrue(game.getEntities(doorPos).size() == 1);
+        assertTrue(game.getEntities(doorPos).size() == 1);
 
-        // // mercenary should not be able to go in the door position
-        // game.tick(null, Direction.NONE);
-        // assertTrue(!game.getEntity(mercenary.getId()).getPosition().equals(doorPos));
-        fail();
+        // mercenary should not be able to go in the door position
+        game.tick(null, Direction.NONE);
+        assertTrue(!game.getEntity(mercenary.getId()).getPosition().equals(doorPos));
     }
 
     @Test

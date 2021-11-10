@@ -36,7 +36,7 @@ public class AttackMovementState implements MovementState {
             optimalPathPosition = player.getPosition();
         } else {
             Position curr = prev.get(player.getPosition());
-            while (curr != enemy.getPosition()) {
+            while (curr != enemy.getPosition() && curr != null) {
                 optimalPathPosition = curr;
                 curr = prev.get(curr);
             }
@@ -52,10 +52,11 @@ public class AttackMovementState implements MovementState {
         else if (Direction.DOWN.getOffset().equals(offset)) enemy.setDirection(Direction.DOWN);
         else enemy.setDirection(Direction.NONE);
         
+        // Interact with all entities in that direction
+        List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(enemy.getDirection()));
+        entities.forEach(entity -> entity.interact(game, enemy));
+
         if (!enemy.getDirection().equals(Direction.NONE)) {
-            // Interact with all entities in that direction
-            List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(enemy.getDirection()));
-            entities.forEach(entity -> entity.interact(game, enemy));
             enemy.setPosition(enemy.getPosition().translateBy(enemy.getDirection()));
         }
     }
