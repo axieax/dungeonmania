@@ -49,6 +49,6 @@ public class Key extends Item implements Consumable {
 
     @Override
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getPrefix(), getPosition(), isInteractable());
+        return new EntityResponse(getId(), getType(), getPosition(), isInteractable());
     }
 }

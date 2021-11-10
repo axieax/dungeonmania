@@ -75,7 +75,7 @@ public class Spider extends Enemy {
      */
     public static boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
         for (Entity e : entitiesAtPos) {
-            if (e.getPrefix().equals("boulder")) {
+            if (e.getType().equals("boulder")) {
                 return false;
             }
         }
@@ -125,7 +125,7 @@ public class Spider extends Enemy {
         List<Entity> entities = game.getEntities();
         int spiders = 0;
         for (Entity e : entities) {
-            if (e.getPrefix().equals("spider")) {
+            if (e.getType().equals("spider")) {
                 spiders++;
             }
         }
