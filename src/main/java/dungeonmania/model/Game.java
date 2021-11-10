@@ -264,6 +264,7 @@ public final class Game {
             .map(e -> (Tickable) e)
             .collect(Collectors.toList());
 
+        // Player moves before other entities (so that bribable enemies can follow the player)
         getCharacter().move(this, movementDirection, itemUsedId);
 
         // Separate loop to avoid concurrency issues when zombie spawner adds new entity
