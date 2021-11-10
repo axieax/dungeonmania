@@ -42,7 +42,7 @@ public class DungeonManiaController {
     }
 
     public List<String> getGameModes() {
-        return Arrays.asList("Standard", "Peaceful", "Hard");
+        return Arrays.asList("standard", "peaceful", "hard");
     }
 
     /**
@@ -71,15 +71,21 @@ public class DungeonManiaController {
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
         throws IllegalArgumentException {
+        gameMode = gameMode.toLowerCase();
         if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException();
         if (!getGameModes().contains(gameMode)) throw new IllegalArgumentException();
 
         Mode mode = null;
-        if (gameMode.equals("Hard")) mode = new Hard(); else if (gameMode.equals("Standard")) mode =
-            new Standard(); else if (gameMode.equals("Peaceful")) mode = new Peaceful();
+        if (gameMode.equals("hard")) {
+            mode = new Hard();
+        } else if (gameMode.equals("standard")) {
+            mode = new Standard();
+        } else if (gameMode.equals("peaceful")) {
+            mode = new Peaceful();
+        }
 
-        List<Entity> entities = EntityFactory.extractEntities (dungeonName, mode);
-        Goal goal = EntityFactory.extractGoal (dungeonName);
+        List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
+        Goal goal = EntityFactory.extractGoal(dungeonName);
 
         Game newGame = new Game(dungeonName, entities, goal, mode);
         games.add(newGame);
@@ -113,9 +119,9 @@ public class DungeonManiaController {
         String prettyString = gson.toJson(je);
         try {
             String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
-            FileWriter myFileWriter = new FileWriter (path, false);
+            FileWriter myFileWriter = new FileWriter(path, false);
             myFileWriter.write(prettyString);
-            myFileWriter.close();            
+            myFileWriter.close();
         } catch (IOException e) {
             return null;
         }
@@ -173,7 +179,8 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        if (itemUsed != null &&
+        if (
+            itemUsed != null &&
             itemUsed.length() != 0 &&
             !(
                 itemUsed.equals("bomb") ||
