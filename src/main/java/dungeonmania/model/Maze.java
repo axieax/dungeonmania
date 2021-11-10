@@ -176,7 +176,7 @@ public class Maze {
         positions.add(new Position(x + 1, y));
         positions.add(new Position(x, y - 1));
 
-        // remove positions on the bounary
+        // remove positions on the boundary
         Iterator<Position> iter = positions.iterator();
         while (iter.hasNext()) {
             Position possiblePosition = iter.next();

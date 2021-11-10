@@ -100,7 +100,6 @@ public class DungeonManiaController {
         // get game entities
         List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
         Goal goal = EntityFactory.extractGoal(dungeonName);
-        System.out.println(goal);
 
         // create new game
         Game newGame = new Game(dungeonName, entities, goal, mode);

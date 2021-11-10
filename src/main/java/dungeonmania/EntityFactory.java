@@ -200,7 +200,6 @@ public class EntityFactory {
     }
 
     public static final Goal doExtractGoal(JSONObject json) {
-        System.out.println("i love you amanda");
         switch (json.getString("goal")) {
             case "enemies":
                 return new DestroyEnemies();

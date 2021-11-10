@@ -417,21 +417,4 @@ public class ControllerTest {
         controller.tick (null, Direction.DOWN);
         assertThrows (InvalidActionException.class, ()->controller.interact(mercenaryId));           
     }
-
-
-    //////////////////
-    /// Test Given Functions
-    //////////////////
-    /**
-     * Test the given functions provide the expected output
-     */
-    @Test
-    public void testGivenFunction() {
-        DungeonManiaController controller = new DungeonManiaController();
-        assertEquals ("default", controller.getSkin());
-        assertEquals ("en_US", controller.getLocalisation());
-        List<String> gameModes = controller.getGameModes();
-        assertEquals ("standard", gameModes.get(0));
-        assertEquals ("hard", gameModes.get(2));
-    }    
 }
