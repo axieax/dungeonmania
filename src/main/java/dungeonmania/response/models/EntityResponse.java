@@ -23,7 +23,7 @@ public final class EntityResponse {
         return id;
     }
 
-    public final String getPrefix() {
+    public final String getType() {
         return type;
     }
 

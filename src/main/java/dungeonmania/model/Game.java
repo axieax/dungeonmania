@@ -247,7 +247,7 @@ public final class Game {
             .allBuildables()
             .stream()
             .filter(item -> item instanceof Item && player.checkBuildable(item))
-            .map(item -> ((Item) item).getPrefix())
+            .map(item -> ((Item) item).getType())
             .collect(Collectors.toList());
     }
 

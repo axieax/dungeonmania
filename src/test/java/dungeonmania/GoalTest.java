@@ -154,7 +154,7 @@ public class GoalTest {
         // Pick up the bomb
         DungeonResponse resp = move(dmc, Direction.RIGHT, 1);
         assertEquals(switchGoal, resp.getGoals());
-        assertEquals("bomb", resp.getInventory().get(0).getPrefix());
+        assertEquals("bomb", resp.getInventory().get(0).getType());
         assertEquals(switchGoal, move(dmc, Direction.RIGHT, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 3).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 1).getGoals());
@@ -199,7 +199,7 @@ public class GoalTest {
         // place the bomb
         resp = move(dmc, Direction.NONE, resp.getInventory().get(0).getId(), 1);
         assertEquals(switchGoal, resp.getGoals());
-        assertFalse(resp.getInventory().stream().anyMatch(item -> item.getPrefix().equals("bomb")));
+        assertFalse(resp.getInventory().stream().anyMatch(item -> item.getType().equals("bomb")));
 
         assertEquals(switchGoal, move(dmc, Direction.DOWN, 2).getGoals());
         assertEquals(switchGoal, move(dmc, Direction.LEFT, 2).getGoals());
