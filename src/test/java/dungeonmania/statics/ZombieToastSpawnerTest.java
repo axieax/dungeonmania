@@ -139,10 +139,11 @@ public class ZombieToastSpawnerTest {
         player.move(game, Direction.UP);
 
         // Player moves to the right of the zombie toast spawner
-        // They will interact with it, destroying the zombie toast spawner with the sword
         player.move(game, Direction.LEFT);
+        assertTrue(game.getEntity(spawner.getId()) != null);
         
-        // Check that the zombie toast spawner has been destroyed
+        // They will interact with it, destroying the zombie toast spawner with the sword
+        game.interact(spawner.getId());
         assertTrue(game.getEntity(spawner.getId()) == null);
     }
 
