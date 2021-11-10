@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class MazeGeneratorTest {
     public static Boolean canFindPath (Maze maze, int height, int width) {
@@ -29,31 +31,19 @@ public class MazeGeneratorTest {
             }
             visited.add(rowInMap);
         }
-        // pred
-        ArrayList<ArrayList<Position>> pred = new ArrayList<> ();
-        for (int i = 0; i < height; i++) {
-            ArrayList<Position> rowInMap = new ArrayList<>();
-            for (int j = 0; j < width; j++) {
-                rowInMap.add(new Position(-1,-1)); // default negative 
-            }
-            pred.add(rowInMap);
-        }
 
+        // Simulates a queue
         List<Position> q = new ArrayList<Position> ();
+        Position end = maze.getEnd();
         q.add(maze.getStart());
 
-        Boolean found = false;
-        while (!found && q.size() > 0) {
+        while (q.size() > 0) {
             Position v = q.remove(0);
             if (visited.get(v.getY()).get(v.getX())) continue;
             visited.get(v.getY()).set(v.getX(), true);
 
-            if (MazeVisit(m,v)) {
-                found = true;
-                break;
-            }
+            if ((v.getX() == end.getX()) && (v.getY() == end.getY())) return true;
             
-
             List<Position> positions = new ArrayList<>();
             positions.add(new Position(v.getX(), v.getY() + 1));
             positions.add(new Position(v.getX() - 1, v.getY()));
@@ -65,11 +55,10 @@ public class MazeGeneratorTest {
                     maze.get(position.getY()).get(position.getX()) && 
                     !visited.get(position.getY()).get(position.getX())) {
                         q.add (position);
-                        pred.get(position.getY()).set(position.getX(), v);
                 }
             }
         }
-        return found;
+        return false;
     }
 
     // check if a position is on the boundary
@@ -81,16 +70,24 @@ public class MazeGeneratorTest {
         return false;
     }
 
-    public boolean mazeVisit (Maze maze, Position p) {
-        int x = p.getX();
-        int y = p.getY();
-        if (!maze.get(y).get(x)) return false;
-        s
-    }
-
-    @Test
-    public void testCanFindPath() {
-        Maze maze = new Maze ()
+    public static int [] data () {
+        return new int [] {5,15,21,29};
     }
     
+    @ParameterizedTest
+    @MethodSource(value = "data")
+    public void testCanFindPath(int data) {
+        int height;
+        int width;
+        Maze maze = new Maze (data, data, new Position (1,1), new Position (data - 2, data -2));
+        assertTrue (canFindPath(maze, height, width));
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "data")
+    public void testGoalIsCorrect(int data) {
+        DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse rsp = controller.generateDungeon (1,1,data,data, "standard");
+        assertEquals(":exit(1)", rsp.getGoals());
+    }
 }
