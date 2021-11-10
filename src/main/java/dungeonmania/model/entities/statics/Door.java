@@ -57,7 +57,7 @@ public class Door extends Entity {
 
     @Override
     public EntityResponse getEntityResponse() {
-        String doorStatus = String.format("%s_%d", getPrefix(), key);
+        String doorStatus = String.format("%s_%d", getType(), key);
         if (open) doorStatus += "_open";
 
         return new EntityResponse(getId(), doorStatus, getPosition(), isInteractable());

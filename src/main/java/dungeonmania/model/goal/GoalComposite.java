@@ -35,6 +35,7 @@ public abstract class GoalComposite implements Goal {
 
     @Override
     public String toString(Game game) {
+        if (isComplete(game)) return "";
         // only include incomplete goals
         String delimiter = String.format(" %s ", getOperator());
         return goals

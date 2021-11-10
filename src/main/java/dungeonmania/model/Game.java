@@ -172,7 +172,7 @@ public final class Game {
             .allBuildables()
             .stream()
             .filter(eq -> player.checkBuildable(eq))
-            .map(eq -> eq.getPrefix())
+            .map(eq -> eq.getType())
             .collect(Collectors.toList());
     }
 

@@ -46,7 +46,7 @@ public class GameLoader {
         try {
             String content = new String(
                 Files.readAllBytes(
-                    Paths.get("./src/main/java/dungeonmania/savedGames/" + dungeonName + ".json")
+                    Paths.get("./bin/savedGames/" + dungeonName + ".json")
                 )
             );
             return new JSONObject(content);
@@ -214,7 +214,6 @@ public class GameLoader {
 
     public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
         JSONObject json = loadSavedDungeon(dungeonName);
-        if (json.get("goal-condition") == null) return null;
-        return EntityFactory.extractGoal(json.getJSONObject("goal-condition"));
+        return (json.has("goal-condition")) ? EntityFactory.extractGoal(json.getJSONObject("goal-condition")):null;
     }
 }

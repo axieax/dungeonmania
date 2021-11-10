@@ -15,6 +15,8 @@ import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -111,14 +113,20 @@ public class DungeonManiaController {
         }
         currGame.put("entities", entities);
         currGame.put("mode", currentGame.getMode().getClass().getSimpleName());
-        currGame.put("goal-condition", currentGame.getGoal().toJSON());
+        if (currentGame.getGoal() != null) currGame.put("goal-condition", currentGame.getGoal().toJSON());
         currGame.put("dungeonName", currentGame.getDungeonName());
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
         try {
-            String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
+            String directoryPath = "./bin/savedGames";
+            File pathAsFile = new File(directoryPath);
+            if (!pathAsFile.exists()) {
+                pathAsFile.mkdir();
+            }
+
+            String path = "./bin/savedGames/" + name + ".json";
             FileWriter myFileWriter = new FileWriter(path, false);
             myFileWriter.write(prettyString);
             myFileWriter.close();
@@ -157,7 +165,7 @@ public class DungeonManiaController {
      */
     public List<String> allGames() {
         try { // adapted from given code
-            String directory = "./src/main/java/dungeonmania/savedGames/";
+            String directory = "./bin/savedGames/";
             return FileLoader.listFileNamesInDirectoryOutsideOfResources(directory);
         } catch (IOException e) {
             return new ArrayList<>();
@@ -179,19 +187,6 @@ public class DungeonManiaController {
      */
     public DungeonResponse tick(String itemUsed, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        if (
-            itemUsed != null &&
-            itemUsed.length() != 0 &&
-            !(
-                itemUsed.equals("bomb") ||
-                itemUsed.equals("invincibility_potion") ||
-                itemUsed.equals("invisibility_potion") ||
-                itemUsed.equals("health_potion")
-            )
-        ) {
-            throw new IllegalArgumentException();
-        }
-
         return currentGame.tick(itemUsed, movementDirection);
     }
 

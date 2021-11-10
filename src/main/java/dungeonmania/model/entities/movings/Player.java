@@ -284,8 +284,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
         }
 
         Item item = getInventoryItem(itemId);
-        if (item != null && item instanceof Bomb) {
-            ((Bomb)item).place(game, this.getPosition());
+        if (itemId != null && item instanceof Bomb) {
+            ((Bomb) item).place(game, this.getPosition());
         }
     }
 

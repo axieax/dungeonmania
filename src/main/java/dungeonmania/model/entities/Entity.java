@@ -32,7 +32,7 @@ public abstract class Entity {
         this.passable = passable;
     }
 
-    public String getPrefix() {
+    public String getType() {
         return prefix;
     }
 
@@ -79,7 +79,7 @@ public abstract class Entity {
     public EntityResponse getEntityResponse() {
         return new EntityResponse(
             id,
-            this.getPrefix(),
+            this.getType(),
             position,
             interactable
         );
@@ -89,7 +89,7 @@ public abstract class Entity {
         JSONObject entity = new JSONObject();
         entity.put ("x", getX());
         entity.put ("y", getY());
-        entity.put ("type", getPrefix());
+        entity.put ("type", getType());
         return entity;
     }
 
