@@ -92,13 +92,13 @@ public class DungeonManiaController {
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
         throws IllegalArgumentException {
+        gameMode = gameMode.toLowerCase();
         if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException();
 
         // determine game mode
         Mode mode = getMode(gameMode);
         // get game entities
         List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
-        // get goal
         Goal goal = EntityFactory.extractGoal(dungeonName);
         System.out.println(goal);
 
@@ -141,13 +141,13 @@ public class DungeonManiaController {
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
         try { // write the json string to a file
-            String directoryPath = "./src/main/java/dungeonmania/savedGames";
+            String directoryPath = "./bin/savedGames";
             File pathAsFile = new File(directoryPath);
             if (!pathAsFile.exists()) {
                 pathAsFile.mkdir();
             }
 
-            String path = "./src/main/java/dungeonmania/savedGames/" + name + ".json";
+            String path = "./bin/savedGames/" + name + ".json";
             FileWriter myFileWriter = new FileWriter(path, false);
             myFileWriter.write(prettyString);
             myFileWriter.close();
@@ -190,7 +190,7 @@ public class DungeonManiaController {
      */
     public List<String> allGames() {
         try { // the name of files in a directory
-            String directory = "./src/main/java/dungeonmania/savedGames/";
+            String directory = "./bin/savedGames/";
             return FileLoader.listFileNamesInDirectoryOutsideOfResources(directory);
         } catch (IOException e) {
             return new ArrayList<>();

@@ -1,0 +1,28 @@
+{
+    "entities": [
+        {
+            "x": 4,
+            "y": 5,
+            "type": "spider"
+        },
+        {
+            "x": 5,
+            "y": 5,
+            "type": "portal",
+            "colour": "BLUE"
+        },
+        {
+            "x": 7,
+            "y": 5,
+            "type": "portal",
+            "colour": "BLUE"
+        },
+        {
+            "x": 3,
+            "y": 6,
+            "type": "player"
+        }
+    ],
+    "width": 15,
+    "height": 15
+}

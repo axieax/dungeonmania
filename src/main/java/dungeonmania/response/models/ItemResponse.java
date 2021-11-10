@@ -9,7 +9,7 @@ public final class ItemResponse {
         this.type = type;
     }
 
-    public final String getPrefix() {
+    public final String getType() {
         return type;
     }
 

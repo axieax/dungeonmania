@@ -32,7 +32,7 @@ public class GameTest {
             responseOne
                 .getEntities()
                 .stream()
-                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .filter(e -> e.getType().equals("zombie_toast"))
                 .collect(Collectors.toList())
                 .size()
         );
@@ -45,7 +45,7 @@ public class GameTest {
                 responseTwo
                     .getEntities()
                     .stream()
-                    .filter(e -> e.getPrefix().equals("zombie_toast"))
+                    .filter(e -> e.getType().equals("zombie_toast"))
                     .collect(Collectors.toList())
                     .size()
             );
@@ -58,7 +58,7 @@ public class GameTest {
             responseThree
                 .getEntities()
                 .stream()
-                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .filter(e -> e.getType().equals("zombie_toast"))
                 .collect(Collectors.toList())
                 .size()
         );
@@ -78,7 +78,7 @@ public class GameTest {
             responseOne
                 .getEntities()
                 .stream()
-                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .filter(e -> e.getType().equals("zombie_toast"))
                 .collect(Collectors.toList())
                 .size()
         );
@@ -91,7 +91,7 @@ public class GameTest {
                 responseTwo
                     .getEntities()
                     .stream()
-                    .filter(e -> e.getPrefix().equals("zombie_toast"))
+                    .filter(e -> e.getType().equals("zombie_toast"))
                     .collect(Collectors.toList())
                     .size()
             );
@@ -104,7 +104,7 @@ public class GameTest {
             responseThree
                 .getEntities()
                 .stream()
-                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .filter(e -> e.getType().equals("zombie_toast"))
                 .collect(Collectors.toList())
                 .size()
         );
@@ -124,7 +124,7 @@ public class GameTest {
             responseOne
                 .getEntities()
                 .stream()
-                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .filter(e -> e.getType().equals("zombie_toast"))
                 .collect(Collectors.toList())
                 .size()
         );
@@ -137,7 +137,7 @@ public class GameTest {
                 responseTwo
                     .getEntities()
                     .stream()
-                    .filter(e -> e.getPrefix().equals("zombie_toast"))
+                    .filter(e -> e.getType().equals("zombie_toast"))
                     .collect(Collectors.toList())
                     .size()
             );
@@ -150,7 +150,7 @@ public class GameTest {
             responseThree
                 .getEntities()
                 .stream()
-                .filter(e -> e.getPrefix().equals("zombie_toast"))
+                .filter(e -> e.getType().equals("zombie_toast"))
                 .collect(Collectors.toList())
                 .size()
         );
