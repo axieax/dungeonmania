@@ -281,14 +281,8 @@ public final class Game {
             );
             this.tick += 1;
 
-            if (getCharacter() == null) {
-                System.out.println("dead");
-            }
             // Player moves before other entities (so that bribable enemies can follow the player)
             getCharacter().move(this, movementDirection, itemUsedId);
-            if (!getCharacter().isAlive()) {
-                System.out.println("dead");
-            }
 
             List<Tickable> tickables = entities
                 .stream()
