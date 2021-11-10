@@ -212,7 +212,7 @@ public class ControllerTest {
     @Test
     public void testItemIllegal() {
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse resp = controller.newGame ("advanced", "Standard");
+        DungeonResponse resp = controller.newGame ("advanced", "standard");
         for (int i = 0; i < 5; i++) {
             controller.tick (null, Direction.RIGHT);            
         }
@@ -239,7 +239,7 @@ public class ControllerTest {
     @Test
     public void testItemNotValid() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "Standard"));  
+        assertDoesNotThrow(() -> controller.newGame ("advanced", "standard"));  
         assertThrows (InvalidActionException.class, () ->controller.tick ("id-does-not-exist", Direction.NONE));    
     }
     
@@ -431,8 +431,7 @@ public class ControllerTest {
         assertEquals ("default", controller.getSkin());
         assertEquals ("en_US", controller.getLocalisation());
         List<String> gameModes = controller.getGameModes();
-        assertEquals ("Standard", gameModes.get(0));
-        assertEquals ("Peaceful", gameModes.get(1));
-        assertEquals ("Hard", gameModes.get(2));
+        assertEquals ("standard", gameModes.get(0));
+        assertEquals ("hard", gameModes.get(2));
     }    
 }

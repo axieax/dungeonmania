@@ -62,11 +62,15 @@ public class EntityFactory {
         }
     }
 
-    public static final List<Entity> extractEntities(String dungeonName, Mode mode)
+    public static final List<Entity> extractEntities (String dungeonName, Mode mode) {
+        JSONObject json = loadDungeon(dungeonName); 
+        return extractEntities(json, mode);
+    }
+
+    public static final List<Entity> extractEntities(JSONObject jsonInfo, Mode mode)
         throws IllegalArgumentException {
         // Extract JSON
-        JSONObject json = loadDungeon(dungeonName);
-        JSONArray entitiesInfo = json.getJSONArray("entities");
+        JSONArray entitiesInfo = jsonInfo.getJSONArray("entities");
 
         // Extract entities
         List<Entity> entities = new ArrayList<>();
@@ -186,15 +190,17 @@ public class EntityFactory {
         Buildable item = buildableMap().get(buildable);
         return item.clone();
     }
-
-    public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
-        JSONObject json = loadDungeon(dungeonName);
-        return (json.has("goal-condition"))
-            ? extractGoal(json.getJSONObject("goal-condition"))
+    public static final Goal extractGoal (String dungeonName) throws IllegalArgumentException {
+        return extractGoal(loadDungeon(dungeonName));
+    }
+    public static final Goal extractGoal(JSONObject dungeon) throws IllegalArgumentException {
+        return (dungeon.has("goal-condition"))
+            ? doExtractGoal(dungeon.getJSONObject("goal-condition"))
             : null;
     }
 
-    public static final Goal extractGoal(JSONObject json) {
+    public static final Goal doExtractGoal(JSONObject json) {
+        System.out.println("i love you amanda");
         switch (json.getString("goal")) {
             case "enemies":
                 return new DestroyEnemies();
@@ -209,7 +215,7 @@ public class EntityFactory {
                 JSONArray andSubgoals = json.getJSONArray("subgoals");
                 for (int i = 0; i < andSubgoals.length(); i++) {
                     JSONObject subgoal = andSubgoals.getJSONObject(i);
-                    and.addGoal(extractGoal(subgoal));
+                    and.addGoal(doExtractGoal(subgoal));
                 }
                 return and;
             case "OR":
@@ -217,7 +223,7 @@ public class EntityFactory {
                 JSONArray orSubgoals = json.getJSONArray("subgoals");
                 for (int i = 0; i < orSubgoals.length(); i++) {
                     JSONObject subgoal = orSubgoals.getJSONObject(i);
-                    or.addGoal(extractGoal(subgoal));
+                    or.addGoal(doExtractGoal(subgoal));
                 }
                 return or;
             default:
