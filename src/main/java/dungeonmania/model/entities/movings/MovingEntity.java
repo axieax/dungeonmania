@@ -40,6 +40,10 @@ public abstract class MovingEntity extends Entity implements Tickable {
         return getHealth() > 0 ? true : false;
     }
     
+    public void reduceHealthFromBattle(int amount) {
+        this.setHealth(this.getHealth() - amount);
+    }
+    
     //////////////////////////////////////////////////////////////////////////////////
     public int getHealth() {
         return health;
@@ -48,7 +52,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     public void setHealth(int health) {
         this.health = health;
     }
-    
+
     public int getBaseAttackDamage() {
         return attackDamage;
     }

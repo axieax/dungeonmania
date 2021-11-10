@@ -1,5 +1,7 @@
 
 {
+    "width": 18,
+    "height": 16,
     "entities": [
       {
         "x": 0,
@@ -387,9 +389,58 @@
         "type": "treasure"
       },
       {
+        "x": 15,
+        "y": 9,
+        "type": "door",
+        "key": 1
+      },
+      {
+        "x": 4,
+        "y": 10,
+        "type": "door",
+        "key": 2
+      },
+      {
         "x": 11,
         "y": 10,
-        "type": "invincibility_potion"
+        "type": "key",
+        "key": 1
+      },
+      {
+        "x": 12,
+        "y": 10,
+        "type": "key",
+        "key": 2
+      },
+      {
+        "x": 11,
+        "y": 11,
+        "type": "wood"
+      },
+      {
+        "x": 11,
+        "y": 12,
+        "type": "wood"
+      },
+      {
+        "x": 11,
+        "y": 13,
+        "type": "arrow"
+      },
+      {
+        "x": 11,
+        "y": 14,
+        "type": "arrow"
+      },
+      {
+        "x": 12,
+        "y": 14,
+        "type": "arrow"
+      },
+      {
+        "x": 13,
+        "y": 14,
+        "type": "wood"
       },
       {
         "x": 17,

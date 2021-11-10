@@ -11,8 +11,8 @@ public abstract class Enemy extends MovingEntity implements Observer {
     private MovementState movementState;
     private int movementTick;
 
-    public final double ARMOUR_DROP_RATE = 0;
-    public final double THE_ONE_RING_DROP_RATE = 0.1; // 10% of dropping one_ring
+    private double armourDropRate = 0;
+    public final double THE_ONE_RING_DROP_RATE = 0.1;
     
     public Enemy(String prefix, Position position, int health, int attackDamage, int damageMultiplier) {
         super(prefix, position, health, attackDamage);
@@ -30,6 +30,10 @@ public abstract class Enemy extends MovingEntity implements Observer {
 
     public void setMovementState(MovementState movementState) {
         this.movementState = movementState;
+    }
+    
+    public double getArmourDropRate() {
+        return armourDropRate;
     }
 
     public int getMovementTick() {
@@ -49,5 +53,4 @@ public abstract class Enemy extends MovingEntity implements Observer {
             this.movementState.move(game);
         }
     }
-    
 }

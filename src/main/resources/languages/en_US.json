@@ -5,6 +5,7 @@
         "subtitle_1": "Frontend created by:\n Braedon Wooding, George Litsas, Nick Patrikeos, Noa Challis",
         "subtitle_2": "Backend created by: The Avocados 🥑",
         "buttons": {
+            "generate_game": "Generate New Game",
             "new_game": "Start New Game",
             "load_game": "Load Game",
             "quit_game": "Quit Game",

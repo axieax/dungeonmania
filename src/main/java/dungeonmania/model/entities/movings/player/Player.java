@@ -17,10 +17,12 @@ import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
@@ -32,6 +34,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     private PlayerState state;
     private boolean inBattle;
+    private MovingEntity currentBattleOpponent;
     private Inventory inventory = new Inventory();
     private List<BribableEnemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
@@ -40,6 +43,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
+        this.currentBattleOpponent = null;
     }
 
     /********************************
@@ -77,6 +81,21 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
+     * @return true if in battle, false otherwise
+     */
+    public MovingEntity getCurrentBattleOpponent() {
+        return currentBattleOpponent;
+    }
+    
+    /**
+     * Sets the current opponent that the player is fighting against.
+     * @return
+     */
+    public void setCurrentBattleOpponent(MovingEntity opponent) {
+        this.currentBattleOpponent = opponent;
+    }
+
+    /**
      * Get a list of all allies that the player has.
      *
      * @return List<Enemy>
@@ -101,6 +120,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
         }
         allies.add(ally);
         ally.setBribed(true);
+    }
+
+    public void removeAlly(MovingEntity ally) {
+        MovingEntity toRemove = null;
+        for (MovingEntity m : allies) {
+            if (m.getId().equals(ally.getId())) toRemove = m;
+        }
+
+        if(toRemove != null) {
+            allies.remove(toRemove);
+        }
     }
 
     /********************************
@@ -210,6 +240,18 @@ public class Player extends MovingEntity implements SubjectPlayer {
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 
+    @Override
+    public AnimationQueue getAnimation() {
+        double health = (double) getHealth() / MAX_CHARACTER_HEALTH;
+        return new AnimationQueue(
+            "PostTick",
+            getId(),
+            Arrays.asList("healthbar set " + health, "healthbar tint 0xff0000, over 0.5s"),
+            false,
+            10
+        );
+    }
+
     /**
      * Checks if the inventory has the specified quantity of the item.
      *
@@ -282,6 +324,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void move(Game game, Direction direction, String itemId)
         throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
+            // check if itemId is not it player inventory
+            if (getInventoryItem(itemId) == null) throw new InvalidActionException(
+                "At Player move method - itemUsed is not in the player's inventory"
+            );
+            
+            // check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
 
             // Item is not null, and it's not a bomb or any potion
@@ -313,8 +361,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
         if (canMove) {
             this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
-            this.notifyObservers();
         }
+
+        // should be notified regardless of if player can move e.g. if player drinks invincibility potion
+        this.notifyObservers();
     }
 
     /**
@@ -326,14 +376,15 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param opponent entity the character is fighting
      */
     public void battle(Game game, MovingEntity opponent) {
-        state.battle(game, opponent);
-
         // Notify the observers that the player is in battle
         this.setInBattle(true);
+        this.setCurrentBattleOpponent(opponent);
         this.notifyObservers();
 
-        // Notify the observers that the player is no longer in battle
+        state.battle(game, opponent);
+
         this.setInBattle(false);
+        this.setCurrentBattleOpponent(null);
     }
 
     /**

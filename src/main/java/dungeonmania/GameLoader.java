@@ -46,7 +46,7 @@ public class GameLoader {
         try {
             String content = new String(
                 Files.readAllBytes(
-                    Paths.get("./src/main/java/dungeonmania/savedGames/" + dungeonName + ".json")
+                    Paths.get("./bin/savedGames/" + dungeonName + ".json")
                 )
             );
             return new JSONObject(content);

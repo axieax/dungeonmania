@@ -27,7 +27,7 @@ public class ControllerTest {
      */
     public static String getInventoryId (DungeonResponse resp, String objectType) {
         for (ItemResponse item: resp.getInventory()) {
-            if (objectType.equals(item.getPrefix())) return item.getId();
+            if (objectType.equals(item.getType())) return item.getId();
         }
         return null;
     }
@@ -40,7 +40,7 @@ public class ControllerTest {
      */
     public static String getEntityId (DungeonResponse resp, String objectType) {
         for (EntityResponse entity : resp.getEntities()) {
-            if (objectType.equals(entity.getPrefix())) return entity.getId();
+            if (objectType.equals(entity.getType())) return entity.getId();
         }
         return null;
     }
@@ -154,7 +154,7 @@ public class ControllerTest {
         // Find current position of the player
         Position playerPosition = new Position(0, 0);
         for (EntityResponse entity: currGame.getEntities()) {
-            if (entity.getPrefix().startsWith("player")) playerPosition = entity.getPosition();
+            if (entity.getType().startsWith("player")) playerPosition = entity.getPosition();
         }
 
         // Save the current game
@@ -168,7 +168,7 @@ public class ControllerTest {
 
         // Player should be in the same position as when the game was saved
         for (EntityResponse entity: loadedGame.getEntities()) {
-            if (entity.getPrefix().equals ("player")) {
+            if (entity.getType().equals ("player")) {
                 assertEquals(entity.getPosition(), playerPosition);
             }
         }
@@ -399,7 +399,7 @@ public class ControllerTest {
     public void testTooFarFromMercenary() {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse gameResponse = controller.newGame ("advanced", "Standard");
-        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getPrefix().equals("mercenary")).findFirst().orElse(null);
+        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getType().equals("mercenary")).findFirst().orElse(null);
         String mercenaryId = mercenary != null ?  mercenary.getId() : "";
         assertThrows (InvalidActionException.class, ()->controller.interact(mercenaryId));
     }
@@ -411,7 +411,7 @@ public class ControllerTest {
     public void testNoGoldBribe() {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse gameResponse = controller.newGame ("advanced", "Standard");  
-        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getPrefix().equals("mercenary")).findFirst().orElse(null);
+        EntityResponse mercenary =  gameResponse.getEntities().stream().filter(e -> e.getType().equals("mercenary")).findFirst().orElse(null);
         String mercenaryId = mercenary != null ?  mercenary.getId() : "";
         controller.tick (null, Direction.DOWN);
         controller.tick (null, Direction.DOWN);

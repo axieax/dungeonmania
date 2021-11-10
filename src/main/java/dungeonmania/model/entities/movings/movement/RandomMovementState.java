@@ -6,7 +6,6 @@ import java.util.Random;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
