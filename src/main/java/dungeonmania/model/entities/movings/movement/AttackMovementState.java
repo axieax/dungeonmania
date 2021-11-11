@@ -33,11 +33,11 @@ public class AttackMovementState implements MovementState {
         Map<Position, Position> prev = positionGraph.dijkstra(enemy.getPosition());
 
         // traverse back path
-        if (prev.get(player.getPosition()) == optimalPathPosition) {
+        if (prev.get(player.getPosition()).equals(optimalPathPosition)) {
             optimalPathPosition = player.getPosition();
         } else {
             Position curr = prev.get(player.getPosition());
-            while (curr != enemy.getPosition() && curr != null) {
+            while (curr != null && !enemy.getPosition().equals(curr)) {
                 optimalPathPosition = curr;
                 curr = prev.get(curr);
             }
