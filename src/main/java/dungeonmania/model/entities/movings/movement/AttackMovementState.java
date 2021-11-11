@@ -18,7 +18,7 @@ public class AttackMovementState implements MovementState {
     }
 
     /**
-     * Enemy runs away from player
+     * Enemy follows player
      */
     @Override
     public void move(Game game) {

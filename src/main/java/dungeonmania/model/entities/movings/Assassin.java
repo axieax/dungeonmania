@@ -9,9 +9,9 @@ import dungeonmania.model.entities.movings.movement.AttackMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
-public class Assassin extends BribableEnemy {
+public class Assassin extends BribableEnemy implements Boss {
     
-    public static final int MAX_ASSASSIN_HEALTH = 60;
+    public static final int MAX_ASSASSIN_HEALTH = 75;
     public static final int MAX_ASSASSIN_ATTACK_DMG = 12;
 
     public Assassin(Position position, int damageMultiplier, SubjectPlayer player) {

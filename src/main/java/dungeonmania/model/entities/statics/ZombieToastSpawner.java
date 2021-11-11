@@ -36,7 +36,7 @@ public class ZombieToastSpawner extends Entity implements Tickable {
             Player player = (Player) character;
             if (player.hasWeapon()) {
                 Equipment weapon = player.getWeapon();
-                weapon.useEquipment(player);
+                weapon.useEquipment(player, this);
                 game.removeEntity(this);
             } else {
                 throw new InvalidActionException(

@@ -1,5 +1,6 @@
 package dungeonmania.model.entities;
 
+import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
 public abstract class AttackEquipment extends Equipment {
@@ -22,5 +23,11 @@ public abstract class AttackEquipment extends Equipment {
 
     public int getHitRate() {
         return hitRate;
+    }
+
+    @Override
+    public double useEquipment(Player player, Entity enemy) {
+        super.useEquipment(player, enemy);
+        return getAttackDamage();
     }
 }

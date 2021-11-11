@@ -9,10 +9,10 @@ public class Shield extends DefenceEquipment implements Buildable {
     private static final int TREASURE_NEEDED = 1;
     private static final int KEY_NEEDED = 1;
 
-    private static final double DEFENCE_MULTIPLIER = 0.25;
+    private static final double DEFENCE_MULTIPLIER = 0.5;
 
     public Shield() {
-        super("shield", DEFENCE_MULTIPLIER, null);
+        super("shield", DEFENCE_MULTIPLIER);
     }
 
     @Override
@@ -28,15 +28,13 @@ public class Shield extends DefenceEquipment implements Buildable {
 
     @Override
     public void craft(Inventory inventory) {
-        if (isBuildable(inventory)) {
-            inventory.removeItemQuantity("wood", WOOD_NEEDED);
-            if (inventory.hasItemQuantity("treasure", TREASURE_NEEDED)) {
-                inventory.removeItemQuantity("treasure", TREASURE_NEEDED);
-            } else {
-                inventory.removeItemQuantity("key", KEY_NEEDED);
-            }
-            inventory.addItem(new Shield());
+        inventory.removeItemQuantity("wood", WOOD_NEEDED);
+        if (inventory.hasItemQuantity("treasure", TREASURE_NEEDED)) {
+            inventory.removeItemQuantity("treasure", TREASURE_NEEDED);
+        } else {
+            inventory.removeItemQuantity("key", KEY_NEEDED);
         }
+        inventory.addItem(new Shield());
     }
 
     @Override

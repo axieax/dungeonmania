@@ -18,6 +18,7 @@ import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -110,28 +111,31 @@ public class Player extends MovingEntity implements SubjectPlayer {
      ********************************/
 
     /**
-     * Add an ally to the player.
+     * Add an ally (becomes bribed) to the player.
      *
      * @param ally
      */
     public void addAlly(BribableEnemy ally) {
-        for (BribableEnemy m : allies) {
-            // Entity is already ally
-            if (m.getId().equals(ally.getId())) return;
+        // Check if the bribable enemy is already an ally
+        if (allies.stream().anyMatch(m -> m.getId().equals(ally.getId()))) {
+            return;
         }
+
         allies.add(ally);
         ally.setBribed(true);
     }
 
+    /**
+     * Remove an ally (no longer bribed) from the player.
+     *
+     * @param ally
+     */
     public void removeAlly(MovingEntity ally) {
-        MovingEntity toRemove = null;
-        for (MovingEntity m : allies) {
-            if (m.getId().equals(ally.getId())) toRemove = m;
+        if (ally instanceof BribableEnemy) {
+            ((BribableEnemy) ally).setBribed(false);
         }
 
-        if (toRemove != null) {
-            allies.remove(toRemove);
-        }
+        allies.remove(ally);
     }
 
     /********************************
@@ -238,6 +242,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public Equipment getWeapon() {
         Item weapon = inventory.findItem("sword");
         if (weapon == null) weapon = inventory.findItem("bow");
+        if (weapon == null) weapon = inventory.findItem("sceptre");
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 
@@ -329,12 +334,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void move(Game game, Direction direction, String itemId)
         throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
-            // check if itemId is not it player inventory
+            // Check if itemId is not in player inventory
             if (getInventoryItem(itemId) == null) throw new InvalidActionException(
                 "At Player move method - itemUsed is not in the player's inventory"
             );
-
-            // check if itemUsed can be consumed
+            
+            // Check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
 
             // Item is not null, and it's not a bomb or any potion
@@ -358,7 +363,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(entity -> {
-            if (!(entity instanceof Enemy)) entity.interact(game, this);
+            // Cannot interact with moving entities or zombie toast spawners when moving
+            if (!(entity instanceof MovingEntity || entity instanceof ZombieToastSpawner))
+                entity.interact(game, this);
         });
 
         // Gets the updated entities after the interaction
@@ -437,7 +444,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Any extra attack damage provided by equipment
         for (AttackEquipment e : getAttackEquipmentList()) {
-            damageToOpponent += e.getHitRate() * e.getAttackDamage();
+            damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
         }
 
         // Any extra attack damage provided by allies
@@ -455,10 +462,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param opponentAttackDamage positive integer indicating attack amount to player
      * @return int reduced opponentAttackDamage corresponding to defence amount
      */
-    public int applyDefenceToOpponentAttack(int opponentAttackDamage) {
-        int finalAttackDamage = opponentAttackDamage;
+    public int applyDefenceToOpponentAttack(MovingEntity opponent) {
+        int finalAttackDamage = opponent.getBaseAttackDamage();
         for (DefenceEquipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage = (int) (finalAttackDamage * e.getDefenceMultiplier());
+            finalAttackDamage = (int) (e.useEquipment(this, opponent));
         }
         return finalAttackDamage;
     }

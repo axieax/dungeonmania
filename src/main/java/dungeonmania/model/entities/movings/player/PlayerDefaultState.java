@@ -2,8 +2,6 @@ package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.exceptions.PlayerDeadException;
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.AttackEquipment;
-import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;
@@ -37,16 +35,13 @@ public class PlayerDefaultState implements PlayerState {
 
         // Battles only last a single tick
         while (player.getHealth() > 0 && opponent.getHealth() > 0) {
+            // equipment is "worn" (durability reduced) when getting applying attack/defence
             int playerAttackDamage = player.getTotalAttackDamage(opponent);
-            int opponentAttackDamage = player.applyDefenceToOpponentAttack(
-                opponent.getBaseAttackDamage()
-            );
-            int originalHealth = player.getHealth();
+            int opponentAttackDamage = player.applyDefenceToOpponentAttack(opponent);
 
-            // Use defensive equipment
-            List<DefenceEquipment> defenseEquipments = player.getDefenceEquipmentList();
-            defenseEquipments.forEach(defenseEquipment -> defenseEquipment.useEquipment(player));
+            int originalHealth = player.getHealth();
             player.setHealth(originalHealth - ((opponent.getHealth() * opponentAttackDamage) / 10));
+            opponent.reduceHealthFromBattle(((originalHealth * playerAttackDamage) / 5));
 
             /**
              * TODO: Instead of using all attack equipment for each battle, only use them if the default
@@ -55,14 +50,6 @@ public class PlayerDefaultState implements PlayerState {
              * Something to consider for Milestone 3.
              */
 
-            // Use attack equipment
-            List<AttackEquipment> attackEquipments = player.getAttackEquipmentList();
-            while (!attackEquipments.isEmpty()) {
-                AttackEquipment currEquipment = attackEquipments.get(0);
-                currEquipment.useEquipment(player);
-                attackEquipments.remove(currEquipment);
-            }
-            
             opponent.reduceHealthFromBattle(((originalHealth * playerAttackDamage) / 5));
 
             // Check if player is dead
@@ -75,7 +62,7 @@ public class PlayerDefaultState implements PlayerState {
             }
         }
 
-        // Remove the entity from the game if dead after battle.
+        // Remove the entity that is dead (there must be one) after battle from the game.
         if (player.isAlive()) {
             player.removeAlly(opponent);
             game.removeEntity(opponent);

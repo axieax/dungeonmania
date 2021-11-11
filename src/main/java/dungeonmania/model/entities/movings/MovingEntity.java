@@ -34,7 +34,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     }
 
     /**
-     * Returns true if the player has positive health, else false
+     * Returns true if entity has positive health, else false
     */
     public boolean isAlive() {
         return getHealth() > 0 ? true : false;

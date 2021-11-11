@@ -60,10 +60,10 @@ public class ShieldTest {
     }
 
     /**
-     * Test whether the buildable entity can be built by the Player.
+     * Test whether the buildable entity can be built by the Player alternatively.
      */
     @Test
-    public void buildTestAlternate() {
+    public void buildTestV2() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
