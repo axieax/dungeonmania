@@ -3,6 +3,7 @@ package dungeonmania.model.entities.movings;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.movement.AttackMovementState;
 import dungeonmania.model.entities.movings.movement.PositionGraph;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
@@ -15,13 +16,16 @@ public abstract class BribableEnemy extends Enemy {
     public static final int BATTLE_RADIUS = 5;
     public static final int MAX_DISTANCE_TO_BRIBE = 2;
     public static final double ARMOUR_DROP_RATE = 0.25;
-
+    
     private boolean bribed;
+    private boolean mindControlled;
     private boolean moveTwice;
+    private int mindControlTicks = 10;
 
     public BribableEnemy(String prefix, Position position, int health, int attackDamage, int damageMultiplier) {
         super(prefix, position, health, attackDamage, damageMultiplier);
         this.bribed = false;
+        this.mindControlled = false;
         this.moveTwice = false;
     }
 
@@ -40,13 +44,24 @@ public abstract class BribableEnemy extends Enemy {
 
     @Override
     public void tick(Game game) {
+        Player player = (Player) game.getCharacter();
+        
         this.move(game);
         
-        Player player = (Player) game.getCharacter();
         // If a player is fighting an enemy within the battle radius, BribableEnemy moves twice as fast
         if (this.isAlive() && moveTwice && getDistanceToPlayer(game, player.getPosition()) <= BATTLE_RADIUS) {
             moveTwice = false;
             this.move(game);
+        }
+
+        // Check that the effects for a mind controlled enemy will only last 10 ticks
+        // After 10 ticks, the enemy will return to its normal state (no longer an ally)
+        if (mindControlled) {
+            mindControlTicks--;
+            if (mindControlTicks == 0) {
+                mindControlled = false;
+                player.removeAlly(this);
+            }
         }
     }
 
@@ -68,11 +83,13 @@ public abstract class BribableEnemy extends Enemy {
     }
 
     /**
-     * Player interacting with BribableEnemy will check if it meets the conditions of bribing
+     * Player interacting with BribableEnemy will first check if it can be mind controlled
+     * If not, it will check if it can be bribed
      */
     @Override
     public void interact(Game game, Entity character) {
-        bribe(game, (Player) character);
+        if (!mindControl(game, (Player) character))
+            bribe(game, (Player) character);
     }
 
     /**
@@ -84,6 +101,25 @@ public abstract class BribableEnemy extends Enemy {
     public int getDistanceToPlayer(Game game, Position playerPos) {
         PositionGraph positionGraph = new PositionGraph(game, this);
         return positionGraph.BFS(this.getPosition(), playerPos);
+    }
+
+    /**
+     * Condition for player to mind control the enemy
+     * @param game
+     * @param player
+     * @return true if conditions are met, false otherwise
+     */
+    public boolean mindControl(Game game, Player player) {
+        // Player must have the sceptre to mindcontrol the mercenary
+        // The effect will only last 10 ticks
+        Item item = player.findInventoryItem("sceptre");
+        
+        if (item == null) return false;
+        
+        player.addAlly(this);
+        this.mindControlTicks = 10;
+        this.mindControlled = true;
+        return true;
     }
 
     /**

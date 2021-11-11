@@ -110,28 +110,31 @@ public class Player extends MovingEntity implements SubjectPlayer {
      ********************************/
 
     /**
-     * Add an ally to the player.
+     * Add an ally (becomes bribed) to the player.
      *
      * @param ally
      */
     public void addAlly(BribableEnemy ally) {
-        for (BribableEnemy m : allies) {
-            // Entity is already ally
-            if (m.getId().equals(ally.getId())) return;
+        // Check if the bribable enemy is already an ally
+        if (allies.stream().anyMatch(m -> m.getId().equals(ally.getId()))) {
+            return;
         }
+
         allies.add(ally);
         ally.setBribed(true);
     }
 
+    /**
+     * Remove an ally (no longer bribed) from the player.
+     *
+     * @param ally
+     */
     public void removeAlly(MovingEntity ally) {
-        MovingEntity toRemove = null;
-        for (MovingEntity m : allies) {
-            if (m.getId().equals(ally.getId())) toRemove = m;
+        if (ally instanceof BribableEnemy) {
+            ((BribableEnemy) ally).setBribed(false);
         }
 
-        if(toRemove != null) {
-            allies.remove(toRemove);
-        }
+        allies.remove(ally);
     }
 
     /********************************
@@ -236,7 +239,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @return Equipment
      */
     public Equipment getWeapon() {
-        Item weapon = inventory.findWeapon();
+        Item weapon = inventory.findItem("sword");
+        if (weapon == null) weapon = inventory.findItem("bow");
+        if (weapon == null) weapon = inventory.findItem("sceptre");
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 

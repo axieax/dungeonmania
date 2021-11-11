@@ -1,7 +1,5 @@
 package dungeonmania.model.entities.movings;
 
-import javax.sound.sampled.Port;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;

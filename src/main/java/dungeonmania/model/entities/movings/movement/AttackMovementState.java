@@ -19,7 +19,7 @@ public class AttackMovementState implements MovementState {
     }
 
     /**
-     * Enemy runs away from player
+     * Enemy follows player
      */
     @Override
     public void move(Game game) {
@@ -32,7 +32,7 @@ public class AttackMovementState implements MovementState {
 
         PositionGraph positionGraph = new PositionGraph(game, enemy);
 
-        // Move the mercenary to the closest possible position to the player
+        // Move the enemy to the closest possible position to the player
         for (Position position : possiblePositionsToMove) {
             int pathLen = positionGraph.BFS(position, player.getPosition());
             if (pathLen < optimalPathLength) {
@@ -41,7 +41,7 @@ public class AttackMovementState implements MovementState {
             }
         }
 
-        // If the player is invisible, move the mercenary randomly (will not follow player)
+        // If the player is invisible, move the enemy randomly (will not follow player)
         if (player.getState() instanceof PlayerInvisibleState) {
             Random rand = new Random();
             int randomIndex = rand.nextInt(possiblePositionsToMove.size());

@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.Buildable;
+import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
@@ -179,6 +180,7 @@ public class EntityFactory {
         Map<String, Buildable> map = new HashMap<>();
         map.put("bow", new Bow());
         map.put("shield", new Shield());
+        map.put("sceptre", new Sceptre());
         return map;
     }
 

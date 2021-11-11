@@ -3,8 +3,11 @@ package dungeonmania.movings;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.Treasure;
+import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Assassin;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
@@ -319,6 +322,48 @@ public class AssassinTest {
         // Assassin should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntities(assassinPos).size() == 0); // assassin should die
+    }
+
+    @Test
+    public void testMindControlledMovementAndAttack() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Assassin assassin = new Assassin(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(assassin);
+
+        game.addEntity(new Wood(new Position(2, 1)));
+        game.addEntity(new Key(new Position(2, 2), 1));
+        game.addEntity(new SunStone(new Position(1, 2)));
+
+        // Player collects all items and builds a sceptre
+        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.LEFT);
+
+        game.build("sceptre");
+
+        // Player uses the sceptre to mind control the assassin
+        Position updatedPlayerPos = new Position(1, 2);
+        game.interact(assassin.getId());
+
+        // The distance between the player and the assassin should decrease
+        int distance = assassin.getDistanceToPlayer(game, updatedPlayerPos);
+        for (int i = 0; i < 10; i++) {
+            game.tick(null, Direction.NONE);
+            assertTrue(assassin.getDistanceToPlayer(game, updatedPlayerPos) <= distance);
+            distance = assassin.getDistanceToPlayer(game, updatedPlayerPos);
+        }
+
+        Position assassinPos = assassin.getPosition();
+        // After 10 ticks, the assassin will no longer be mind controlled
+        // It will battle with the player and will consequently die
+        game.tick(null, Direction.NONE);
+
+        assertTrue(game.getEntities(assassinPos).size() == 0);
     }
 
     private List<Entity> sevenBySevenWallBoundary() {

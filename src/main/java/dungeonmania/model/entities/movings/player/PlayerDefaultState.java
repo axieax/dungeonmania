@@ -59,7 +59,7 @@ public class PlayerDefaultState implements PlayerState {
             }
         }
 
-        // Remove the entity from the game if dead after battle.
+        // Remove the entity that is dead (there must be one) after battle from the game.
         if (player.isAlive()) {
             player.removeAlly(opponent);
             game.removeEntity(opponent);
