@@ -23,6 +23,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     public Direction getDirection() {
         return this.movingDirection;
     }
+    
     public void setDirection(Direction direction) {
         this.movingDirection = direction;
     }

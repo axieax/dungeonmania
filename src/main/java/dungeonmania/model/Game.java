@@ -114,7 +114,7 @@ public final class Game {
             .collect(Collectors.toList());
     }
 
-    public final List<Position> getMoveablePositions(MovingEntity from, Position position) {
+    public final List<Position> getMoveablePositions(MovingEntity entity, Position position) {
         int x = position.getX();
         int y = position.getY();
         List<Position> positions = new ArrayList<>();
@@ -122,16 +122,19 @@ public final class Game {
         positions.add(new Position(x - 1, y));
         positions.add(new Position(x + 1, y));
         positions.add(new Position(x, y - 1));
+
+        List<Position> toRemove = new ArrayList<>();
+    
         getCardinallyAdjacentEntities(position)
             .stream()
-            .forEach(
-                e -> {
-                    // consider portals as moveable positions since all moving entities can teleport
-                    if (from.collision(e) && !(e instanceof Portal)) positions.remove(
-                        e.getPosition()
-                    );
-                }
-            );
+            .forEach(e -> {
+                if (entity.collision(e)) toRemove.add(e.getPosition());
+            });
+        
+        toRemove
+            .stream()
+            .forEach(p -> positions.remove(p));
+        
         return positions
             .stream()
             .filter(
