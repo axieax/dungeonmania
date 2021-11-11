@@ -52,7 +52,7 @@ public class Inventory {
     public Item findItem(String prefix) {
         return items
             .stream()
-            .filter(i -> i.getPrefix().startsWith(prefix))
+            .filter(i -> i.getType().startsWith(prefix))
             .findFirst()
             .orElse(null);
     }
@@ -78,7 +78,7 @@ public class Inventory {
     public boolean hasItemQuantity(String prefix, int quantity) {
         int itemQuantity = 0;
         for (Item item : items) {
-            if (item.getPrefix().startsWith(prefix)) itemQuantity++;
+            if (item.getType().startsWith(prefix)) itemQuantity++;
         }
         return itemQuantity >= quantity;
     }
@@ -96,7 +96,7 @@ public class Inventory {
             List<Item> toRemove = new ArrayList<>();
             items
                 .stream()
-                .filter(item -> item.getPrefix().startsWith(prefix))
+                .filter(item -> item.getType().startsWith(prefix))
                 .limit(quantity)
                 .forEach(item -> toRemove.add(item));
             toRemove
@@ -125,7 +125,7 @@ public class Inventory {
         List<ItemResponse> response = new ArrayList<>();
 
         for(Item i: items) {
-            ItemResponse itemResponse = new ItemResponse(i.getId(), i.getPrefix());
+            ItemResponse itemResponse = new ItemResponse(i.getId(), i.getType());
             response.add(itemResponse);
         }
 

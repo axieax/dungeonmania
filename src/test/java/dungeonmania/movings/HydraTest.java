@@ -88,7 +88,7 @@ public class HydraTest {
         // Any other movingEntites that spawn will be removed
         List<Entity> toRemove = new ArrayList<>();
         for(Entity e: game.getEntities()) {
-            if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA) && !(e instanceof Player)) {
+            if(e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
                 toRemove.add(e);
             }
         }
@@ -120,7 +120,7 @@ public class HydraTest {
             // Any other movingEntites that spawn will be removed (other than player)
             List<Entity> toRemove = new ArrayList<>();
             for(Entity e: game.getEntities()) {
-                if(e instanceof MovingEntity && !e.getPrefix().equals(HYDRA) && !(e instanceof Player)) {
+                if(e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
                     toRemove.add(e);
                 }
             }
@@ -441,7 +441,7 @@ public class HydraTest {
 
     public EntityResponse getHydraEntity(List<EntityResponse> entities) {
         for (EntityResponse e : entities) {
-            if (e.getPrefix().startsWith(HYDRA)) {
+            if (e.getType().startsWith(HYDRA)) {
                 return e;
             }
         }

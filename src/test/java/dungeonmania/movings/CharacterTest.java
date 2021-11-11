@@ -281,7 +281,7 @@ public class CharacterTest {
 
         for (int i = 0; i < updatedEntities.size(); i++) {
             // don't compare players as their position is different
-            if (updatedEntities.get(i).getPrefix() == CHARACTER_TYPE) {
+            if (updatedEntities.get(i).getType() == CHARACTER_TYPE) {
                 continue;
             }
 
@@ -781,7 +781,7 @@ public class CharacterTest {
         throws IllegalArgumentException, InvalidActionException {
         EntityResponse player = entities
             .stream()
-            .filter(e -> e.getPrefix().startsWith(CHARACTER_TYPE))
+            .filter(e -> e.getType().startsWith(CHARACTER_TYPE))
             .findFirst()
             .orElse(null);
 
