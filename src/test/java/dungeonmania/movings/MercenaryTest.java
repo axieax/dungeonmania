@@ -7,7 +7,10 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.Treasure;
+import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
@@ -292,8 +295,6 @@ public class MercenaryTest {
         assertTrue(game.getEntities(mercenaryPos).size() == 0); // mercenary should die
     }
     
-    
-
     @Test
     public void testBribedMovement() {
         Mode mode = new Standard();
@@ -325,6 +326,7 @@ public class MercenaryTest {
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
 
         // Mercenary stays either next to or on top of the player regardless of where the latter moves
+        // Since mercenary is bribed, it will not engage in battle with the player
         List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
         Random rand = new Random(5);
         for (int i = 0; i < 100; i++) {
@@ -339,6 +341,48 @@ public class MercenaryTest {
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
             assertTrue(adjacentEntites.contains(mercenary) || numEntitesAtPlayerPos == 2);
         }
+    }
+
+    @Test
+    public void testMindControlledMovementAndAttack() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        game.addEntity(new Wood(new Position(2, 1)));
+        game.addEntity(new Key(new Position(2, 2), 1));
+        game.addEntity(new SunStone(new Position(1, 2)));
+
+        // Player collects all items and builds a sceptre
+        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.LEFT);
+
+        game.build("sceptre");
+
+        // Player uses the sceptre to mind control the mercenary
+        Position updatedPlayerPos = new Position(1, 2);
+        game.interact(mercenary.getId());
+
+        // The distance between the player and the mercenary should decrease
+        int distance = mercenary.getDistanceToPlayer(game, updatedPlayerPos);
+        for (int i = 0; i < 10; i++) {
+            game.tick(null, Direction.NONE);
+            assertTrue(mercenary.getDistanceToPlayer(game, updatedPlayerPos) <= distance);
+            distance = mercenary.getDistanceToPlayer(game, updatedPlayerPos);
+        }
+
+        Position mercenaryPos = mercenary.getPosition();
+        // After 10 ticks, the mercenary will no longer be mind controlled
+        // It will battle with the player and will consequently die
+        game.tick(null, Direction.NONE);
+
+        assertTrue(game.getEntities(mercenaryPos).size() == 0);
     }
 
     private List<Entity> sevenBySevenWallBoundary() {

@@ -20,18 +20,18 @@ public class RunMovementState implements MovementState {
      */
     @Override
     public void move(Game game) {
-        Position currPos = enemy.getPosition();
+        Player player = game.getCharacter();
 
-        List<Position> possiblePositionsToMove = game.getMoveablePositions(enemy, currPos);
+        List<Position> possiblePositionsToMove = game.getMoveablePositions(enemy, enemy.getPosition());
 
         int optimalPathLength = -1;
-        Position optimalPathPosition = currPos;
+        Position optimalPathPosition = enemy.getPosition();
 
         PositionGraph positionGraph = new PositionGraph(game, enemy);
-        Player player = game.getCharacter();
+        
         // Move the enemy to the furthest possible position to the player
         for (Position position: possiblePositionsToMove) {
-            int pathLen = positionGraph.BFS(enemy.getPosition(), player.getPosition());
+            int pathLen = positionGraph.BFS(position, player.getPosition());
             if (pathLen > optimalPathLength) {
                 optimalPathLength = pathLen;
                 optimalPathPosition = position;

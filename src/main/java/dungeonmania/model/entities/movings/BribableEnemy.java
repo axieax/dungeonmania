@@ -18,12 +18,14 @@ public abstract class BribableEnemy extends Enemy {
     public static final double ARMOUR_DROP_RATE = 0.25;
     
     private boolean bribed;
+    private boolean mindControlled;
     private boolean moveTwice;
     private int mindControlTicks = 10;
 
     public BribableEnemy(String prefix, Position position, int health, int attackDamage, int damageMultiplier) {
         super(prefix, position, health, attackDamage, damageMultiplier);
         this.bribed = false;
+        this.mindControlled = false;
         this.moveTwice = false;
     }
 
@@ -35,10 +37,6 @@ public abstract class BribableEnemy extends Enemy {
         this.bribed = bribed;
     }
 
-    public int getMindControlTicks() {
-        return mindControlTicks;
-    }
-
     @Override
     public double getArmourDropRate() {
         return ARMOUR_DROP_RATE;
@@ -47,11 +45,6 @@ public abstract class BribableEnemy extends Enemy {
     @Override
     public void tick(Game game) {
         Player player = (Player) game.getCharacter();
-
-        // Check that the effects for a mind controlled enemy will only last 10 ticks
-        // After 10 ticks, the enemy will return to its normal state (no longer an ally)
-        this.mindControlTicks--;
-        if (this.getMindControlTicks() == 0) player.removeAlly(this);
         
         this.move(game);
         
@@ -59,6 +52,16 @@ public abstract class BribableEnemy extends Enemy {
         if (this.isAlive() && moveTwice && getDistanceToPlayer(game, player.getPosition()) <= BATTLE_RADIUS) {
             moveTwice = false;
             this.move(game);
+        }
+
+        // Check that the effects for a mind controlled enemy will only last 10 ticks
+        // After 10 ticks, the enemy will return to its normal state (no longer an ally)
+        if (mindControlled) {
+            mindControlTicks--;
+            if (mindControlTicks == 0) {
+                mindControlled = false;
+                player.removeAlly(this);
+            }
         }
     }
 
@@ -111,11 +114,11 @@ public abstract class BribableEnemy extends Enemy {
         // The effect will only last 10 ticks
         Item item = player.findInventoryItem("sceptre");
         
-        if (item == null)
-            return false;
+        if (item == null) return false;
         
         player.addAlly(this);
         this.mindControlTicks = 10;
+        this.mindControlled = true;
         return true;
     }
 
