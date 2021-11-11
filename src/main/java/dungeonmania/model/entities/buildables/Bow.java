@@ -8,7 +8,7 @@ public class Bow extends AttackEquipment implements Buildable {
     private static final int WOOD_NEEDED = 1;
     private static final int ARROW_NEEDED = 3;
 
-    private static final int ATTACK_DAMAGE = 30;
+    private static final int ATTACK_DAMAGE = 25;
     private static final int HIT_RATE = 2;
 
     public Bow() {

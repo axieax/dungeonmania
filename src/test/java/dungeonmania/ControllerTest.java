@@ -12,7 +12,6 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.time.LocalTime;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class ControllerTest {

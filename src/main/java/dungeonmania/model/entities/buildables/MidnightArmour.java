@@ -5,7 +5,7 @@ import dungeonmania.model.entities.movings.player.Inventory;
 
 public class MidnightArmour extends DefenceEquipment implements Buildable {
 
-    private static final double DEFENCE_MULTIPLIER = 0.25;
+    private static final double DEFENCE_MULTIPLIER = 0.3;
     public static final int BONUS_ATTACK_DAMAGE = 25;
 
     public MidnightArmour() {

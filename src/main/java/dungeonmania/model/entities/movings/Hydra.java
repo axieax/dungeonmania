@@ -15,8 +15,8 @@ import dungeonmania.model.mode.Hard;
 import dungeonmania.util.Position;
 
 public class Hydra extends Enemy implements Boss {
-    private static final int MAX_HYDRA_HEALTH = 30;
-    private static final int MAX_HYDRA_ATTACK_DMG = 5;
+    private static final int MAX_HYDRA_HEALTH = 50;
+    private static final int MAX_HYDRA_ATTACK_DMG = 10;
     private static final int HYDRA_TICK_RATE = 50;
     
     boolean preventHeadRespawn;

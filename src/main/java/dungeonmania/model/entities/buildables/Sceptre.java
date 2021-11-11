@@ -11,8 +11,8 @@ public class Sceptre extends AttackEquipment implements Buildable {
     private static final int TREASURE_NEEDED = 1;
     private static final int SUNSTONE_NEEDED = 1;
 
-    private static final int ATTACK_DAMAGE = 40;
-    private static final int HIT_RATE = 2;
+    private static final int ATTACK_DAMAGE = 25;
+    private static final int HIT_RATE = 3;
 
     public Sceptre() {
         super("sceptre", ATTACK_DAMAGE, HIT_RATE);
