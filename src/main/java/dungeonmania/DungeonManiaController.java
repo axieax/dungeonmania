@@ -283,4 +283,6 @@ public class DungeonManiaController {
         currentGame = newGame;
         return newGame.getDungeonResponse();
     }
+
+    public DungeonResponse rewind(int ticks) throws IllegalArgumentException {}
 }
