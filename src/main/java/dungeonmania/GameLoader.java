@@ -46,7 +46,7 @@ public class GameLoader {
         try {
             String content = new String(
                 Files.readAllBytes(
-                    Paths.get("./src/main/java/dungeonmania/savedGames/" + dungeonName + ".json")
+                    Paths.get("./bin/savedGames/" + dungeonName + ".json")
                 )
             );
             return new JSONObject(content);
@@ -55,12 +55,14 @@ public class GameLoader {
         }
     }  
 
-
-    public static final List<Entity> extractEntities(String dungeonName, Mode mode)
+    public static final List<Entity> extractEntities (String dungeonName, Mode mode) {
+        JSONObject json = loadSavedDungeon(dungeonName); 
+        return extractEntities(json, mode);
+    }
+    public static final List<Entity> extractEntities(JSONObject jsonInfo, Mode mode)
         throws IllegalArgumentException {
         // Extract JSON
-        JSONObject json = loadSavedDungeon(dungeonName);
-        JSONArray entitiesInfo = json.getJSONArray("entities");
+        JSONArray entitiesInfo = jsonInfo.getJSONArray("entities");
 
         // Extract entities
         List<Entity> entities = new ArrayList<>();
@@ -213,8 +215,11 @@ public class GameLoader {
         return json.getString ("dungeonName");
     }
 
-    public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
-        JSONObject json = loadSavedDungeon(dungeonName);
-        return (json.has("goal-condition")) ? EntityFactory.extractGoal(json.getJSONObject("goal-condition")):null;
+    public static final Goal extractGoal (String dungeonName) throws IllegalArgumentException {
+        return extractGoal(loadSavedDungeon(dungeonName));
+    }
+
+    public static final Goal extractGoal(JSONObject savedDungeon) throws IllegalArgumentException {
+        return (savedDungeon.has("goal-condition")) ? EntityFactory.doExtractGoal(savedDungeon.getJSONObject("goal-condition")):null;
     }
 }

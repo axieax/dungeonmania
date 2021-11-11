@@ -148,7 +148,7 @@ public class MercenaryTest {
         String mercenaryId = resp
             .getEntities()
             .stream()
-            .filter(e -> e.getPrefix().equals("mercenary"))
+            .filter(e -> e.getType().equals("mercenary"))
             .findFirst()
             .map(EntityResponse::getId)
             .orElse(null);

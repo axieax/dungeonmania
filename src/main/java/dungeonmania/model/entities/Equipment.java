@@ -23,11 +23,12 @@ public abstract class Equipment extends Item {
 
     /**
      * @param durability
-     * Reduces the durability of the equipment
+     * Reduces the durability of the equipment and returns the attack/defence amount
      */
-    public void useEquipment(Player player) {
+    public double useEquipment(Player player, Entity enemy) {
         this.durability--;
         if (this.durability == 0) player.removeInventoryItem(this.getId());
+        return 0;
     }
 
     public JSONObject toJSON() {

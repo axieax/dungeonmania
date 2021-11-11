@@ -4,6 +4,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.json.JSONObject;
@@ -48,7 +49,8 @@ public class Portal extends Entity {
      */
     public void teleport(Game game, MovingEntity character) {
         Portal portal = this.findPortal(game);
-        if (portal != null) {
+        // zombies cannot go through portal
+        if (portal != null && !(character instanceof ZombieToast)) {
             Position teleportedPosition = portal
                 .getPosition()
                 .translateBy(character.getDirection());
@@ -59,7 +61,7 @@ public class Portal extends Entity {
             if (!collision) character.moveTo(portal.getPosition());
             // Their is a collision on the teleported position so do no move.
             else if (character instanceof Enemy) ((Enemy) character).setDirection(Direction.NONE);
-        }
+        } else if (character instanceof Enemy) ((Enemy) character).setDirection(Direction.NONE);
     }
 
     @Override

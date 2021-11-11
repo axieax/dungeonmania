@@ -17,6 +17,7 @@ import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -328,12 +329,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void move(Game game, Direction direction, String itemId)
         throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
-            // check if itemId is not it player inventory
+            // Check if itemId is not in player inventory
             if (getInventoryItem(itemId) == null) throw new InvalidActionException(
                 "At Player move method - itemUsed is not in the player's inventory"
             );
             
-            // check if itemUsed can be consumed
+            // Check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
 
             // Item is not null, and it's not a bomb or any potion
@@ -357,8 +358,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(entity -> {
-            // Cannot interact with moving entities when moving
-            if (!(entity instanceof MovingEntity)) entity.interact(game, this);
+            // Cannot interact with moving entities or zombie toast spawners when moving
+            if (!(entity instanceof MovingEntity || entity instanceof ZombieToastSpawner))
+                entity.interact(game, this);
         });
 
         // Gets the updated entities after the interaction
@@ -444,7 +446,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Any extra attack damage provided by equipment
         for (AttackEquipment e : getAttackEquipmentList()) {
-            damageToOpponent += e.getHitRate() * e.getAttackDamage();
+            damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
         }
 
         // Any extra attack damage provided by allies
@@ -462,10 +464,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param opponentAttackDamage positive integer indicating attack amount to player
      * @return int reduced opponentAttackDamage corresponding to defence amount
      */
-    public int applyDefenceToOpponentAttack(int opponentAttackDamage) {
-        int finalAttackDamage = opponentAttackDamage;
+    public int applyDefenceToOpponentAttack(MovingEntity opponent) {
+        int finalAttackDamage = opponent.getBaseAttackDamage();
         for (DefenceEquipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage = (int) (finalAttackDamage * e.getDefenceMultiplier());
+            finalAttackDamage = (int) (e.useEquipment(this, opponent));
         }
         return finalAttackDamage;
     }

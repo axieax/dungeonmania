@@ -30,7 +30,7 @@ public abstract class Entity {
         this.passable = passable;
     }
 
-    public String getPrefix() {
+    public String getType() {
         return prefix;
     }
 
@@ -75,7 +75,7 @@ public abstract class Entity {
     }
 
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(id, this.getPrefix(), position, interactable);
+        return new EntityResponse(id, this.getType(), position, interactable);
     }
 
     public AnimationQueue getAnimation() {
@@ -86,7 +86,7 @@ public abstract class Entity {
         JSONObject entity = new JSONObject();
         entity.put("x", (position != null) ? getX() : 0);
         entity.put("y", (position != null) ? getY() : 0);
-        entity.put("type", getPrefix());
+        entity.put("type", getType());
         return entity;
     }
 

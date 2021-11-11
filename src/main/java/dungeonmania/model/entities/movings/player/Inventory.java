@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.movings.player;
 
+import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.response.models.ItemResponse;
@@ -51,7 +52,18 @@ public class Inventory {
     public Item findItem(String prefix) {
         return items
             .stream()
-            .filter(i -> i.getPrefix().startsWith(prefix))
+            .filter(i -> i.getType().startsWith(prefix))
+            .findFirst()
+            .orElse(null);
+    }
+
+    /**
+     * @return the first instance of any AttackEquipment, otherwise null
+     */
+    public Item findWeapon() {
+        return items
+            .stream()
+            .filter(i -> i instanceof AttackEquipment)
             .findFirst()
             .orElse(null);
     }
@@ -66,7 +78,7 @@ public class Inventory {
     public boolean hasItemQuantity(String prefix, int quantity) {
         int itemQuantity = 0;
         for (Item item : items) {
-            if (item.getPrefix().startsWith(prefix)) itemQuantity++;
+            if (item.getType().startsWith(prefix)) itemQuantity++;
         }
         return itemQuantity >= quantity;
     }
@@ -84,7 +96,7 @@ public class Inventory {
             List<Item> toRemove = new ArrayList<>();
             items
                 .stream()
-                .filter(item -> item.getPrefix().startsWith(prefix))
+                .filter(item -> item.getType().startsWith(prefix))
                 .limit(quantity)
                 .forEach(item -> toRemove.add(item));
             toRemove
@@ -113,7 +125,7 @@ public class Inventory {
         List<ItemResponse> response = new ArrayList<>();
 
         for(Item i: items) {
-            ItemResponse itemResponse = new ItemResponse(i.getId(), i.getPrefix());
+            ItemResponse itemResponse = new ItemResponse(i.getId(), i.getType());
             response.add(itemResponse);
         }
 
