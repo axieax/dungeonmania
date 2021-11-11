@@ -6,7 +6,6 @@ import java.util.Map;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.Enemy;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -31,14 +30,14 @@ public class RunMovementState implements MovementState {
         int optimalPathLength = -1;
         Position optimalPathPosition = currPos;
 
-        PositionGraph positionGraph = new PositionGraph(game, enemy);
         Player player = game.getCharacter();
+        PositionGraph positionGraph = new PositionGraph(game, player);
         // Move the enemy to the furthest possible position to the player
         for (Position position: possiblePositionsToMove) {
-            Map<Integer, Position> prev = positionGraph.dijkstra(enemy.getPosition());
+            Map<Integer, Position> prev = positionGraph.dijkstra(player.getPosition());
             int pathLen = 0;
-            Position curr = prev.get(player.getPosition().hashCode());
-            while (curr != enemy.getPosition()) {
+            Position curr = prev.get(enemy.getPosition().hashCode());
+            while (curr != null && curr != player.getPosition()) {
                 optimalPathPosition = curr;
                 curr = prev.get(curr.hashCode());
                 pathLen++;

@@ -3,7 +3,6 @@ package dungeonmania.model.entities.movings.movement;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.Enemy;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
