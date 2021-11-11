@@ -6,6 +6,7 @@ import dungeonmania.util.Position;
 
 public abstract class DefenceEquipment extends Equipment {
     private double defenceMultiplier;
+    private int bonusAttackDamage = 0;
 
     public DefenceEquipment(String prefix, double defenceMultiplier) {
         this(prefix, defenceMultiplier, null);
@@ -16,10 +17,14 @@ public abstract class DefenceEquipment extends Equipment {
         this.defenceMultiplier = defenceMultiplier;
     }
 
+    public double getBonusAttackDamage() {
+        return bonusAttackDamage;
+    }
+
     @Override
     public double useEquipment(Player player, Entity enemy) {
         super.useEquipment(player, enemy);
-        if(enemy instanceof MovingEntity) {
+        if (enemy instanceof MovingEntity) {
             MovingEntity movingEnemy = (MovingEntity) enemy;
             return movingEnemy.getBaseAttackDamage() * defenceMultiplier;
         }

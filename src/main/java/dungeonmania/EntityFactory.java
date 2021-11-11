@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.Buildable;
+import dungeonmania.model.entities.buildables.MidnightArmour;
 import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
@@ -181,6 +182,7 @@ public class EntityFactory {
         map.put("bow", new Bow());
         map.put("shield", new Shield());
         map.put("sceptre", new Sceptre());
+        map.put("midnight_armour", new MidnightArmour());
         return map;
     }
 
