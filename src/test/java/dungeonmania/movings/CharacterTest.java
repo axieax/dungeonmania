@@ -22,10 +22,12 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerDefaultState;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Peaceful;
 import dungeonmania.model.mode.Standard;
@@ -627,6 +629,32 @@ public class CharacterTest {
                 assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
             }
         }
+    }
+
+    @Test
+    public void testInvincibilityPotionHasNoEffectInHardMode() {
+        Mode mode = new Hard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Position playerPos = new Position(1, 2);
+        Player player = new Player(playerPos);
+        int initialPlayerHealth = player.getHealth();
+
+        game.addEntity(player);
+
+        Position potionPos = new Position(2, 2);
+        InvincibilityPotion potion = new InvincibilityPotion(potionPos);
+        game.addEntity(potion);
+
+        // player state should not change at all in hard mode after drinkign invincibility potion
+        assertTrue(player.getState() instanceof PlayerDefaultState);
+        game.tick(null, Direction.RIGHT); // player picks up potion
+        assertTrue(player.getState() instanceof PlayerDefaultState);
+        game.tick(potion.getId(), Direction.NONE); // drink potion
+        assertTrue(player.getState() instanceof PlayerDefaultState);
+        
+        
+        assertTrue(player.getHealth() == initialPlayerHealth);
     }
 
     @Test

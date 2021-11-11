@@ -2,10 +2,12 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.movement.AttackMovementState;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 
 public class Mercenary extends BribableEnemy {
@@ -37,5 +39,13 @@ public class Mercenary extends BribableEnemy {
         
         player.addAlly(this);
         ((Treasure) item).consume(game, player);
+    }
+
+    @Override
+    public boolean collision(Entity entity) {
+        if (
+            entity instanceof Portal
+        ) return false;
+        return !entity.isPassable();
     }
 }
