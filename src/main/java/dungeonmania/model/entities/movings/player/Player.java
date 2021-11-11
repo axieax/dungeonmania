@@ -288,7 +288,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param game
      */
     @Override
-    public void tick(Game game) {
+    public void tick(Game game) throws PlayerDeadException {
         List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
             if (e instanceof Enemy) {
@@ -315,7 +315,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param game
      * @param direction
      */
-    public void move(Game game, Direction direction) {
+    public void move(Game game, Direction direction) throws PlayerDeadException {
         this.move(game, direction, "");
     }
 

@@ -30,16 +30,17 @@ public class AttackMovementState implements MovementState {
         PositionGraph positionGraph = new PositionGraph(game, enemy);
 
         // Move the mercenary to the closest possible position to the player
-        Map<Position, Position> prev = positionGraph.dijkstra(enemy.getPosition());
-
+        Map<Integer, Position> prev = positionGraph.dijkstra(enemy.getPosition());
+        
         // traverse back path
-        if (prev.get(player.getPosition()).equals(optimalPathPosition)) {
+        Position pos = prev.get(player.getPosition().hashCode());
+        if (pos != null && pos.equals(optimalPathPosition)) {
             optimalPathPosition = player.getPosition();
         } else {
-            Position curr = prev.get(player.getPosition());
+            Position curr = prev.get(player.getPosition().hashCode());
             while (curr != null && !enemy.getPosition().equals(curr)) {
                 optimalPathPosition = curr;
-                curr = prev.get(curr);
+                curr = prev.get(curr.hashCode());
             }
         }
 
@@ -59,6 +60,6 @@ public class AttackMovementState implements MovementState {
 
         if (!enemy.getDirection().equals(Direction.NONE)) {
             enemy.setPosition(enemy.getPosition().translateBy(enemy.getDirection()));
-        }
+        }   
     }
 }

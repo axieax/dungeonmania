@@ -35,12 +35,12 @@ public class RunMovementState implements MovementState {
         Player player = game.getCharacter();
         // Move the enemy to the furthest possible position to the player
         for (Position position: possiblePositionsToMove) {
-            Map<Position, Position> prev = positionGraph.dijkstra(enemy.getPosition());
+            Map<Integer, Position> prev = positionGraph.dijkstra(enemy.getPosition());
             int pathLen = 0;
-            Position curr = prev.get(player.getPosition());
+            Position curr = prev.get(player.getPosition().hashCode());
             while (curr != enemy.getPosition()) {
                 optimalPathPosition = curr;
-                curr = prev.get(curr);
+                curr = prev.get(curr.hashCode());
                 pathLen++;
             }
             // gets the longest shortest path

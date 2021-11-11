@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.movings.player;
 
+import dungeonmania.exceptions.PlayerDeadException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
@@ -22,7 +23,7 @@ public class PlayerDefaultState implements PlayerState {
     }
 
     @Override
-    public void battle(Game game, Enemy opponent) {
+    public void battle(Game game, Enemy opponent) throws PlayerDeadException {
         // Do not battle opponent if it is an ally
         List<BribableEnemy> allies = player.getAllies();
         if (allies.contains(opponent)) {
@@ -78,8 +79,11 @@ public class PlayerDefaultState implements PlayerState {
         if (player.isAlive()) {
             player.removeAlly(opponent);
             game.removeEntity(opponent);
-        } else {
-            game.removeEntity(player);    
+        }
+        if (opponent.isAlive()) {
+            game.removeEntity(player);
+            System.out.println("player is dead...");
+            throw new PlayerDeadException("Player has died");
         }
 
         // If a player wins a battle, there is a small chance that items could be 
