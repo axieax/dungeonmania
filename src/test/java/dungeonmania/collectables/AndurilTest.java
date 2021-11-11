@@ -61,7 +61,7 @@ public class AndurilTest {
         assertTrue(anduril.getDurability() == initialDurability);
 
         ZombieToastSpawner spawner = new ZombieToastSpawner(
-            new Position(3, 1),
+            new Position(2, 1),
             mode.damageMultiplier()
         );
         game.addEntity(spawner);

@@ -237,13 +237,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return Equipment
+     * @return first weapon in a player's inventory
      */
     public Equipment getWeapon() {
-        Item weapon = inventory.findItem("sword");
-        if (weapon == null) weapon = inventory.findItem("bow");
-        if (weapon == null) weapon = inventory.findItem("sceptre");
-        return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
+        return (AttackEquipment) inventory.findWeapon();
     }
 
     @Override
