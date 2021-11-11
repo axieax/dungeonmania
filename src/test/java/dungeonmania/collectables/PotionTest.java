@@ -8,7 +8,11 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
+import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.movement.RandomMovementState;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
@@ -109,5 +113,44 @@ public class PotionTest {
 
         assertTrue(game.getEntity(invisibilityPotion.getId()) == null);
         assertTrue(player.getInventoryItem(invisibilityPotion.getId()).equals(invisibilityPotion));
+    }
+
+    /**
+     * Test runaway effects of invincibility potion
+     */
+    @Test
+    public void runawayInvincibilityTest() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        InvincibilityPotion potion = new InvincibilityPotion(new Position(1, 0));
+        game.addEntity(potion);
+
+        // create a row of walls on y = 1
+        for (int i = 0; i < 50; i++) {
+            game.addEntity(new Wall(new Position(i, 1)));
+        }
+
+        Player player = new Player(new Position(0, 0));
+        game.addEntity(player);
+        game.tick(null, Direction.RIGHT);
+
+        assertTrue(player.findInventoryItem("invincibility_potion") != null);
+
+        ZombieToast zombie = new ZombieToast(new Position(5, 0), mode.damageMultiplier(), player);
+        game.addEntity(zombie);
+        assertTrue(zombie.getMovementState() instanceof RandomMovementState);
+
+        game.tick(potion.getId(), Direction.NONE);
+        // zombie can only move right to run away
+        assertTrue(zombie.getMovementState() instanceof RunMovementState);
+        assertTrue(new Position(6, 0).equals(zombie.getPosition()));        
+
+        game.tick(null, Direction.NONE);
+        assertTrue(new Position(7, 0).equals(zombie.getPosition())); 
+
+        game.tick(null, Direction.NONE);
+        assertTrue(new Position(8, 0).equals(zombie.getPosition())); 
+        // after 3 ticks, zombie should be in random state
+        assertTrue(zombie.getMovementState() instanceof RandomMovementState);        
     }
 }

@@ -88,7 +88,7 @@ public abstract class BribableEnemy extends Enemy {
      */
     @Override
     public void interact(Game game, Entity character) {
-        if (!mindControl(game, (Player) character))
+        if (character instanceof Player && !mindControl(game, (Player) character))
             bribe(game, (Player) character);
     }
 

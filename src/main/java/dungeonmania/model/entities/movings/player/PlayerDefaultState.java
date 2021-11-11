@@ -69,7 +69,6 @@ public class PlayerDefaultState implements PlayerState {
         }
         if (opponent.isAlive()) {
             game.removeEntity(player);
-            System.out.println("player is dead...");
             throw new PlayerDeadException("Player has died");
         }
 

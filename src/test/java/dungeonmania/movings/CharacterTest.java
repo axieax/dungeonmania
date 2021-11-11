@@ -26,6 +26,7 @@ import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Peaceful;
 import dungeonmania.model.mode.Standard;
@@ -692,24 +693,21 @@ public class CharacterTest {
 
     @Test
     public void testCharacterDies() {
-        Mode mode = new Standard();
+        Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
         game.addEntity(player);
 
-        assertDoesNotThrow(() -> {
-            // attack player until it dies
-            while(game.getEntities().contains(player)) {
-                // mercenaries should all attack character and character should die
-                game.tick(null, Direction.NONE);
-    
-                Position mercenaryPos = new Position(1, 2);
-                Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
-                game.addEntity(mercenary);
-            }
-        });
+        // attack player until it dies
+        while(game.getEntities().contains(player)) {
+            // mercenaries should all attack character and character should die
+            assertDoesNotThrow(() -> game.tick(null, Direction.NONE));
+            Position mercenaryPos = new Position(1, 2);
+            Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
+            game.addEntity(mercenary);
+        }
     }
     
     @Test

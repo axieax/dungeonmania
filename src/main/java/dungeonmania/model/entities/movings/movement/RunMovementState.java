@@ -30,14 +30,13 @@ public class RunMovementState implements MovementState {
         int optimalPathLength = -1;
         Position optimalPathPosition = enemy.getPosition();
 
-        PositionGraph positionGraph = new PositionGraph(game, player);
+        PositionGraph positionGraph = new PositionGraph(game, enemy);
         // Move the enemy to the furthest possible position to the player
         for (Position position: possiblePositionsToMove) {
-            Map<Integer, Position> prev = positionGraph.dijkstra(player.getPosition());
+            Map<Integer, Position> prev = positionGraph.dijkstra(position);
             int pathLen = 0;
-            Position curr = prev.get(enemy.getPosition().hashCode());
+            Position curr = prev.get(player.getPosition().hashCode());
             while (curr != null && curr != player.getPosition()) {
-                optimalPathPosition = curr;
                 curr = prev.get(curr.hashCode());
                 pathLen++;
             }
@@ -58,6 +57,7 @@ public class RunMovementState implements MovementState {
             else if (Direction.UP.getOffset().equals(offset)) enemy.setDirection(Direction.UP);
             else if (Direction.RIGHT.getOffset().equals(offset)) enemy.setDirection(Direction.RIGHT);
             else if (Direction.DOWN.getOffset().equals(offset)) enemy.setDirection(Direction.DOWN);
+            else enemy.setDirection(Direction.NONE);
             // Interact with all entities in that direction
             List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(enemy.getDirection()));
             entities.forEach(entity -> entity.interact(game, enemy));
