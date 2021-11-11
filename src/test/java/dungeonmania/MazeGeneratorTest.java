@@ -1,22 +1,14 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dungeonmania.model.Game;
 import dungeonmania.model.Maze;
-import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.player.Player;
-import dungeonmania.model.mode.Mode;
-import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

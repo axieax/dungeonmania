@@ -1,8 +1,6 @@
 package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.AttackEquipment;
-import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.equipment.Armour;

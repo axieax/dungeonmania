@@ -9,7 +9,7 @@ public class Shield extends DefenceEquipment implements Buildable {
     private static final int TREASURE_NEEDED = 1;
     private static final int KEY_NEEDED = 1;
 
-    private static final double DEFENCE_MULTIPLIER = 0.25;
+    private static final double DEFENCE_MULTIPLIER = 0.5;
 
     public Shield() {
         super("shield", DEFENCE_MULTIPLIER);

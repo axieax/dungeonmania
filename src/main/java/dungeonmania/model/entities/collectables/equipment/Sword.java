@@ -5,7 +5,7 @@ import dungeonmania.util.Position;
 
 public class Sword extends AttackEquipment {
 
-    private static final int ATTACK_DAMAGE = 50;
+    private static final int ATTACK_DAMAGE = 20;
     private static final int HIT_RATE = 1;
 
     public Sword(Position position) {
