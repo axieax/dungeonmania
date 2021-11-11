@@ -203,7 +203,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Get a list of all defensable eqipments from the inventory.
+     * Get a list of all defendable eqipments from the inventory.
      *
      * @return List<DefenceEquipment>
      */
@@ -445,9 +445,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
         // Normal damage inflicted by player
         int damageToOpponent = this.getBaseAttackDamage();
 
-        // Any extra attack damage provided by equipment
+        // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
             damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
+        }
+
+        // Any extra attack damage provided by defence equipment
+        for (DefenceEquipment e : getDefenceEquipmentList()) {
+            damageToOpponent += e.getBonusAttackDamage();
         }
 
         // Any extra attack damage provided by allies
