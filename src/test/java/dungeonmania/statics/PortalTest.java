@@ -233,7 +233,7 @@ public class PortalTest {
      * Test if zombie is bounded and cannot teleport through a portal
      */
     @Test
-    public void testZombieTeleport() {
+    public void testZombieNotAffectedByTeleport() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Player player = new Player(new Position(3, 6));
@@ -253,48 +253,8 @@ public class PortalTest {
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 6)));
 
-        // zombie stays in same position
         game.tick(null, Direction.NONE);
-        // zombie gets teleported to portal
-        assertEquals(new Position(4, 5), zombie.getPosition());
-    }
-
-    /**
-     * Test if zombie cannot teleport if there is something blocking on the teleported
-     * position
-     */
-    @Test
-    public void testZombieNoTeleport() {
-        // TODO (Gabriel) : reuse this test for mercenary??
-        fail();
-        // Mode mode = new Standard();
-        // Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        // Player player = new Player(new Position(3, 6));
-
-        // Portal portalStart = new Portal(new Position(5, 5), "BLUE");
-        // Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
-        // // spawn zombie next to portal
-        // ZombieToast zombie = new ZombieToast(new Position(4, 5), mode.damageMultiplier(), player);
-
-        // game.addEntity(player);
-        // game.addEntity(portalStart);
-        // game.addEntity(portalEnd);
-        // game.addEntity(zombie);
-
-        // // create walls around zombie
-        // game.addEntity(new Wall(new Position(3, 5)));
-        // game.addEntity(new Wall(new Position(4, 4)));
-        // game.addEntity(new Wall(new Position(4, 6)));
-
-        // // create walls around portal location
-        // game.addEntity(new Wall(new Position(9, 5)));
-        // game.addEntity(new Wall(new Position(8, 4)));
-        // game.addEntity(new Wall(new Position(8, 6)));
-        // game.addEntity(new Wall(new Position(8, 5)));
-
-        // // zombie can only move right since walls are blocking the zombie's movement
-        // game.tick(null, Direction.NONE);
-        // // zombie stays on same position
-        // assertEquals(new Position(4, 5), zombie.getPosition());
+        // zombies are not affected by portals
+        assertEquals(new Position(5, 5), zombie.getPosition());
     }
 }

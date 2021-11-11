@@ -259,7 +259,6 @@ public class HydraTest {
         
         Position hydraPos = new Position(5, 5);
         Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
-
         assertTrue(game.getEntities(hydraPos).size() == 0);
         game.addEntity(hydra);
         assertTrue(game.getEntities(hydraPos).size() > 0);
@@ -267,13 +266,18 @@ public class HydraTest {
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
+        game.addEntity(new Wall(new Position(5, 3)));
 
         Position portalPos = new Position(5, 4);
         Portal portal = new Portal(portalPos, "blue");
         game.addEntity(portal);
+        
         game.tick(null, Direction.NONE);
         
         // the only option for the hydra is to move to the portal which it cannot pass through
+        System.out.println(hydra.getPosition());
+        System.out.println(portal.getPosition());
+        System.out.println(portalPos);
         assertTrue(hydra.getPosition().equals(portalPos)); // portal has no effect
     }
 
