@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.movings.player;
 
+import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.response.models.ItemResponse;
@@ -52,6 +53,17 @@ public class Inventory {
         return items
             .stream()
             .filter(i -> i.getType().startsWith(prefix))
+            .findFirst()
+            .orElse(null);
+    }
+
+    /**
+     * @return the first instance of any AttackEquipment, otherwise null
+     */
+    public Item findWeapon() {
+        return items
+            .stream()
+            .filter(i -> i instanceof AttackEquipment)
             .findFirst()
             .orElse(null);
     }

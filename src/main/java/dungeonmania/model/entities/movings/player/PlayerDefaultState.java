@@ -32,16 +32,13 @@ public class PlayerDefaultState implements PlayerState {
 
         // Battles only last a single tick
         while (player.getHealth() > 0 && opponent.getHealth() > 0) {
+            // equipment is "worn" (durability reduced) when getting applying attack/defence
             int playerAttackDamage = player.getTotalAttackDamage(opponent);
-            int opponentAttackDamage = player.applyDefenceToOpponentAttack(
-                opponent.getBaseAttackDamage()
-            );
-            int originalHealth = player.getHealth();
+            int opponentAttackDamage = player.applyDefenceToOpponentAttack(opponent);
 
-            // Use defensive equipment
-            List<DefenceEquipment> defenseEquipments = player.getDefenceEquipmentList();
-            defenseEquipments.forEach(defenseEquipment -> defenseEquipment.useEquipment(player));
+            int originalHealth = player.getHealth();
             player.setHealth(originalHealth - ((opponent.getHealth() * opponentAttackDamage) / 10));
+            opponent.reduceHealthFromBattle(((originalHealth * playerAttackDamage) / 5));
 
             /**
              * TODO: Instead of using all attack equipment for each battle, only use them if the default
@@ -50,14 +47,6 @@ public class PlayerDefaultState implements PlayerState {
              * Something to consider for Milestone 3.
              */
 
-            // Use attack equipment
-            List<AttackEquipment> attackEquipments = player.getAttackEquipmentList();
-            while (!attackEquipments.isEmpty()) {
-                AttackEquipment currEquipment = attackEquipments.get(0);
-                currEquipment.useEquipment(player);
-                attackEquipments.remove(currEquipment);
-            }
-            
             opponent.reduceHealthFromBattle(((originalHealth * playerAttackDamage) / 5));
 
             // Check if player is dead

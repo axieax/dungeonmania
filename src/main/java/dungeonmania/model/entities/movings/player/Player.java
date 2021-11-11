@@ -235,8 +235,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @return Equipment
      */
     public Equipment getWeapon() {
-        Item weapon = inventory.findItem("sword");
-        if (weapon == null) weapon = inventory.findItem("bow");
+        Item weapon = inventory.findWeapon();
         return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
     }
 
@@ -440,7 +439,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Any extra attack damage provided by equipment
         for (AttackEquipment e : getAttackEquipmentList()) {
-            damageToOpponent += e.getHitRate() * e.getAttackDamage();
+            damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
         }
 
         // Any extra attack damage provided by allies
@@ -458,10 +457,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param opponentAttackDamage positive integer indicating attack amount to player
      * @return int reduced opponentAttackDamage corresponding to defence amount
      */
-    public int applyDefenceToOpponentAttack(int opponentAttackDamage) {
-        int finalAttackDamage = opponentAttackDamage;
+    public int applyDefenceToOpponentAttack(MovingEntity opponent) {
+        int finalAttackDamage = opponent.getBaseAttackDamage();
         for (DefenceEquipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage = (int) (finalAttackDamage * e.getDefenceMultiplier());
+            finalAttackDamage = (int) (e.useEquipment(this, opponent));
         }
         return finalAttackDamage;
     }
