@@ -127,7 +127,7 @@ public class ZombieToastSpawnerTest {
     public void zombieToastDestroySpawner() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
+        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(0, 1), mode.tickRate());
         game.addEntity(spawner);
         
         game.addEntity(new Sword(new Position(2, 1)));
