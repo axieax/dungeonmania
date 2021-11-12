@@ -142,7 +142,7 @@ public class MercenaryTest {
     @Test
     public void testMercenarySimplePortal() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
