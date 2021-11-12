@@ -5,6 +5,7 @@ import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.util.Position;
 import java.util.List;
 
@@ -29,7 +30,16 @@ public class OlderPlayer extends MovingEntity implements Observer {
         if (!(player instanceof Player)) return;
         Player character = (Player) player;
 
-        if (character.getPosition().equals(this.getPosition())) {
+        if (
+            // encounter
+            character.getPosition().equals(this.getPosition()) &&
+            !(
+                // player invisible, has sun stone or has midnight armour
+                character.getState() instanceof PlayerInvisibleState ||
+                character.findInventoryItem("sun_stone") != null ||
+                character.findInventoryItem("midnight_armour") != null
+            )
+        ) {
             // transition to battle state
             state = new BattleOlderPlayerState(character);
         }

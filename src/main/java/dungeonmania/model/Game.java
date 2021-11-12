@@ -42,6 +42,7 @@ public final class Game {
     private final Mode mode;
 
     private int tick = 0;
+    private int rewindQty = 0;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
         this.dungeonId = UUID.randomUUID().toString();

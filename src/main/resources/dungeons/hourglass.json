@@ -12,6 +12,16 @@
             "type": "time_turner"
         },
         {
+            "x": 9,
+            "y": 14,
+            "type": "time_travelling_portal"
+        },
+        {
+            "x": 21,
+            "y": 12,
+            "type": "time_travelling_portal"
+        },
+        {
             "x": 0,
             "y": 0,
             "type": "wall"

@@ -55,33 +55,50 @@ public final class GameWrapper {
         JSONObject gameState = states.get(restoreIndex);
         Game restoreGame = GameLoader.JSONObjectToGame(gameState);
 
-        // get positions since rewinded index
+        // get positions since rewind index
         List<Position> moves = new ArrayList<>(states.size() - restoreIndex);
-        for (int i = restoreIndex; i < states.size(); ++i) {
+        for (int i = restoreIndex + 1; i < states.size(); ++i) {
             JSONObject state = states.get(i);
-
-            // find player position
-            // TODO: move to GameLoader?
-            JSONArray entities = state.getJSONArray("entities");
-            for (int j = 0; j < entities.length(); ++j) {
-                JSONObject entity = entities.getJSONObject(j);
-                if (entity.getString("type").startsWith("player")) {
-                    moves.add(new Position(entity.getInt("x"), entity.getInt("y"), 31));
-                    break;
-                }
-            }
+            moves.add(getPlayerPosition(state));
         }
 
-        // add old player
-        Player player = (Player) activeGame.getCharacter();
-        OlderPlayer ilNam = new OlderPlayer(player.getPosition(), moves, player);
+        // retrieve activeGame player
+        Player activePlayer = (Player) activeGame.getCharacter();
+
+        // retrieve restoreGame player
+        Player restorePlayer = (Player) restoreGame.getCharacter();
+
+        // old_player in activeGame has restorePlayer's position
+        OlderPlayer ilNam = new OlderPlayer(
+            restorePlayer.getPosition().asLayer(30),
+            moves,
+            activePlayer
+        );
         restoreGame.addEntity(ilNam);
 
-        // rewind
+        // replace player
+        restoreGame.removeEntity(restorePlayer);
+        restoreGame.addEntity(activePlayer);
+
+        // NOTE: reattach observers or you might get null pointer exception?
+        // ISSUE: older player battle doesn't follow player
+
+        // time travel
         activeGame = restoreGame;
         states = states.subList(0, restoreIndex + 1);
 
         return activeGame.getDungeonResponse();
+    }
+
+    private final Position getPlayerPosition(JSONObject state) {
+        JSONArray entities = state.getJSONArray("entities");
+        for (int j = 0; j < entities.length(); ++j) {
+            JSONObject entity = entities.getJSONObject(j);
+            if (entity.getString("type").startsWith("player")) {
+                return new Position(entity.getInt("x"), entity.getInt("y"), 30);
+            }
+        }
+        return null;
     }
 
     public final DungeonResponse getDungeonResponse() {
