@@ -738,8 +738,9 @@ public class CharacterTest {
         
         // Player collects coin and bribes mercenary
         game.tick(null, Direction.RIGHT);
+        assertEquals(new Position(3, 1), mercenary.getPosition());
         game.interact(mercenary.getId());
-        assertTrue(player.getAllies().size() == 1);        
+        assertTrue(player.getAllies().size() == 1);
 
         // Spawn an enemy mercenary
         Mercenary enemyMercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
@@ -748,6 +749,7 @@ public class CharacterTest {
         int playerTotalAttackDmgWithAlly = player.getTotalAttackDamage(mercenary);
         // enemy mercenary should battle with player in this tick
         game.tick(null, Direction.RIGHT);
+        assertEquals(new Position(3, 1), mercenary.getPosition());
         assertTrue(!enemyMercenary.isAlive());
         int enemyHealthWithAlly = enemyMercenary.getHealth();
 
@@ -765,10 +767,12 @@ public class CharacterTest {
         
         // Player moves to battle mercenary
         game.tick(null, Direction.RIGHT);
+        assertEquals(new Position(4, 1), enemyMercenary.getPosition());
 
         int playerTotalAttackDmgWithoutAlly = player.getTotalAttackDamage(mercenary);
         // player and mercenary should battle in this tick
         game.tick(null, Direction.RIGHT);
+        assertEquals(new Position(3, 1), enemyMercenary.getPosition());
         assertTrue(!enemyMercenary.isAlive());
 
         int enemyHealthWithoutAlly = enemyMercenary.getHealth();
