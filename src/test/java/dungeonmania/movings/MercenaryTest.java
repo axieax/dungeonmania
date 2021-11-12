@@ -371,7 +371,8 @@ public class MercenaryTest {
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
-            assertTrue(adjacentEntites.contains(mercenary) || numEntitesAtPlayerPos == 2);
+            // Note that we have the number of entities at the player position is >= 2 since spiders may spawn
+            assertTrue(adjacentEntites.contains(mercenary) || numEntitesAtPlayerPos >= 2);
         }
     }
 
