@@ -42,7 +42,7 @@ public class FloorSwitchTest {
         FloorSwitch floorSwitch = new FloorSwitch(new Position(1, 1));
         game.addEntity(floorSwitch);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
 
         player.move(game, Direction.RIGHT);
@@ -65,7 +65,7 @@ public class FloorSwitchTest {
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 0));
         game.addEntity(floorSwitch);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
 
         Boulder boulder = new Boulder(new Position(1, 0));

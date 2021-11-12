@@ -40,7 +40,7 @@ public class ArmourTest {
         Armour armour = new Armour(new Position(1, 1));
         game.addEntity(armour);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));
@@ -60,7 +60,7 @@ public class ArmourTest {
         Armour armour = new Armour(new Position(1, 1));
         game.addEntity(armour);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 
@@ -86,7 +86,7 @@ public class ArmourTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 

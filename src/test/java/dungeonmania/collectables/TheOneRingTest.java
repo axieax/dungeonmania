@@ -40,7 +40,7 @@ public class TheOneRingTest {
         TheOneRing ring = new TheOneRing(new Position(1, 1));
         game.addEntity(ring);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
@@ -59,7 +59,7 @@ public class TheOneRingTest {
         TheOneRing ring = new TheOneRing(new Position(1, 1));
         game.addEntity(ring);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         assertTrue(player.getInventoryItem(ring.getId()).equals(ring));
@@ -107,7 +107,7 @@ public class TheOneRingTest {
         TheOneRing ring = new TheOneRing(new Position(1, 1));
         game.addEntity(ring);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         assertTrue(player.getInventoryItem(ring.getId()).equals(ring));
@@ -132,7 +132,7 @@ public class TheOneRingTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 

@@ -5,7 +5,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.Treasure;
-import dungeonmania.model.entities.movings.movement.AttackMovementState;
+import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
@@ -16,7 +16,7 @@ public class Assassin extends BribableEnemy implements Boss {
 
     public Assassin(Position position, int damageMultiplier, SubjectPlayer player) {
         super("assassin", position, MAX_ASSASSIN_HEALTH, MAX_ASSASSIN_ATTACK_DMG, damageMultiplier);
-        this.setMovementState(new AttackMovementState(this));
+        this.setMovementState(new FollowPlayerMovementState(this));
         player.attach(this);
     }
 
@@ -36,19 +36,16 @@ public class Assassin extends BribableEnemy implements Boss {
         Item treasure = player.findInventoryItem("treasure");
         Item ring = player.findInventoryItem("one_ring");
 
-        if (sunstone == null && treasure == null && ring == null) {
+        if ((sunstone == null && treasure == null) || ring == null) {
             throw new InvalidActionException(
                 "You need both treasure and TheOneRing to bribe this assassin"
             );
         }
 
         player.addAlly(this);
-        if (sunstone != null) {
-            player.removeInventoryItem(sunstone.getId());
-            ((TheOneRing) ring).consume(game, player);
-        } else if (treasure != null && ring != null) {
-            ((Treasure) treasure).consume(game, player);
-            ((TheOneRing) ring).consume(game, player);
-        }
+
+        // Remove the treasure and TheOneRing from the player's inventory
+        if (sunstone == null) ((Treasure) treasure).consume(game, player);
+        ((TheOneRing) ring).consume(game, player);
     }
 }

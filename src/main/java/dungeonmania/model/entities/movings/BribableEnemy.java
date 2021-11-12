@@ -6,7 +6,7 @@ import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.movings.movement.AttackMovementState;
+import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.movement.PositionGraph;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
@@ -87,7 +87,7 @@ public abstract class BribableEnemy extends Enemy {
         if (character.getState() instanceof PlayerInvincibleState && !this.isBribed()) {
             this.setMovementState(new RunMovementState(this));
         } else {
-            this.setMovementState(new AttackMovementState(this));
+            this.setMovementState(new FollowPlayerMovementState(this));
         }
     }
 
