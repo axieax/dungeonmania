@@ -15,6 +15,13 @@
 * All enemies will run away if a player is invincible. For spiders, if a player is no longer invincible, it will reset it's circular movement on its last position.
 * If the player is invisible, the mercenary will not follow them.
 
+### SunStone
+* If the player has a `SunStone` and the `Key` to open that door, `SunStone` takes priority to open the door. i.e Any `Key` are not consumed by the player if they have a `SunStone`.
+* `SunStone` takes priority when building an item with `Treasure`.
+* `SunStone` is consumed if it is only used as a material in building an item.
+
+## Buildables Mechanics
+* For `Shield`, `Treasure` takes priority over `Key` if the user have enough materials.
 ### Drop Rates
 * `TheOneRing` has a drop rate of 10% after a battle has ended
 * `Armour` have a drop rate of 20% after a battle has ended
