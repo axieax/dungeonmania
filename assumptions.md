@@ -27,6 +27,7 @@
 * `Armour` have a drop rate of 20% after a battle has ended
 ## Enemy Mechanics
 * Spiders can move out of the map if they spawn on the edge and their ‘circular' path causes them to go beyond the map.
+* When a spider is performing their initial movement (i.e. moving UP), if there is an entity blocking their movement, then the spider stays on their spawning position since it cannot perform it's initial movement position.
 * Zombies cannot move a boulder as this action is only conducted by a player.
 * Zombies will only randomly pick a free tile to move to.
 * Spider starts with an initial direction of clockwise when spawned.

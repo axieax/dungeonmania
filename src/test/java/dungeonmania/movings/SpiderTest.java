@@ -285,19 +285,20 @@ public class SpiderTest {
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        Position portalPos = new Position(2, 1);
-        Portal portal = new Portal(portalPos, "blue");
-        game.addEntity(portal);
+        Portal portal1 = new Portal(new Position(2, 1), "blue");
+        game.addEntity(portal1);
+
+        Portal portal2 = new Portal(new Position(5, 1), "blue");
+        game.addEntity(portal2);
 
         Position initialSpiderPos = new Position(2, 2);
         Spider spider = new Spider(initialSpiderPos, mode.damageMultiplier());
         game.addEntity(spider);
 
-        // after the first tick, spider should move straight up, into the portal
+        // after the first tick, spider should move straight up, into the portal and be teleported
         game.tick(null, Direction.NONE);
 
-        assertTrue(spider.getPosition().equals(portalPos));
-        assertTrue(game.getEntities(portalPos).size() == 2); // portal and spider in same tile
+        assertTrue(spider.getPosition().equals(new Position(5, 0)));
     }
 
     @Test
