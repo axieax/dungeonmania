@@ -24,11 +24,17 @@ public class Sceptre extends AttackEquipment implements Buildable {
             (
                 inventory.hasItemQuantity("wood", WOOD_NEEDED) ||
                 inventory.hasItemQuantity("arrow", ARROW_NEEDED)
-            ) && (
-                inventory.hasItemQuantity("key", KEY_NEEDED) ||
-                inventory.hasItemQuantity("treasure", TREASURE_NEEDED)
             ) &&
-            inventory.hasItemQuantity("sun_stone", SUNSTONE_NEEDED)
+            (
+                inventory.hasItemQuantity("key", KEY_NEEDED) ||
+                inventory.hasItemQuantity("treasure", TREASURE_NEEDED) ||
+                inventory.hasItemQuantity("sun_stone", TREASURE_NEEDED)
+            ) &&
+            inventory.hasItemQuantity(
+                "sun_stone",
+                SUNSTONE_NEEDED +
+                (inventory.hasItemQuantity("sun_stone", TREASURE_NEEDED) ? TREASURE_NEEDED : 0)
+            )
         );
     }
 
