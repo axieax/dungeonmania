@@ -35,22 +35,20 @@ public class PositionGraph {
         positionsToEvaluate.add(entity.getPosition());
         freePositions.add(entity.getPosition());
 
-        if (entity instanceof MovingEntity) {
-            int i = 0;
-            while (i < positionsToEvaluate.size()) {
-                Position currPosition = positionsToEvaluate.get(i);
-                List<Position> moveToPositions = game.getMoveablePositions(
-                    (MovingEntity) entity,
-                    currPosition
-                );
-                for (Position currMoveToPosition : moveToPositions) {
-                    if (!positionsToEvaluate.contains(currMoveToPosition)) {
-                        freePositions.add(currMoveToPosition);
-                        positionsToEvaluate.add(currMoveToPosition);
-                    }
+        int i = 0;
+        while (i < positionsToEvaluate.size()) {
+            Position currPosition = positionsToEvaluate.get(i);
+            List<Position> moveToPositions = game.getMoveablePositions(
+                (MovingEntity) entity,
+                currPosition
+            );
+            for (Position currMoveToPosition : moveToPositions) {
+                if (!positionsToEvaluate.contains(currMoveToPosition)) {
+                    freePositions.add(currMoveToPosition);
+                    positionsToEvaluate.add(currMoveToPosition);
                 }
-                i++;
             }
+            i++;
         }
 
         return freePositions;
@@ -105,7 +103,7 @@ public class PositionGraph {
 
     /**
      * Performs the Dijkstra's algorithm to find the shortest costing path.
-     * 
+     *
      * @param src
      * @return HashMap<Integer, Position> pred that gives us the shortest path
      * to traverse from. The key in the HashMap is the hashcode of the position.
