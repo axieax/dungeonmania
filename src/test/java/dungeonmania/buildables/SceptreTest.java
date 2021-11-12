@@ -22,6 +22,7 @@ import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 
 public class SceptreTest {
+    
     /**
      * Test whether the buildable entity can be built by the Player.
      */
