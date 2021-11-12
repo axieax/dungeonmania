@@ -39,6 +39,7 @@ public class BombTest {
         game.addEntity(bomb);
 
         Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
