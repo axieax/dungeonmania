@@ -255,9 +255,9 @@ public class SceptreTest {
         // Player moves to attack the mercenary with the sceptre
         player.move(game, Direction.DOWN);
 
-        // Either the player or the mercenary should be dead
+        // Mercenary should die upon battle
         // Durability of sceptre decreases by 1 each time it battles (within one tick)
-        assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
+        assertTrue(game.getEntity(mercenary.getId()) == null);
         assertTrue(sceptre == null || sceptre.getDurability() != initialDurability);
     }
 }

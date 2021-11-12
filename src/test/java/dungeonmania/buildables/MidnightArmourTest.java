@@ -164,9 +164,9 @@ public class MidnightArmourTest {
         // Player moves to attack the mercenary with the midnight armour
         player.move(game, Direction.DOWN);
 
-        // Either the player or the mercenary should be dead
+        // Mercenary should die upon battle
         // Durability of midnight armour decreases by 1 each time it battles (within one tick)
-        assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
+        assertTrue(game.getEntity(mercenary.getId()) == null);
         assertTrue(midnightArmour == null || midnightArmour.getDurability() != initialDurability);
     }
 }

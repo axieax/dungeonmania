@@ -292,7 +292,7 @@ public class MercenaryTest {
 
         // Mercenary should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
-        assertTrue(game.getEntities(mercenaryPos).size() == 0); // mercenary should die
+        assertTrue(game.getEntity(mercenary.getId()) == null);
     }
     
     @Test

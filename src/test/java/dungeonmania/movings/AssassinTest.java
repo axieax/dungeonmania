@@ -321,7 +321,7 @@ public class AssassinTest {
 
         // Assassin should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
-        assertTrue(game.getEntities(assassinPos).size() == 0); // assassin should die
+        assertTrue(game.getEntity(assassin.getId()) == null);
     }
 
     @Test
@@ -358,12 +358,11 @@ public class AssassinTest {
             distance = assassin.getDistanceToPlayer(game, updatedPlayerPos);
         }
 
-        Position assassinPos = assassin.getPosition();
         // After 10 ticks, the assassin will no longer be mind controlled
         // It will battle with the player and will consequently die
         game.tick(null, Direction.NONE);
 
-        assertTrue(game.getEntities(assassinPos).size() == 0);
+        assertTrue(game.getEntity(assassin.getId()) == null);
     }
 
     private List<Entity> sevenBySevenWallBoundary() {

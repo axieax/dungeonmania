@@ -140,9 +140,9 @@ public class BowTest {
         // Player moves to attack the mercenary with the bow
         player.move(game, Direction.RIGHT);
 
-        // Either the player or the mercenary should be dead
+        // Mercenary should die upon battle
         // Durability of bow decreases by 1 each time it battles (within one tick)
-        assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
+        assertTrue(game.getEntity(mercenary.getId()) == null);
         assertTrue(bow == null || bow.getDurability() != initialDurability);
     }
 }
