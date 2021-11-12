@@ -1,6 +1,8 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.DefenceEquipment;
+import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.player.Inventory;
 
 public class MidnightArmour extends DefenceEquipment implements Buildable {
@@ -21,6 +23,15 @@ public class MidnightArmour extends DefenceEquipment implements Buildable {
             inventory.hasItemQuantity("armour", ARMOUR_NEEDED) && 
             inventory.hasItemQuantity("sun_stone", SUNSTONE_NEEDED)
         );
+    }
+
+    @Override
+    public boolean checkNoZombies(Game game, Inventory inventory) {
+        return game.getEntities()
+            .stream()
+            .filter(entity -> entity instanceof ZombieToast)
+            .findAny()
+            .isEmpty();
     }
 
     @Override

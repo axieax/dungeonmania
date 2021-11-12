@@ -17,8 +17,6 @@ import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
-import dungeonmania.model.entities.statics.Portal;
-import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -407,13 +405,20 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Given a buildableItem, builds it if it is buildable
+     * Given an item, builds it if it is buildable
      *
      * @param equipment
+     * @throws InvalidActionException if the player doesn't have enough resources or fails zombie check
      */
-    public void craft(Buildable equipment) throws InvalidActionException {
+    public void craft(Game game, Buildable equipment) throws InvalidActionException {
         if (equipment.isBuildable(inventory)) {
-            equipment.craft(inventory);
+            if (equipment.checkNoZombies(game, inventory)) {
+                equipment.craft(inventory);
+            } else {
+                throw new InvalidActionException(
+                    "You can only build this equipment if there are no zombies in the dungeon"
+                );
+            }
         } else {
             throw new InvalidActionException(
                 "You don't have enough resources to build this equipment"

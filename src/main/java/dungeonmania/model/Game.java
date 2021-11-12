@@ -289,7 +289,7 @@ public final class Game {
     public final DungeonResponse build(String buildable) throws InvalidActionException {
         Player player = getCharacter();
         Buildable item = EntityFactory.getBuildable(buildable);
-        player.craft(item);
+        player.craft(this, item);
         return getDungeonResponse();
     }
 

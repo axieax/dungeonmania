@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.movings.player.Inventory;
 
@@ -30,6 +31,11 @@ public class Sceptre extends AttackEquipment implements Buildable {
             ) &&
             inventory.hasItemQuantity("sun_stone", SUNSTONE_NEEDED)
         );
+    }
+
+    @Override
+    public boolean checkNoZombies(Game game, Inventory inventory) {
+        return true;
     }
 
     @Override

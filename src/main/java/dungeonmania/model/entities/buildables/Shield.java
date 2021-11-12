@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.movings.player.Inventory;
 
@@ -24,6 +25,11 @@ public class Shield extends DefenceEquipment implements Buildable {
                 inventory.hasItemQuantity("key", KEY_NEEDED)
             )
         );
+    }
+
+    @Override
+    public boolean checkNoZombies(Game game, Inventory inventory) {
+        return true;
     }
 
     @Override

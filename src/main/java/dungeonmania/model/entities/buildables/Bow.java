@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.movings.player.Inventory;
 
@@ -21,6 +22,11 @@ public class Bow extends AttackEquipment implements Buildable {
             inventory.hasItemQuantity("wood", WOOD_NEEDED) &&
             inventory.hasItemQuantity("arrow", ARROW_NEEDED)
         );
+    }
+
+    @Override
+    public boolean checkNoZombies(Game game, Inventory inventory) {
+        return true;
     }
 
     @Override

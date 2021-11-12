@@ -64,8 +64,11 @@ public class AssassinTest {
 
         game.tick(null, Direction.RIGHT);
 
-        // Assassin should move upwards or stay in the same horizontal line
-        assertTrue(assassin.getY() <= 3);
+        // Assassin should move to the left or upwards
+        assertTrue(
+            (assassin.getX() == 2 && assassin.getY() == 3) || 
+            (assassin.getX() == 3 && assassin.getY() == 2)
+        );
     }
 
     @Test
