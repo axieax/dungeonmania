@@ -22,7 +22,7 @@ public final class Position {
 
     @Override
     public final int hashCode() {
-        return Objects.hash(x, y, layer);
+        return Objects.hash(x, y);
     }
 
     @Override

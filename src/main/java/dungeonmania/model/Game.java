@@ -2,6 +2,7 @@ package dungeonmania.model;
 
 import dungeonmania.EntityFactory;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.exceptions.PlayerDeadException;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
@@ -14,6 +15,7 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.SwampTile;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
@@ -38,9 +40,6 @@ public final class Game {
     private final Goal goal;
     private final Mode mode;
 
-    private int MAX_WIDTH = 50;
-    private int MAX_HEIGHT = 50;
-
     private int tick = 0;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
@@ -49,6 +48,18 @@ public final class Game {
         this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
+    }
+
+    private int findMaxX() {
+        int maxX = 0;
+        for (Entity e : entities) if (e.getX() > maxX) maxX = e.getX();
+        return maxX;
+    }
+
+    private int findMaxY() {
+        int maxY = 0;
+        for (Entity e : entities) if (e.getY() > maxY) maxY = e.getY();
+        return maxY;
     }
 
     public final void addEntity(Entity entity) {
@@ -126,13 +137,14 @@ public final class Game {
         
         return positions
             .stream()
-            .filter(pos ->
-                (
-                    pos.getX() >= 0 &&
-                    pos.getX() < MAX_WIDTH &&
-                    pos.getY() >= 0 &&
-                    pos.getY() < MAX_HEIGHT
-                )
+            .filter(
+                pos ->
+                    (
+                        pos.getX() >= 0 &&
+                        pos.getX() <= this.findMaxX() &&
+                        pos.getY() >= 0 &&
+                        pos.getY() <= this.findMaxY()
+                    )
             )
             .collect(Collectors.toList());
     }
@@ -147,19 +159,24 @@ public final class Game {
     public final List<Entity> getCardinallyAdjacentEntities(Position position) {
         return getAdjacentEntities(position)
             .stream()
-            .filter(e -> {
-                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                Position difference = Position.calculatePositionBetween(e.getPosition(), position);
-                int xDiff = Math.abs(difference.getX());
-                int yDiff = Math.abs(difference.getY());
-                return (
-                    // ensure both xDiff and yDiff are either 0 or 1
-                    (xDiff == (xDiff & 1)) &&
-                    (yDiff == (yDiff & 1)) &&
-                    // logical XOR to check x and y are different
-                    ((xDiff == 1) ^ (yDiff == 1))
-                );
-            })
+            .filter(
+                e -> {
+                    // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                    Position difference = Position.calculatePositionBetween(
+                        e.getPosition(),
+                        position
+                    );
+                    int xDiff = Math.abs(difference.getX());
+                    int yDiff = Math.abs(difference.getY());
+                    return (
+                        // ensure both xDiff and yDiff are either 0 or 1
+                        (xDiff == (xDiff & 1)) &&
+                        (yDiff == (yDiff & 1)) &&
+                        // logical XOR to check x and y are different
+                        ((xDiff == 1) ^ (yDiff == 1))
+                    );
+                }
+            )
             .collect(Collectors.toList());
     }
 
@@ -227,17 +244,18 @@ public final class Game {
         // different skins for boulders on switches
         return entities
             .stream()
-            .filter(e ->
-                e instanceof Boulder && switchPositions.contains(e.getPosition().asLayer(0))
+            .filter(
+                e -> e instanceof Boulder && switchPositions.contains(e.getPosition().asLayer(0))
             )
-            .map(e ->
-                new AnimationQueue(
-                    "PostTick",
-                    e.getId(),
-                    Arrays.asList("sprite boulder_on_switch"),
-                    false,
-                    -1
-                )
+            .map(
+                e ->
+                    new AnimationQueue(
+                        "PostTick",
+                        e.getId(),
+                        Arrays.asList("sprite boulder_on_switch"),
+                        false,
+                        -1
+                    )
             )
             .collect(Collectors.toList());
     }
@@ -260,29 +278,34 @@ public final class Game {
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException(
-            itemUsedId
-        );
-        this.tick += 1;
+        try {
+            if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException(
+                itemUsedId
+            );
+            this.tick += 1;
 
-        List<Tickable> tickables = entities
-            .stream()
-            .filter(e -> e instanceof Tickable)
-            .map(e -> (Tickable) e)
-            .collect(Collectors.toList());
+            // Player moves before other entities (so that bribable enemies can follow the player)
+            getCharacter().move(this, movementDirection, itemUsedId);
 
-        // Player moves before other entities (so that bribable enemies can follow the player)
-        getCharacter().move(this, movementDirection, itemUsedId);
+            List<Tickable> tickables = entities
+                .stream()
+                .filter(e -> e instanceof Tickable)
+                .map(e -> (Tickable) e)
+                .collect(Collectors.toList());
 
-        // Separate loop to avoid concurrency issues when zombie spawner adds new entity
-        tickables.forEach(e -> {
-            if (!(e instanceof Player)) {
-                ((Tickable) e).tick(this);
-            }
-        });
+            // Separate loop to avoid concurrency issues when zombie spawner adds new entity
+            tickables.forEach(
+                e -> {
+                    if (!(e instanceof Player)) {
+                        ((Tickable) e).tick(this);
+                    }
+                }
+            );
 
-        Spider.spawnSpider(this, this.mode.damageMultiplier());
-        Hydra.spawnHydra(this, this.mode.damageMultiplier());
+            Spider.spawnSpider(this, this.mode.damageMultiplier());
+            Hydra.spawnHydra(this, this.mode.damageMultiplier());
+        } catch (PlayerDeadException e) {}
+
         return getDungeonResponse();
     }
 
@@ -317,5 +340,14 @@ public final class Game {
 
     public int getTickRate() {
         return mode.tickRate();
+    }
+
+    public SwampTile getSwampTile(Position position) {
+        return entities
+            .stream()
+            .filter(e -> e.getPosition().equals(position) && e instanceof SwampTile)
+            .map(e -> (SwampTile) e)
+            .findFirst()
+            .orElse(null);
     }
 }

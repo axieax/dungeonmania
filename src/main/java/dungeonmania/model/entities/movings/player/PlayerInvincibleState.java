@@ -1,7 +1,7 @@
 package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Enemy;
 
 public class PlayerInvincibleState implements PlayerState {
     
@@ -21,8 +21,16 @@ public class PlayerInvincibleState implements PlayerState {
      *       are not reduced while a player is invincible.
      */
     @Override
-    public void battle(Game game, MovingEntity opponent) {
+    public void battle(Game game, Enemy opponent) {
+        // Notify the observers that the player is in battle
+        player.setInBattle(true);
+        player.setCurrentBattleOpponent(opponent);
+        player.notifyObservers();
+
         opponent.kill();
+
+        player.setInBattle(false);
+        player.setCurrentBattleOpponent(null);
     }
 
     @Override

@@ -2,7 +2,7 @@ package dungeonmania.model.entities.movings.movement;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -13,13 +13,13 @@ import java.util.List;
 
 public class CircularMovementState implements MovementState {
 
-    private MovingEntity enemy;
+    private Enemy enemy;
     private boolean initialMovement;
     private List<Direction> circularMovementPath;
     private boolean reverseMovement;
     private int indexOfNextMove;
 
-    public CircularMovementState(MovingEntity enemy) {
+    public CircularMovementState(Enemy enemy) {
         this.enemy = enemy;
         this.initialMovement = true;
         // Default "circling" movement
@@ -54,12 +54,7 @@ public class CircularMovementState implements MovementState {
             
             // Interact with all entities in that direction
             List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(nextMoveInPath));
-            entities.forEach(
-                entity -> {
-                    // Cannot interact with moving entities when moving
-                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
-                }
-            );
+            entities.forEach(entity -> entity.interact(game, enemy));
             enemy.setPosition(enemy.getPosition().translateBy(nextMoveInPath));
             this.initialMovement = false;
         }
@@ -96,12 +91,7 @@ public class CircularMovementState implements MovementState {
 
             // Interact with all entities in that direction
             List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(nextMoveInPath));
-            entities.forEach(
-                entity -> {
-                    // Cannot interact with moving entities when moving
-                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
-                }
-            );
+            entities.forEach(entity -> entity.interact(game, enemy));
             enemy.setPosition(enemy.getPosition().translateBy(nextMoveInPath));
         } else { // reverse direction
             this.reverseMovement = !this.reverseMovement;

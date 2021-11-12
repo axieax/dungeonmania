@@ -221,8 +221,8 @@
       "type": "wall"
     },
     {
-      "x": 2,
-      "y": 3,
+      "x": 3,
+      "y": 5,
       "health": 50,
       "type": "mercenary"
     },
