@@ -24,11 +24,6 @@ public abstract class DefenceEquipment extends Equipment {
     @Override
     public double useEquipment(Player player, Entity enemy) {
         super.useEquipment(player, enemy);
-        if (enemy instanceof MovingEntity) {
-            MovingEntity movingEnemy = (MovingEntity) enemy;
-            return movingEnemy.getBaseAttackDamage() * defenceMultiplier;
-        }
-
-        return 0;
+        return ((MovingEntity) enemy).getBaseAttackDamage() * defenceMultiplier;
     }
 }
