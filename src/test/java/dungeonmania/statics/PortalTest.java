@@ -258,7 +258,7 @@ public class PortalTest {
 
         game.tick(null, Direction.NONE);
         // zombies are not affected by portals
-        assertEquals(new Position(5, 5), zombie.getPosition());
+        assertEquals(new Position(4, 5), zombie.getPosition());
     }
 
     /**
