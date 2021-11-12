@@ -118,7 +118,7 @@ public class SpiderTest {
 
         EntityResponse spider = getSpiderEntity(entities);
         Position oldSpiderPos = spider.getPosition();
-
+        
         // initially spider moves 1 block up
         response = controller.tick(null, Direction.NONE);
         entities = response.getEntities();
