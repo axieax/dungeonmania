@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.movings.player.Inventory;
 
@@ -16,7 +17,7 @@ public class Shield extends DefenceEquipment implements Buildable {
     }
 
     @Override
-    public boolean isBuildable(Inventory inventory) {
+    public boolean isBuildable(Game game, Inventory inventory) {
         return (
             inventory.hasItemQuantity("wood", WOOD_NEEDED) &&
             (

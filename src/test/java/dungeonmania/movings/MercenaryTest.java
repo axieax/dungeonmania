@@ -68,8 +68,11 @@ public class MercenaryTest {
 
         game.tick(null, Direction.RIGHT);
 
-        // Mercenary should move upwards or stay in the same horizontal line
-        assertTrue(mercenary.getY() <= 3);
+        // Mercenary should move to the left or upwards
+        assertTrue(
+            (mercenary.getX() == 2 && mercenary.getY() == 3) || 
+            (mercenary.getX() == 3 && mercenary.getY() == 2)
+        );
     }
 
     @Test
@@ -137,6 +140,7 @@ public class MercenaryTest {
         game.tick(null, Direction.NONE);
         // Same position as player but mercenary should be killed
         assertTrue(mercenary.getX() == 1);
+        assertTrue(game.getEntity(mercenary.getId()) == null);
     }
 
     @Test
@@ -320,7 +324,7 @@ public class MercenaryTest {
 
         // Mercenary should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
-        assertTrue(game.getEntities(mercenaryPos).size() == 0); // mercenary should die
+        assertTrue(game.getEntity(mercenary.getId()) == null);
     }
     
     @Test

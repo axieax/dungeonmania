@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.movings.player.Inventory;
 
@@ -19,7 +20,7 @@ public class Sceptre extends AttackEquipment implements Buildable {
     }
 
     @Override
-    public boolean isBuildable(Inventory inventory) {
+    public boolean isBuildable(Game game, Inventory inventory) {
         return (
             (
                 inventory.hasItemQuantity("wood", WOOD_NEEDED) ||
@@ -39,8 +40,8 @@ public class Sceptre extends AttackEquipment implements Buildable {
         } else {
             inventory.removeItemQuantity("arrow", ARROW_NEEDED);
         }
-        if (inventory.hasItemQuantity("key_1", KEY_NEEDED)) {
-            inventory.removeItemQuantity("key_1", KEY_NEEDED);
+        if (inventory.hasItemQuantity("key", KEY_NEEDED)) {
+            inventory.removeItemQuantity("key", KEY_NEEDED);
         } else {
             inventory.removeItemQuantity("treasure", TREASURE_NEEDED);
         }
