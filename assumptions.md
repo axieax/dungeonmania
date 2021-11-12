@@ -45,7 +45,7 @@
 * The bomb explosion has a radius of one tile i.e. entities in adjacent tiles of the bomb are exploded.
 * Boulders can only be moved past a switch or an empty tile.
 * Bombs can only explode once it has been placed by the user - meaning that bombs spawned next to a switch cannot explode initially.
-* Assume that bomb explosions will also destroy floor switches.
+* Assume that bomb explosions will not destroy portals (but will destroy floor switches).
 
 ## Weapon Mechanics
 * Durability of any weapon is not reduced if a player is invincible.
