@@ -67,7 +67,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return boolean true if the player is currently in battle
      */
     public boolean getInBattle() {
         return inBattle;
@@ -215,7 +215,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return booleant true if the player has a key
      */
     public boolean hasKey() {
         return this.getKey() != null;
@@ -229,14 +229,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return boolean true if the player has a weapon
      */
     public boolean hasWeapon() {
         return !this.getAttackEquipmentList().isEmpty();
     }
 
     /**
-     * @return first weapon in a player's inventory
+     * @return first weapon in the player inventory
      */
     public Equipment getWeapon() {
         return (AttackEquipment) inventory.findWeapon();
@@ -259,7 +259,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param prefix
      * @param quantity
-     * @return
+     * @return boolean true if there's the specified quantity in the player inventory
      */
     public boolean hasItemQuantity(String prefix, int quantity) {
         return inventory.hasItemQuantity(prefix, quantity);
@@ -408,15 +408,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
         if (equipment.isBuildable(game, inventory))
             equipment.craft(inventory);
         else
-            throw new InvalidActionException(
-                "You do not meet the requirements to build this equipment");
+            throw new InvalidActionException("You do not meet the requirements to build this equipment");
     }
 
     /**
      * Check if the equipment is buildable
      *
      * @param equipment
-     * @return boolean
+     * @return boolean true if the equipment is buildable
      */
     public boolean checkBuildable(Game game, Buildable item) {
         return item.isBuildable(game, this.inventory);
@@ -430,7 +429,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * Returns the total attack damage a player is able to inflict upon an opponent.
      * This includes any attack damage provided by equipment e.g. sword
      *
-     * @return int a positive integer indicating the amount of attack
+     * @return int indicating the amount of attack
      */
     public int getTotalAttackDamage(MovingEntity opponent) {
         // Normal damage inflicted by player

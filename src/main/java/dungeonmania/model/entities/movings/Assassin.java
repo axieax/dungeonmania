@@ -36,19 +36,16 @@ public class Assassin extends BribableEnemy implements Boss {
         Item treasure = player.findInventoryItem("treasure");
         Item ring = player.findInventoryItem("one_ring");
 
-        if (sunstone == null && treasure == null && ring == null) {
+        if ((sunstone == null && treasure == null) || ring == null) {
             throw new InvalidActionException(
                 "You need both treasure and TheOneRing to bribe this assassin"
             );
         }
 
         player.addAlly(this);
-        if (sunstone != null) {
-            player.removeInventoryItem(sunstone.getId());
-            ((TheOneRing) ring).consume(game, player);
-        } else if (treasure != null && ring != null) {
-            ((Treasure) treasure).consume(game, player);
-            ((TheOneRing) ring).consume(game, player);
-        }
+
+        // Remove the treasure and TheOneRing from the player's inventory
+        if (sunstone == null) ((Treasure) treasure).consume(game, player);
+        ((TheOneRing) ring).consume(game, player);
     }
 }

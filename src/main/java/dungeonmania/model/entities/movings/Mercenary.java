@@ -4,7 +4,6 @@ import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.player.Player;
@@ -37,11 +36,12 @@ public class Mercenary extends BribableEnemy {
         Item treasure = player.findInventoryItem("treasure");
         
         if (sunstone == null && treasure == null)
-            throw new InvalidActionException("You don't have enough treasure to bribe this mercenary");
+            throw new InvalidActionException("You need treasure to bribe this mercenary");
         
         player.addAlly(this);
-        if (sunstone != null) player.removeInventoryItem(sunstone.getId());
-        else ((Treasure) treasure).consume(game, player);
+
+        // Remove the treasure from the player's inventory
+        if (sunstone == null) ((Treasure) treasure).consume(game, player);
     }
 
     /**
