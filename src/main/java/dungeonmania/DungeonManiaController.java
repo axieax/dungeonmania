@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
+import dungeonmania.model.GameWrapper;
 import dungeonmania.model.Maze;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.goal.Goal;
@@ -17,7 +18,6 @@ import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,14 +25,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class DungeonManiaController {
 
-    private List<Game> games = new ArrayList<>();
-    private Game currentGame;
+    private List<GameWrapper> games = new ArrayList<>();
+    private GameWrapper currentGame;
 
     public String getSkin() {
         return "default";
@@ -53,17 +52,19 @@ public class DungeonManiaController {
      * @return mode object
      * @throws IllegalArgumentException if the mode does not exist
      */
-    private Mode getMode (String mode) throws IllegalArgumentException {
+    private Mode getMode(String mode) throws IllegalArgumentException {
         mode = mode.toLowerCase();
-        if (!getGameModes().contains (mode)) throw new IllegalArgumentException();
-        if (mode.equals("hard")) {
-            return new Hard(); 
-        } else if (mode.equals("standard")) {
-            return new Standard(); 
-        } else if (mode.equals("peaceful")) {
-            return new Peaceful();
+        if (!getGameModes().contains(mode)) throw new IllegalArgumentException(mode);
+        switch (mode) {
+            case "peaceful":
+                return new Peaceful();
+            case "standard":
+                return new Standard();
+            case "hard":
+                return new Hard();
+            default:
+                return null;
         }
-        return null;
     }
 
     /**
@@ -92,19 +93,21 @@ public class DungeonManiaController {
      */
     public DungeonResponse newGame(String dungeonName, String gameMode)
         throws IllegalArgumentException {
-        gameMode = gameMode.toLowerCase();
+        // checks
         if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException();
 
-        // determine game mode
+        // get game mode
         Mode mode = getMode(gameMode);
         // get game entities
         List<Entity> entities = EntityFactory.extractEntities(dungeonName, mode);
+        // get game goal
         Goal goal = EntityFactory.extractGoal(dungeonName);
 
         // create new game
-        Game newGame = new Game(dungeonName, entities, goal, mode);
+        GameWrapper newGame = new GameWrapper(dungeonName, entities, goal, mode);
         games.add(newGame);
         currentGame = newGame;
+
         return newGame.getDungeonResponse();
     }
 
@@ -116,30 +119,17 @@ public class DungeonManiaController {
      * @throws IllegalArgumentException
      */
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        if (name.length() == 0) throw new IllegalArgumentException("Invalid name");
+        if (name.length() == 0) throw new IllegalArgumentException(name);
 
-        JSONObject currGame = new JSONObject();
-
-        // save all entities in the game
-        JSONArray entities = new JSONArray();
-        for (Entity entity : currentGame.getEntities()) {
-            entities.put(entity.toJSON());
-        }
-        currGame.put("entities", entities);
-
-        // save the mode of the game and the goal of the game
-        currGame.put("mode", currentGame.getMode().getClass().getSimpleName());
-        Goal goal = currentGame.getGoal();
-        if (goal != null) currGame.put("goal-condition", goal.toJSON());
-
-        // save the dungeon name of the game
-        currGame.put("dungeonName", currentGame.getDungeonName());
+        // convert game to JSONObject
+        JSONObject currGame = GameLoader.gameToJSONObject(currentGame.getActiveGame());
 
         // get a pretty printed json string
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement je = JsonParser.parseString(currGame.toString());
         String prettyString = gson.toJson(je);
-        try { // write the json string to a file
+        try {
+            // write the json string to a file
             String directoryPath = "./bin/savedGames";
             File pathAsFile = new File(directoryPath);
             if (!pathAsFile.exists()) {
@@ -166,17 +156,13 @@ public class DungeonManiaController {
      */
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         // name must not have length = 0 and not be contained already in saved games
-        if (name.length() == 0) throw new IllegalArgumentException();
-        if (!allGames().contains(name)) throw new IllegalArgumentException();
+        if (name.length() == 0) throw new IllegalArgumentException(name);
+        if (!allGames().contains(name)) throw new IllegalArgumentException(name);
 
-        // extract details of the game
-        Mode mode = GameLoader.extractMode(name);
-        List<Entity> entities = GameLoader.extractEntities(name, mode);
-        Goal goal = GameLoader.extractGoal(name);
-        String dungeonName = GameLoader.extractDungeonName(name);
+        // load dungeon
+        JSONObject dungeon = GameLoader.loadSavedDungeon(name);
+        GameWrapper newGame = new GameWrapper(GameLoader.JSONObjectToGame(dungeon));
 
-        // load game and set this game as the current game
-        Game newGame = new Game(dungeonName, entities, goal, mode);
         games.add(newGame);
         currentGame = newGame;
         return newGame.getDungeonResponse();
@@ -188,7 +174,8 @@ public class DungeonManiaController {
      * @return
      */
     public List<String> allGames() {
-        try { // the name of files in a directory
+        try {
+            // the name of files in the savedGames directory
             String directory = "./bin/savedGames/";
             return FileLoader.listFileNamesInDirectoryOutsideOfResources(directory);
         } catch (IOException e) {
@@ -201,7 +188,7 @@ public class DungeonManiaController {
      * direction one square - All enemies move respectively - Any items which are
      * used are 'actioned' and interact with the relevant entity
      *
-     * @param itemUsed
+     * @param itemUsedId
      * @param movementDirection
      * @return
      * @throws IllegalArgumentException If itemUsed is not a bomb, health_potion
@@ -243,46 +230,55 @@ public class DungeonManiaController {
      */
     public DungeonResponse build(String buildable)
         throws IllegalArgumentException, InvalidActionException {
-        if (!(buildable.equals("bow") || buildable.equals("shield"))) {
-            throw new IllegalArgumentException();
-        }
+        // check for valid buildable
+        List<String> buildables = Arrays.asList("bow", "shield");
+        if (!buildables.contains(buildable)) throw new IllegalArgumentException(buildable);
+
         return currentGame.build(buildable);
     }
 
     /**
-     * Generate a random maze dungeon 
+     * Generate a random maze dungeon
      * @param xStart x coordinate of start position
      * @param yStart y coordinate of starte position
      * @param xEnd x coordinate of end position
      * @param yEnd y coordinate of end position
      * @param gameMode mode of game
-     * @return 
+     * @return
      * @throws IllegalArgumentException if mode does not exist
      */
-    public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd, String gameMode)
-    throws IllegalArgumentException {
+    public DungeonResponse generateDungeon(
+        int xStart,
+        int yStart,
+        int xEnd,
+        int yEnd,
+        String gameMode
+    ) throws IllegalArgumentException {
         // get game mode
         Mode mode = getMode(gameMode);
-        Random random = new Random();
-        
+
         // get height and width for maze
+        Random random = new Random();
         int widthMinBound = ((xStart > xEnd) ? xStart : xEnd) + 2;
         int heightMinBound = ((yStart > yEnd) ? yStart : yEnd) + 2;
         int width = random.nextInt(5) + widthMinBound;
         int height = random.nextInt(5) + heightMinBound;
 
         // make a new maze
-        Maze maze = new Maze (width, height, new Position (xStart, yStart), new Position (xEnd, yEnd));
+        Maze maze = new Maze(width, height, new Position(xStart, yStart), new Position(xEnd, yEnd));
         JSONObject mazeJSON = maze.toJSON();
         List<Entity> entities = EntityFactory.extractEntities(mazeJSON, mode);
         Goal goal = EntityFactory.extractGoal(mazeJSON);
 
         // generate the new game
-        Game newGame = new Game("Dungeon Builder", entities, goal, mode);
+        GameWrapper newGame = new GameWrapper("Dungeon Builder", entities, goal, mode);
         games.add(newGame);
         currentGame = newGame;
         return newGame.getDungeonResponse();
     }
 
-    public DungeonResponse rewind(int ticks) throws IllegalArgumentException {}
+    public DungeonResponse rewind(int ticks) throws IllegalArgumentException {
+        if (ticks <= 0) throw new IllegalArgumentException(String.valueOf(ticks));
+        return currentGame.rewind(ticks);
+    }
 }

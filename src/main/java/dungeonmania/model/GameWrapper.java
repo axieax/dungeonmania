@@ -20,9 +20,13 @@ public final class GameWrapper {
     private List<JSONObject> states = new ArrayList<>();
     private Game activeGame;
 
-    public GameWrapper(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
-        activeGame = new Game(dungeonName, entities, goal, mode);
+    public GameWrapper(Game game) {
+        activeGame = game;
         states.add(GameLoader.gameToJSONObject(activeGame));
+    }
+
+    public GameWrapper(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
+        this(new Game(dungeonName, entities, goal, mode));
     }
 
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
@@ -31,9 +35,16 @@ public final class GameWrapper {
         return (activeGame.playerReachedTTPortal()) ? rewind(30) : resp;
     }
 
+    public final DungeonResponse interact(String entityId) {
+        return activeGame.interact(entityId);
+    }
+
+    public final DungeonResponse build(String buildable) {
+        return activeGame.build(buildable);
+    }
+
     public final DungeonResponse rewind(int ticks) throws IllegalArgumentException {
-        // checks
-        if (ticks <= 0) throw new IllegalArgumentException(String.valueOf(ticks));
+        // extra check that time turner has been obtained
         if (!activeGame.playerHasTimeTurner()) throw new IllegalArgumentException(
             "time_turner required to rewind"
         );
@@ -70,5 +81,13 @@ public final class GameWrapper {
         states = states.subList(0, restoreIndex + 1);
 
         return activeGame.getDungeonResponse();
+    }
+
+    public final DungeonResponse getDungeonResponse() {
+        return activeGame.getDungeonResponse();
+    }
+
+    public Game getActiveGame() {
+        return activeGame;
     }
 }
