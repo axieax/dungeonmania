@@ -45,8 +45,8 @@ public class Sceptre extends AttackEquipment implements Buildable {
         } else {
             inventory.removeItemQuantity("arrow", ARROW_NEEDED);
         }
-        if (inventory.hasItemQuantity("key_1", KEY_NEEDED)) {
-            inventory.removeItemQuantity("key_1", KEY_NEEDED);
+        if (inventory.hasItemQuantity("key", KEY_NEEDED)) {
+            inventory.removeItemQuantity("key", KEY_NEEDED);
         } else {
             inventory.removeItemQuantity("treasure", TREASURE_NEEDED);
         }
