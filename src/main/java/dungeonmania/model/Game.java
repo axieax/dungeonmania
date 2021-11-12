@@ -14,6 +14,7 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.TimeTravellingPortal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
@@ -310,5 +311,26 @@ public final class Game {
 
     public int getTickRate() {
         return mode.tickRate();
+    }
+
+    public final boolean playerReachedTTPortal() {
+        Entity player = getCharacter();
+        if (player == null) return false;
+        Position position = player.getPosition();
+
+        return (
+            entities
+                .stream()
+                .filter(e -> e instanceof TimeTravellingPortal && e.getPosition().equals(position))
+                .count() >
+            0
+        );
+    }
+
+    public final boolean playerHasTimeTurner() {
+        Player player = getCharacter();
+        if (player == null) return false;
+
+        return player.getInventoryItem("time_turner") != null;
     }
 }
