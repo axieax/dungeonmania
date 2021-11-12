@@ -134,7 +134,7 @@ public class ShieldTest {
         Shield shield = (Shield) player.findInventoryItem("shield");
         assertTrue(shield.getDurability() == initialDurability);
 
-        Spider spider = new Spider(new Position(3, 1), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(3, 1), mode.damageMultiplier(), player);
         game.addEntity(spider);
 
         // Player moves to defend against the spider with the shield

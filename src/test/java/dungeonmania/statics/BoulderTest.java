@@ -130,6 +130,59 @@ public class BoulderTest {
         assertTrue(game.getEntity(wall2.getId()) == null);
         assertTrue(game.getEntity(wall3.getId()) == null);
         assertTrue(game.getEntity(bomb.getId()) == null);
+        assertTrue(game.getEntity(boulder.getId()) == null);
+        assertTrue(game.getEntity(floorSwitch.getId()) == null);
         assertTrue(game.getEntity(player.getId()) != null);
+    }
+
+    /**
+     * Test player in blast radius of bombs
+     */
+    @Test
+    public void boulderExplodePlayer() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Boulder boulder = new Boulder(new Position(1, 1));
+        game.addEntity(boulder);
+
+        Player player = new Player(new Position(1, 0));
+        game.addEntity(player);
+
+        FloorSwitch floorSwitch = new FloorSwitch(new Position(1, 2));
+        game.addEntity(floorSwitch);
+
+        Position bombPos = new Position(2, 2);
+        Bomb bomb = new Bomb(bombPos);
+        game.addEntity(bomb);
+
+        // create a wall
+        Wall wall1 = new Wall(new Position(3, 1));
+
+        game.addEntity(wall1);
+
+        // get bomb
+        game.tick(null, Direction.RIGHT);
+        game.tick(null, Direction.DOWN);
+        game.tick(null, Direction.DOWN);
+
+        // place bomb
+        game.tick(bomb.getId(), Direction.NONE);
+
+        // go to initial spawn spot
+        game.tick(null, Direction.UP);
+        game.tick(null, Direction.UP);
+        game.tick(null, Direction.LEFT);
+
+        // move boulder to trigger bomb explosion
+        game.tick(null, Direction.DOWN);
+
+        // boulder explodes
+        assertTrue(game.getEntity(wall1.getId()) == null);
+        assertTrue(game.getEntity(bomb.getId()) == null);
+        assertTrue(game.getEntity(boulder.getId()) == null);
+        assertTrue(game.getEntity(floorSwitch.getId()) == null);
+        assertTrue(game.getEntity(player.getId()) != null);
+        assertTrue(Position.isAdjacent(bombPos, player.getPosition()));
+        
     }
 }

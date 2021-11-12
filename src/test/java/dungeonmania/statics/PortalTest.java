@@ -164,7 +164,7 @@ public class PortalTest {
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
-        Spider spider = new Spider(new Position(4, 5), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(4, 5), mode.damageMultiplier(), player);
         game.addEntity(player);
         game.addEntity(portalStart);
         game.addEntity(portalEnd);
@@ -204,7 +204,7 @@ public class PortalTest {
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
-        Spider spider = new Spider(new Position(5, 6), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(5, 6), mode.damageMultiplier(), player);
         game.addEntity(player);
         game.addEntity(portalStart);
         game.addEntity(portalEnd);

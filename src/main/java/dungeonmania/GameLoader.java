@@ -180,7 +180,7 @@ public class GameLoader {
             return newShield;
         } else if (type.startsWith("spider")) {
             position = position.asLayer(18);
-            Spider newSpider = new Spider(position, mode.damageMultiplier());
+            Spider newSpider = new Spider(position, mode.damageMultiplier(), currentPlayer);
             int health = entityInfo.getInt("health");
             newSpider.setHealth (health);
             return newSpider;
