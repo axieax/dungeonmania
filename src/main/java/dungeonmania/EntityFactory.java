@@ -117,60 +117,90 @@ public class EntityFactory {
             int key = entityInfo.getInt("key");
             position = position.asLayer(4);
             return new Door(position, key);
+        } else if (type.startsWith("time_travelling_portal")) {
+            position = position.asLayer(5);
+            return new TimeTravellingPortal(position);
         } else if (type.startsWith("portal")) {
             String colour = entityInfo.getString("colour");
-            position = position.asLayer(5);
-            return new Portal(position, colour);
-        } else if (type.startsWith("zombie_toast_spawner")) {
             position = position.asLayer(6);
+            return new Portal(position, colour);
+        }  else if (type.startsWith("zombie_toast_spawner")) {
+            position = position.asLayer(7);
             return new ZombieToastSpawner(position, mode.tickRate());
             // Collectable Entities
         } else if (type.startsWith("treasure")) {
-            position = position.asLayer(7);
+            position = position.asLayer(8);
             return new Treasure(position);
         } else if (type.startsWith("key")) {
             int key = entityInfo.getInt("key");
-            position = position.asLayer(8);
+            position = position.asLayer(9);
             return new Key(position, key);
         } else if (type.startsWith("health_potion")) {
-            position = position.asLayer(9);
+            position = position.asLayer(10);
             return new HealthPotion(position);
         } else if (type.startsWith("invincibility_potion")) {
-            position = position.asLayer(10);
+            position = position.asLayer(11);
             return new InvincibilityPotion(position);
         } else if (type.startsWith("invisibility_potion")) {
-            position = position.asLayer(11);
+            position = position.asLayer(12);
             return new InvisibilityPotion(position);
         } else if (type.startsWith("wood")) {
-            position = position.asLayer(12);
+            position = position.asLayer(13);
             return new Wood(position);
         } else if (type.startsWith("arrow")) {
-            position = position.asLayer(13);
+            position = position.asLayer(14);
             return new Arrow(position);
         } else if (type.startsWith("bomb")) {
-            position = position.asLayer(14);
+            position = position.asLayer(15);
             return new Bomb(position);
         } else if (type.startsWith("sword")) {
-            position = position.asLayer(15);
+            position = position.asLayer(16);
             return new Sword(position);
         } else if (type.startsWith("armour")) {
-            position = position.asLayer(16);
+            position = position.asLayer(17);
             return new Armour(position);
         } else if (type.startsWith("one_ring")) {
-            position = position.asLayer(17);
+            position = position.asLayer(18);
             return new TheOneRing(position);
             // Moving Entities
         } else if (type.startsWith("spider")) {
-            position = position.asLayer(18);
+            position = position.asLayer(19);
             return new Spider(position, mode.damageMultiplier());
         } else if (type.startsWith("zombie_toast")) {
-            position = position.asLayer(19);
+            position = position.asLayer(20);
             return new ZombieToast(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("mercenary")) {
-            position = position.asLayer(20);
-            return new Mercenary(position, mode.damageMultiplier(), player);
-        } else if (type.startsWith("player")) {
             position = position.asLayer(21);
+            return new Mercenary(position, mode.damageMultiplier(), player);
+        } else if (type.startsWith("assassin")) { 
+            position = position.asLayer(22);
+            return new Assassin(position);
+        }else if (type.startsWith("hydra")) {
+            position = position.asLayer(23);
+            return new Hydra(position);
+        }else if (type.startsWith("swamp_tile")) {
+            position = position.asLayer(24);
+            return new SwampTile(position);
+        }else if (type.startsWith("sun_stone")) {
+            position = position.asLayer(25);
+            return new SunStone(position);
+        } else if (type.startsWith("anduril")) {
+            position = position.asLayer(26);
+            return new Anduril(position);
+        } else if (type.startsWith("sceptre")) {
+            position = position.asLayer(27);
+            return new Sceptre(position);
+        } else if (type.startsWith("midnight_armour")) {
+            position = position.asLayer(28);
+            return new MidnightArmour(position);
+        } else if (type.startsWith("time_turner")) {
+            position = position.asLayer(29);
+            return new TimeTurner(position);
+        } else if (type.startsWith("older_player")) {
+            position = position.asLayer(30);
+            return new OlderPlayer(position);
+        } else if (type.startsWith("player")) {
+            position = position.asLayer(31);
             return new Player(position);
         }
         return null;

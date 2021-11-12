@@ -118,22 +118,7 @@ public class DungeonManiaController {
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         if (name.length() == 0) throw new IllegalArgumentException("Invalid name");
 
-        JSONObject currGame = new JSONObject();
-
-        // save all entities in the game
-        JSONArray entities = new JSONArray();
-        for (Entity entity : currentGame.getEntities()) {
-            entities.put(entity.toJSON());
-        }
-        currGame.put("entities", entities);
-
-        // save the mode of the game and the goal of the game
-        currGame.put("mode", currentGame.getMode().getClass().getSimpleName());
-        Goal goal = currentGame.getGoal();
-        if (goal != null) currGame.put("goal-condition", goal.toJSON());
-
-        // save the dungeon name of the game
-        currGame.put("dungeonName", currentGame.getDungeonName());
+        JSONObject currGame = GameLoader.gameToJSONObject(currentGame);
 
         // get a pretty printed json string
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -170,13 +155,10 @@ public class DungeonManiaController {
         if (!allGames().contains(name)) throw new IllegalArgumentException();
 
         // extract details of the game
-        Mode mode = GameLoader.extractMode(name);
-        List<Entity> entities = GameLoader.extractEntities(name, mode);
-        Goal goal = GameLoader.extractGoal(name);
-        String dungeonName = GameLoader.extractDungeonName(name);
+        JSONObject dungeon = GameLoader.loadSavedDungeon(name);
 
         // load game and set this game as the current game
-        Game newGame = new Game(dungeonName, entities, goal, mode);
+        Game newGame = GameLoader.JSONObjectToGame(dungeon);
         games.add(newGame);
         currentGame = newGame;
         return newGame.getDungeonResponse();
