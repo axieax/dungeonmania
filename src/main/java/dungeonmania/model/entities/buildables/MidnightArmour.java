@@ -18,20 +18,15 @@ public class MidnightArmour extends DefenceEquipment implements Buildable {
     }
 
     @Override
-    public boolean isBuildable(Inventory inventory) {
+    public boolean isBuildable(Game game, Inventory inventory) {
+        // Midnight armour can only be built if there are no zombies currently in the dungeon
         return (
+            game.getEntities().stream()
+            .filter(entity -> entity instanceof ZombieToast)
+            .findAny().isEmpty() &&
             inventory.hasItemQuantity("armour", ARMOUR_NEEDED) && 
             inventory.hasItemQuantity("sun_stone", SUNSTONE_NEEDED)
         );
-    }
-
-    @Override
-    public boolean checkNoZombies(Game game, Inventory inventory) {
-        return game.getEntities()
-            .stream()
-            .filter(entity -> entity instanceof ZombieToast)
-            .findAny()
-            .isEmpty();
     }
 
     @Override

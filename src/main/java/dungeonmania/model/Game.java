@@ -253,7 +253,7 @@ public final class Game {
         return EntityFactory
             .allBuildables()
             .stream()
-            .filter(item -> item instanceof Item && player.checkBuildable(item))
+            .filter(item -> item instanceof Item && player.checkBuildable(this, item))
             .map(item -> ((Item) item).getType())
             .collect(Collectors.toList());
     }

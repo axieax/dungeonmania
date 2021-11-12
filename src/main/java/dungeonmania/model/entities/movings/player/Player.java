@@ -411,19 +411,11 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @throws InvalidActionException if the player doesn't have enough resources or fails zombie check
      */
     public void craft(Game game, Buildable equipment) throws InvalidActionException {
-        if (equipment.isBuildable(inventory)) {
-            if (equipment.checkNoZombies(game, inventory)) {
-                equipment.craft(inventory);
-            } else {
-                throw new InvalidActionException(
-                    "You can only build this equipment if there are no zombies in the dungeon"
-                );
-            }
-        } else {
+        if (equipment.isBuildable(game, inventory))
+            equipment.craft(inventory);
+        else
             throw new InvalidActionException(
-                "You don't have enough resources to build this equipment"
-            );
-        }
+                "You do not meet the requirements to build this equipment");
     }
 
     /**
@@ -432,8 +424,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param equipment
      * @return boolean
      */
-    public boolean checkBuildable(Buildable item) {
-        return item.isBuildable(this.inventory);
+    public boolean checkBuildable(Game game, Buildable item) {
+        return item.isBuildable(game, this.inventory);
     }
 
     /********************************

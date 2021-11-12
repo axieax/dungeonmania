@@ -8,17 +8,9 @@ public interface Buildable {
     /**
      * Check if the equipment is buildable.
      * @param inventory
-     * @return true if the player has enough resources to build the object.
+     * @return true if all the requirements to build the equipment are met.
      */
-    public abstract boolean isBuildable(Inventory inventory);
-
-    /**
-     * Check if there are any zombies currently in the dungeon.
-     * @param game
-     * @param inventory
-     * @return true if there are no zombies in the dungeon.
-     */
-    public abstract boolean checkNoZombies(Game game, Inventory inventory);
+    public abstract boolean isBuildable(Game game, Inventory inventory);
 
     /**
      * Remove the resources used for building from the player's inventory.

@@ -20,7 +20,7 @@ public class Sceptre extends AttackEquipment implements Buildable {
     }
 
     @Override
-    public boolean isBuildable(Inventory inventory) {
+    public boolean isBuildable(Game game, Inventory inventory) {
         return (
             (
                 inventory.hasItemQuantity("wood", WOOD_NEEDED) ||
@@ -31,11 +31,6 @@ public class Sceptre extends AttackEquipment implements Buildable {
             ) &&
             inventory.hasItemQuantity("sun_stone", SUNSTONE_NEEDED)
         );
-    }
-
-    @Override
-    public boolean checkNoZombies(Game game, Inventory inventory) {
-        return true;
     }
 
     @Override

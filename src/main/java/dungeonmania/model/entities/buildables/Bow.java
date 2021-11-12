@@ -17,16 +17,11 @@ public class Bow extends AttackEquipment implements Buildable {
     }
 
     @Override
-    public boolean isBuildable(Inventory inventory) {
+    public boolean isBuildable(Game game, Inventory inventory) {
         return (
             inventory.hasItemQuantity("wood", WOOD_NEEDED) &&
             inventory.hasItemQuantity("arrow", ARROW_NEEDED)
         );
-    }
-
-    @Override
-    public boolean checkNoZombies(Game game, Inventory inventory) {
-        return true;
     }
 
     @Override
