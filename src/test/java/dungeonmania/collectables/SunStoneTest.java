@@ -2,11 +2,9 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.Treasure;
@@ -68,6 +66,7 @@ public class SunStoneTest {
         game.addEntity(stone);
 
         Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
 
         Door door = new Door(new Position(2, 1), 1);
         Key key = new Key(new Position(3, 1), 1);
@@ -100,6 +99,7 @@ public class SunStoneTest {
         game.addEntity(stone);
 
         Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
 
         Door door = new Door(new Position(3, 1), 1);
         Key key = new Key(new Position(2, 1), 1);
@@ -145,6 +145,7 @@ public class SunStoneTest {
         );
 
         Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
 
         // pick up items
         game.tick(null, Direction.RIGHT);
@@ -160,10 +161,11 @@ public class SunStoneTest {
         assertDoesNotThrow(() -> game.build("shield"));
 
         // check inventory if it has been used
-        // only treasure is left in inventory
-        assertEquals(player.getInventoryResponses().size(), 1);
+        // only treasure and shield is left in inventory
+        assertEquals(player.getInventoryResponses().size(), 2);
         assertTrue(player.hasItemQuantity("sun_stone", 0));
         assertTrue(player.hasItemQuantity("treasure", 1));
+        assertTrue(player.hasItemQuantity("shield", 1));
     }
 
     /**
@@ -187,6 +189,7 @@ public class SunStoneTest {
         );
 
         Player player = new Player(new Position(0, 1));
+        game.addEntity(player);
 
         // pick up items
         game.tick(null, Direction.RIGHT);
@@ -203,8 +206,9 @@ public class SunStoneTest {
 
         // check inventory if it has been used
         // only treasure is left in inventory
-        assertEquals(player.getInventoryResponses().size(), 1);
+        assertEquals(player.getInventoryResponses().size(), 2);
         assertTrue(player.hasItemQuantity("sun_stone", 0));
         assertTrue(player.hasItemQuantity("treasure", 1));
+        assertTrue(player.hasItemQuantity("sceptre", 1));
     }
 }

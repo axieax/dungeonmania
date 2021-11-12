@@ -275,7 +275,7 @@ public class HydraTest {
         game.tick(null, Direction.NONE);
         
         // the only option for the hydra is to move to the portal which it cannot pass through
-        assertTrue(hydra.getPosition().equals(portalPos)); // portal has no effect
+        assertTrue(hydra.getPosition().equals(hydraPos)); // portal has no effect
     }
 
     @Test

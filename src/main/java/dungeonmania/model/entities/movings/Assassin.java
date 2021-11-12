@@ -10,7 +10,7 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
 public class Assassin extends BribableEnemy implements Boss {
-    
+
     public static final int MAX_ASSASSIN_HEALTH = 75;
     public static final int MAX_ASSASSIN_ATTACK_DMG = 12;
 
@@ -25,20 +25,30 @@ public class Assassin extends BribableEnemy implements Boss {
      */
     @Override
     public void bribe(Game game, Player player) throws InvalidActionException {
-        // Player must be within 2 cardinal tiles to the assassin and 
+        // Player must be within 2 cardinal tiles to the assassin and
         // have 1 treasure (gold) and TheOneRing in order to bribe the assassin
-        Item item = player.findInventoryItem("treasure");
+
+        if (getDistanceToPlayer(game, player.getPosition()) > MAX_DISTANCE_TO_BRIBE) {
+            throw new InvalidActionException("You are too far away to bribe this assassin");
+        }
+
+        Item sunstone = player.findInventoryItem("sun_stone");
+        Item treasure = player.findInventoryItem("treasure");
         Item ring = player.findInventoryItem("one_ring");
-        if (item != null && ring != null) {
-            if (getDistanceToPlayer(game, player.getPosition()) <= MAX_DISTANCE_TO_BRIBE) {
-                player.addAlly(this);
-                ((Treasure) item).consume(game, player);
-                ((TheOneRing) ring).consume(game, player);
-            } else {
-                throw new InvalidActionException("You are too far away to bribe this assassin");
-            }
-        } else {
-            throw new InvalidActionException("You need both treasure and TheOneRing to bribe this assassin");
+
+        if (sunstone == null && treasure == null && ring == null) {
+            throw new InvalidActionException(
+                "You need both treasure and TheOneRing to bribe this assassin"
+            );
+        }
+
+        player.addAlly(this);
+        if (sunstone != null) {
+            player.removeInventoryItem(sunstone.getId());
+            ((TheOneRing) ring).consume(game, player);
+        } else if (treasure != null && ring != null) {
+            ((Treasure) treasure).consume(game, player);
+            ((TheOneRing) ring).consume(game, player);
         }
     }
 }

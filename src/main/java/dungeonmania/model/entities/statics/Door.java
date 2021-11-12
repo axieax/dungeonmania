@@ -32,12 +32,22 @@ public class Door extends Entity {
      * @param key
      * @return
      */
-    public boolean unlockDoor(Key key) {
+    private boolean unlockDoor(Key key) {
         if (key.getKey() == this.key) {
             this.open = true;
             this.setPassable(true);
         }
         return this.open;
+    }
+
+    /**
+     * Unlocks the door.
+     * @param key
+     * @return
+     */
+    private void unlockDoor() {
+        this.open = true;
+        this.setPassable(true);
     }
 
     /**
@@ -50,7 +60,8 @@ public class Door extends Entity {
         if (character instanceof Player) {
             Player player = (Player) character;
             Key key = player.getKey();
-            if (key != null && this.unlockDoor(key)) key.consume(game, player);
+            if (player.hasItemQuantity("sun_stone", 1)) this.unlockDoor();
+            else if (key != null && this.unlockDoor(key)) key.consume(game, player);
         }
     }
 

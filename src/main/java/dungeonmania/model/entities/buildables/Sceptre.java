@@ -21,20 +21,34 @@ public class Sceptre extends AttackEquipment implements Buildable {
 
     @Override
     public boolean isBuildable(Game game, Inventory inventory) {
+        boolean useSunStone = inventory.hasItemQuantity(
+            "sun_stone",
+            TREASURE_NEEDED + SUNSTONE_NEEDED
+        );
         return (
             (
                 inventory.hasItemQuantity("wood", WOOD_NEEDED) ||
                 inventory.hasItemQuantity("arrow", ARROW_NEEDED)
-            ) && (
+            ) &&
+            (
                 inventory.hasItemQuantity("key", KEY_NEEDED) ||
+                useSunStone ||
                 inventory.hasItemQuantity("treasure", TREASURE_NEEDED)
             ) &&
-            inventory.hasItemQuantity("sun_stone", SUNSTONE_NEEDED)
+            inventory.hasItemQuantity(
+                "sun_stone",
+                SUNSTONE_NEEDED +
+                (useSunStone ? TREASURE_NEEDED : 0)
+            )
         );
     }
 
     @Override
     public void craft(Inventory inventory) {
+        boolean useSunStone = inventory.hasItemQuantity(
+            "sun_stone",
+            TREASURE_NEEDED + SUNSTONE_NEEDED
+        );
         if (inventory.hasItemQuantity("wood", WOOD_NEEDED)) {
             inventory.removeItemQuantity("wood", WOOD_NEEDED);
         } else {
@@ -42,6 +56,8 @@ public class Sceptre extends AttackEquipment implements Buildable {
         }
         if (inventory.hasItemQuantity("key", KEY_NEEDED)) {
             inventory.removeItemQuantity("key", KEY_NEEDED);
+        } else if (useSunStone) {
+            inventory.removeItemQuantity("sun_stone", TREASURE_NEEDED);
         } else {
             inventory.removeItemQuantity("treasure", TREASURE_NEEDED);
         }
