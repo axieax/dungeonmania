@@ -15,6 +15,7 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -136,6 +137,33 @@ public class MercenaryTest {
         game.tick(null, Direction.NONE);
         // Same position as player but mercenary should be killed
         assertTrue(mercenary.getX() == 1);
+    }
+
+    @Test
+    public void testMercenarySimplePortal() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1));
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(0, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        // Add two portals in the same horizontal position
+        Portal portal1 = new Portal(new Position(2, 1), "BLUE");
+        Portal portal2 = new Portal(new Position(5, 1), "BLUE");
+
+        game.addEntity(portal1);
+        game.addEntity(portal2);
+
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getX() == 6);
+        assertTrue(mercenary.getX() == 1);
+
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getX() == 7);
+        assertTrue(mercenary.getX() == 6);
     }
 
     @Test
@@ -377,12 +405,11 @@ public class MercenaryTest {
             distance = mercenary.getDistanceToPlayer(game, updatedPlayerPos);
         }
 
-        Position mercenaryPos = mercenary.getPosition();
         // After 10 ticks, the mercenary will no longer be mind controlled
         // It will battle with the player and will consequently die
         game.tick(null, Direction.NONE);
 
-        assertTrue(game.getEntities(mercenaryPos).size() == 0);
+        assertTrue(game.getEntity(mercenary.getId()) == null);
     }
 
     private List<Entity> sevenBySevenWallBoundary() {
