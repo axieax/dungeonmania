@@ -3,6 +3,9 @@ package dungeonmania.model.entities.movings;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.CircularMovementState;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.Portal;
@@ -34,27 +37,17 @@ public class Spider extends Enemy {
     /**
      * If a player drinks an invincibility potion, change the state
      * of the spider to make sure it runs away
-     */
-    // @Override
-    // public void update(SubjectPlayer player) {
-    //     if (!(player instanceof Player)) {
-    //         return;
-    //     }
-
-    //     Player character = (Player) player;
-    //     if (character.getState() instanceof PlayerInvincibleState) {
-    //         this.setMovementState(new RunMovementState(this));
-    //     } else {
-    //         this.setMovementState(new CircularMovementState(this));
-    //     }
-    // }
-
-    /**
-     * Spider does not track player as it is assumed that the spider only moves in a circular motion
-     */
+     */ 
     @Override
     public void update(SubjectPlayer player) {
-        return;
+        if (player instanceof Player) {
+            Player character = (Player) player;
+            if (character.getState() instanceof PlayerInvincibleState) {
+                this.setMovementState(new RunMovementState(this));
+            } else {
+                this.setMovementState(new CircularMovementState(this));
+            }
+        }
     }
 
     /**
