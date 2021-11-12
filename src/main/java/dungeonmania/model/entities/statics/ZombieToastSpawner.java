@@ -69,12 +69,14 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                 new Position(x + 1, y),
                 new Position(x, y - 1)
             );
+
             List<Position> openSquares = new ArrayList<>();
             positions
                 .stream()
                 .forEach(position -> {
                     if (game.getEntities(position).isEmpty()) openSquares.add(position);
                 });
+                
             if (!openSquares.isEmpty()) {
                 Random rand = new Random();
                 Position randPosition = openSquares.get(rand.nextInt(openSquares.size()));
@@ -87,10 +89,6 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                 );
             }
         }
-    }
-
-    public int getCurrTick() {
-        return currTick;
     }
 }
 
