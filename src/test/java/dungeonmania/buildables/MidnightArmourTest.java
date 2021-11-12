@@ -133,40 +133,61 @@ public class MidnightArmourTest {
     }
 
     /**
-     * Test if Midnight Armour can be used in battles.
+     * Test if Midnight Armour deals bonus attack damage.
      */
     @Test
     public void battleTest() {
+        // Fight an ememy mercenary while the player has armour equipped
+        // Fight an enemy mercenary while the player has midnight armour equipped
+        // Enemy health should be less (more negative) in the latter case
+
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Armour armour = new Armour(new Position(1, 0));
-        SunStone sunstone = new SunStone(new Position(1, 1));
+        Armour armour1 = new Armour(new Position(1, 0));
+        game.addEntity(armour1);
 
-        game.addEntity(armour);
-        game.addEntity(sunstone);
-
-        // Player picks up both items
         Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
+
+        // Player picks up the armour
         player.move(game, Direction.RIGHT);
+
+        Mercenary mercenary1 = new Mercenary(new Position(2, 0), mode.damageMultiplier(), player);
+        game.addEntity(mercenary1);
+
+        // Player moves to attack the mercenary with the armour
+        player.move(game, Direction.RIGHT);
+
+        // Mercenary should die upon battle - we record their remaining health
+        assertTrue(game.getEntity(mercenary1.getId()) == null);
+        int enemyHealthAttackedWithArmour = mercenary1.getHealth();
+
+        // Player removes the armour from their inventory
+        // Proceeds to collect the necessary items to craft midnight armour
+        player.removeInventoryItem(armour1.getId());
+
+        Armour armour2 = new Armour(new Position(2, 1));
+        SunStone sunstone = new SunStone(new Position(2, 2));
+        game.addEntity(armour2);
+        game.addEntity(sunstone);
+
+        player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
 
         game.build("midnight_armour");
 
-        int initialDurability = 5;
-        MidnightArmour midnightArmour = (MidnightArmour) player.findInventoryItem("midnight_armour");
-        assertTrue(midnightArmour.getDurability() == initialDurability);
-
-        Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
-        game.addEntity(mercenary);
+        Mercenary mercenary2 = new Mercenary(new Position(2, 3), mode.damageMultiplier(), player);
+        game.addEntity(mercenary2);
 
         // Player moves to attack the mercenary with the midnight armour
         player.move(game, Direction.DOWN);
 
         // Mercenary should die upon battle
-        // Durability of midnight armour decreases by 1 each time it battles (within one tick)
-        assertTrue(game.getEntity(mercenary.getId()) == null);
-        assertTrue(midnightArmour == null || midnightArmour.getDurability() != initialDurability);
+        assertTrue(game.getEntity(mercenary2.getId()) == null);
+        int enemyHealthAttackedWithMidnightArmour = mercenary2.getHealth();
+
+        // Check that the mercenary has less health when attacked with midnight armour
+        assertTrue(enemyHealthAttackedWithMidnightArmour < enemyHealthAttackedWithArmour);
     }
 }

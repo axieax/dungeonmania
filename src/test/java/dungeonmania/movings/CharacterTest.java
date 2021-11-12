@@ -739,7 +739,7 @@ public class CharacterTest {
     public void testCharacterBattleWithAlly() {
         // Fight an enemy mercenary while a player has an allied mercenary
         // Fight an enemy mercenary without any allies
-        // Health remaining in the latter case should be smaller than in the former
+        // Enemy health should be less (more negative) in the former case
         
         Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
@@ -763,13 +763,13 @@ public class CharacterTest {
         game.addEntity(enemyMercenary);
 
         int playerTotalAttackDmgWithAlly = player.getTotalAttackDamage(mercenary);
-        // enemy mercenary should battle with player in this tick
+        // Enemy mercenary should battle with player in this tick
         game.tick(null, Direction.RIGHT);
         assertEquals(new Position(3, 1), mercenary.getPosition());
         assertTrue(!enemyMercenary.isAlive());
         int enemyHealthWithAlly = enemyMercenary.getHealth();
 
-        // create a new game instance where the player do not have any allies
+        // Create a new game instance where the player does not have any allies
         mode = new Hard();
         game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
@@ -786,7 +786,7 @@ public class CharacterTest {
         assertEquals(new Position(4, 1), enemyMercenary.getPosition());
 
         int playerTotalAttackDmgWithoutAlly = player.getTotalAttackDamage(mercenary);
-        // player and mercenary should battle in this tick
+        // Player and mercenary should battle in this tick
         game.tick(null, Direction.RIGHT);
         assertEquals(new Position(3, 1), enemyMercenary.getPosition());
         assertTrue(!enemyMercenary.isAlive());
