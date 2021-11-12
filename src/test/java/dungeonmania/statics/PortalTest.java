@@ -2,7 +2,6 @@ package dungeonmania.statics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
