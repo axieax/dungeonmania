@@ -6,7 +6,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.Treasure;
-import dungeonmania.model.entities.movings.movement.AttackMovementState;
+import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
@@ -19,7 +19,7 @@ public class Mercenary extends BribableEnemy {
 
     public Mercenary(Position position, int damageMultiplier, SubjectPlayer player) {
         super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, damageMultiplier);
-        this.setMovementState(new AttackMovementState(this));
+        this.setMovementState(new FollowPlayerMovementState(this));
         player.attach(this);
     }
 

@@ -1,7 +1,6 @@
 package dungeonmania.model.entities.movings.movement;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
 import java.util.HashMap;
@@ -14,20 +13,20 @@ public class PositionGraph {
 
     private Game game;
     private List<Position> nodes;
-    private Entity entity;
+    private MovingEntity entity;
 
-    public PositionGraph(Game game, Entity entity) {
+    public PositionGraph(Game game, MovingEntity entity) {
         this.game = game;
         this.entity = entity;
         this.nodes = this.getAllFreePositions();
     }
 
     /**
-     * Gets all free positions that the entity can can go to
+     * Gets all free positions that the moving entity can can go to.
      *
      * @param game
      * @param entity
-     * @return
+     * @return List<Position> all free position nodes on the dungeon map
      */
     private List<Position> getAllFreePositions() {
         LinkedList<Position> positionsToEvaluate = new LinkedList<>();
@@ -62,7 +61,7 @@ public class PositionGraph {
      *
      * @param src Position
      * @param dest Position
-     * @return
+     * @return int shortest path length from src to dest
      */
     public int bfs(Position src, Position dest) {
         if (src.equals(dest)) return 0;
@@ -83,29 +82,34 @@ public class PositionGraph {
         dist.put(src, 0);
         queue.add(src);
 
-        if (entity instanceof MovingEntity) {
-            // Breadth First Search Algorithm to find shortest path length
-            while (!queue.isEmpty()) {
-                Position vertex = queue.remove();
-                List<Position> adjacentPositions = game.getMoveablePositions(
-                    (MovingEntity) this.entity,
-                    vertex
-                );
+        // Breadth First Search Algorithm to find shortest path length
+        while (!queue.isEmpty()) {
+            Position vertex = queue.remove();
+            List<Position> adjacentPositions = game.getMoveablePositions(
+                (MovingEntity) this.entity,
+                vertex
+            );
 
-                for (Position currNode : adjacentPositions) {
-                    if (visited.get(currNode) != null && !visited.get(currNode)) {
-                        visited.put(currNode, true);
-                        dist.put(currNode, dist.get(vertex) + 1);
-                        pred.put(currNode, vertex);
-                        queue.add(currNode);
-                        if (currNode.equals(dest)) return dist.get(currNode);
-                    }
+            for (Position currNode : adjacentPositions) {
+                if (visited.get(currNode) != null && !visited.get(currNode)) {
+                    visited.put(currNode, true);
+                    dist.put(currNode, dist.get(vertex) + 1);
+                    pred.put(currNode, vertex);
+                    queue.add(currNode);
+                    if (currNode.equals(dest)) return dist.get(currNode);
                 }
             }
         }
         return Integer.MAX_VALUE;
     }
 
+    /**
+     * Performs the Dijkstra's algorithm to find the shortest costing path.
+     * 
+     * @param src
+     * @return HashMap<Integer, Position> pred that gives us the shortest path
+     * to traverse from. The key in the HashMap is the hashcode of the position.
+     */
     public HashMap<Integer, Position> dijkstra(Position src) {
         Queue<Position> queue = new LinkedList<Position>();
 
@@ -120,30 +124,22 @@ public class PositionGraph {
         dist.put(src.hashCode(), 0);
         queue.add(src);
 
-        if (entity instanceof MovingEntity) {
-            while (!queue.isEmpty()) {
-                Position vertex = queue.remove();
-                List<Position> adjacentPositions = game.getMoveablePositions(
-                    (MovingEntity) this.entity,
-                    vertex
-                );
+        while (!queue.isEmpty()) {
+            Position vertex = queue.remove();
+            List<Position> adjacentPositions = game.getMoveablePositions(
+                (MovingEntity) this.entity,
+                vertex
+            );
 
-                for (Position currNode : adjacentPositions) {
-                    if (dist.get(vertex.hashCode()) != null && dist.get(currNode.hashCode()) != null) {
-                        int cost = 1;
-                        if (game.getSwampTile(currNode) != null) cost =
-                            game.getSwampTile(currNode).getMovementFactor();
-                        if (dist.get(vertex.hashCode()) == null) {
-                            return null;
-                        }
-                        if (dist.get(currNode.hashCode()) == null) {
-                            return null;
-                        }
-                        if (dist.get(vertex.hashCode()) + cost < dist.get(currNode.hashCode())) {
-                            dist.put(currNode.hashCode(), dist.get(vertex.hashCode()) + cost);
-                            pred.put(currNode.hashCode(), vertex);
-                            queue.add(currNode);
-                        }
+            for (Position currNode : adjacentPositions) {
+                if (dist.get(vertex.hashCode()) != null && dist.get(currNode.hashCode()) != null) {
+                    int cost = 1;
+                    if (game.getSwampTile(currNode) != null) cost =
+                        game.getSwampTile(currNode).getMovementFactor();
+                    if (dist.get(vertex.hashCode()) + cost < dist.get(currNode.hashCode())) {
+                        dist.put(currNode.hashCode(), dist.get(vertex.hashCode()) + cost);
+                        pred.put(currNode.hashCode(), vertex);
+                        queue.add(currNode);
                     }
                 }
             }

@@ -5,7 +5,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.Treasure;
-import dungeonmania.model.entities.movings.movement.AttackMovementState;
+import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
@@ -16,7 +16,7 @@ public class Assassin extends BribableEnemy implements Boss {
 
     public Assassin(Position position, int damageMultiplier, SubjectPlayer player) {
         super("assassin", position, MAX_ASSASSIN_HEALTH, MAX_ASSASSIN_ATTACK_DMG, damageMultiplier);
-        this.setMovementState(new AttackMovementState(this));
+        this.setMovementState(new FollowPlayerMovementState(this));
         player.attach(this);
     }
 
