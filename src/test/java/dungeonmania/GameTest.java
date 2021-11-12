@@ -10,6 +10,7 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
 import java.util.List;
@@ -267,7 +268,11 @@ public class GameTest {
         assertDoesNotThrow(() -> newGame.build("bow"));
 
         // bow is in inventory
-        assertEquals (1, gamePlayer.getInventoryResponses().size());
+        boolean builtBow = false;
+        for (ItemResponse item: gamePlayer.getInventoryResponses()) {
+            if (item.getType().contains("bow")) builtBow = true;
+        }
+        assertTrue(builtBow);
     }
     
     /*
