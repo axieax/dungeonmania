@@ -55,7 +55,7 @@ public class SunStoneTest {
     }
 
     /**
-     * Test if sun stone can be used to open doors
+     * Test if SunStone can be used to open doors
      */
     @Test
     public void openDoor() {
@@ -69,26 +69,24 @@ public class SunStoneTest {
         game.addEntity(player);
 
         Door door = new Door(new Position(2, 1), 1);
-        Key key = new Key(new Position(3, 1), 1);
         game.addEntity(door);
-        game.addEntity(key);
 
-        // player pick up sunstone
+        // Player picks up sunstone
         game.tick(null, Direction.RIGHT);
         assertEquals(player.getPosition(), stonePos);
-        // player picked up sun stone
         assertEquals(1, game.getEntities(player.getPosition()).size());
         assertTrue(player.getInventoryItem(stone.getId()).equals(stone));
 
-        // player unlock door with sunstone
+        // Player unlocks door with sunstone
         game.tick(null, Direction.RIGHT);
         assertEquals(player.getPosition(), door.getPosition());
-        // sun stone is not consumed
+        
+        // Sunstone is not consumed
         assertTrue(player.getInventoryItem(stone.getId()).equals(stone));
     }
 
     /**
-     * Test if sun stone is used over keys to open doors
+     * Test if SunStone is used over keys to open doors
      */
     @Test
     public void openDoorWithKey() {
@@ -126,7 +124,6 @@ public class SunStoneTest {
 
     /**
      * Test if SunStone can be used in replacement of Treasure when building a Shield.
-     * Check also if SunStone is consumed.
      */
     @Test
     public void buildWithSunStoneShield() {
@@ -136,7 +133,7 @@ public class SunStoneTest {
             Arrays.asList(
                 new Wood(new Position(1, 1)),
                 new Wood(new Position(2, 1)),
-                new Treasure(new Position(3, 1)),
+                new Key(new Position(3, 1), 1),
                 new SunStone(new Position(4, 1))
                 
             ),
@@ -147,30 +144,28 @@ public class SunStoneTest {
         Player player = new Player(new Position(0, 1));
         game.addEntity(player);
 
-        // pick up items
+        // Player picks up up items
         game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.RIGHT);
         assertEquals(player.getPosition(), new Position(4, 1));
 
-        // 4 items in inventory
         assertEquals(player.getInventoryResponses().size(), 4);
 
-        // build shield
+        // Building the shield
         assertDoesNotThrow(() -> game.build("shield"));
 
-        // check inventory if it has been used
-        // only treasure and shield is left in inventory
+        // Check inventory to check all resources used correctly
+        // Note that the key remains in the player's inventory since the sunstone takes priority
         assertEquals(player.getInventoryResponses().size(), 2);
         assertTrue(player.hasItemQuantity("sun_stone", 0));
-        assertTrue(player.hasItemQuantity("treasure", 1));
+        assertTrue(player.hasItemQuantity("key", 1));
         assertTrue(player.hasItemQuantity("shield", 1));
     }
 
     /**
      * Test if SunStone can be used in replacement of Treasure when building a Sceptre.
-     * Check also if SunStone is consumed.
      */
     @Test
     public void buildWithSunStoneSceptre() {
@@ -191,21 +186,20 @@ public class SunStoneTest {
         Player player = new Player(new Position(0, 1));
         game.addEntity(player);
 
-        // pick up items
+        // Player picks up up items
         game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.RIGHT);
         assertEquals(player.getPosition(), new Position(4, 1));
 
-        // 4 items in inventory
         assertEquals(player.getInventoryResponses().size(), 4);
-
-        // build sceptre
+        
+        // Building the shield
         assertDoesNotThrow(() -> game.build("sceptre"));
 
-        // check inventory if it has been used
-        // only treasure is left in inventory
+        // Check inventory to check all resources used correctly
+        // Note that the treasure remains in the player's inventory since the sunstone takes priority
         assertEquals(player.getInventoryResponses().size(), 2);
         assertTrue(player.hasItemQuantity("sun_stone", 0));
         assertTrue(player.hasItemQuantity("treasure", 1));
