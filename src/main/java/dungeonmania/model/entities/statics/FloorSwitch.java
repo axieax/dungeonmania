@@ -31,11 +31,11 @@ public class FloorSwitch extends Entity {
      * @param game
      */
     public void triggerSwitch(Game game) {
-        if (this.isTriggered(game)) {
-            List<Entity> entities = game.getCardinallyAdjacentEntities(this.getPosition());
-            entities.forEach(entity -> {
+        List<Entity> entities = game.getCardinallyAdjacentEntities(this.getPosition());
+        entities.forEach(
+            entity -> {
                 if (entity instanceof Bomb) ((Bomb) entity).explode(game);
-            });
-        }
+            }
+        );
     }
 }
