@@ -725,73 +725,56 @@ public class CharacterTest {
         // Fight an enemy mercenary without any allies
         // Health remaining in the latter case should be smaller than in the former
         
-        // Note that since the player will take the same amount of damage in both cases,
-        // we will be boosting the health of all mercenaries (so we can actually compare)
-        Mode mode = new Standard();
+        Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
-        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
+        Mercenary mercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-
-        game.addEntity(new Treasure(new Position(1, 2)));        
         
-        // Player collects coin and moves down twice
-        game.tick(null, Direction.DOWN);
-        game.tick(null, Direction.DOWN);
-        game.tick(null, Direction.DOWN);
-
-        Position updatedPlayerPos = new Position(1, 4);
-
-        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
-            game.tick(null, Direction.NONE);
-        }
-
-        // Mercenary in adjacent tile, so bribe
+        game.addEntity(new Treasure(new Position(2, 1)));        
+        
+        // Player collects coin and bribes mercenary
+        game.tick(null, Direction.RIGHT);
         game.interact(mercenary.getId());
-        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
         assertTrue(player.getAllies().size() == 1);        
 
         // Spawn an enemy mercenary
-        Mercenary enemyMercenary = new Mercenary(new Position(5, 5), mode.damageMultiplier(), player);
+        Mercenary enemyMercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
         game.addEntity(enemyMercenary);
-        mercenary.setHealth(100);
-        enemyMercenary.setHealth(100);
 
-        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(enemyMercenary)) {
-            game.tick(null, Direction.NONE);
-        }
+        int playerTotalAttackDmgWithAlly = player.getTotalAttackDamage(mercenary);
+        // enemy mercenary should battle with player in this tick
+        game.tick(null, Direction.RIGHT);
+        assertTrue(!enemyMercenary.isAlive());
+        int enemyHealthWithAlly = enemyMercenary.getHealth();
 
-        // Enemy mercenary now adjacent
-        game.tick(null, Direction.NONE);
-        assertFalse(enemyMercenary.isAlive());
-        int healthRemainingWithAlly = player.getHealth();
+        // create a new game instance where the player do not have any allies
+        mode = new Hard();
+        game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        // Give player full health, remove allied mercenary, and fight enemy mercenary
-        player.removeAlly(mercenary);
-        game.removeEntity(mercenary);
-        player.setHealth(Player.MAX_CHARACTER_HEALTH);
+        player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
 
-        Mercenary newEnemyMercenary = new Mercenary(
-            new Position(5, 5),
-            mode.damageMultiplier(),
-            player
-        );
-        game.addEntity(newEnemyMercenary);
-        enemyMercenary.setHealth(100);
-        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(newEnemyMercenary)) {
-            game.tick(null, Direction.NONE);
-        }
+        enemyMercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(enemyMercenary);
+
+        game.addEntity(new Treasure(new Position(1, 2)));        
         
-        // New enemy mercenary now adjacent
-        game.tick(null, Direction.NONE);
-        assertFalse(newEnemyMercenary.isAlive());
+        // Player moves to battle mercenary
+        game.tick(null, Direction.RIGHT);
 
-        int healthRemainingWithoutAlly = player.getHealth();
+        int playerTotalAttackDmgWithoutAlly = player.getTotalAttackDamage(mercenary);
+        // player and mercenary should battle in this tick
+        game.tick(null, Direction.RIGHT);
+        assertTrue(!enemyMercenary.isAlive());
 
-        assertTrue(healthRemainingWithAlly > healthRemainingWithoutAlly);
+        int enemyHealthWithoutAlly = enemyMercenary.getHealth();
+
+        assertTrue(enemyHealthWithAlly < enemyHealthWithoutAlly);
+        assertTrue(playerTotalAttackDmgWithAlly > playerTotalAttackDmgWithoutAlly);
     }
 
     public Position getCharacterPosition(List<EntityResponse> entities)
