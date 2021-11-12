@@ -489,11 +489,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
         return info;
     }
 
-    @Override
-    public void detach(Observer observer) {
-        observers.remove(observer);
-    }
-
     /**
      * Notifies all observers of the player.
      */
