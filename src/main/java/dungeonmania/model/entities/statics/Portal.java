@@ -59,8 +59,6 @@ public class Portal extends Entity {
                 if (character.collision(e)) collision = true;
             }
             if (!collision) character.moveTo(portal.getPosition());
-            // Their is a collision on the teleported position so do no move.
-            else if (character instanceof Enemy) ((Enemy) character).setDirection(Direction.NONE);
         } else if (character instanceof Enemy) ((Enemy) character).setDirection(Direction.NONE);
     }
 

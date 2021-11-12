@@ -11,9 +11,4 @@ public class Hard implements Mode{
     public int initialHealth() {
         return 80;
     }
-
-    @Override
-    public int invincibilityPotionMultipler() {
-        return 0;
-    } 
 }

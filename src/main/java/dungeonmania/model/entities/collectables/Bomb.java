@@ -26,6 +26,7 @@ public class Bomb extends Item implements Consumable {
         game.addEntity(this);
         player.removeInventoryItem(this.getId());
         isPlaced = true;
+        this.setPassable(false);
     }
 
     /**

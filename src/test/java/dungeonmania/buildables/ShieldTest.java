@@ -40,7 +40,7 @@ public class ShieldTest {
         game.addEntity(treasure);
 
         // Player picks up the wood and treasure
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -77,7 +77,7 @@ public class ShieldTest {
         game.addEntity(key);
 
         // Player picks up the wood and key
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -121,7 +121,7 @@ public class ShieldTest {
         game.addEntity(wood2);
         game.addEntity(key);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -134,7 +134,7 @@ public class ShieldTest {
         Shield shield = (Shield) player.findInventoryItem("shield");
         assertTrue(shield.getDurability() == initialDurability);
 
-        Spider spider = new Spider(new Position(3, 1), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(3, 1), mode.damageMultiplier(), player);
         game.addEntity(spider);
 
         // Player moves to defend against the spider with the shield
@@ -160,7 +160,7 @@ public class ShieldTest {
         game.addEntity(wood2);
         game.addEntity(key);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -178,9 +178,9 @@ public class ShieldTest {
         // Player moves to defend against the mercenary with the shield
         player.move(game, Direction.RIGHT);
 
-        // Either the player or the mercenary should be dead
+        // Mercenary should die upon battle
         // Durability of shield decreases by 1 each time it battles (within one tick)
-        assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
+        assertTrue(game.getEntity(mercenary.getId()) == null);
         assertTrue(shield == null || shield.getDurability() != initialDurability);
     }
 }

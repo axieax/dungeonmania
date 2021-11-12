@@ -2,11 +2,13 @@ package dungeonmania.statics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
@@ -40,7 +42,7 @@ public class PortalTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(0, 0), "BLUE");
         Portal portalEnd = new Portal(new Position(2, 2), "BLUE");
@@ -72,7 +74,7 @@ public class PortalTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
 
         Portal portal1 = new Portal(new Position(0, 0), "BLUE");
         Portal portal2 = new Portal(new Position(2, 2), "BLUE");
@@ -109,7 +111,7 @@ public class PortalTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
 
         Portal portal = new Portal(new Position(0, 0), "BLUE");
         game.addEntity(player);
@@ -130,7 +132,7 @@ public class PortalTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(0, 0), "BLUE");
         Portal portalEnd = new Portal(new Position(2, 2), "BLUE");
@@ -158,11 +160,11 @@ public class PortalTest {
     public void testSpiderTeleport() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        Player player = new Player(new Position(3, 6));
+        Player player = new Player(new Position(3, 6), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
-        Spider spider = new Spider(new Position(4, 5), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(4, 5), mode.damageMultiplier(), player);
         game.addEntity(player);
         game.addEntity(portalStart);
         game.addEntity(portalEnd);
@@ -198,11 +200,11 @@ public class PortalTest {
     public void testSpiderTeleportStart() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        Player player = new Player(new Position(3, 6));
+        Player player = new Player(new Position(3, 6), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
-        Spider spider = new Spider(new Position(5, 6), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(5, 6), mode.damageMultiplier(), player);
         game.addEntity(player);
         game.addEntity(portalStart);
         game.addEntity(portalEnd);
@@ -233,10 +235,10 @@ public class PortalTest {
      * Test if zombie is bounded and cannot teleport through a portal
      */
     @Test
-    public void testZombieTeleport() {
+    public void testZombieNoTeleport() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        Player player = new Player(new Position(3, 6));
+        Player player = new Player(new Position(3, 6), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
@@ -253,48 +255,46 @@ public class PortalTest {
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 6)));
 
-        // zombie stays in same position
         game.tick(null, Direction.NONE);
-        // zombie gets teleported to portal
+        // zombies are not affected by portals
         assertEquals(new Position(4, 5), zombie.getPosition());
     }
 
     /**
-     * Test if zombie cannot teleport if there is something blocking on the teleported
-     * position
+     * Test if mercenary can teleport through portals.
+     * 
+     * Test Case: Player consumes invincibility potion. Mercenary is in runstate.
+     * Mercenary run to portal below.
      */
     @Test
-    public void testZombieNoTeleport() {
-        // TODO (Gabriel) : reuse this test for mercenary??
-        fail();
-        // Mode mode = new Standard();
-        // Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        // Player player = new Player(new Position(3, 6));
+    public void testMercenaryRunToPortal() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Player player = new Player(new Position(3, 2), mode.initialHealth());
+        InvincibilityPotion potion = new InvincibilityPotion(new Position(3, 6));
+        player.addInventoryItem(potion);
 
-        // Portal portalStart = new Portal(new Position(5, 5), "BLUE");
-        // Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
-        // // spawn zombie next to portal
-        // ZombieToast zombie = new ZombieToast(new Position(4, 5), mode.damageMultiplier(), player);
 
-        // game.addEntity(player);
-        // game.addEntity(portalStart);
-        // game.addEntity(portalEnd);
-        // game.addEntity(zombie);
 
-        // // create walls around zombie
-        // game.addEntity(new Wall(new Position(3, 5)));
-        // game.addEntity(new Wall(new Position(4, 4)));
-        // game.addEntity(new Wall(new Position(4, 6)));
+        Portal portalStart = new Portal(new Position(3, 5), "BLUE");
+        Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
+        // spawn mercenary next to portal
+        Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
 
-        // // create walls around portal location
-        // game.addEntity(new Wall(new Position(9, 5)));
-        // game.addEntity(new Wall(new Position(8, 4)));
-        // game.addEntity(new Wall(new Position(8, 6)));
-        // game.addEntity(new Wall(new Position(8, 5)));
+        game.addEntity(player);
+        game.addEntity(portalStart);
+        game.addEntity(portalEnd);
+        game.addEntity(mercenary);
 
-        // // zombie can only move right since walls are blocking the zombie's movement
-        // game.tick(null, Direction.NONE);
-        // // zombie stays on same position
-        // assertEquals(new Position(4, 5), zombie.getPosition());
+        game.tick(potion.getId(), Direction.NONE);
+
+        // mercenary run away from player
+        assertEquals(new Position(3, 4), mercenary.getPosition());
+        assertTrue(mercenary.getMovementState() instanceof RunMovementState);
+
+        game.tick(null, Direction.NONE);
+
+        // mercenary move to portal and teleports
+        assertEquals(new Position(7, 6), mercenary.getPosition());
     }
 }

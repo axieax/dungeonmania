@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.buildables;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.DefenceEquipment;
 import dungeonmania.model.entities.movings.player.Inventory;
 
@@ -16,11 +17,12 @@ public class Shield extends DefenceEquipment implements Buildable {
     }
 
     @Override
-    public boolean isBuildable(Inventory inventory) {
+    public boolean isBuildable(Game game, Inventory inventory) {
         return (
             inventory.hasItemQuantity("wood", WOOD_NEEDED) &&
             (
                 inventory.hasItemQuantity("treasure", TREASURE_NEEDED) ||
+                inventory.hasItemQuantity("sun_stone", TREASURE_NEEDED) ||
                 inventory.hasItemQuantity("key", KEY_NEEDED)
             )
         );
@@ -29,7 +31,9 @@ public class Shield extends DefenceEquipment implements Buildable {
     @Override
     public void craft(Inventory inventory) {
         inventory.removeItemQuantity("wood", WOOD_NEEDED);
-        if (inventory.hasItemQuantity("treasure", TREASURE_NEEDED)) {
+        if (inventory.hasItemQuantity("sun_stone", TREASURE_NEEDED)) {
+            inventory.removeItemQuantity("sun_stone", TREASURE_NEEDED);
+        } else if (inventory.hasItemQuantity("treasure", TREASURE_NEEDED)) {
             inventory.removeItemQuantity("treasure", TREASURE_NEEDED);
         } else {
             inventory.removeItemQuantity("key", KEY_NEEDED);

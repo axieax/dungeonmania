@@ -4,7 +4,7 @@ import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
-import dungeonmania.model.entities.movings.movement.AttackMovementState;
+import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.movement.PositionGraph;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
@@ -12,7 +12,6 @@ import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.util.Position;
 
 public abstract class BribableEnemy extends Enemy {
-    public static final int TREASURE_REQUIRED_TO_BRIBE = 1;
     public static final int BATTLE_RADIUS = 5;
     public static final int MAX_DISTANCE_TO_BRIBE = 2;
     public static final double ARMOUR_DROP_RATE = 0.25;
@@ -78,7 +77,7 @@ public abstract class BribableEnemy extends Enemy {
         if (character.getState() instanceof PlayerInvincibleState && !this.isBribed()) {
             this.setMovementState(new RunMovementState(this));
         } else {
-            this.setMovementState(new AttackMovementState(this));
+            this.setMovementState(new FollowPlayerMovementState(this));
         }
     }
 
@@ -88,7 +87,7 @@ public abstract class BribableEnemy extends Enemy {
      */
     @Override
     public void interact(Game game, Entity character) {
-        if (!mindControl(game, (Player) character))
+        if (character instanceof Player && !mindControl(game, (Player) character))
             bribe(game, (Player) character);
     }
 
@@ -100,7 +99,7 @@ public abstract class BribableEnemy extends Enemy {
      */
     public int getDistanceToPlayer(Game game, Position playerPos) {
         PositionGraph positionGraph = new PositionGraph(game, this);
-        return positionGraph.BFS(this.getPosition(), playerPos);
+        return positionGraph.bfs(this.getPosition(), playerPos);
     }
 
     /**

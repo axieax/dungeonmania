@@ -2,10 +2,12 @@ package dungeonmania.model.entities.movings;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.Treasure;
-import dungeonmania.model.entities.movings.movement.AttackMovementState;
+import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 
 public class Mercenary extends BribableEnemy {
@@ -16,7 +18,7 @@ public class Mercenary extends BribableEnemy {
 
     public Mercenary(Position position, int damageMultiplier, SubjectPlayer player) {
         super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, damageMultiplier);
-        this.setMovementState(new AttackMovementState(this));
+        this.setMovementState(new FollowPlayerMovementState(this));
         player.attach(this);
     }
 
@@ -30,12 +32,24 @@ public class Mercenary extends BribableEnemy {
         if (getDistanceToPlayer(game, player.getPosition()) > MAX_DISTANCE_TO_BRIBE)
             throw new InvalidActionException("You are too far away to bribe this mercenary");
 
-        Item item = player.findInventoryItem("treasure");
+        Item sunstone = player.findInventoryItem("sun_stone");
+        Item treasure = player.findInventoryItem("treasure");
         
-        if (item == null)
-            throw new InvalidActionException("You don't have enough treasure to bribe this mercenary");
+        if (sunstone == null && treasure == null)
+            throw new InvalidActionException("You need treasure to bribe this mercenary");
         
         player.addAlly(this);
-        ((Treasure) item).consume(game, player);
+
+        // Remove the treasure from the player's inventory
+        if (sunstone == null) ((Treasure) treasure).consume(game, player);
+    }
+
+    /**
+     * Mercenary is allowed to pass through portals
+     */
+    @Override
+    public boolean collision(Entity entity) {
+        if (entity instanceof Portal) return false;
+        return !entity.isPassable();
     }
 }

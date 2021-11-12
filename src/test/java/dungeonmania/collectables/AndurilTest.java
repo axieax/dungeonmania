@@ -1,5 +1,6 @@
 package dungeonmania.collectables;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class AndurilTest {
         Anduril anduril = new Anduril(new Position(1, 1));
         game.addEntity(anduril);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));
@@ -52,16 +53,15 @@ public class AndurilTest {
         Anduril anduril = new Anduril(new Position(1, 1));
         game.addEntity(anduril);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
-        player.move(game, Direction.RIGHT);
 
         // check initial durability
         int initialDurability = anduril.getDurability();
         assertTrue(anduril.getDurability() == initialDurability);
 
         ZombieToastSpawner spawner = new ZombieToastSpawner(
-            new Position(3, 1),
+            new Position(2, 1),
             mode.damageMultiplier()
         );
         game.addEntity(spawner);
@@ -70,8 +70,10 @@ public class AndurilTest {
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the anduril
         // Durability of anudril decreases by 1 each time it battles (within one tick)
-        game.interact(spawner.getId());
-        Entity item = player.findInventoryItem(anduril.getId());
+        assertDoesNotThrow(() -> {
+            game.interact(spawner.getId());
+        });
+        Entity item = player.getInventoryItem(anduril.getId());
         assertTrue(item == null || ((Anduril) item).getDurability() != initialDurability);
     }
 }

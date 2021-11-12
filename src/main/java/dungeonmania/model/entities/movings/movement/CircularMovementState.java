@@ -1,9 +1,7 @@
 package dungeonmania.model.entities.movings.movement;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -11,16 +9,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class CircularMovementState implements MovementState {
+public class CircularMovementState extends MovementState {
 
-    private MovingEntity enemy;
     private boolean initialMovement;
     private List<Direction> circularMovementPath;
     private boolean reverseMovement;
     private int indexOfNextMove;
 
-    public CircularMovementState(MovingEntity enemy) {
-        this.enemy = enemy;
+    public CircularMovementState(Enemy enemy) {
+        super(enemy);
         this.initialMovement = true;
         // Default "circling" movement
         this.circularMovementPath =
@@ -40,81 +37,41 @@ public class CircularMovementState implements MovementState {
     }
 
     /**
-     *
+     * Finds the next tile, ensuring that the entity maintains a "circular path" 
+     * and reverses direction if necessary.
+     * 
      * @param game dungeon the entity is contained in
-     */
-    private void initialCircularMove(Game game) {
-        // initially always move up if possible, else stay in spot
-        Direction nextMoveInPath = Direction.UP;
-        Position newPos = enemy.getPosition().translateBy(Direction.UP);
-        List<Entity> entitiesAtNewPos = game.getEntities(newPos);
-        boolean canMove = entitiesAtNewPos.stream().allMatch(e -> !enemy.collision(e));
-        if (canMove) {
-            enemy.setDirection(nextMoveInPath);
-            
-            // Interact with all entities in that direction
-            List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(nextMoveInPath));
-            entities.forEach(
-                entity -> {
-                    // Cannot interact with moving entities when moving
-                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
-                }
-            );
-            enemy.setPosition(enemy.getPosition().translateBy(nextMoveInPath));
-            this.initialMovement = false;
-        }
-    }
-
-    /**
-     * Enemy runs away from player
+     * @return Position to move next
      */
     @Override
-    public void move(Game game) {
-        if (initialMovement) initialCircularMove(game);
-        else moveCircular(game);
-
-        Player player = (Player) game.getCharacter();
-        if (player.getPosition().equals(enemy.getPosition())){
-            player.battle(game, enemy);
-        }
-    }
-
-    /**
-     * Given the current position of the entity, moves onto the next tile,
-     * ensuring that the entity maintains a "circular path" and reverses direction
-     * if necessary.
-     * @param game dungeon the entity is contained in
-     */
-    private void moveCircular(Game game) {
-        Direction nextMoveInPath = circularMovementPath.get(indexOfNextMove);
-
-        Position newPos = enemy.getPosition().translateBy(nextMoveInPath);
-        List<Entity> entitiesAtNewPos = game.getEntities(newPos);
-        boolean canMove = entitiesAtNewPos.stream().allMatch(e -> !enemy.collision(e));
-        if (canMove) {
-            enemy.setDirection(nextMoveInPath);
-
-            // Interact with all entities in that direction
-            List<Entity> entities = game.getEntities(enemy.getPosition().translateBy(nextMoveInPath));
-            entities.forEach(
-                entity -> {
-                    // Cannot interact with moving entities when moving
-                    if (!(entity instanceof MovingEntity)) entity.interact(game, enemy);
-                }
-            );
-            enemy.setPosition(enemy.getPosition().translateBy(nextMoveInPath));
-        } else { // reverse direction
-            this.reverseMovement = !this.reverseMovement;
-            indexOfNextMove =  Math.abs(circularMovementPath.size() - (indexOfNextMove + 4)) % 8;
-            Collections.reverse(this.circularMovementPath);
-            enemy.setDirection(Direction.NONE);
-            return; // no movement occurs if blocked
-        }
-
-        if (indexOfNextMove >= circularMovementPath.size() - 1) { // end of movement path
-            indexOfNextMove = 0;
+    public Position findNextPosition(Game game) {
+        // initially always move up if possible, else stay in spot
+        if (initialMovement) {
+            Position newPos = this.getEnemy().getPosition().translateBy(Direction.UP);
+            boolean canMove = game.getEntities(newPos).stream().allMatch(e -> !this.getEnemy().collision(e));
+            if (canMove) {
+                this.initialMovement = false;
+                return this.getEnemy().getPosition().translateBy(Direction.UP);
+            }
+            return this.getEnemy().getPosition();
         } else {
-            indexOfNextMove += 1;
+            Direction nextMoveInPath = circularMovementPath.get(indexOfNextMove);
+            Position newPos = this.getEnemy().getPosition().translateBy(nextMoveInPath);
+            boolean canMove = game.getEntities(newPos).stream().allMatch(e -> !this.getEnemy().collision(e));
+            if (!canMove) {
+                this.reverseMovement = !this.reverseMovement;
+                indexOfNextMove =  Math.abs(circularMovementPath.size() - (indexOfNextMove + 4)) % 8;
+                Collections.reverse(this.circularMovementPath);
+                return this.getEnemy().getPosition();
+            }
+
+            if (indexOfNextMove >= circularMovementPath.size() - 1) { // end of movement path
+                indexOfNextMove = 0;
+            } else {
+                indexOfNextMove += 1;
+            }
+            return newPos;
         }
     }
+
 }

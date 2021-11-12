@@ -15,6 +15,7 @@ import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -44,7 +45,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         // Mercenaries only spawn in dungeons with at least one enemy
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
@@ -59,7 +60,7 @@ public class MercenaryTest {
         // Distance between the mercenary and player should decrease per tick/movement
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
@@ -67,8 +68,11 @@ public class MercenaryTest {
 
         game.tick(null, Direction.RIGHT);
 
-        // Mercenary should move upwards or stay in the same horizontal line
-        assertTrue(mercenary.getY() <= 3);
+        // Mercenary should move to the left or upwards
+        assertTrue(
+            (mercenary.getX() == 2 && mercenary.getY() == 3) || 
+            (mercenary.getX() == 3 && mercenary.getY() == 2)
+        );
     }
 
     @Test
@@ -76,7 +80,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 10), mode.damageMultiplier(), player);
@@ -98,7 +102,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
@@ -117,10 +121,10 @@ public class MercenaryTest {
         // outside/go through the gap
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
-        // Create horizontal wall with 1 gap near the right game border between the player and mercenary
+        // create horizontal wall with 1 gap near the right game border between the player and mercenary
         for (int i = 0; i < 4; i++) {
             game.addEntity(new Wall(new Position(i + 1, 2)));
         }
@@ -136,6 +140,34 @@ public class MercenaryTest {
         game.tick(null, Direction.NONE);
         // Same position as player but mercenary should be killed
         assertTrue(mercenary.getX() == 1);
+        assertTrue(game.getEntity(mercenary.getId()) == null);
+    }
+
+    @Test
+    public void testMercenarySimplePortal() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(0, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        // Add two portals in the same horizontal position
+        Portal portal1 = new Portal(new Position(2, 1), "BLUE");
+        Portal portal2 = new Portal(new Position(5, 1), "BLUE");
+
+        game.addEntity(portal1);
+        game.addEntity(portal2);
+
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getX() == 6);
+        assertTrue(mercenary.getX() == 1);
+
+        game.tick(null, Direction.RIGHT);
+        assertTrue(player.getX() == 7);
+        assertTrue(mercenary.getX() == 6);
     }
 
     @Test
@@ -162,7 +194,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
@@ -179,7 +211,7 @@ public class MercenaryTest {
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
 
-        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -207,7 +239,7 @@ public class MercenaryTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
         game.addEntity(new Treasure(new Position(1, 2)));
@@ -227,7 +259,7 @@ public class MercenaryTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(), player);
@@ -248,7 +280,7 @@ public class MercenaryTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(5, 5);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(1, 1), mode.damageMultiplier(), player);
@@ -279,7 +311,7 @@ public class MercenaryTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
         Position mercenaryPos = new Position(2, 1);
@@ -292,7 +324,7 @@ public class MercenaryTest {
 
         // Mercenary should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
-        assertTrue(game.getEntities(mercenaryPos).size() == 0); // mercenary should die
+        assertTrue(game.getEntity(mercenary.getId()) == null);
     }
     
     @Test
@@ -300,7 +332,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
@@ -317,7 +349,7 @@ public class MercenaryTest {
         player.move(game, Direction.DOWN);
         Position updatedPlayerPos = new Position(1, 4);
 
-        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -335,11 +367,12 @@ public class MercenaryTest {
 
             game.tick(null, movementDirection);
 
-            List<Entity> adjacentEntites = game.getAdjacentEntities(player.getPosition());
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
-            assertTrue(adjacentEntites.contains(mercenary) || numEntitesAtPlayerPos == 2);
+            // Note that we have the number of entities at the player position is >= 2 since spiders may spawn
+            assertTrue(adjacentEntites.contains(mercenary) || numEntitesAtPlayerPos >= 2);
         }
     }
 
@@ -348,7 +381,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
@@ -377,12 +410,11 @@ public class MercenaryTest {
             distance = mercenary.getDistanceToPlayer(game, updatedPlayerPos);
         }
 
-        Position mercenaryPos = mercenary.getPosition();
         // After 10 ticks, the mercenary will no longer be mind controlled
         // It will battle with the player and will consequently die
         game.tick(null, Direction.NONE);
 
-        assertTrue(game.getEntities(mercenaryPos).size() == 0);
+        assertTrue(game.getEntity(mercenary.getId()) == null);
     }
 
     private List<Entity> sevenBySevenWallBoundary() {

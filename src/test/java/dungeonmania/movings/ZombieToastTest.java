@@ -37,7 +37,7 @@ public class ZombieToastTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(5, 5), mode.tickRate());
@@ -59,7 +59,7 @@ public class ZombieToastTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position zombiePos = new Position(5, 5);
@@ -79,7 +79,7 @@ public class ZombieToastTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(5, 5), mode.tickRate());
@@ -107,7 +107,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position zombiePos = new Position(5, 5);
@@ -132,7 +132,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position zombiePos = new Position(5, 5);
@@ -166,7 +166,7 @@ public class ZombieToastTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(4, 2));
+        Player player = new Player(new Position(4, 2), mode.initialHealth());
         game.addEntity(player);
         game.addEntity(new Key(new Position(4, 3), 1));
         Door door = new Door(new Position(4, 4), 1);
@@ -208,7 +208,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
@@ -230,7 +230,7 @@ public class ZombieToastTest {
         game.tick(null, Direction.NONE);
         
         // the only option for the zombie is to move to the portal which cant pass through
-        assertTrue(zombie.getPosition().equals(portalPos)); // portal has no effect
+        assertTrue(zombie.getPosition().equals(zombiePos)); // portal has no effect
     }
 
     @Test
@@ -238,7 +238,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         
         Position zombiePos = new Position(5, 5);
@@ -269,7 +269,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         
         InvincibilityPotion invinc = new InvincibilityPotion(new Position(1, 2));
@@ -302,7 +302,7 @@ public class ZombieToastTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
     
         // spawn zombie next to player

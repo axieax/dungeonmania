@@ -212,11 +212,12 @@ public class GoalTest {
      */
     @Test
     public final void testSimpleExit() {
+        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.initialHealth()),
             new Exit(new Position(0, 2))
         );
-        Game game = new Game("test", entities, new ExitCondition(), new Standard());
+        Game game = new Game("test", entities, new ExitCondition(), mode);
         assertEquals(":exit(1)", game.tick(null, Direction.DOWN).getGoals());
         assertEquals("", game.tick(null, Direction.DOWN).getGoals());
     }
@@ -226,8 +227,9 @@ public class GoalTest {
      */
     @Test
     public final void testSimpleBoulders() {
+        Mode mode = new Standard();
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.initialHealth()),
             // Setup boulder to be pushed onto switch
             new Boulder(new Position(0, 2)),
             new FloorSwitch(new Position(0, 3)),
@@ -235,7 +237,7 @@ public class GoalTest {
             new Boulder(new Position(1, 0)),
             new FloorSwitch(new Position(1, 0))
         );
-        Game game = new Game("test", entities, new ToggleSwitch(), new Standard());
+        Game game = new Game("test", entities, new ToggleSwitch(), mode);
         assertEquals(":switch(1)", game.tick(null, Direction.DOWN).getGoals());
         assertEquals("", game.tick(null, Direction.DOWN).getGoals());
     }
@@ -247,7 +249,7 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesMercenaryKilled() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         List<Entity> entities = Arrays.asList(
             player,
             new Mercenary(new Position(0, 3), mode.damageMultiplier(), player)
@@ -263,7 +265,7 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesMercenaryBribed() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         Entity mercenary = new Mercenary(new Position(0, 4), mode.damageMultiplier(), player);
         List<Entity> entities = Arrays.asList(player, new Treasure(new Position(0, 1)), mercenary);
         Game game = new Game("test", entities, new DestroyEnemies(), mode);
@@ -279,7 +281,7 @@ public class GoalTest {
     @Test
     public final void testSimpleEnemiesZombie() {
         Mode mode = new Standard();
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         ZombieToast zombie = new ZombieToast(new Position(0, -1), mode.damageMultiplier(), player);
         List<Entity> entities = new ArrayList<>();
         entities.add(player);
@@ -299,7 +301,7 @@ public class GoalTest {
         Mode mode = new Standard();
         Entity spawner = new ZombieToastSpawner(new Position(0, 2), mode.tickRate());
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.initialHealth()),
             new Sword(new Position(0, 1)),
             spawner
         );
@@ -317,7 +319,7 @@ public class GoalTest {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.initialHealth()),
             // Boulder can be pushed onto the switch
             new Boulder(new Position(0, 4)),
             new FloorSwitch(new Position(0, 5)),
@@ -354,7 +356,7 @@ public class GoalTest {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.initialHealth()),
             new Treasure(new Position(-1, 1)),
             new Exit(new Position(1, 1))
         );
@@ -387,7 +389,7 @@ public class GoalTest {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.initialHealth()),
             new Treasure(new Position(-1, 1)), // Go left to get Treasure
             new Exit(new Position(1, 1))
         );
@@ -418,7 +420,7 @@ public class GoalTest {
         Mode mode = new Standard();
         // Setup entities
         List<Entity> entities = Arrays.asList(
-            new Player(new Position(0, 0)),
+            new Player(new Position(0, 0), mode.initialHealth()),
             new Treasure(new Position(-1, 1)),
             new Exit(new Position(1, 1)) //Go right to reach exit
         );

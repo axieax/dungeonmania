@@ -76,7 +76,7 @@ public class HydraTest {
         
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         int numEntities = game.getEntities().size();
         
@@ -108,7 +108,7 @@ public class HydraTest {
         for(Mode m: modes) {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), m);
             
-            Player player = new Player(new Position(1, 1));
+            Player player = new Player(new Position(1, 1), m.initialHealth());
             game.addEntity(player);
             int numEntities = game.getEntities().size();
             
@@ -140,7 +140,7 @@ public class HydraTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position hydraPos = new Position(5, 5);
@@ -161,7 +161,7 @@ public class HydraTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position hydraPos = new Position(5, 5);
@@ -187,7 +187,7 @@ public class HydraTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position hydraPos = new Position(5, 5);
@@ -219,7 +219,7 @@ public class HydraTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(4, 2));
+        Player player = new Player(new Position(4, 2), mode.initialHealth());
         game.addEntity(player);
         game.addEntity(new Key(new Position(4, 3), 1));
 
@@ -254,12 +254,11 @@ public class HydraTest {
         Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         
         Position hydraPos = new Position(5, 5);
         Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
-
         assertTrue(game.getEntities(hydraPos).size() == 0);
         game.addEntity(hydra);
         assertTrue(game.getEntities(hydraPos).size() > 0);
@@ -267,14 +266,16 @@ public class HydraTest {
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
+        game.addEntity(new Wall(new Position(5, 3)));
 
         Position portalPos = new Position(5, 4);
         Portal portal = new Portal(portalPos, "blue");
         game.addEntity(portal);
+        
         game.tick(null, Direction.NONE);
         
         // the only option for the hydra is to move to the portal which it cannot pass through
-        assertTrue(hydra.getPosition().equals(portalPos)); // portal has no effect
+        assertTrue(hydra.getPosition().equals(hydraPos)); // portal has no effect
     }
 
     @Test
@@ -282,7 +283,7 @@ public class HydraTest {
         Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         
         Position hydraPos = new Position(5, 5);
@@ -306,6 +307,9 @@ public class HydraTest {
         assertTrue(hydra.getPosition().equals(hydraPos));
     }
 
+    /**
+     * TODO: Currently failing as no battle occurs when hydra moves onto player tile
+     */
     @Test
     public void testHydraHealthInBattle() {
         // Test the head regrowing ability of of a hydra during battle by
@@ -322,7 +326,7 @@ public class HydraTest {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
             Position playerPos = new Position(1, 1);
-            Player player = new Player(playerPos);
+            Player player = new Player(playerPos, mode.initialHealth());
             game.addEntity(player);
             
             Position hydraPos = new Position(1, 2);
@@ -339,7 +343,7 @@ public class HydraTest {
             // health
             game.tick(null, Direction.NONE);
             assertTrue(game.getEntities(hydraPos).size() == 0);
-            assertTrue(game.getEntities(playerPos).size() == 1);
+            assertTrue(game.getEntities(playerPos).size() == 1); // either hydra or player wins in battle
             playerHealthAfterBattle.add(player.getHealth());
         }
 
@@ -347,6 +351,9 @@ public class HydraTest {
         assertTrue(playerHealthAfterBattle.size() > 1);
     }
 
+    /**
+     * TODO: Currently failing as no battle occurs when hydra moves onto player tile
+     */
     @Test
     public void testAndurilBattle() {
         // since the player has an anduril in their inventory,
@@ -359,7 +366,7 @@ public class HydraTest {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
             Position playerPos = new Position(1, 1);
-            Player player = new Player(playerPos);
+            Player player = new Player(playerPos, mode.initialHealth());
             game.addEntity(player);
             
             Position andurilPos = new Position(1, 2);

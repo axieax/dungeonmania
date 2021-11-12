@@ -1,6 +1,7 @@
 package dungeonmania.model.entities.movings.player;
 
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.exceptions.PlayerDeadException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.DefenceEquipment;
@@ -17,7 +18,6 @@ import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
-import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -30,7 +30,7 @@ import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
 
-    public static final int MAX_CHARACTER_HEALTH = 100;
+    public static int MAX_CHARACTER_HEALTH = 100;
     public static final int CHARACTER_ATTACK_DMG = 10;
 
     private PlayerState state;
@@ -40,11 +40,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private List<BribableEnemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
-    public Player(Position position) {
-        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
+    public Player(Position position, int health) {
+        super("player", position, health, CHARACTER_ATTACK_DMG);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
         this.currentBattleOpponent = null;
+        MAX_CHARACTER_HEALTH = health;
     }
 
     /********************************
@@ -67,7 +68,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return boolean true if the player is currently in battle
      */
     public boolean getInBattle() {
         return inBattle;
@@ -87,7 +88,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public MovingEntity getCurrentBattleOpponent() {
         return currentBattleOpponent;
     }
-    
+
     /**
      * Sets the current opponent that the player is fighting against.
      * @return
@@ -202,7 +203,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Get a list of all defensable eqipments from the inventory.
+     * Get a list of all defendable eqipments from the inventory.
      *
      * @return List<DefenceEquipment>
      */
@@ -215,7 +216,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return booleant true if the player has a key
      */
     public boolean hasKey() {
         return this.getKey() != null;
@@ -229,20 +230,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return boolean true if the player has a weapon
      */
     public boolean hasWeapon() {
         return !this.getAttackEquipmentList().isEmpty();
     }
 
     /**
-     * @return Equipment
+     * @return first weapon in the player inventory
      */
     public Equipment getWeapon() {
-        Item weapon = inventory.findItem("sword");
-        if (weapon == null) weapon = inventory.findItem("bow");
-        if (weapon == null) weapon = inventory.findItem("sceptre");
-        return weapon instanceof AttackEquipment ? (Equipment) weapon : null;
+        return (AttackEquipment) inventory.findWeapon();
     }
 
     @Override
@@ -262,7 +260,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param prefix
      * @param quantity
-     * @return
+     * @return boolean true if there's the specified quantity in the player inventory
      */
     public boolean hasItemQuantity(String prefix, int quantity) {
         return inventory.hasItemQuantity(prefix, quantity);
@@ -282,13 +280,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *  Action Methods              *
      ********************************/
 
+    public void interact(Game game, Entity character) {
+        if (character instanceof Enemy) this.battle(game, (Enemy) character);
+    }
+
     /**
      * Conduct any required tasks for a player after it has moved into its new position
      *
      * @param game
      */
     @Override
-    public void tick(Game game) {
+    public void tick(Game game) throws PlayerDeadException {
         List<Entity> entities = game.getEntities(this.getPosition());
         for (Entity e : entities) {
             if (e instanceof Enemy) {
@@ -301,7 +303,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
                         continue;
                     }
                 }
-
                 this.battle(game, opponent);
             }
         }
@@ -315,7 +316,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param game
      * @param direction
      */
-    public void move(Game game, Direction direction) {
+    public void move(Game game, Direction direction) throws PlayerDeadException {
         this.move(game, direction, "");
     }
 
@@ -358,8 +359,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(entity -> {
-            // Cannot interact with moving entities or zombie toast spawners when moving
-            if (!(entity instanceof MovingEntity || entity instanceof ZombieToastSpawner))
+            // Cannot interact with moving entities when moving
+            if (!(entity instanceof MovingEntity))
                 entity.interact(game, this);
         });
 
@@ -384,18 +385,11 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param opponent entity the character is fighting
      */
-    public void battle(Game game, MovingEntity opponent) {
-        // Notify the observers that the player is in battle
-        this.setInBattle(true);
-        this.setCurrentBattleOpponent(opponent);
-        this.notifyObservers();
-
+    public void battle(Game game, Enemy opponent) throws PlayerDeadException {
         state.battle(game, opponent);
-
-        this.setInBattle(false);
-        this.setCurrentBattleOpponent(null);
+        if (!this.isAlive()) throw new PlayerDeadException("Player has died... Ending game...");
     }
-
+    
     /**
      * Given an item, places it in the player's inventory
      *
@@ -406,28 +400,26 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Given a buildableItem, builds it if it is buildable
+     * Given an item, builds it if it is buildable
      *
      * @param equipment
+     * @throws InvalidActionException if the player doesn't have enough resources or fails zombie check
      */
-    public void craft(Buildable equipment) throws InvalidActionException {
-        if (equipment.isBuildable(inventory)) {
+    public void craft(Game game, Buildable equipment) throws InvalidActionException {
+        if (equipment.isBuildable(game, inventory))
             equipment.craft(inventory);
-        } else {
-            throw new InvalidActionException(
-                "You don't have enough resources to build this equipment"
-            );
-        }
+        else
+            throw new InvalidActionException("You do not meet the requirements to build this equipment");
     }
 
     /**
      * Check if the equipment is buildable
      *
      * @param equipment
-     * @return boolean
+     * @return boolean true if the equipment is buildable
      */
-    public boolean checkBuildable(Buildable item) {
-        return item.isBuildable(this.inventory);
+    public boolean checkBuildable(Game game, Buildable item) {
+        return item.isBuildable(game, this.inventory);
     }
 
     /********************************
@@ -438,15 +430,20 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * Returns the total attack damage a player is able to inflict upon an opponent.
      * This includes any attack damage provided by equipment e.g. sword
      *
-     * @return int a positive integer indicating the amount of attack
+     * @return int indicating the amount of attack
      */
     public int getTotalAttackDamage(MovingEntity opponent) {
         // Normal damage inflicted by player
         int damageToOpponent = this.getBaseAttackDamage();
 
-        // Any extra attack damage provided by equipment
+        // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
             damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
+        }
+
+        // Any extra attack damage provided by defence equipment
+        for (DefenceEquipment e : getDefenceEquipmentList()) {
+            damageToOpponent += e.getBonusAttackDamage();
         }
 
         // Any extra attack damage provided by allies
@@ -491,11 +488,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
         info.put(state.getClass().getSimpleName(), state.ticksLeft());
         info.put("inventory", inventory.toJSON());
         return info;
-    }
-
-    @Override
-    public void detach(Observer observer) {
-        observers.remove(observer);
     }
 
     /**

@@ -41,7 +41,7 @@ public class AssassinTest {
         Mode mode = new Standard();
         // Assassins only spawn in dungeons with at least one enemy
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
@@ -56,7 +56,7 @@ public class AssassinTest {
         // Distance between the assassin and player should decrease per tick/movement
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Assassin assassin = new Assassin(new Position(3, 3), mode.damageMultiplier(), player);
@@ -64,8 +64,11 @@ public class AssassinTest {
 
         game.tick(null, Direction.RIGHT);
 
-        // Assassin should move upwards or stay in the same horizontal line
-        assertTrue(assassin.getY() <= 3);
+        // Assassin should move to the left or upwards
+        assertTrue(
+            (assassin.getX() == 2 && assassin.getY() == 3) || 
+            (assassin.getX() == 3 && assassin.getY() == 2)
+        );
     }
 
     @Test
@@ -73,7 +76,7 @@ public class AssassinTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Assassin assassin = new Assassin(new Position(1, 10), mode.damageMultiplier(), player);
@@ -95,7 +98,7 @@ public class AssassinTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Assassin assassin = new Assassin(new Position(1, 2), mode.damageMultiplier(), player);
@@ -115,7 +118,7 @@ public class AssassinTest {
         // outside/go through the gap
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         // Create horizontal wall with 1 gap near the right game border between the player and assassin
@@ -142,7 +145,7 @@ public class AssassinTest {
         // Character attemps to bribe assassin without TheOneRing should throw an exception
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         game.addEntity(new Treasure(new Position(1, 2)));
@@ -163,7 +166,7 @@ public class AssassinTest {
         // Character attemps to bribe assassin without treasure should throw an exception
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         game.addEntity(new TheOneRing(new Position(1, 2)));
@@ -187,7 +190,7 @@ public class AssassinTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
         game.addEntity(new Treasure(new Position(1, 2)));
@@ -209,7 +212,7 @@ public class AssassinTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Assassin assassin = new Assassin(new Position(5, 1), mode.damageMultiplier(), player);
@@ -231,7 +234,7 @@ public class AssassinTest {
 
         Position updatedPlayerPos = new Position(2, 4);
 
-        while(!game.getAdjacentEntities(player.getPosition()).contains(assassin)) {
+        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -256,7 +259,7 @@ public class AssassinTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
         Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(),player);
@@ -277,7 +280,7 @@ public class AssassinTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(5, 5);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
         Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(),player);
@@ -308,7 +311,7 @@ public class AssassinTest {
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
         
         Position assassinPos = new Position(2, 1);
@@ -321,7 +324,7 @@ public class AssassinTest {
 
         // Assassin should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
-        assertTrue(game.getEntities(assassinPos).size() == 0); // assassin should die
+        assertTrue(game.getEntity(assassin.getId()) == null);
     }
 
     @Test
@@ -329,7 +332,7 @@ public class AssassinTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Assassin assassin = new Assassin(new Position(5, 1), mode.damageMultiplier(), player);
@@ -358,12 +361,11 @@ public class AssassinTest {
             distance = assassin.getDistanceToPlayer(game, updatedPlayerPos);
         }
 
-        Position assassinPos = assassin.getPosition();
         // After 10 ticks, the assassin will no longer be mind controlled
         // It will battle with the player and will consequently die
         game.tick(null, Direction.NONE);
 
-        assertTrue(game.getEntities(assassinPos).size() == 0);
+        assertTrue(game.getEntity(assassin.getId()) == null);
     }
 
     private List<Entity> sevenBySevenWallBoundary() {

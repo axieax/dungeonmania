@@ -22,6 +22,7 @@ import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 
 public class SceptreTest {
+    
     /**
      * Test whether the buildable entity can be built by the Player.
      */
@@ -40,7 +41,7 @@ public class SceptreTest {
         game.addEntity(sunstone);
 
         // Player picks up all the items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -80,7 +81,7 @@ public class SceptreTest {
         game.addEntity(sunstone);
 
         // Player picks up all the items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -119,7 +120,7 @@ public class SceptreTest {
         game.addEntity(sunstone);
 
         // Player picks up all the items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -159,7 +160,7 @@ public class SceptreTest {
         game.addEntity(sunstone);
 
         // Player picks up all the items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -196,7 +197,7 @@ public class SceptreTest {
         game.addEntity(key);
         game.addEntity(sunstone);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -236,7 +237,7 @@ public class SceptreTest {
         game.addEntity(key);
         game.addEntity(sunstone);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -254,9 +255,9 @@ public class SceptreTest {
         // Player moves to attack the mercenary with the sceptre
         player.move(game, Direction.DOWN);
 
-        // Either the player or the mercenary should be dead
+        // Mercenary should die upon battle
         // Durability of sceptre decreases by 1 each time it battles (within one tick)
-        assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
+        assertTrue(game.getEntity(mercenary.getId()) == null);
         assertTrue(sceptre == null || sceptre.getDurability() != initialDurability);
     }
 }

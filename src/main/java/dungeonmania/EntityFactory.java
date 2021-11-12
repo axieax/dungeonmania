@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.buildables.Bow;
 import dungeonmania.model.entities.buildables.Buildable;
+import dungeonmania.model.entities.buildables.MidnightArmour;
 import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
@@ -161,7 +162,7 @@ public class EntityFactory {
             // Moving Entities
         } else if (type.startsWith("spider")) {
             position = position.asLayer(18);
-            return new Spider(position, mode.damageMultiplier());
+            return new Spider(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("zombie_toast")) {
             position = position.asLayer(19);
             return new ZombieToast(position, mode.damageMultiplier(), player);
@@ -170,7 +171,7 @@ public class EntityFactory {
             return new Mercenary(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("player")) {
             position = position.asLayer(21);
-            return new Player(position);
+            return new Player(position, mode.initialHealth());
         }
         return null;
     }
@@ -181,6 +182,7 @@ public class EntityFactory {
         map.put("bow", new Bow());
         map.put("shield", new Shield());
         map.put("sceptre", new Sceptre());
+        map.put("midnight_armour", new MidnightArmour());
         return map;
     }
 

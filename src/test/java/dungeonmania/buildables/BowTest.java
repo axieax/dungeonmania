@@ -19,6 +19,7 @@ import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 
 public class BowTest {
+    
     /**
      * Test whether the buildable entity can be built by the Player.
      */
@@ -39,7 +40,7 @@ public class BowTest {
         game.addEntity(arrow3);
 
         // Player picks up the wood and arrows
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -77,7 +78,7 @@ public class BowTest {
         game.addEntity(arrow2);
         game.addEntity(arrow3);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -120,7 +121,7 @@ public class BowTest {
         game.addEntity(arrow2);
         game.addEntity(arrow3);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -139,9 +140,9 @@ public class BowTest {
         // Player moves to attack the mercenary with the bow
         player.move(game, Direction.RIGHT);
 
-        // Either the player or the mercenary should be dead
+        // Mercenary should die upon battle
         // Durability of bow decreases by 1 each time it battles (within one tick)
-        assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
+        assertTrue(game.getEntity(mercenary.getId()) == null);
         assertTrue(bow == null || bow.getDurability() != initialDurability);
     }
 }

@@ -17,15 +17,10 @@ public class Spider extends Enemy {
     public static final int MAX_SPIDER_ATTACK_DMG = 2;
     public static final int MAX_SPIDERS = 4;
 
-    public Spider(Position position, int damageMultiplier) {
-        // TODO: attack player
-        this(position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, damageMultiplier);
-    }
-
-    public Spider(Position position, int health, int attackDamage, int damageMultiplier) {
-        super("spider", position, health, attackDamage, damageMultiplier);
+    public Spider(Position position, int damageMultiplier, SubjectPlayer player) {
+        super("spider", position, MAX_SPIDER_HEALTH, MAX_SPIDER_ATTACK_DMG, damageMultiplier);
         this.setMovementState(new CircularMovementState(this));
-
+        player.attach(this);
     }
 
     /**
@@ -61,9 +56,6 @@ public class Spider extends Enemy {
     public void update(SubjectPlayer player) {
         return;
     }
-
-    @Override
-    public void interact(Game game, Entity character) {}
 
     /**
      * Determines if a spider can move onto a position that contains the given entities
@@ -108,7 +100,7 @@ public class Spider extends Enemy {
             }
 
             if (canSpawn) {
-                game.addEntity(new Spider(position, damageMultiplier));
+                game.addEntity(new Spider(position, damageMultiplier, game.getCharacter()));
             }
         }
     }
