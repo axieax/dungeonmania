@@ -5,8 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
@@ -233,7 +236,7 @@ public class PortalTest {
      * Test if zombie is bounded and cannot teleport through a portal
      */
     @Test
-    public void testZombieNotAffectedByTeleport() {
+    public void testZombieNoTeleport() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Player player = new Player(new Position(3, 6));
@@ -256,5 +259,43 @@ public class PortalTest {
         game.tick(null, Direction.NONE);
         // zombies are not affected by portals
         assertEquals(new Position(5, 5), zombie.getPosition());
+    }
+
+    /**
+     * Test if mercenary can teleport through portals.
+     * 
+     * Test Case: Player consumes invincibility potion. Mercenary is in runstate.
+     * Mercenary run to portal below.
+     */
+    @Test
+    public void testMercenaryRunToPortal() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Player player = new Player(new Position(3, 2));
+        InvincibilityPotion potion = new InvincibilityPotion(new Position(3, 6));
+        player.addInventoryItem(potion);
+
+
+
+        Portal portalStart = new Portal(new Position(3, 5), "BLUE");
+        Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
+        // spawn mercenary next to portal
+        Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
+
+        game.addEntity(player);
+        game.addEntity(portalStart);
+        game.addEntity(portalEnd);
+        game.addEntity(mercenary);
+
+        game.tick(potion.getId(), Direction.NONE);
+
+        // mercenary run away from player
+        assertEquals(new Position(3, 4), mercenary.getPosition());
+        assertTrue(mercenary.getMovementState() instanceof RunMovementState);
+
+        game.tick(null, Direction.NONE);
+
+        // mercenary move to portal and teleports
+        assertEquals(new Position(7, 6), mercenary.getPosition());
     }
 }

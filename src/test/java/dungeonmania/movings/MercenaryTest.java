@@ -121,7 +121,7 @@ public class MercenaryTest {
         Player player = new Player(new Position(1, 1));
         game.addEntity(player);
 
-        // Create horizontal wall with 1 gap near the right game border between the player and mercenary
+        // create horizontal wall with 1 gap near the right game border between the player and mercenary
         for (int i = 0; i < 4; i++) {
             game.addEntity(new Wall(new Position(i + 1, 2)));
         }
@@ -157,12 +157,10 @@ public class MercenaryTest {
         game.addEntity(portal1);
         game.addEntity(portal2);
 
-        // Player teleports through the portal
         game.tick(null, Direction.RIGHT);
         assertTrue(player.getX() == 6);
         assertTrue(mercenary.getX() == 1);
 
-        // Mercenary teleports through the portal to follow player via the shortest path
         game.tick(null, Direction.RIGHT);
         assertTrue(player.getX() == 7);
         assertTrue(mercenary.getX() == 6);
@@ -407,12 +405,11 @@ public class MercenaryTest {
             distance = mercenary.getDistanceToPlayer(game, updatedPlayerPos);
         }
 
-        Position mercenaryPos = mercenary.getPosition();
         // After 10 ticks, the mercenary will no longer be mind controlled
         // It will battle with the player and will consequently die
         game.tick(null, Direction.NONE);
 
-        assertTrue(game.getEntities(mercenaryPos).size() == 0);
+        assertTrue(game.getEntity(mercenary.getId()) == null);
     }
 
     private List<Entity> sevenBySevenWallBoundary() {

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
@@ -720,24 +721,22 @@ public class CharacterTest {
 
     @Test
     public void testCharacterDies() {
-        Mode mode = new Standard();
+        Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos);
         game.addEntity(player);
 
-        assertDoesNotThrow(() -> {
-            // attack player until it dies
-            while(player != null) {
-                // mercenaries should all attack character and character should die
-                game.tick(null, Direction.NONE);
-    
-                Position mercenaryPos = new Position(1, 2);
-                Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
-                game.addEntity(mercenary);
-            }
-        });
+        // attack player until it dies
+        while(player.getHealth() > 0) {
+            // mercenaries should all attack character and character should die
+            assertDoesNotThrow(() -> game.tick(null, Direction.NONE));
+            Position mercenaryPos = new Position(1, 2);
+            Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
+            game.addEntity(mercenary);
+        }
+        assertTrue(!game.getEntities().contains(player));
     }
     
     @Test

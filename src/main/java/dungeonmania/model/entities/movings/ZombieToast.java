@@ -49,9 +49,6 @@ public class ZombieToast extends Enemy {
     }
 
     @Override
-    public void interact(Game game, Entity character) {}
-
-    @Override
     public void moveTo(Position position) {
         this.setPosition(position);
     }

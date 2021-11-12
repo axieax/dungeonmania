@@ -8,7 +8,7 @@
 ## Consumable Mechanics
 ### Potions
 * Potions are consumed once. However, the effect lasts for a certain amount of in game ticks (depending for the type of potion). In our implementation,
-  - InvincibilityPotion lasts 2 in game ticks
+  - InvincibilityPotion lasts 3 in game ticks (including the tick where the player consumes the potion)
   - InvisibilityPotion lasts for 6 in game ticks
   - HealthPotion are just simply consumed to regain to full health
 * If a player is invisible, they cannot attack another entity. Rather they can just pass through the enemy undetected.
