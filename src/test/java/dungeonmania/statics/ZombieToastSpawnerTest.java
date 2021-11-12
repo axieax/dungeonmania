@@ -171,9 +171,10 @@ public class ZombieToastSpawnerTest {
      * Interact with a zombie spawner without a weapon - should raise exception.
      */
     @Test
-    public void zombieToastDestroySpawnerWithoutWeapon() {
+    public void DestroyZombieToastSpawnerWithoutWeapon() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
         
@@ -183,4 +184,25 @@ public class ZombieToastSpawnerTest {
         assertThrows(InvalidActionException.class, () -> game.interact(spawner.getId()));
     }
 
+    /**
+     * Interact with a zombie spawner without being cardinally adjacent to it - should raise exception.
+     */
+    @Test
+    public void InteractZombieToastSpawnerNotAdjacent() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+
+        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(4, 4), mode.tickRate());
+        game.addEntity(spawner);
+
+        game.addEntity(new Sword(new Position(2, 1)));
+
+        Player player = new Player(new Position(2, 2));
+        game.addEntity(player);
+        
+        // Player picks up sword
+        player.move(game, Direction.UP);
+
+        assertThrows(InvalidActionException.class, () -> game.interact(spawner.getId()));
+    }
 }
