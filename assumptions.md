@@ -18,7 +18,8 @@
 ### SunStone
 * If the player has a `SunStone` and the `Key` to open that door, `SunStone` takes priority to open the door. i.e Any `Key` are not consumed by the player if they have a `SunStone`.
 * `SunStone` takes priority when building an item with `Treasure`.
-* `SunStone` is consumed if it is only used as a material in building an item.
+* `SunStone` is consumed if it is only used as a material in building an item (retained in player inventory if used for bribing).
+* `SunStone` cannot be interchanged with `Treasure` for completing the Goals
 
 ## Buildables Mechanics
 * For `Shield`, `Treasure` takes priority over `Key` if the user have enough materials.
@@ -34,7 +35,7 @@
 * Mercenaries can only move twice if mercenary is aiming to attack the player.
 ## Entity Mechanics
 ### Portal
-* Portals teleports all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A spider will resume moving in a circular motion after it has been teleported.
+* Portals teleport all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A spider will resume moving in a circular motion after it has been teleported.
 * Entities can only use portals if a) there is a free tile in the direction of the entity's movement when passing the portal and b) if the tile is occupied by an entity, it must be a collectable item or an entity that can be passed through. Otherwise, it will stay on the same position for the tick.
 * Assume that there exist a corresponding portal. If there is no corresponding portal to teleport, the entity stays on the same position.
 
