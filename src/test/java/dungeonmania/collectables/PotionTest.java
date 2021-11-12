@@ -147,9 +147,9 @@ public class PotionTest {
 
         game.tick(null, Direction.NONE);
         assertTrue(new Position(7, 0).equals(zombie.getPosition())); 
+        assertTrue(zombie.getMovementState() instanceof RunMovementState); 
 
         game.tick(null, Direction.NONE);
-        assertTrue(new Position(8, 0).equals(zombie.getPosition())); 
         // after 3 ticks, zombie should be in random state
         assertTrue(zombie.getMovementState() instanceof RandomMovementState);        
     }
