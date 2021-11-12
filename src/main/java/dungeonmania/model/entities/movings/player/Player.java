@@ -385,7 +385,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param opponent entity the character is fighting
      */
-    public void battle(Game game, Enemy opponent) {
+    public void battle(Game game, Enemy opponent) throws PlayerDeadException {
         state.battle(game, opponent);
         if (!this.isAlive()) throw new PlayerDeadException("Player has died... Ending game...");
     }
@@ -488,11 +488,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
         info.put(state.getClass().getSimpleName(), state.ticksLeft());
         info.put("inventory", inventory.toJSON());
         return info;
-    }
-
-    @Override
-    public void detach(Observer observer) {
-        observers.remove(observer);
     }
 
     /**

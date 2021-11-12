@@ -234,7 +234,7 @@ public class AssassinTest {
 
         Position updatedPlayerPos = new Position(2, 4);
 
-        while(!game.getAdjacentEntities(player.getPosition()).contains(assassin)) {
+        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
             game.tick(null, Direction.NONE);
         }
 

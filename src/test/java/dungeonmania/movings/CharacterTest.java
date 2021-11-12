@@ -530,7 +530,7 @@ public class CharacterTest {
 
         game.tick(null, Direction.NONE);
 
-        // mercenary should move towards player and the two should fight,
+        // Mercenary should move towards player and the two should fight,
         // with the player winning & its health reduced
 
         assertTrue(player.getHealth() < initialPlayerHealth);
@@ -595,27 +595,31 @@ public class CharacterTest {
             Position potionPos = new Position(2, 2);
             InvincibilityPotion potion = new InvincibilityPotion(potionPos);
             game.addEntity(potion);
+    
+            // Player picks up potion and drinks it
+            game.tick(null, Direction.RIGHT);
+            game.tick(potion.getId(), Direction.NONE);
 
-            game.tick(null, Direction.RIGHT); // player picks up potion
-
-            game.tick(potion.getId(), Direction.NONE); // drink potion
             assertTrue(player.getState() instanceof PlayerInvincibleState);
-
             assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
-            // if the player was near the enemy when the player drank the potion,
-            // in the next move it should not be in the adjacent tile
-            assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
 
-            // enemy should not come near the player - until the effects of the potion have weared away
-            // and so, the player's health should not reduce
-            while (!(player.getState() instanceof PlayerInvincibleState)) {
+            // Since the player was near the enemy when the player drank the potion,
+            // in the next move it should not be in the adjacent tile
+            assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
+            
+            // Enemy should not come near the player (until the effects of the potion have finished),
+            // and so the player's health should not reduce
+            while(!(player.getState() instanceof PlayerInvincibleState)) {
                 game.tick(null, Direction.NONE);
                 assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
-                assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
+                assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
             }
         }
     }
 
+    /**
+     * Player state should not change at all in hard mode after drinking invincibility potion
+     */
     @Test
     public void testInvincibilityPotionHasNoEffectInHardMode() {
         Mode mode = new Hard();
@@ -627,17 +631,19 @@ public class CharacterTest {
 
         game.addEntity(player);
 
+        assertTrue(player.getState() instanceof PlayerDefaultState);
+
         Position potionPos = new Position(2, 2);
         InvincibilityPotion potion = new InvincibilityPotion(potionPos);
         game.addEntity(potion);
 
-        // player state should not change at all in hard mode after drinkign invincibility potion
+        // Player picks up potion
+        game.tick(null, Direction.RIGHT);
         assertTrue(player.getState() instanceof PlayerDefaultState);
-        game.tick(null, Direction.RIGHT); // player picks up potion
+        
+        // Player drinks potion
+        game.tick(potion.getId(), Direction.NONE);
         assertTrue(player.getState() instanceof PlayerDefaultState);
-        game.tick(potion.getId(), Direction.NONE); // drink potion
-        assertTrue(player.getState() instanceof PlayerDefaultState);
-
         assertTrue(player.getHealth() == initialPlayerHealth);
     }
 
@@ -702,9 +708,9 @@ public class CharacterTest {
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
-        // attack player until it dies
+        // Attack player until it dies
         while (player.getHealth() > 0) {
-            // mercenaries should all attack character and character should die
+            // Mercenaries should all attack character and character should die (eventually)
             assertDoesNotThrow(() -> game.tick(null, Direction.NONE));
             Position mercenaryPos = new Position(1, 2);
             Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
@@ -715,9 +721,12 @@ public class CharacterTest {
 
     @Test
     public void testCharacterBattleWithAlly() {
-        // fight an enemy mercenary while a player has an allied mercenary
-        // fight an enemy mercenary without any allies
-        // health remaining in the latter case should be smaller than in the former
+        // Fight an enemy mercenary while a player has an allied mercenary
+        // Fight an enemy mercenary without any allies
+        // Health remaining in the latter case should be smaller than in the former
+        
+        // Note that since the player will take the same amount of damage in both cases,
+        // we will be boosting the health of all mercenaries (so we can actually compare)
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
@@ -727,42 +736,40 @@ public class CharacterTest {
         Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
 
-        game.addEntity(new Treasure(new Position(1, 2)));
+        game.addEntity(new Treasure(new Position(1, 2)));        
+        
+        // Player collects coin and moves down twice
+        game.tick(null, Direction.DOWN);
+        game.tick(null, Direction.DOWN);
+        game.tick(null, Direction.DOWN);
 
         Position updatedPlayerPos = new Position(1, 4);
 
-        // make player collect coin and move down twice
-        game.tick(null, Direction.DOWN);
-        game.tick(null, Direction.DOWN);
-        game.tick(null, Direction.DOWN);
-
-        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
         }
 
-        // mercenary in adjacent tile, so bribe
+        // Mercenary in adjacent tile, so bribe
         game.interact(mercenary.getId());
-        assertTrue(game.getEntities(updatedPlayerPos).size() == 1); // player still at tile
-        assertTrue(player.getAllies().size() > 0);
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
+        assertTrue(player.getAllies().size() == 1);        
 
-        // spawn an enemy mercenary
-        Mercenary enemyMercenary = new Mercenary(
-            new Position(5, 5),
-            mode.damageMultiplier(),
-            player
-        );
+        // Spawn an enemy mercenary
+        Mercenary enemyMercenary = new Mercenary(new Position(5, 5), mode.damageMultiplier(), player);
         game.addEntity(enemyMercenary);
+        mercenary.setHealth(100);
+        enemyMercenary.setHealth(100);
 
-        while (!game.getAdjacentEntities(player.getPosition()).contains(enemyMercenary)) {
+        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(enemyMercenary)) {
             game.tick(null, Direction.NONE);
         }
 
-        // enemy mercenary now adjacent
+        // Enemy mercenary now adjacent
         game.tick(null, Direction.NONE);
         assertFalse(enemyMercenary.isAlive());
         int healthRemainingWithAlly = player.getHealth();
 
-        // give player full health, remove allied mercenary, and fight enemy mercenary
+        // Give player full health, remove allied mercenary, and fight enemy mercenary
         player.removeAlly(mercenary);
         game.removeEntity(mercenary);
         player.setHealth(Player.MAX_CHARACTER_HEALTH);
@@ -773,13 +780,12 @@ public class CharacterTest {
             player
         );
         game.addEntity(newEnemyMercenary);
-        while (
-            !game.getCardinallyAdjacentEntities(player.getPosition()).contains(newEnemyMercenary)
-        ) {
+        enemyMercenary.setHealth(100);
+        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(newEnemyMercenary)) {
             game.tick(null, Direction.NONE);
         }
-
-        // new enemy mercenary now adjacent
+        
+        // New enemy mercenary now adjacent
         game.tick(null, Direction.NONE);
         assertFalse(newEnemyMercenary.isAlive());
 
@@ -803,25 +809,25 @@ public class CharacterTest {
     private List<Entity> sevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
 
-        // left border
+        // Left border
         for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(0, i));
             wallBorder.add(wall);
         }
 
-        // right border
+        // Right border
         for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(6, i));
             wallBorder.add(wall);
         }
 
-        // top border
+        // Top border
         for (int i = 1; i < 6; i++) {
             Wall wall = new Wall(new Position(i, 0));
             wallBorder.add(wall);
         }
 
-        // bottom border
+        // Bottom border
         for (int i = 1; i < 6; i++) {
             Wall wall = new Wall(new Position(i, 6));
             wallBorder.add(wall);
