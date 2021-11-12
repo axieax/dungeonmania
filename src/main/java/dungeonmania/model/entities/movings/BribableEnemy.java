@@ -12,7 +12,6 @@ import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.util.Position;
 
 public abstract class BribableEnemy extends Enemy {
-    public static final int TREASURE_REQUIRED_TO_BRIBE = 1;
     public static final int BATTLE_RADIUS = 5;
     public static final int MAX_DISTANCE_TO_BRIBE = 2;
     public static final double ARMOUR_DROP_RATE = 0.25;
