@@ -124,7 +124,7 @@ public class EntityFactory {
             return new Door(position, key);
         } else if (type.startsWith("time_travelling_portal")) {
             position = position.asLayer(5);
-            return new TimeTravellingPortal(position);
+            // return new TimeTravellingPortal(position);
         } else if (type.startsWith("portal")) {
             String colour = entityInfo.getString("colour");
             position = position.asLayer(6);
@@ -179,13 +179,13 @@ public class EntityFactory {
             return new Mercenary(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("assassin")) { 
             position = position.asLayer(22);
-            return new Assassin(position);
+            return new Assassin(position, Assassin.MAX_ASSASSIN_ATTACK_DMG, player);// is the damage multiplier right?
         }else if (type.startsWith("hydra")) {
             position = position.asLayer(23);
-            return new Hydra(position);
+            return new Hydra(position, 1, player); // is damage multiplier right?
         }else if (type.startsWith("swamp_tile")) {
             position = position.asLayer(24);
-            return new SwampTile(position);
+            return new SwampTile(position,2); // is movementFactor right?
         }else if (type.startsWith("sun_stone")) {
             position = position.asLayer(25);
             return new SunStone(position);
@@ -194,13 +194,13 @@ public class EntityFactory {
             return new Anduril(position);
         } else if (type.startsWith("sceptre")) {
             position = position.asLayer(27);
-            return new Sceptre(position);
+            return new Sceptre();
         } else if (type.startsWith("midnight_armour")) {
             position = position.asLayer(28);
-            return new MidnightArmour(position);
+            return new MidnightArmour();
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);
-            return new TimeTurner(position);
+            //return new TimeTurner(position);
         } else if (type.startsWith("player")) {
             position = position.asLayer(31);
             return new Player(position);

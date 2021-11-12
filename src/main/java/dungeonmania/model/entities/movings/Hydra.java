@@ -30,6 +30,10 @@ public class Hydra extends Enemy implements Boss {
         player.attach(this);
     }
 
+    public void setPreventHeadRespawn(Boolean respawn) {
+        this.preventHeadRespawn = respawn;
+    }
+
     @Override
     public void update(SubjectPlayer player) {
         if (!(player instanceof Player)) {

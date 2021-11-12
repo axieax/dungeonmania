@@ -32,12 +32,4 @@ public abstract class AttackEquipment extends Equipment {
         super.useEquipment(player, enemy);
         return getAttackDamage();
     }
-    
-    @Override
-    public JSONObject toJSON() {
-        JSONObject info = super.toJSON();
-        info.put("attackDamage", attackDamage);
-        info.put("hitRate", hitRate);
-        return info;
-    }
 }

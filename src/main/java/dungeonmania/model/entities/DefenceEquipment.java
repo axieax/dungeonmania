@@ -23,6 +23,10 @@ public abstract class DefenceEquipment extends Equipment {
         return bonusAttackDamage;
     }
 
+    public void setAttackDamage(int bonusAttackDamage) {
+        this.bonusAttackDamage = bonusAttackDamage;
+    }
+
     @Override
     public double useEquipment(Player player, Entity enemy) {
         super.useEquipment(player, enemy);
