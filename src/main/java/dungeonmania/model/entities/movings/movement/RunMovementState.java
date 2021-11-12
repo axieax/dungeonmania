@@ -1,22 +1,22 @@
 package dungeonmania.model.entities.movings.movement;
 
+import dungeonmania.model.Game;
+import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.util.Position;
 import java.util.List;
 import java.util.Map;
 
-import dungeonmania.model.Game;
-import dungeonmania.model.entities.movings.Enemy;
-import dungeonmania.model.entities.movings.player.Player;
-import dungeonmania.util.Position;
-
 public class RunMovementState extends MovementState {
 
-    public RunMovementState(Enemy enemy) {
+    public RunMovementState(MovingEntity enemy) {
         super(enemy);
     }
 
     /**
      * Find the best position to move to get away from the player.
-     * 
+     *
      * @param game
      * @return Position to move to next
      */
@@ -24,14 +24,17 @@ public class RunMovementState extends MovementState {
     public Position findNextPosition(Game game) {
         Player player = game.getCharacter();
 
-        List<Position> possiblePositionsToMove = game.getMoveablePositions(this.getEnemy(), this.getEnemy().getPosition());
+        List<Position> possiblePositionsToMove = game.getMoveablePositions(
+            this.getEnemy(),
+            this.getEnemy().getPosition()
+        );
 
         int optimalPathLength = Integer.MIN_VALUE;
         Position optimalPathPosition = this.getEnemy().getPosition();
 
         PositionGraph positionGraph = new PositionGraph(game, this.getEnemy());
         // Move the enemy to the furthest possible position to the player
-        for (Position position: possiblePositionsToMove) {
+        for (Position position : possiblePositionsToMove) {
             Map<Integer, Position> prev = positionGraph.dijkstra(position);
             int pathLen = 0;
             Position curr = prev.get(player.getPosition().hashCode());
@@ -48,5 +51,4 @@ public class RunMovementState extends MovementState {
         }
         return optimalPathPosition;
     }
-
 }

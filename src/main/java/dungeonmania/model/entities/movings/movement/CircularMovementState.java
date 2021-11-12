@@ -2,9 +2,9 @@ package dungeonmania.model.entities.movings.movement;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +16,7 @@ public class CircularMovementState extends MovementState {
     private boolean reverseMovement;
     private int indexOfNextMove;
 
-    public CircularMovementState(Enemy enemy) {
+    public CircularMovementState(MovingEntity enemy) {
         super(enemy);
         this.initialMovement = true;
         // Default "circling" movement
@@ -37,9 +37,9 @@ public class CircularMovementState extends MovementState {
     }
 
     /**
-     * Finds the next tile, ensuring that the entity maintains a "circular path" 
+     * Finds the next tile, ensuring that the entity maintains a "circular path"
      * and reverses direction if necessary.
-     * 
+     *
      * @param game dungeon the entity is contained in
      * @return Position to move next
      */
@@ -48,7 +48,10 @@ public class CircularMovementState extends MovementState {
         // initially always move up if possible, else stay in spot
         if (initialMovement) {
             Position newPos = this.getEnemy().getPosition().translateBy(Direction.UP);
-            boolean canMove = game.getEntities(newPos).stream().allMatch(e -> !this.getEnemy().collision(e));
+            boolean canMove = game
+                .getEntities(newPos)
+                .stream()
+                .allMatch(e -> !this.getEnemy().collision(e));
             if (canMove) {
                 this.initialMovement = false;
                 return this.getEnemy().getPosition().translateBy(Direction.UP);
@@ -57,10 +60,13 @@ public class CircularMovementState extends MovementState {
         } else {
             Direction nextMoveInPath = circularMovementPath.get(indexOfNextMove);
             Position newPos = this.getEnemy().getPosition().translateBy(nextMoveInPath);
-            boolean canMove = game.getEntities(newPos).stream().allMatch(e -> !this.getEnemy().collision(e));
+            boolean canMove = game
+                .getEntities(newPos)
+                .stream()
+                .allMatch(e -> !this.getEnemy().collision(e));
             if (!canMove) {
                 this.reverseMovement = !this.reverseMovement;
-                indexOfNextMove =  Math.abs(circularMovementPath.size() - (indexOfNextMove + 4)) % 8;
+                indexOfNextMove = Math.abs(circularMovementPath.size() - (indexOfNextMove + 4)) % 8;
                 Collections.reverse(this.circularMovementPath);
                 return this.getEnemy().getPosition();
             }
@@ -73,5 +79,4 @@ public class CircularMovementState extends MovementState {
             return newPos;
         }
     }
-
 }

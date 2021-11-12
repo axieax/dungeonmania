@@ -79,6 +79,7 @@
         "midnight_armour": "images/tileset/entities/midnight_armour.png",
         "time_turner": "images/tileset/entities/time_turner.png",
         "time_travelling_portal": "images/tileset/entities/time_travelling_portal.png",
+        "older_player": "images/tileset/entities/old_player.png",
         "light_bulb_on": "images/tileset/entities/light_bulb_on.png",
         "light_bulb_off": "images/tileset/entities/light_bulb_off.png",
         "wire": "images/tileset/entities/wire.png"

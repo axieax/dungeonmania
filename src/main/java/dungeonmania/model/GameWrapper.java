@@ -32,6 +32,7 @@ public final class GameWrapper {
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
         DungeonResponse resp = activeGame.tick(itemUsedId, movementDirection);
+        states.add(GameLoader.gameToJSONObject(activeGame));
         return (activeGame.playerReachedTTPortal()) ? rewind(30) : resp;
     }
 

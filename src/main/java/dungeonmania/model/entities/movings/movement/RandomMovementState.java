@@ -2,19 +2,20 @@ package dungeonmania.model.entities.movings.movement;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Position;
 import java.util.List;
 import java.util.Random;
 
 public class RandomMovementState extends MovementState {
 
-    public RandomMovementState(Enemy enemy) {
+    public RandomMovementState(MovingEntity enemy) {
         super(enemy);
     }
 
     /**
      * Finds a random adjacent position to make.
-     * 
+     *
      * @param game dungeon
      * @return Position to go to next
      */
