@@ -37,16 +37,21 @@ public class Spider extends Enemy {
     /**
      * If a player drinks an invincibility potion, change the state
      * of the spider to make sure it runs away
-     */ 
+     */
     @Override
     public void update(SubjectPlayer player) {
-        if (player instanceof Player) {
-            Player character = (Player) player;
-            if (character.getState() instanceof PlayerInvincibleState) {
-                this.setMovementState(new RunMovementState(this));
-            } else {
-                this.setMovementState(new CircularMovementState(this));
-            }
+        if (!(player instanceof Player)) {
+            return;
+        }
+
+        Player character = (Player) player;
+        if (character.getState() instanceof PlayerInvincibleState) {
+            this.setMovementState(new RunMovementState(this));
+        } else if (this.getMovementState() instanceof CircularMovementState) {
+            // don't return new instance otherwise entire movement will be reset
+            return;
+        } else {
+            this.setMovementState(new CircularMovementState(this));
         }
     }
 
