@@ -235,7 +235,7 @@ public class SunStoneTest {
         player.move(game, Direction.DOWN);
         Position updatedPlayerPos = new Position(1, 2);
 
-        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -256,7 +256,7 @@ public class SunStoneTest {
 
             game.tick(null, movementDirection);
 
-            List<Entity> adjacentEntites = game.getAdjacentEntities(player.getPosition());
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
@@ -290,7 +290,7 @@ public class SunStoneTest {
         player.move(game, Direction.DOWN);
         Position updatedPlayerPos = new Position(1, 3);
 
-        while (!game.getAdjacentEntities(player.getPosition()).contains(assassin)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -312,7 +312,7 @@ public class SunStoneTest {
 
             game.tick(null, movementDirection);
 
-            List<Entity> adjacentEntites = game.getAdjacentEntities(player.getPosition());
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Assassin will always be adjacent to or at the same position as the player since it will always follow it

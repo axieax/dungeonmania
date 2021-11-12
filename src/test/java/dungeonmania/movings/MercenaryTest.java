@@ -211,7 +211,7 @@ public class MercenaryTest {
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
 
-        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -349,7 +349,7 @@ public class MercenaryTest {
         player.move(game, Direction.DOWN);
         Position updatedPlayerPos = new Position(1, 4);
 
-        while (!game.getAdjacentEntities(player.getPosition()).contains(mercenary)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -367,7 +367,7 @@ public class MercenaryTest {
 
             game.tick(null, movementDirection);
 
-            List<Entity> adjacentEntites = game.getAdjacentEntities(player.getPosition());
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it

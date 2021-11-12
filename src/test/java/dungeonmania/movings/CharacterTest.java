@@ -545,7 +545,7 @@ public class CharacterTest {
 
         game.tick(null, Direction.NONE);
 
-        // mercenary should move towards player and the two should fight,
+        // Mercenary should move towards player and the two should fight,
         // with the player winning & its health reduced
 
         assertTrue(player.getHealth() < initialPlayerHealth);
@@ -600,7 +600,7 @@ public class CharacterTest {
             new Hydra(enemyPos, mode.damageMultiplier(), player)
         );
             
-        for(MovingEntity enemy: enemies) {
+        for (MovingEntity enemy: enemies) {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
             player.setHealth(Player.MAX_CHARACTER_HEALTH);
             player.setPosition(playerPos);
@@ -611,22 +611,23 @@ public class CharacterTest {
             InvincibilityPotion potion = new InvincibilityPotion(potionPos);
             game.addEntity(potion);
     
-            game.tick(null, Direction.RIGHT); // player picks up potion
-    
-            game.tick(potion.getId(), Direction.NONE); // drink potion
+            // Player picks up potion and drinks it
+            game.tick(null, Direction.RIGHT);
+            game.tick(potion.getId(), Direction.NONE);
+
             assertTrue(player.getState() instanceof PlayerInvincibleState);
-            
             assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
-            // if the player was near the enemy when the player drank the potion,
+
+            // Since the player was near the enemy when the player drank the potion,
             // in the next move it should not be in the adjacent tile
-            assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
+            assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
             
-            // enemy should not come near the player - until the effects of the potion have weared away
-            // and so, the player's health should not reduce
+            // Enemy should not come near the player (until the effects of the potion have finished),
+            // and so the player's health should not reduce
             while(!(player.getState() instanceof PlayerInvincibleState)) {
                 game.tick(null, Direction.NONE);
                 assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
-                assertTrue(game.getAdjacentEntities(potionPos).size() == 0);
+                assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
             }
         }
     }
@@ -646,14 +647,16 @@ public class CharacterTest {
         InvincibilityPotion potion = new InvincibilityPotion(potionPos);
         game.addEntity(potion);
 
-        // player state should not change at all in hard mode after drinkign invincibility potion
+        // Player state should not change at all in hard mode after drinking invincibility potion
         assertTrue(player.getState() instanceof PlayerDefaultState);
-        game.tick(null, Direction.RIGHT); // player picks up potion
-        assertTrue(player.getState() instanceof PlayerDefaultState);
-        game.tick(potion.getId(), Direction.NONE); // drink potion
-        assertTrue(player.getState() instanceof PlayerDefaultState);
+        game.tick(null, Direction.RIGHT);
         
+        // Player picks up potion
+        assertTrue(player.getState() instanceof PlayerDefaultState);
+        game.tick(potion.getId(), Direction.NONE);
         
+        // Player drinks potion
+        assertTrue(player.getState() instanceof PlayerDefaultState);
         assertTrue(player.getHealth() == initialPlayerHealth);
     }
 
