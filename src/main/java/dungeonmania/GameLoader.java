@@ -121,7 +121,8 @@ public class GameLoader {
         for (int i = 0; i < entitiesInfo.length(); i++) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
             if (entityInfo.getString("type").startsWith("player")) continue;
-            entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
+            Entity entity = extractEntity(entityInfo, (Player) playerEntity, mode);
+            if (entity != null) entities.add(entity);
         }
 
         return entities;
@@ -322,9 +323,6 @@ public class GameLoader {
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);
             return new TimeTurner(position);
-        } else if (type.startsWith("older_player")) { ///////
-            position = position.asLayer(30);
-            // return new OlderPlayer(position); // TODO
         } else if (type.startsWith("player")) {
             position = position.asLayer(31);
             Player player = new Player(position, mode.initialHealth());

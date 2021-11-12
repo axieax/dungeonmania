@@ -61,7 +61,7 @@ public abstract class Enemy extends MovingEntity implements Observer {
         info.put("damageMultiplier", damageMultiplier);
         info.put ("movementState", movementState.getClass().getSimpleName());
         info.put ("movementTick", movementTick);
-        info.put ("armourDropRate", 0);
+        info.put ("armourDropRate", armourDropRate);
         return info;
     }
 }
