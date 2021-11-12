@@ -55,32 +55,10 @@ public class TimeTravelTest {
     private Position getOldPlayerPosition(List<EntityResponse> entities) {
         EntityResponse player = entities
             .stream()
-            .filter(e -> e.getType().equals("old_player"))
+            .filter(e -> e.getType().equals("older_player"))
             .findFirst()
             .orElse(null);
         return (player != null) ? player.getPosition().asLayer(0) : null;
-    }
-
-    /**
-     * Filters the old player from DungeonResponse
-     *
-     * @param original DungeonResponse
-     *
-     * @return DungeonResponse without the old_player entity
-     */
-    private DungeonResponse respWithoutOldPlayer(DungeonResponse original) {
-        return new DungeonResponse(
-            original.getDungeonId(),
-            original.getDungeonName(),
-            original
-                .getEntities()
-                .stream()
-                .filter(e -> !e.getType().equals("old_player"))
-                .collect(Collectors.toList()),
-            original.getInventory(),
-            original.getBuildables(),
-            original.getGoals()
-        );
     }
 
     @Test
@@ -122,7 +100,8 @@ public class TimeTravelTest {
 
         // go back one position
         resp = dmc.rewind(1);
-        assertEquals(new Position(1, 12), getPlayerPosition(resp.getEntities()));
+        assertEquals(new Position(1, 13), getPlayerPosition(resp.getEntities()));
+        assertEquals(new Position(1, 12), getOldPlayerPosition(resp.getEntities()));
     }
 
     @Test
@@ -135,9 +114,8 @@ public class TimeTravelTest {
         // try to rewind more than 2 moves
         assertDoesNotThrow(() -> {
             DungeonResponse resp = dmc.rewind(3);
-            // add old_player
-            assertEquals(initialState, respWithoutOldPlayer(resp));
-            assertEquals(new Position(1, 13), getOldPlayerPosition(resp.getEntities()));
+            assertEquals(new Position(1, 13), getPlayerPosition(resp.getEntities()));
+            assertEquals(new Position(1, 11), getOldPlayerPosition(resp.getEntities()));
         });
     }
 
@@ -151,23 +129,8 @@ public class TimeTravelTest {
         // try to rewind 2 moves
         assertDoesNotThrow(() -> {
             DungeonResponse resp = dmc.rewind(2);
-            assertEquals(initialState, respWithoutOldPlayer(resp));
-            assertEquals(new Position(1, 13), getOldPlayerPosition(resp.getEntities()));
-        });
-    }
-
-    @Test
-    public void testRewindDoesNotExceed() {
-        // create game and collect time turner
-        DungeonManiaController dmc = new DungeonManiaController();
-        dmc.newGame("hourglass", "standard");
-        DungeonResponse secondMove = dmc.tick(null, Direction.DOWN);
-
-        // try to rewind 1 move
-        assertDoesNotThrow(() -> {
-            DungeonResponse resp = dmc.rewind(1);
-            assertEquals(secondMove, respWithoutOldPlayer(resp));
-            assertEquals(new Position(1, 13), getOldPlayerPosition(resp.getEntities()));
+            assertEquals(new Position(1, 13), getPlayerPosition(resp.getEntities()));
+            assertEquals(new Position(1, 11), getOldPlayerPosition(resp.getEntities()));
         });
     }
 }
