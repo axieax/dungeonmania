@@ -259,7 +259,6 @@ public class HydraTest {
         
         Position hydraPos = new Position(5, 5);
         Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
-
         assertTrue(game.getEntities(hydraPos).size() == 0);
         game.addEntity(hydra);
         assertTrue(game.getEntities(hydraPos).size() > 0);
@@ -267,10 +266,12 @@ public class HydraTest {
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
+        game.addEntity(new Wall(new Position(5, 3)));
 
         Position portalPos = new Position(5, 4);
         Portal portal = new Portal(portalPos, "blue");
         game.addEntity(portal);
+        
         game.tick(null, Direction.NONE);
         
         // the only option for the hydra is to move to the portal which it cannot pass through
@@ -306,6 +307,9 @@ public class HydraTest {
         assertTrue(hydra.getPosition().equals(hydraPos));
     }
 
+    /**
+     * TODO: Currently failing as no battle occurs when hydra moves onto player tile
+     */
     @Test
     public void testHydraHealthInBattle() {
         // Test the head regrowing ability of of a hydra during battle by
@@ -339,7 +343,7 @@ public class HydraTest {
             // health
             game.tick(null, Direction.NONE);
             assertTrue(game.getEntities(hydraPos).size() == 0);
-            assertTrue(game.getEntities(playerPos).size() == 1);
+            assertTrue(game.getEntities(playerPos).size() == 1); // either hydra or player wins in battle
             playerHealthAfterBattle.add(player.getHealth());
         }
 
@@ -347,6 +351,9 @@ public class HydraTest {
         assertTrue(playerHealthAfterBattle.size() > 1);
     }
 
+    /**
+     * TODO: Currently failing as no battle occurs when hydra moves onto player tile
+     */
     @Test
     public void testAndurilBattle() {
         // since the player has an anduril in their inventory,

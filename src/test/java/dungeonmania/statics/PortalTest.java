@@ -256,10 +256,9 @@ public class PortalTest {
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 6)));
 
-        // zombie stays in same position
         game.tick(null, Direction.NONE);
-        // zombie gets teleported to portal
-        assertEquals(new Position(4, 5), zombie.getPosition());
+        // zombies are not affected by portals
+        assertEquals(new Position(5, 5), zombie.getPosition());
     }
 
     /**

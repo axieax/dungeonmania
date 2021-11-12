@@ -17,7 +17,7 @@ public class RandomMovementState implements MovementState {
         this.enemy = enemy;
     }
 
-    /**
+     /**
      * Enemy makes a random movement choice
      */
     @Override
@@ -40,4 +40,5 @@ public class RandomMovementState implements MovementState {
         }
         else enemy.setDirection(Direction.NONE);
     }
+
 }
