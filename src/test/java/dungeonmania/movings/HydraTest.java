@@ -76,7 +76,7 @@ public class HydraTest {
         
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         int numEntities = game.getEntities().size();
         
@@ -108,7 +108,7 @@ public class HydraTest {
         for(Mode m: modes) {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), m);
             
-            Player player = new Player(new Position(1, 1));
+            Player player = new Player(new Position(1, 1), m.initialHealth());
             game.addEntity(player);
             int numEntities = game.getEntities().size();
             
@@ -140,7 +140,7 @@ public class HydraTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position hydraPos = new Position(5, 5);
@@ -161,7 +161,7 @@ public class HydraTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position hydraPos = new Position(5, 5);
@@ -187,7 +187,7 @@ public class HydraTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position hydraPos = new Position(5, 5);
@@ -219,7 +219,7 @@ public class HydraTest {
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(4, 2));
+        Player player = new Player(new Position(4, 2), mode.initialHealth());
         game.addEntity(player);
         game.addEntity(new Key(new Position(4, 3), 1));
 
@@ -254,7 +254,7 @@ public class HydraTest {
         Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         
         Position hydraPos = new Position(5, 5);
@@ -283,7 +283,7 @@ public class HydraTest {
         Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         
         Position hydraPos = new Position(5, 5);
@@ -326,7 +326,7 @@ public class HydraTest {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
             Position playerPos = new Position(1, 1);
-            Player player = new Player(playerPos);
+            Player player = new Player(playerPos, mode.initialHealth());
             game.addEntity(player);
             
             Position hydraPos = new Position(1, 2);
@@ -366,7 +366,7 @@ public class HydraTest {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
             Position playerPos = new Position(1, 1);
-            Player player = new Player(playerPos);
+            Player player = new Player(playerPos, mode.initialHealth());
             game.addEntity(player);
             
             Position andurilPos = new Position(1, 2);

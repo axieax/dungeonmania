@@ -52,7 +52,7 @@ public class SunStoneTest {
         SunStone stone = new SunStone(new Position(1, 1));
         game.addEntity(stone);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 
@@ -73,7 +73,7 @@ public class SunStoneTest {
         SunStone stone = new SunStone(new Position(1, 1));
         game.addEntity(stone);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
 
         Door door = new Door(new Position(2, 1), 1);
@@ -104,7 +104,7 @@ public class SunStoneTest {
         SunStone stone = new SunStone(new Position(1, 1));
         game.addEntity(stone);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
 
         Door door = new Door(new Position(3, 1), 1);
@@ -149,7 +149,7 @@ public class SunStoneTest {
             mode
         );
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
 
         // Player picks up up items
@@ -191,7 +191,7 @@ public class SunStoneTest {
             mode
         );
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
 
         // Player picks up up items
@@ -222,7 +222,7 @@ public class SunStoneTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
@@ -273,7 +273,7 @@ public class SunStoneTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Assassin assassin = new Assassin(new Position(5, 1), mode.damageMultiplier(), player);
