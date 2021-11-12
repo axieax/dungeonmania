@@ -23,12 +23,4 @@ public interface Mode {
     default int initialHealth() {
         return 100;
     }
-
-    /**
-     * @return the invincibility potion multiplier
-     */
-    default int invincibilityPotionMultipler() {
-        return 1;
-
-    }
 }

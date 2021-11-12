@@ -30,7 +30,7 @@ import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
 
-    public static final int MAX_CHARACTER_HEALTH = 100;
+    public static int MAX_CHARACTER_HEALTH = 100;
     public static final int CHARACTER_ATTACK_DMG = 10;
 
     private PlayerState state;
@@ -40,11 +40,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private List<BribableEnemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
-    public Player(Position position) {
-        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
+    public Player(Position position, int health) {
+        super("player", position, health, CHARACTER_ATTACK_DMG);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
         this.currentBattleOpponent = null;
+        MAX_CHARACTER_HEALTH = health;
     }
 
     /********************************
@@ -67,7 +68,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return boolean true if the player is currently in battle
      */
     public boolean getInBattle() {
         return inBattle;
@@ -215,7 +216,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return booleant true if the player has a key
      */
     public boolean hasKey() {
         return this.getKey() != null;
@@ -229,14 +230,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean
+     * @return boolean true if the player has a weapon
      */
     public boolean hasWeapon() {
         return !this.getAttackEquipmentList().isEmpty();
     }
 
     /**
-     * @return first weapon in a player's inventory
+     * @return first weapon in the player inventory
      */
     public Equipment getWeapon() {
         return (AttackEquipment) inventory.findWeapon();
@@ -259,7 +260,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param prefix
      * @param quantity
-     * @return
+     * @return boolean true if there's the specified quantity in the player inventory
      */
     public boolean hasItemQuantity(String prefix, int quantity) {
         return inventory.hasItemQuantity(prefix, quantity);
@@ -408,15 +409,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
         if (equipment.isBuildable(game, inventory))
             equipment.craft(inventory);
         else
-            throw new InvalidActionException(
-                "You do not meet the requirements to build this equipment");
+            throw new InvalidActionException("You do not meet the requirements to build this equipment");
     }
 
     /**
      * Check if the equipment is buildable
      *
      * @param equipment
-     * @return boolean
+     * @return boolean true if the equipment is buildable
      */
     public boolean checkBuildable(Game game, Buildable item) {
         return item.isBuildable(game, this.inventory);
@@ -430,7 +430,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * Returns the total attack damage a player is able to inflict upon an opponent.
      * This includes any attack damage provided by equipment e.g. sword
      *
-     * @return int a positive integer indicating the amount of attack
+     * @return int indicating the amount of attack
      */
     public int getTotalAttackDamage(MovingEntity opponent) {
         // Normal damage inflicted by player

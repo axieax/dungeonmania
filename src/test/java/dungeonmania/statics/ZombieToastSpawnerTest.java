@@ -46,7 +46,7 @@ public class ZombieToastSpawnerTest {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
-        game.addEntity(new Player(new Position(10, 10)));
+        game.addEntity(new Player(new Position(10, 10), mode.initialHealth()));
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
             game.tick(null, Direction.NONE);
@@ -132,7 +132,7 @@ public class ZombieToastSpawnerTest {
         
         game.addEntity(new Sword(new Position(2, 1)));
 
-        Player player = new Player(new Position(2, 2));
+        Player player = new Player(new Position(2, 2), mode.initialHealth());
         game.addEntity(player);
         
         // Player picks up sword
@@ -157,7 +157,7 @@ public class ZombieToastSpawnerTest {
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
         
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
         game.addEntity(player);
         
         assertThrows(InvalidActionException.class, () -> game.interact(spawner.getId()));
