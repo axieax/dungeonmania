@@ -4,6 +4,7 @@ import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
+import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.movement.AttackMovementState;
 import dungeonmania.model.entities.movings.player.Player;
@@ -32,13 +33,15 @@ public class Mercenary extends BribableEnemy {
         if (getDistanceToPlayer(game, player.getPosition()) > MAX_DISTANCE_TO_BRIBE)
             throw new InvalidActionException("You are too far away to bribe this mercenary");
 
-        Item item = player.findInventoryItem("treasure");
+        Item sunstone = player.findInventoryItem("sun_stone");
+        Item treasure = player.findInventoryItem("treasure");
         
-        if (item == null)
+        if (sunstone == null && treasure == null)
             throw new InvalidActionException("You don't have enough treasure to bribe this mercenary");
         
         player.addAlly(this);
-        ((Treasure) item).consume(game, player);
+        if (sunstone != null) player.removeInventoryItem(sunstone.getId());
+        else ((Treasure) treasure).consume(game, player);
     }
 
     /**

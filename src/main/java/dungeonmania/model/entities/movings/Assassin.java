@@ -28,25 +28,27 @@ public class Assassin extends BribableEnemy implements Boss {
         // Player must be within 2 cardinal tiles to the assassin and
         // have 1 treasure (gold) and TheOneRing in order to bribe the assassin
 
-        if (getDistanceToPlayer(game, player.getPosition()) <= MAX_DISTANCE_TO_BRIBE) {
-            Item sunstone = player.findInventoryItem("sun_stone");
-            Item treasure = player.findInventoryItem("treasure");
-            Item ring = player.findInventoryItem("one_ring");
-            if (sunstone != null) {
-                player.addAlly(this);
-                player.removeInventoryItem(sunstone.getId());
-                ((TheOneRing) ring).consume(game, player);
-            } else if (treasure != null && ring != null) {
-                player.addAlly(this);
-                ((Treasure) treasure).consume(game, player);
-                ((TheOneRing) ring).consume(game, player);
-            } else {
-                throw new InvalidActionException(
-                    "You need both treasure and TheOneRing to bribe this assassin"
-                );
-            }
-        } else {
+        if (getDistanceToPlayer(game, player.getPosition()) > MAX_DISTANCE_TO_BRIBE) {
             throw new InvalidActionException("You are too far away to bribe this assassin");
+        }
+
+        Item sunstone = player.findInventoryItem("sun_stone");
+        Item treasure = player.findInventoryItem("treasure");
+        Item ring = player.findInventoryItem("one_ring");
+
+        if (sunstone == null && treasure == null && ring == null) {
+            throw new InvalidActionException(
+                "You need both treasure and TheOneRing to bribe this assassin"
+            );
+        }
+
+        player.addAlly(this);
+        if (sunstone != null) {
+            player.removeInventoryItem(sunstone.getId());
+            ((TheOneRing) ring).consume(game, player);
+        } else if (treasure != null && ring != null) {
+            ((Treasure) treasure).consume(game, player);
+            ((TheOneRing) ring).consume(game, player);
         }
     }
 }
