@@ -68,7 +68,7 @@ public class PotionTest {
         HealthPotion healthPotion = new HealthPotion(new Position(1, 1));
         game.addEntity(healthPotion);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
@@ -87,7 +87,7 @@ public class PotionTest {
         InvincibilityPotion invincibilityPotion = new InvincibilityPotion(new Position(1, 1));
         game.addEntity(invincibilityPotion);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
@@ -106,7 +106,7 @@ public class PotionTest {
         InvisibilityPotion invisibilityPotion = new InvisibilityPotion(new Position(1, 1));
         game.addEntity(invisibilityPotion);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
@@ -130,7 +130,7 @@ public class PotionTest {
             game.addEntity(new Wall(new Position(i, 1)));
         }
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         game.tick(null, Direction.RIGHT);
 

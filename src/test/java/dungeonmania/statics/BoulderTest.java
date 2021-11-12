@@ -42,7 +42,7 @@ public class BoulderTest {
         Boulder boulder = new Boulder(new Position(1, 1));
         game.addEntity(boulder);
 
-        Player player = new Player(new Position(2, 1));
+        Player player = new Player(new Position(2, 1), mode.initialHealth());
 
         game.addEntity(player);
         player.move(game, Direction.LEFT);
@@ -64,7 +64,7 @@ public class BoulderTest {
         game.addEntity(boulder1);
         game.addEntity(boulder2);
 
-        Player player = new Player(new Position(3, 1));
+        Player player = new Player(new Position(3, 1), mode.initialHealth());
 
         game.addEntity(player);
         player.move(game, Direction.LEFT);
@@ -86,7 +86,7 @@ public class BoulderTest {
         Boulder boulder = new Boulder(new Position(1, 2));
         game.addEntity(boulder);
 
-        Player player = new Player(new Position(0, 2));
+        Player player = new Player(new Position(0, 2), mode.initialHealth());
         game.addEntity(player);
 
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 2));
@@ -145,7 +145,7 @@ public class BoulderTest {
         Boulder boulder = new Boulder(new Position(1, 1));
         game.addEntity(boulder);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
         game.addEntity(player);
 
         FloorSwitch floorSwitch = new FloorSwitch(new Position(1, 2));

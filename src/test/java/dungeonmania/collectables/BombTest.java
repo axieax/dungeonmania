@@ -43,7 +43,7 @@ public class BombTest {
         Bomb bomb = new Bomb(new Position(1, 1));
         game.addEntity(bomb);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 
@@ -63,7 +63,7 @@ public class BombTest {
         Bomb bomb = new Bomb(new Position(1, 1));
         game.addEntity(bomb);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
         game.tick(null, Direction.RIGHT);
 
@@ -95,7 +95,7 @@ public class BombTest {
         Boulder boulder = new Boulder(new Position(1, 2));
         game.addEntity(boulder);
 
-        Player player = new Player(new Position(0, 2));
+        Player player = new Player(new Position(0, 2), mode.initialHealth());
         game.addEntity(player);
 
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 2));

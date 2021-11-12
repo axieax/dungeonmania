@@ -39,7 +39,7 @@ public class MidnightArmourTest {
         game.addEntity(sunstone);
 
         // Player picks up both items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -71,7 +71,7 @@ public class MidnightArmourTest {
         game.addEntity(armour);
         game.addEntity(sunstone);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -110,7 +110,7 @@ public class MidnightArmourTest {
         game.addEntity(sunstone);
 
         // Player picks up both items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -122,7 +122,7 @@ public class MidnightArmourTest {
         MidnightArmour midnightArmour = (MidnightArmour) player.findInventoryItem("midnight_armour");
         assertTrue(midnightArmour.getDurability() == initialDurability);
 
-        Spider spider = new Spider(new Position(2, 1), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(2, 1), mode.damageMultiplier(), player);
         game.addEntity(spider);
 
         // Player moves to defend against the spider with the midnight armour
@@ -147,7 +147,7 @@ public class MidnightArmourTest {
         game.addEntity(sunstone);
 
         // Player picks up both items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);

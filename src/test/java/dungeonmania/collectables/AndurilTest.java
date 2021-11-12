@@ -37,7 +37,7 @@ public class AndurilTest {
         Anduril anduril = new Anduril(new Position(1, 1));
         game.addEntity(anduril);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));
@@ -53,7 +53,7 @@ public class AndurilTest {
         Anduril anduril = new Anduril(new Position(1, 1));
         game.addEntity(anduril);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
 
         // check initial durability

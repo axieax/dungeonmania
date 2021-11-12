@@ -39,7 +39,7 @@ public class KeyTest {
         Key key = new Key(new Position(1, 1), 1);
         game.addEntity(key);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        
@@ -62,7 +62,7 @@ public class KeyTest {
         game.addEntity(key1);
         game.addEntity(key2);
 
-        Player player = new Player(new Position(0, 1)); 
+        Player player = new Player(new Position(0, 1), mode.initialHealth()); 
 
         // Collect the first key
         player.move(game, Direction.RIGHT);
@@ -91,7 +91,7 @@ public class KeyTest {
         Door door = new Door(new Position(1, 1), 1);
         game.addEntity(door);
 
-        Player player = new Player(new Position(1, 3));
+        Player player = new Player(new Position(1, 3), mode.initialHealth());
         game.addEntity(player);
 
         Key key = new Key(new Position(1, 2), 1);

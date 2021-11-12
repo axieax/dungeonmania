@@ -38,10 +38,11 @@ public class SwampTileTest {
      */
     @Test
     public void noEffectPlayer() {
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         SwampTile swampTile = new SwampTile(new Position(1, 1), 5);
         game.addEntity(swampTile);
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
 
         // player move right to swamp tile
@@ -62,7 +63,7 @@ public class SwampTileTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(10, 10));
+        Player player = new Player(new Position(10, 10), mode.initialHealth());
         game.addEntity(player);
 
         // create a 9x9 swamp tiles
@@ -73,7 +74,7 @@ public class SwampTileTest {
         }
 
         // create spider in middle of swamp tile
-        Spider spider = new Spider(new Position(1, 1), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(spider);
 
         // takes two ticks for spider to move
@@ -101,7 +102,7 @@ public class SwampTileTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(10, 10));
+        Player player = new Player(new Position(10, 10), mode.initialHealth());
         game.addEntity(player);
 
         // create a 9x9 swamp tiles
@@ -132,7 +133,7 @@ public class SwampTileTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(10, 10));
+        Player player = new Player(new Position(10, 10), mode.initialHealth());
         game.addEntity(player);
 
         // create a 9x9 swamp tiles
@@ -143,7 +144,7 @@ public class SwampTileTest {
         }
 
         // create spider in middle of swamp tile
-        Spider spider = new Spider(new Position(1, 1), mode.damageMultiplier());
+        Spider spider = new Spider(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(spider);
 
         // takes 99 ticks for spider to move
@@ -165,7 +166,7 @@ public class SwampTileTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         // create a 100 movement factor swamp tile below player

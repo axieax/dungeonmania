@@ -38,7 +38,7 @@ public class TreasureTest {
         Treasure treasure = new Treasure(new Position(1, 1));
         game.addEntity(treasure);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));        

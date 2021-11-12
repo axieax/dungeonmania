@@ -40,7 +40,7 @@ public class SwordTest {
         Sword sword = new Sword(new Position(1, 1));
         game.addEntity(sword);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
         assertTrue(new Position(1, 1).equals(player.getPosition()));
@@ -59,7 +59,7 @@ public class SwordTest {
         Sword sword = new Sword(new Position(1, 1));
         game.addEntity(sword);
 
-        Player player = new Player(new Position(0, 1));
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 

@@ -42,7 +42,7 @@ public class PortalTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(0, 0), "BLUE");
         Portal portalEnd = new Portal(new Position(2, 2), "BLUE");
@@ -74,7 +74,7 @@ public class PortalTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
 
         Portal portal1 = new Portal(new Position(0, 0), "BLUE");
         Portal portal2 = new Portal(new Position(2, 2), "BLUE");
@@ -111,7 +111,7 @@ public class PortalTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
 
         Portal portal = new Portal(new Position(0, 0), "BLUE");
         game.addEntity(player);
@@ -132,7 +132,7 @@ public class PortalTest {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 0));
+        Player player = new Player(new Position(1, 0), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(0, 0), "BLUE");
         Portal portalEnd = new Portal(new Position(2, 2), "BLUE");
@@ -160,7 +160,7 @@ public class PortalTest {
     public void testSpiderTeleport() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        Player player = new Player(new Position(3, 6));
+        Player player = new Player(new Position(3, 6), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
@@ -200,7 +200,7 @@ public class PortalTest {
     public void testSpiderTeleportStart() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        Player player = new Player(new Position(3, 6));
+        Player player = new Player(new Position(3, 6), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
@@ -238,7 +238,7 @@ public class PortalTest {
     public void testZombieNoTeleport() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        Player player = new Player(new Position(3, 6));
+        Player player = new Player(new Position(3, 6), mode.initialHealth());
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
@@ -270,7 +270,7 @@ public class PortalTest {
     public void testMercenaryRunToPortal() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        Player player = new Player(new Position(3, 2));
+        Player player = new Player(new Position(3, 2), mode.initialHealth());
         InvincibilityPotion potion = new InvincibilityPotion(new Position(3, 6));
         player.addInventoryItem(potion);
 

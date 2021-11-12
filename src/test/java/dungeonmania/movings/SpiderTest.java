@@ -179,7 +179,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 2);
@@ -235,7 +235,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position doorPos = new Position(2, 1);
@@ -259,7 +259,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position switchPos = new Position(2, 1);
@@ -282,7 +282,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Portal portal1 = new Portal(new Position(2, 1), "blue");
@@ -306,7 +306,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position exitPos = new Position(2, 1);
@@ -336,7 +336,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 2);
@@ -375,7 +375,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 4);
@@ -420,7 +420,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position boulderPos = new Position(2, 4);
@@ -472,7 +472,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position boulder1Pos = new Position(2, 2);
@@ -514,7 +514,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position boulder1Pos = new Position(2, 2);
@@ -556,7 +556,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position boulderPos = new Position(3, 2);
@@ -580,7 +580,7 @@ public class SpiderTest {
         Mode mode = new Peaceful();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
-        Player player = new Player(new Position(5, 5));
+        Player player = new Player(new Position(5, 5), mode.initialHealth());
         game.addEntity(player);
 
         Position initialSpiderPos = new Position(0, 0);
@@ -609,7 +609,7 @@ public class SpiderTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1));
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Position boulderPos = new Position(4, 4);
@@ -692,7 +692,7 @@ public class SpiderTest {
         );
 
         Position playerPos = new Position(1, 1);
-        Player player = new Player(playerPos);
+        Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
         int numEntitiesAtPlayerPos = game.getEntities(playerPos).size();
