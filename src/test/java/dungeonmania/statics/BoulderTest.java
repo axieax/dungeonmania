@@ -130,6 +130,8 @@ public class BoulderTest {
         assertTrue(game.getEntity(wall2.getId()) == null);
         assertTrue(game.getEntity(wall3.getId()) == null);
         assertTrue(game.getEntity(bomb.getId()) == null);
+        assertTrue(game.getEntity(boulder.getId()) == null);
+        assertTrue(game.getEntity(floorSwitch.getId()) == null);
         assertTrue(game.getEntity(player.getId()) != null);
     }
 }
