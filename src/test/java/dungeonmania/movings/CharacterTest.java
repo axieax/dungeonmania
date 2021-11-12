@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dungeonmania.DungeonManiaController;
 import dungeonmania.exceptions.InvalidActionException;
@@ -728,13 +729,14 @@ public class CharacterTest {
         game.addEntity(player);
 
         // attack player until it dies
-        while(game.getEntities().contains(player)) {
+        while(player.getHealth() > 0) {
             // mercenaries should all attack character and character should die
             assertDoesNotThrow(() -> game.tick(null, Direction.NONE));
             Position mercenaryPos = new Position(1, 2);
             Mercenary mercenary = new Mercenary(mercenaryPos, mode.damageMultiplier(), player);
             game.addEntity(mercenary);
         }
+        assertTrue(!game.getEntities().contains(player));
     }
     
     @Test

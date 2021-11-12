@@ -307,7 +307,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
                         continue;
                     }
                 }
-
                 this.battle(game, opponent);
             }
         }
