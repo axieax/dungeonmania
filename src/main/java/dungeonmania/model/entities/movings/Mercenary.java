@@ -41,11 +41,12 @@ public class Mercenary extends BribableEnemy {
         ((Treasure) item).consume(game, player);
     }
 
+    /**
+     * Mercenary is allowed to pass through portals
+     */
     @Override
     public boolean collision(Entity entity) {
-        if (
-            entity instanceof Portal
-        ) return false;
+        if (entity instanceof Portal) return false;
         return !entity.isPassable();
     }
 }

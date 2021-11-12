@@ -178,9 +178,9 @@ public class ShieldTest {
         // Player moves to defend against the mercenary with the shield
         player.move(game, Direction.RIGHT);
 
-        // Either the player or the mercenary should be dead
+        // Mercenary should die upon battle
         // Durability of shield decreases by 1 each time it battles (within one tick)
-        assertTrue((game.getEntity(mercenary.getId()) == null) || (game.getEntity(player.getId()) == null));
+        assertTrue(game.getEntity(mercenary.getId()) == null);
         assertTrue(shield == null || shield.getDurability() != initialDurability);
     }
 }

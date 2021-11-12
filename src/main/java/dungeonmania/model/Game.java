@@ -271,7 +271,7 @@ public final class Game {
         return EntityFactory
             .allBuildables()
             .stream()
-            .filter(item -> item instanceof Item && player.checkBuildable(item))
+            .filter(item -> item instanceof Item && player.checkBuildable(this, item))
             .map(item -> ((Item) item).getType())
             .collect(Collectors.toList());
     }
@@ -312,7 +312,7 @@ public final class Game {
     public final DungeonResponse build(String buildable) throws InvalidActionException {
         Player player = getCharacter();
         Buildable item = EntityFactory.getBuildable(buildable);
-        player.craft(item);
+        player.craft(this, item);
         return getDungeonResponse();
     }
 

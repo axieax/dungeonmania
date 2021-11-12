@@ -18,8 +18,6 @@ import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.statics.Consumable;
-import dungeonmania.model.entities.statics.Portal;
-import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -204,7 +202,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Get a list of all defensable eqipments from the inventory.
+     * Get a list of all defendable eqipments from the inventory.
      *
      * @return List<DefenceEquipment>
      */
@@ -401,18 +399,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Given a buildableItem, builds it if it is buildable
+     * Given an item, builds it if it is buildable
      *
      * @param equipment
+     * @throws InvalidActionException if the player doesn't have enough resources or fails zombie check
      */
-    public void craft(Buildable equipment) throws InvalidActionException {
-        if (equipment.isBuildable(inventory)) {
+    public void craft(Game game, Buildable equipment) throws InvalidActionException {
+        if (equipment.isBuildable(game, inventory))
             equipment.craft(inventory);
-        } else {
+        else
             throw new InvalidActionException(
-                "You don't have enough resources to build this equipment"
-            );
-        }
+                "You do not meet the requirements to build this equipment");
     }
 
     /**
@@ -421,8 +418,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param equipment
      * @return boolean
      */
-    public boolean checkBuildable(Buildable item) {
-        return item.isBuildable(this.inventory);
+    public boolean checkBuildable(Game game, Buildable item) {
+        return item.isBuildable(game, this.inventory);
     }
 
     /********************************
@@ -439,9 +436,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
         // Normal damage inflicted by player
         int damageToOpponent = this.getBaseAttackDamage();
 
-        // Any extra attack damage provided by equipment
+        // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
             damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
+        }
+
+        // Any extra attack damage provided by defence equipment
+        for (DefenceEquipment e : getDefenceEquipmentList()) {
+            damageToOpponent += e.getBonusAttackDamage();
         }
 
         // Any extra attack damage provided by allies
