@@ -30,7 +30,7 @@ import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
 
-    public static final int MAX_CHARACTER_HEALTH = 100;
+    public static int MAX_CHARACTER_HEALTH = 100;
     public static final int CHARACTER_ATTACK_DMG = 10;
 
     private PlayerState state;
@@ -40,11 +40,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
     private List<BribableEnemy> allies = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
 
-    public Player(Position position) {
-        super("player", position, MAX_CHARACTER_HEALTH, CHARACTER_ATTACK_DMG);
+    public Player(Position position, int health) {
+        super("player", position, health, CHARACTER_ATTACK_DMG);
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
         this.currentBattleOpponent = null;
+        MAX_CHARACTER_HEALTH = health;
     }
 
     /********************************

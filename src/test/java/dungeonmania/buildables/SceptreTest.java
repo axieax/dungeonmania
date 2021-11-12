@@ -41,7 +41,7 @@ public class SceptreTest {
         game.addEntity(sunstone);
 
         // Player picks up all the items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -81,7 +81,7 @@ public class SceptreTest {
         game.addEntity(sunstone);
 
         // Player picks up all the items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -120,7 +120,7 @@ public class SceptreTest {
         game.addEntity(sunstone);
 
         // Player picks up all the items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -160,7 +160,7 @@ public class SceptreTest {
         game.addEntity(sunstone);
 
         // Player picks up all the items
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
@@ -197,7 +197,7 @@ public class SceptreTest {
         game.addEntity(key);
         game.addEntity(sunstone);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
@@ -237,7 +237,7 @@ public class SceptreTest {
         game.addEntity(key);
         game.addEntity(sunstone);
 
-        Player player = new Player(new Position(0, 0));
+        Player player = new Player(new Position(0, 0), mode.initialHealth());
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
