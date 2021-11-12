@@ -43,12 +43,9 @@ public class Assassin extends BribableEnemy implements Boss {
         }
 
         player.addAlly(this);
-        if (sunstone != null) {
-            player.removeInventoryItem(sunstone.getId());
-            ((TheOneRing) ring).consume(game, player);
-        } else if (treasure != null && ring != null) {
-            ((Treasure) treasure).consume(game, player);
-            ((TheOneRing) ring).consume(game, player);
-        }
+
+        // Remove the treasure and TheOneRing from the player's inventory
+        if (sunstone == null) ((Treasure) treasure).consume(game, player);
+        ((TheOneRing) ring).consume(game, player);
     }
 }
