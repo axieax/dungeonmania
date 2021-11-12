@@ -44,9 +44,12 @@ public class ZombieToastSpawnerTest {
     public void zombieToastSpawnEveryCycle() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
+        
         game.addEntity(new Player(new Position(10, 10)));
+
         // Ticks the game 20 times
         for (int i = 0; i < 20; i++) {
             game.tick(null, Direction.NONE);
@@ -75,8 +78,11 @@ public class ZombieToastSpawnerTest {
     public void zombieToastSurroundedByWalls() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
+
+        game.addEntity(new Player(new Position(10, 10)));
 
         // The zombie toast spawner is surrounded by either walls or boulders
         game.addEntity(new Wall(new Position(0, 0)));
@@ -87,6 +93,11 @@ public class ZombieToastSpawnerTest {
         game.addEntity(new Wall(new Position(2, 0)));
         game.addEntity(new Wall(new Position(2, 1)));
         game.addEntity(new Wall(new Position(2, 2)));
+
+        // Ticks the game 20 times
+        for (int i = 0; i < 20; i++) {
+            game.tick(null, Direction.NONE);
+        }
 
         // Check that there are no zombie toasts spawned
         for (Entity entity : game.getEntities()) {
@@ -103,14 +114,22 @@ public class ZombieToastSpawnerTest {
     public void zombieToastCannotSpawn() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
+
+        game.addEntity(new Player(new Position(10, 10)));
 
         // The zombie toast spawner is blocked by boulders in the four cardinal directions
         game.addEntity(new Boulder(new Position(0, 1)));
         game.addEntity(new Boulder(new Position(1, 0)));
         game.addEntity(new Boulder(new Position(1, 2)));
         game.addEntity(new Boulder(new Position(2, 1)));
+
+        // Ticks the game 20 times
+        for (int i = 0; i < 20; i++) {
+            game.tick(null, Direction.NONE);
+        }
 
         // Check that there are no zombie toasts spawned
         for (Entity entity : game.getEntities()) {
@@ -127,6 +146,7 @@ public class ZombieToastSpawnerTest {
     public void zombieToastDestroySpawner() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(0, 1), mode.tickRate());
         game.addEntity(spawner);
         
