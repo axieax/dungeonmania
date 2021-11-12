@@ -5,6 +5,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Bomb extends Item implements Consumable {
 
     /**
      * Explodes the bomb destroying all entities in the bomb's blast radius,
-     * except for the character.
+     * except for portals and the player.
      * @param game
      */
     public void explode(Game game) {
@@ -50,8 +51,11 @@ public class Bomb extends Item implements Consumable {
         game.removeEntity(this);
         entities.forEach(
             entity -> {
+                // Recursively explode all bombs in the blast radius
                 if (entity instanceof Bomb) ((Bomb) entity).explode(game);
-                if (!(entity instanceof Player)) game.removeEntity(entity);
+                // Do not destroy portals or the player
+                if (!(entity instanceof Player || entity instanceof Portal))
+                    game.removeEntity(entity);
             }
         );
     }
