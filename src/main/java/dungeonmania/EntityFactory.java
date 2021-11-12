@@ -9,14 +9,18 @@ import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
+import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
+import dungeonmania.model.entities.movings.Assassin;
+import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
@@ -26,6 +30,7 @@ import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.SwampTile;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.AndComposite;
@@ -196,9 +201,6 @@ public class EntityFactory {
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);
             return new TimeTurner(position);
-        } else if (type.startsWith("older_player")) {
-            position = position.asLayer(30);
-            return new OlderPlayer(position);
         } else if (type.startsWith("player")) {
             position = position.asLayer(31);
             return new Player(position);

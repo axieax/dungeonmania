@@ -4,18 +4,24 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
+import dungeonmania.model.entities.buildables.MidnightArmour;
+import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
+import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
+import dungeonmania.model.entities.movings.Assassin;
+import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
@@ -25,6 +31,7 @@ import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.SwampTile;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
@@ -212,31 +219,31 @@ public class GameLoader {
         } else if (type.startsWith("assassin")) { /////
             position = position.asLayer(22);
             return new Assassin(position);
-        }else if (type.startsWith("hydra")) {
+        }else if (type.startsWith("hydra")) {////////
             position = position.asLayer(23);
             return new Hydra(position);
-        }else if (type.startsWith("swamp_tile")) {
+        }else if (type.startsWith("swamp_tile")) {/////////
             position = position.asLayer(24);
             return new SwampTile(position);
-        }else if (type.startsWith("sun_stone")) { ////
+        }else if (type.startsWith("sun_stone")) {
             position = position.asLayer(25);
             return new SunStone(position);
         } else if (type.startsWith("anduril")) {/////
             position = position.asLayer(26);
             return new Anduril(position);
-        } else if (type.startsWith("sceptre")) {///
+        } else if (type.startsWith("sceptre")) {/////////
             position = position.asLayer(27);
             return new Sceptre(position);
-        } else if (type.startsWith("midnight_armour")) {//
+        } else if (type.startsWith("midnight_armour")) {///////
             position = position.asLayer(28);
             return new MidnightArmour(position);
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);
             return new TimeTurner(position);
-        } else if (type.startsWith("older_player")) {///
+        } else if (type.startsWith("older_player")) {///////
             position = position.asLayer(30);
             return new OlderPlayer(position);
-        } else if (type.startsWith("player")) {///
+        } else if (type.startsWith("player")) {
             position = position.asLayer(31);
             Player player = new Player (position);
             int health = entityInfo.getInt("health");

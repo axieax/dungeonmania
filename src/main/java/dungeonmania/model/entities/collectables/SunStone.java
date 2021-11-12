@@ -12,4 +12,6 @@ public class SunStone extends Item {
         super("sun_stone", position);
     }
 
+    
+
 }

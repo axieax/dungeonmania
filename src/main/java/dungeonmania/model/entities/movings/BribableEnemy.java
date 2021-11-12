@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.movings;
 
+import org.json.JSONObject;
+
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -120,6 +122,14 @@ public abstract class BribableEnemy extends Enemy {
         this.mindControlled = true;
         return true;
     }
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("bribed", bribed); 
+        info.put ("mindControlled", mindControlled);  
+        info.put ("moveTwice", moveTwice);  
+        info.put ("mindControlTicks", mindControlTicks);    
+        return info;   
+    } 
 
     /**
      * Condition for player to bribe the enemy
@@ -128,4 +138,6 @@ public abstract class BribableEnemy extends Enemy {
      * @throws InvalidActionException
      */
     public abstract void bribe(Game game, Player player) throws InvalidActionException;
+
+
 }

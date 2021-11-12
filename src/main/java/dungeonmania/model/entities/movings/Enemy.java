@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.movings;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.movement.MovementState;
 import dungeonmania.model.entities.statics.SwampTile;
@@ -52,5 +54,14 @@ public abstract class Enemy extends MovingEntity implements Observer {
             this.movementTick = 1;
             this.movementState.move(game);
         }
+    }
+
+    public JSONObject toJSON () {
+        JSONObject info = super.toJSON();
+        info.put("damageMultiplier", damageMultiplier);
+        info.put ("movementState", movementState);
+        info.put ("movementTick", movementTick);
+        info.put ("armourDropRate", 0);
+        return info;
     }
 }
