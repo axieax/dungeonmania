@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class PositionGraph {
 
@@ -63,7 +64,7 @@ public class PositionGraph {
      * @param dest Position
      * @return
      */
-    public int BFS(Position src, Position dest) {
+    public int bfs(Position src, Position dest) {
         if (src.equals(dest)) return 0;
 
         LinkedList<Position> queue = new LinkedList<Position>();
@@ -103,5 +104,50 @@ public class PositionGraph {
             }
         }
         return Integer.MAX_VALUE;
+    }
+
+    public HashMap<Integer, Position> dijkstra(Position src) {
+        Queue<Position> queue = new LinkedList<Position>();
+
+        HashMap<Integer, Integer> dist = new HashMap<>();
+        HashMap<Integer, Position> pred = new HashMap<>();
+
+        for (Position currNode : nodes) {
+            dist.put(currNode.hashCode(), Integer.MAX_VALUE);
+            pred.put(currNode.hashCode(), null);
+        }
+
+        dist.put(src.hashCode(), 0);
+        queue.add(src);
+
+        if (entity instanceof MovingEntity) {
+            while (!queue.isEmpty()) {
+                Position vertex = queue.remove();
+                List<Position> adjacentPositions = game.getMoveablePositions(
+                    (MovingEntity) this.entity,
+                    vertex
+                );
+
+                for (Position currNode : adjacentPositions) {
+                    if (dist.get(vertex.hashCode()) != null && dist.get(currNode.hashCode()) != null) {
+                        int cost = 1;
+                        if (game.getSwampTile(currNode) != null) cost =
+                            game.getSwampTile(currNode).getMovementFactor();
+                        if (dist.get(vertex.hashCode()) == null) {
+                            return null;
+                        }
+                        if (dist.get(currNode.hashCode()) == null) {
+                            return null;
+                        }
+                        if (dist.get(vertex.hashCode()) + cost < dist.get(currNode.hashCode())) {
+                            dist.put(currNode.hashCode(), dist.get(vertex.hashCode()) + cost);
+                            pred.put(currNode.hashCode(), vertex);
+                            queue.add(currNode);
+                        }
+                    }
+                }
+            }
+        }
+        return pred;
     }
 }

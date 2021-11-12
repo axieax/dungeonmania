@@ -230,7 +230,7 @@ public class ZombieToastTest {
         game.tick(null, Direction.NONE);
         
         // the only option for the zombie is to move to the portal which cant pass through
-        assertTrue(zombie.getPosition().equals(portalPos)); // portal has no effect
+        assertTrue(zombie.getPosition().equals(zombiePos)); // portal has no effect
     }
 
     @Test
