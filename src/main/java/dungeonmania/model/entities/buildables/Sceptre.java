@@ -1,10 +1,10 @@
 package dungeonmania.model.entities.buildables;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Equipment;
+import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.player.Inventory;
 
-public class Sceptre extends Equipment implements Buildable {
+public class Sceptre extends Item implements Buildable {
 
     private static final int WOOD_NEEDED = 1;
     private static final int ARROW_NEEDED = 2;

@@ -7,13 +7,11 @@ import java.util.ArrayList;
 
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
-import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
@@ -181,44 +179,6 @@ public class SceptreTest {
         assertTrue(player.findInventoryItem("arrow") == null);
         assertTrue(player.getInventoryItem(treasure.getId()) == null);
         assertTrue(player.getInventoryItem(sunstone.getId()) == null);
-    }
-
-    /**
-     * Test durability of Sceptre.
-     */
-    @Test
-    public void durabilityTest() {
-        Mode mode = new Standard();
-        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-
-        Wood wood = new Wood(new Position(1, 0));
-        Key key = new Key(new Position(1, 1), 1);
-        SunStone sunstone = new SunStone(new Position(0, 1));
-
-        game.addEntity(wood);
-        game.addEntity(key);
-        game.addEntity(sunstone);
-
-        Player player = new Player(new Position(0, 0), mode.initialHealth());
-        game.addEntity(player);
-        player.move(game, Direction.RIGHT);
-        player.move(game, Direction.DOWN);
-        player.move(game, Direction.LEFT);
-        
-        game.build("sceptre");
-
-        // Durability of sceptre when built should be 5
-        int initialDurability = 5;
-        Sceptre sceptre = (Sceptre) player.findInventoryItem("sceptre");
-        assertTrue(sceptre.getDurability() == initialDurability);
-
-        Mercenary mercenary = new Mercenary(new Position(0, 2), mode.damageMultiplier(), player);
-        game.addEntity(mercenary);
-
-        // Player moves towards the mercenary, but cannot attack it with the sceptre (not a weapon)
-        // Durability of sceptre does not decrease
-        player.move(game, Direction.DOWN);
-        assertTrue(sceptre.getDurability() == initialDurability);
     }
 
     /**
