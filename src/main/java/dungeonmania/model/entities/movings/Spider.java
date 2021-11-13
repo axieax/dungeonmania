@@ -121,6 +121,52 @@ public class Spider extends Enemy {
         return spiders;
     }
 
+    /**
+     * 
+     * @return true if spider is in the circular movement state and
+     *         is in its initial movement (moving upwards), otherwise false
+     */
+    public boolean isInitialIfCircularMovement() {
+        if(this.getMovementState() instanceof CircularMovementState) {
+            CircularMovementState state = (CircularMovementState) this.getMovementState();
+            if(state.isInitialMovement()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 
+     * @return true if spider is in the circular movement state and
+     *         its movement is reversed, otherwise false
+     */
+    public boolean isReverseIfCircularMovement() {
+        if(this.getMovementState() instanceof CircularMovementState) {
+            CircularMovementState state = (CircularMovementState) this.getMovementState();
+            if(state.isReverseMovement()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 
+     * @return integer greater than 0 if spider is in the 
+     *         circular movement state otherwise -1
+     */
+    public int getIndexOfNextMoveIfCircularMovement() {
+        if(this.getMovementState() instanceof CircularMovementState) {
+            CircularMovementState state = (CircularMovementState) this.getMovementState();
+            return state.getIndexOfNextMove();
+        }
+        
+        return -1;
+    }
+
     //////////////////////////////////////////////////////////////////////////////
 
     @Override

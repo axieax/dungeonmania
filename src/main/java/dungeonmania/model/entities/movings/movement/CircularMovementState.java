@@ -35,6 +35,11 @@ public class CircularMovementState extends MovementState {
         this.reverseMovement = false;
     }
 
+    public CircularMovementState(Enemy enemy, int indexOfNextMove) {
+        this(enemy);
+        this.indexOfNextMove = indexOfNextMove;
+    }
+
     /**
      * Finds the next tile, ensuring that the entity maintains a "circular path"
      * and reverses direction if necessary.
@@ -77,5 +82,17 @@ public class CircularMovementState extends MovementState {
             }
             return newPos;
         }
+    }
+
+    public boolean isInitialMovement() {
+        return initialMovement;
+    }
+
+    public boolean isReverseMovement() {
+        return reverseMovement;
+    }
+
+    public int getIndexOfNextMove() {
+        return indexOfNextMove;
     }
 }
