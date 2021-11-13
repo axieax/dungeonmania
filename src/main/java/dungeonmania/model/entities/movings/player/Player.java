@@ -17,6 +17,7 @@ import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
+import dungeonmania.model.entities.movings.older_player.OlderPlayer;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
@@ -334,7 +335,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             if (getInventoryItem(itemId) == null) throw new InvalidActionException(
                 "At Player move method - itemUsed is not in the player's inventory"
             );
-            
+
             // Check if itemUsed can be consumed
             Item item = getInventoryItem(itemId);
 
@@ -358,11 +359,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(entity -> {
-            // Cannot interact with moving entities when moving
-            if (!(entity instanceof MovingEntity))
-                entity.interact(game, this);
-        });
+        entities.forEach(
+            entity -> {
+                // Cannot interact with moving entities when moving
+                if (!(entity instanceof MovingEntity)) entity.interact(game, this);
+            }
+        );
 
         // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
@@ -386,10 +388,21 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @param opponent entity the character is fighting
      */
     public void battle(Game game, Enemy opponent) throws PlayerDeadException {
-        state.battle(game, opponent);
-        if (!this.isAlive()) throw new PlayerDeadException("Player has died... Ending game...");
+        if (this.canBattleOpponent(opponent)) {
+            state.battle(game, opponent);
+            if (!this.isAlive()) throw new PlayerDeadException("Player has died... Ending game...");
+        }
     }
-    
+
+    private boolean canBattleOpponent(Enemy opponent) {
+        if (!(opponent instanceof OlderPlayer)) return true;
+        return !(
+            this.findInventoryItem("sun_stone") != null ||
+            this.findInventoryItem("midnight_armour") != null ||
+            this.getState() instanceof PlayerInvisibleState
+        );
+    }
+
     /**
      * Given an item, places it in the player's inventory
      *
@@ -406,10 +419,11 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @throws InvalidActionException if the player doesn't have enough resources or fails zombie check
      */
     public void craft(Game game, Buildable equipment) throws InvalidActionException {
-        if (equipment.isBuildable(game, inventory))
-            equipment.craft(inventory);
-        else
-            throw new InvalidActionException("You do not meet the requirements to build this equipment");
+        if (equipment.isBuildable(game, inventory)) equipment.craft(
+            inventory
+        ); else throw new InvalidActionException(
+            "You do not meet the requirements to build this equipment"
+        );
     }
 
     /**

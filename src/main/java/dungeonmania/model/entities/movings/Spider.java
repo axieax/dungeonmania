@@ -31,6 +31,7 @@ public class Spider extends Enemy {
         this.move(game);
     }
 
+    // TODO (Gabriel): change assumptions??
     /**
      * If a player drinks an invincibility potion, change the state
      * of the spider to make sure it runs away
