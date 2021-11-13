@@ -2,7 +2,6 @@ package dungeonmania.model.entities.movings.movement;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Enemy;
-import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.Arrays;

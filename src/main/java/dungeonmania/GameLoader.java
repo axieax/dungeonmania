@@ -4,6 +4,8 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
+import dungeonmania.model.entities.buildables.MidnightArmour;
+import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
@@ -19,6 +21,8 @@ import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
+import dungeonmania.model.entities.movings.Assassin;
+import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
@@ -29,6 +33,7 @@ import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.SwampTile;
 import dungeonmania.model.entities.statics.TimeTravellingPortal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
@@ -37,6 +42,7 @@ import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Peaceful;
 import dungeonmania.model.mode.Standard;
+import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -216,44 +222,111 @@ public class GameLoader {
             return newZombieToast;
         } else if (type.startsWith("mercenary")) { ////
             position = position.asLayer(21);
+            Boolean bribed = entityInfo.getBoolean("bribed");
+            Boolean mindControlled = entityInfo.getBoolean("mindControlled");
+            Boolean moveTwice = entityInfo.getBoolean("moveTwice");
+            int mindControlTicks = entityInfo.getInt("mindControlTicks");
+            int damageMultiplier = entityInfo.getInt("damageMultiplier");
+            // String movementState = entityInfo.getString("movementState"); // TODO more
+            int movementTick = entityInfo.getInt("movementTick");
+            int health = entityInfo.getInt("health");
+            String direct = entityInfo.getString("movingDirection"); // TODO
             Mercenary newMercenary = new Mercenary(
                 position,
                 mode.damageMultiplier(),
                 currentPlayer
             );
-            int health = entityInfo.getInt("health");
+            newMercenary.setBribed(bribed);
+            newMercenary.update(currentPlayer);
+            newMercenary.setMoveTwice(moveTwice);
+            newMercenary.setMindControlTicks(mindControlTicks);
+            newMercenary.setMovementTick(movementTick);
             newMercenary.setHealth(health);
+            Direction direction = Direction.NONE;
+            if (direct.equals("UP")) direction = Direction.UP; else if (
+                direct.equals("DOWN")
+            ) direction = Direction.DOWN; else if (direct.equals("RIGHT")) direction =
+                Direction.RIGHT; else if (direct.equals("LEFT")) direction = Direction.LEFT;
+            newMercenary.setDirection(direction);
             return newMercenary;
             // Collectable Entities
         } else if (type.startsWith("assassin")) { /////
             position = position.asLayer(22);
-            // return new Assassin(position);
-        } else if (type.startsWith("hydra")) {
+            Boolean bribed = entityInfo.getBoolean("bribed");
+            Boolean mindControlled = entityInfo.getBoolean("mindControlled");
+            Boolean moveTwice = entityInfo.getBoolean("moveTwice");
+            int mindControlTicks = entityInfo.getInt("mindControlTicks");
+            int damageMultiplier = entityInfo.getInt("damageMultiplier");
+            // String movementState = entityInfo.getString("movementState"); // TODO more
+            int movementTick = entityInfo.getInt("movementTick");
+            int health = entityInfo.getInt("health");
+            String direct = entityInfo.getString("movingDirection"); // TODO more
+            Assassin newAssassin = new Assassin(position, damageMultiplier, currentPlayer);
+            newAssassin.setBribed(bribed);
+            newAssassin.update(currentPlayer);
+            newAssassin.setMoveTwice(moveTwice);
+            newAssassin.setMindControlTicks(mindControlTicks);
+            newAssassin.setMovementTick(movementTick);
+            newAssassin.setHealth(health);
+            Direction direction = Direction.NONE;
+            if (direct.equals("UP")) direction = Direction.UP; else if (
+                direct.equals("DOWN")
+            ) direction = Direction.DOWN; else if (direct.equals("RIGHT")) direction =
+                Direction.RIGHT; else if (direct.equals("LEFT")) direction = Direction.LEFT;
+            newAssassin.setDirection(direction);
+            return newAssassin;
+        } else if (type.startsWith("hydra")) { ////////
             position = position.asLayer(23);
-            // return new Hydra(position);
-        } else if (type.startsWith("swamp_tile")) {
+            int damageMultiplier = entityInfo.getInt("damageMultiplier");
+            // String movementState = entityInfo.getString("movementState"); // TODO more
+            int movementTick = entityInfo.getInt("movementTick");
+            int health = entityInfo.getInt("health");
+            String direct = entityInfo.getString("movingDirection"); // TODO more
+            Boolean preventHeadRespawn = entityInfo.getBoolean("preventHeadRespawn");
+            Hydra newHydra = new Hydra(position, damageMultiplier, currentPlayer);
+            newHydra.setMovementTick(movementTick);
+            newHydra.setHealth(health);
+            newHydra.setPreventHeadRespawn(preventHeadRespawn);
+            Direction direction = Direction.NONE;
+            if (direct.equals("UP")) direction = Direction.UP; else if (
+                direct.equals("DOWN")
+            ) direction = Direction.DOWN; else if (direct.equals("RIGHT")) direction =
+                Direction.RIGHT; else if (direct.equals("LEFT")) direction = Direction.LEFT;
+            newHydra.setDirection(direction);
+            return newHydra;
+        } else if (type.startsWith("swamp_tile")) { /////////
             position = position.asLayer(24);
-            // return new SwampTile(position);
-        } else if (type.startsWith("sun_stone")) { ////
+            int movementFactor = entityInfo.getInt("movementFactor");
+            SwampTile newSwampTile = new SwampTile(position, movementFactor);
+            return newSwampTile;
+        } else if (type.startsWith("sun_stone")) {
             position = position.asLayer(25);
             return new SunStone(position);
         } else if (type.startsWith("anduril")) { /////
+            Anduril newAnduril = new Anduril(position);
             position = position.asLayer(26);
-            return new Anduril(position);
-        } else if (type.startsWith("sceptre")) { ///
-            position = position.asLayer(27);
-            // return new Sceptre(position);
-        } else if (type.startsWith("midnight_armour")) { //
-            position = position.asLayer(28);
-            // return new MidnightArmour(position);
+            int durability = entityInfo.getInt("durability");
+            newAnduril.setDurability(durability);
+            return newAnduril;
+        } else if (type.startsWith("sceptre")) { /////////
+            Sceptre newSceptre = new Sceptre();
+            int durability = entityInfo.getInt("durability");
+            newSceptre.setDurability(durability);
+            return newSceptre;
+        } else if (type.startsWith("midnight_armour")) { ///////
+            MidnightArmour newMidnightArmour = new MidnightArmour();
+            int durability = entityInfo.getInt("durability");
+            int bonusAttackDamage = entityInfo.getInt("bonusAttackDamage");
+            newMidnightArmour.setDurability(durability);
+            newMidnightArmour.setAttackDamage(bonusAttackDamage);
+            return newMidnightArmour;
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);
             return new TimeTurner(position);
-        } else if (type.startsWith("older_player")) { ///
+        } else if (type.startsWith("older_player")) { ///////
             position = position.asLayer(30);
-            // moves
-            // return new OlderPlayer(position, currentPlayer);
-        } else if (type.startsWith("player")) { ///
+            // return new OlderPlayer(position); // TODO
+        } else if (type.startsWith("player")) {
             position = position.asLayer(31);
             Player player = new Player(position, mode.initialHealth());
             int health = entityInfo.getInt("health");
@@ -276,7 +349,6 @@ public class GameLoader {
             newShield.setDurability(durability);
             return newShield;
         }
-
         return null;
     }
 

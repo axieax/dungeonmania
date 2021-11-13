@@ -60,7 +60,7 @@ public class TimeTurnerTest {
     public void testRewindExceeds() {
         // create game and collect time turner
         DungeonManiaController dmc = new DungeonManiaController();
-        DungeonResponse initialState = dmc.newGame("hourglass", "standard");
+        dmc.newGame("hourglass", "standard");
         TimeTravelUtil.goToTimeTurnerFromSpawnPoint(dmc);
 
         // try to rewind more than 2 moves
@@ -83,7 +83,7 @@ public class TimeTurnerTest {
     public void testRewindEdge() {
         // create game and collect time turner
         DungeonManiaController dmc = new DungeonManiaController();
-        DungeonResponse initialState = dmc.newGame("hourglass", "standard");
+        dmc.newGame("hourglass", "standard");
         TimeTravelUtil.goToTimeTurnerFromSpawnPoint(dmc);
 
         // try to rewind 2 moves
@@ -109,7 +109,7 @@ public class TimeTurnerTest {
     public void testRewindOneTickOldPlayerMovement() {
         // create game and collect time turner
         DungeonManiaController dmc = new DungeonManiaController();
-        DungeonResponse initialState = dmc.newGame("hourglass", "standard");
+        dmc.newGame("hourglass", "standard");
         TimeTravelUtil.goToTimeTurnerFromSpawnPoint(dmc);
         assertDoesNotThrow(() -> dmc.tick(null, Direction.RIGHT));
 
@@ -155,7 +155,7 @@ public class TimeTurnerTest {
     public void testRewindFiveTicksOldPlayerMovement() {
         // create game and collect time turner
         DungeonManiaController dmc = new DungeonManiaController();
-        DungeonResponse initialState = dmc.newGame("hourglass", "standard");
+        dmc.newGame("hourglass", "standard");
         TimeTravelUtil.goToTimeTurnerFromSpawnPoint(dmc);
         assertDoesNotThrow(() -> dmc.tick(null, Direction.RIGHT));
         assertDoesNotThrow(() -> dmc.tick(null, Direction.RIGHT));
@@ -217,7 +217,7 @@ public class TimeTurnerTest {
     public void testRewindBattle() {
         // create game and collect time turner
         DungeonManiaController dmc = new DungeonManiaController();
-        DungeonResponse initialState = dmc.newGame("hourglass", "standard");
+        dmc.newGame("hourglass", "standard");
         TimeTravelUtil.goToTimeTurnerFromSpawnPoint(dmc);
 
         // try to rewind 1 move

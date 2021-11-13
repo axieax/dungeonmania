@@ -42,6 +42,16 @@
             "type": "invincibility_potion"
         },
         {
+            "x": 21,
+            "y": 14,
+            "type": "sun_stone"
+        },
+        {
+            "x": 22,
+            "y": 13,
+            "type": "armour"
+        },
+        {
             "x": 19,
             "y": 12,
             "type": "invisibility_potion"

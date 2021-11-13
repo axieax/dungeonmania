@@ -181,30 +181,24 @@ public class EntityFactory {
             return new Mercenary(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("assassin")) {
             position = position.asLayer(22);
-            // return new Assassin(position);
+            return new Assassin(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("hydra")) {
             position = position.asLayer(23);
-            // return new Hydra(position);
+            return new Hydra(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("swamp_tile")) {
             position = position.asLayer(24);
-            // return new SwampTile(position);
+            return new SwampTile(position, 2); // TODO: is movementFactor right?
         } else if (type.startsWith("sun_stone")) {
             position = position.asLayer(25);
             return new SunStone(position);
         } else if (type.startsWith("anduril")) {
             position = position.asLayer(26);
             return new Anduril(position);
-        } else if (type.startsWith("sceptre")) {
-            position = position.asLayer(27);
-            // return new Sceptre(position);
-        } else if (type.startsWith("midnight_armour")) {
-            position = position.asLayer(28);
-            // return new MidnightArmour(position);
         } else if (type.startsWith("time_turner")) {
-            position = position.asLayer(29);
+            position = position.asLayer(27);
             return new TimeTurner(position);
         } else if (type.startsWith("player")) {
-            position = position.asLayer(30);
+            position = position.asLayer(28);
             return new Player(position, mode.initialHealth());
         }
         return null;

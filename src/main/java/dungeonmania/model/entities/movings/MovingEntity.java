@@ -62,6 +62,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put ("health", health);
+        info.put ("movingDirection", (movingDirection != null) ? movingDirection.toString(): Direction.NONE.toString());
         return info;
     }
 
