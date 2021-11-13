@@ -357,6 +357,9 @@ public class MercenaryTest {
         game.interact(mercenary.getId());
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
 
+        // Nothing should happen if the mercenary gets bribed again
+        game.interact(mercenary.getId());
+
         // Mercenary stays either next to or on top of the player regardless of where the latter moves
         // Since mercenary is bribed, it will not engage in battle with the player
         List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);

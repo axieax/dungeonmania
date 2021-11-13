@@ -11,7 +11,9 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.model.entities.movings.Boss;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
@@ -330,28 +332,20 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public void move(Game game, Direction direction, String itemId)
         throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
-            // Check if itemId is not in player inventory
-            if (getInventoryItem(itemId) == null) throw new InvalidActionException(
+            Item item = getInventoryItem(itemId);
+            
+            // Check if item is in the player's inventory
+            if (item == null) throw new InvalidActionException(
                 "At Player move method - itemUsed is not in the player's inventory"
             );
-            
-            // Check if itemUsed can be consumed
-            Item item = getInventoryItem(itemId);
 
             // Item is not null, and it's not a bomb or any potion
-            if (item != null && !(item instanceof Bomb || item instanceof Potion)) {
+            if (!(item instanceof Bomb || item instanceof Potion)) {
                 throw new IllegalArgumentException("Not a valid item to use");
             }
 
-            // Item is in the game but not in the player's inventory, or doesn't exist in either
-            if (item == null) {
-                throw new InvalidActionException("Item not found in player inventory");
-            }
-
             // Consume item
-            if (item instanceof Consumable) {
-                ((Consumable) item).consume(game, this);
-            }
+            if (item instanceof Consumable) ((Consumable) item).consume(game, this);
         }
 
         this.setDirection(direction);
@@ -438,10 +432,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
-            damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
+            damageToOpponent += e.getHitRate() * e.useEquipment(this);
+            
+            // If the opponent is a boss, andurils deal triple the damage
+            if (opponent instanceof Boss && e instanceof Anduril)
+                damageToOpponent += e.getHitRate() * e.useEquipment(this) * 2;
         }
 
-        // Any extra attack damage provided by defence equipment
+        // Any extra attack damage provided by defence equipments
         for (DefenceEquipment e : getDefenceEquipmentList()) {
             damageToOpponent += e.getBonusAttackDamage();
         }
@@ -464,7 +462,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public int applyDefenceToOpponentAttack(MovingEntity opponent) {
         int finalAttackDamage = opponent.getBaseAttackDamage();
         for (DefenceEquipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage = (int) (e.useEquipment(this, opponent));
+            finalAttackDamage *= e.useEquipment(this);
         }
         return finalAttackDamage;
     }

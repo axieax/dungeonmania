@@ -38,10 +38,6 @@ public abstract class Entity {
         return interactable;
     }
 
-    public void setInteractable(boolean interactable) {
-        this.interactable = interactable;
-    }
-
     public boolean isPassable() {
         return passable;
     }

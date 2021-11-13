@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Bomb;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
@@ -53,6 +54,34 @@ public class BoulderTest {
     }
 
     /**
+     * Test if mercenary interacts with the boulder, nothing will happen
+     */
+    @Test
+    public void boulderInteractByMercenary() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Boulder boulder = new Boulder(new Position(1, 1));
+        game.addEntity(boulder);
+
+        Player player = new Player(new Position(5, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(0, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+        mercenary.interact(game, boulder);
+
+        assertTrue(new Position(1, 1).equals(game.getEntity(boulder.getId()).getPosition()));
+
+        // Since player is directly to the right of the mercenary, it would theoretically move right
+        // However, the boulder is blocking the path, so it should not move there
+        game.tick(null, Direction.NONE);
+        assertTrue(
+            new Position(0, 0).equals(game.getEntity(mercenary.getId()).getPosition()) ||
+            new Position(0, 2).equals(game.getEntity(mercenary.getId()).getPosition())
+        );
+    }
+
+    /**
      * Test that the player cannot push more than one boulder at once.
      */
     @Test
@@ -95,7 +124,7 @@ public class BoulderTest {
         Bomb bomb = new Bomb(new Position(2, 1));
         game.addEntity(bomb);
 
-        // create a wall on top of the bomb
+        // Create a wall on top of the bomb
         Wall wall1 = new Wall(new Position(1, 0));
         Wall wall2 = new Wall(new Position(2, 0));
         Wall wall3 = new Wall(new Position(3, 0));
@@ -104,28 +133,28 @@ public class BoulderTest {
         game.addEntity(wall2);
         game.addEntity(wall3);
 
-        // assert that walls exists
+        // Check that walls exist
         assertTrue(game.getEntity(wall1.getId()) != null);
         assertTrue(game.getEntity(wall2.getId()) != null);
         assertTrue(game.getEntity(wall3.getId()) != null);
 
-        // get bomb
+        // Get bomb
         game.tick(null, Direction.UP);
         game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.RIGHT);
 
-        // place bomb
+        // Place bomb
         game.tick(bomb.getId(), Direction.NONE);
 
-        // go to initial spawn spot
+        // Go to initial spawn spot
         game.tick(null, Direction.LEFT);
         game.tick(null, Direction.LEFT);
         game.tick(null, Direction.DOWN);
 
-        // move boulder to trigger bomb explosion
+        // Move boulder to trigger bomb explosion
         game.tick(null, Direction.RIGHT);
 
-        // boulder explodes
+        // Boulder explodes
         assertTrue(game.getEntity(wall1.getId()) == null);
         assertTrue(game.getEntity(wall2.getId()) == null);
         assertTrue(game.getEntity(wall3.getId()) == null);
@@ -155,34 +184,33 @@ public class BoulderTest {
         Bomb bomb = new Bomb(bombPos);
         game.addEntity(bomb);
 
-        // create a wall
+        // Create a wall
         Wall wall1 = new Wall(new Position(3, 1));
 
         game.addEntity(wall1);
 
-        // get bomb
+        // Get bomb
         game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.DOWN);
         game.tick(null, Direction.DOWN);
 
-        // place bomb
+        // Place bomb
         game.tick(bomb.getId(), Direction.NONE);
 
-        // go to initial spawn spot
+        // Go to initial spawn spot
         game.tick(null, Direction.UP);
         game.tick(null, Direction.UP);
         game.tick(null, Direction.LEFT);
 
-        // move boulder to trigger bomb explosion
+        // Move boulder to trigger bomb explosion
         game.tick(null, Direction.DOWN);
 
-        // boulder explodes
+        // Boulder explodes
         assertTrue(game.getEntity(wall1.getId()) == null);
         assertTrue(game.getEntity(bomb.getId()) == null);
         assertTrue(game.getEntity(boulder.getId()) == null);
         assertTrue(game.getEntity(floorSwitch.getId()) == null);
         assertTrue(game.getEntity(player.getId()) != null);
         assertTrue(Position.isAdjacent(bombPos, player.getPosition()));
-        
     }
 }

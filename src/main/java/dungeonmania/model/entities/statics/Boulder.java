@@ -14,14 +14,12 @@ public class Boulder extends Entity {
     }
 
     /**
-     * If the boulder is interacted by the player, it moves the boulder to the next
-     * tile.
+     * If the boulder is interacted by the player, it moves the boulder to the next tile.
      */
     @Override
     public void interact(Game game, Entity character) {
-        if (character instanceof Player) {
+        if (character instanceof Player)
             this.moveBoulder(game, ((Player) character).getDirection());
-        }
     }
 
     /**

@@ -2,8 +2,8 @@ package dungeonmania.movings;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.DungeonManiaController;
@@ -14,6 +14,7 @@ import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
+import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.collectables.potion.Potion;
@@ -487,10 +488,25 @@ public class CharacterTest {
 
         assertTrue(game.getEntities(new Position(2, 2)).size() == 1); // bomb position
 
-        // any attempt to move onto the block with the bomb fials
+        // any attempt to move onto the block with the bomb fails
         game.tick(null, Direction.LEFT);
         assertTrue(game.getEntities(player.getPosition()).size() == 1); // player position
         assertTrue(game.getEntities(new Position(2, 2)).size() == 1); // bomb position
+    }
+
+    @Test
+    public void testUsingNonExistentItem() {
+        Mode mode = new Peaceful();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        Sword sword = new Sword(new Position(2, 1));
+        game.addEntity(sword);
+
+        // The sword exists in the game, but the player does not have it in their inventory, so should throw exception
+        assertThrows(InvalidActionException.class, () -> player.move(game, Direction.RIGHT, sword.getId()));
     }
 
     @Test
@@ -723,7 +739,7 @@ public class CharacterTest {
     public void testCharacterBattleWithAlly() {
         // Fight an enemy mercenary while a player has an allied mercenary
         // Fight an enemy mercenary without any allies
-        // Health remaining in the latter case should be smaller than in the former
+        // Enemy health should be less (more negative) in the former case
         
         Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
@@ -747,13 +763,13 @@ public class CharacterTest {
         game.addEntity(enemyMercenary);
 
         int playerTotalAttackDmgWithAlly = player.getTotalAttackDamage(mercenary);
-        // enemy mercenary should battle with player in this tick
+        // Enemy mercenary should battle with player in this tick
         game.tick(null, Direction.RIGHT);
         assertEquals(new Position(3, 1), mercenary.getPosition());
         assertTrue(!enemyMercenary.isAlive());
         int enemyHealthWithAlly = enemyMercenary.getHealth();
 
-        // create a new game instance where the player do not have any allies
+        // Create a new game instance where the player does not have any allies
         mode = new Hard();
         game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
@@ -770,7 +786,7 @@ public class CharacterTest {
         assertEquals(new Position(4, 1), enemyMercenary.getPosition());
 
         int playerTotalAttackDmgWithoutAlly = player.getTotalAttackDamage(mercenary);
-        // player and mercenary should battle in this tick
+        // Player and mercenary should battle in this tick
         game.tick(null, Direction.RIGHT);
         assertEquals(new Position(3, 1), enemyMercenary.getPosition());
         assertTrue(!enemyMercenary.isAlive());

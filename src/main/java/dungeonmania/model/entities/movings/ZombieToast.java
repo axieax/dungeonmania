@@ -45,18 +45,13 @@ public class ZombieToast extends Enemy {
             }
         }
     }
-
-    @Override
-    public void moveTo(Position position) {
-        this.setPosition(position);
-    }
-
+    
     /**
-     * Zombie Toast is allowed to pass through portals
+     * Zombie Toast is not allowed to pass through portals
      */
     @Override
     public boolean collision(Entity entity) {
-        if (entity instanceof Portal) return false;
+        if (entity instanceof Portal) return true;
         return !entity.isPassable();
     }
     

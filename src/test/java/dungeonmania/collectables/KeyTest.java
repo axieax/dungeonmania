@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.goal.ExitCondition;
@@ -105,5 +106,29 @@ public class KeyTest {
         player.move(game, Direction.UP);
         assertTrue(new Position(1, 1).equals(player.getPosition()));
         assertTrue(door.isOpen());
+    }
+
+    /**
+     * Test that the key cannot be picked up by entities other than the player.
+     */
+    @Test
+    public void keyMercenaryCannotPickup() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(1, 3), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        Key key = new Key(new Position(1, 2), 1);
+        game.addEntity(key);
+        
+        // Mercenary moves in the direction of the player (upwards)
+        // which will pass the location of the key, but cannot pick it up
+        mercenary.move(game);
+        assertTrue(game.getEntities(new Position(1, 2)).contains(mercenary));
+        assertTrue(game.getEntities(new Position(1, 2)).contains(key));
     }
 }
