@@ -1,9 +1,11 @@
 package dungeonmania.buildables;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.collectables.Arrow;
@@ -210,22 +212,20 @@ public class SceptreTest {
         Sceptre sceptre = (Sceptre) player.findInventoryItem("sceptre");
         assertTrue(sceptre.getDurability() == initialDurability);
 
-        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(0, 3), mode.damageMultiplier());
-        game.addEntity(spawner);
+        Mercenary mercenary = new Mercenary(new Position(0, 2), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
 
+        // Player moves towards the mercenary, but cannot attack it with the sceptre (not a weapon)
+        // Durability of sceptre does not decrease
         player.move(game, Direction.DOWN);
-
-        // Player is now next to the zombie toast spawner and will proceed to destroy it with the sceptre
-        // Durability of sceptre decreases by 1
-        game.interact(spawner.getId());
-        assertTrue(sceptre.getDurability() == initialDurability - 1);
+        assertTrue(sceptre.getDurability() == initialDurability);
     }
 
     /**
-     * Test if Sceptre can be used in battles.
+     * Test interaction with Zombie Toast Spawner.
      */
     @Test
-    public void battleTest() {
+    public void zombieToastSpawnerTest() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
@@ -245,19 +245,12 @@ public class SceptreTest {
         
         game.build("sceptre");
 
-        int initialDurability = 5;
-        Sceptre sceptre = (Sceptre) player.findInventoryItem("sceptre");
-        assertTrue(sceptre.getDurability() == initialDurability);
+        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(0, 3), mode.damageMultiplier());
+        game.addEntity(spawner);
 
-        Mercenary mercenary = new Mercenary(new Position(0, 2), mode.damageMultiplier(), player);
-        game.addEntity(mercenary);
-
-        // Player moves to attack the mercenary with the sceptre
         player.move(game, Direction.DOWN);
 
-        // Mercenary should die upon battle
-        // Durability of sceptre decreases by 1 each time it battles (within one tick)
-        assertTrue(game.getEntity(mercenary.getId()) == null);
-        assertTrue(sceptre == null || sceptre.getDurability() != initialDurability);
+        // Player is now next to the zombie toast spawner but cannot destroy it with the sceptre (not a weapon)
+        assertThrows(InvalidActionException.class, () -> game.interact(spawner.getId()));
     }
 }

@@ -1,10 +1,10 @@
 package dungeonmania.model.entities.buildables;
 
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.AttackEquipment;
+import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.movings.player.Inventory;
 
-public class Sceptre extends AttackEquipment implements Buildable {
+public class Sceptre extends Equipment implements Buildable {
 
     private static final int WOOD_NEEDED = 1;
     private static final int ARROW_NEEDED = 2;
@@ -12,11 +12,8 @@ public class Sceptre extends AttackEquipment implements Buildable {
     private static final int TREASURE_NEEDED = 1;
     private static final int SUNSTONE_NEEDED = 1;
 
-    private static final int ATTACK_DAMAGE = 60;
-    private static final int HIT_RATE = 1;
-
     public Sceptre() {
-        super("sceptre", ATTACK_DAMAGE, HIT_RATE);
+        super("sceptre", null);
     }
 
     @Override
