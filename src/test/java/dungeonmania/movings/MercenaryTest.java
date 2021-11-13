@@ -222,47 +222,6 @@ public class MercenaryTest {
     }
 
     @Test
-    public void testBribedMercenaryDoesNotAttack() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-
-        Player player = new Player(new Position(1, 1), mode.initialHealth());
-        game.addEntity(player);
-
-        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
-        game.addEntity(mercenary);
-
-        game.addEntity(new Treasure(new Position(1, 2)));
-        game.addEntity(new Treasure(new Position(1, 3)));
-        game.addEntity(new Treasure(new Position(1, 4)));
-
-        Position updatedPlayerPos = new Position(1, 4);
-
-        // Make player collect all 3 coins
-        player.move(game, Direction.DOWN);
-        player.move(game, Direction.DOWN);
-        player.move(game, Direction.DOWN);
-
-        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
-            game.tick(null, Direction.NONE);
-        }
-
-        // Mercenary in adjacent tile, so bribe
-        int playerHealth = player.getHealth();
-
-        game.interact(mercenary.getId());
-        // Player still at tile
-        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
-
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == playerHealth);
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == playerHealth);
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == playerHealth);
-    }
-
-    @Test
     public void testInteractMercenaryNotAdjacent() {
         // InvalidActionException if the player is not within 2 cardinal
         // tiles to the mercenary and they are bribing
@@ -366,6 +325,47 @@ public class MercenaryTest {
     }
     
     @Test
+    public void testBribedMercenaryDoesNotAttack() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        game.addEntity(new Treasure(new Position(1, 2)));
+        game.addEntity(new Treasure(new Position(1, 3)));
+        game.addEntity(new Treasure(new Position(1, 4)));
+
+        
+        // Make player collect all 3 coins
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        Position updatedPlayerPos = new Position(1, 4);
+
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
+            game.tick(null, Direction.NONE);
+        }
+
+        int playerHealth = player.getHealth();
+
+        // Mercenary in adjacent tile, so bribe (player stil at tile)
+        game.interact(mercenary.getId());
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
+        
+        // Mercenary will not attack the player
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == playerHealth);
+    }
+
+    @Test
     public void testBribedMovement() {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
@@ -410,6 +410,11 @@ public class MercenaryTest {
 
             List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
+
+            // Exit the loop if the player or mercenary has died
+            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+                break;
+            }
 
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
             // Note that we have the number of entities at the player position is >= 2 since spiders may spawn

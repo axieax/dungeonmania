@@ -23,7 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -272,19 +274,83 @@ public class AssassinTest {
             game.tick(null, Direction.NONE);
         }
 
-        // Assassin in adjacent tile, so bribe
         int playerHealth = player.getHealth();
 
+        // Assassin in adjacent tile, so bribe (player stil at tile)
         game.interact(assassin.getId());
-        // Player still at tile
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
         
+        // Assassin will not attack the player
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
+    }
+
+    @Test
+    public void testBribedMovement() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        Assassin assassin = new Assassin(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(assassin);
+
+        game.addEntity(new Treasure(new Position(1, 2)));
+        game.addEntity(new Treasure(new Position(1, 3)));
+        game.addEntity(new Treasure(new Position(1, 4)));
+        
+        // Make player collect all 3 coins
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+
+        game.addEntity(new TheOneRing(new Position(2,4)));
+        game.addEntity(new TheOneRing(new Position(3,4)));
+        
+        // Make player collect TheOneRing
+        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
+
+        Position updatedPlayerPos = new Position(3, 4);
+
+        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
+            game.tick(null, Direction.NONE);
+        }
+
+        // Assassin in adjacent tile, so bribe (player still at original tile)
+        game.interact(assassin.getId());
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
+
+        // Nothing should happen if the assassin gets bribed again
+        game.interact(assassin.getId());
+
+        // Assassin stays either next to or on top of the player regardless of where the latter moves
+        // Since assassin is bribed, it will not engage in battle with the player
+        List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
+        Random rand = new Random(5);
+        for (int i = 0; i < 100; i++) {
+            int index = rand.nextInt(100) % 4;
+            Direction movementDirection = possibleDirections.get(index); 
+
+            game.tick(null, movementDirection);
+
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
+            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
+
+            // Exit the loop if the player or assassin has died
+            if (game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null) {
+                break;
+            }
+
+            // Assassin will always be adjacent to or at the same position as the player since it will always follow it
+            // Note that we have the number of entities at the player position is >= 2 since spiders may spawn
+            assertTrue(adjacentEntites.contains(assassin) || numEntitesAtPlayerPos >= 2);
+        }
     }
 
     @Test

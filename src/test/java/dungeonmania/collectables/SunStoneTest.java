@@ -325,7 +325,6 @@ public class SunStoneTest {
                 break;
             }
 
-
             // Assassin will always be adjacent to or at the same position as the player since it will always follow it
             // Note that we have the number of entities at the player position is >= 2 since spiders may spawn
             assertTrue(adjacentEntites.contains(assassin) || numEntitesAtPlayerPos >= 2);
