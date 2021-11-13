@@ -8,7 +8,9 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.movings.BribableEnemy;
+import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.Hydra;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.player.Player;
@@ -40,6 +42,7 @@ public final class Game {
     private final List<Entity> entities;
     private final Goal goal;
     private final Mode mode;
+    private Position playerSpawnLocation;
 
     private int tick = 0;
 
@@ -65,6 +68,7 @@ public final class Game {
 
     public final void addEntity(Entity entity) {
         entities.add(entity);
+        if (entity instanceof Player) playerSpawnLocation = entity.getPosition();
     }
 
     public final boolean removeEntity(Entity entity) {
@@ -82,6 +86,10 @@ public final class Game {
             .map(e -> (Player) e)
             .findFirst()
             .orElse(null);
+    }
+
+    public Position getPlayerSpawnLocation() {
+        return playerSpawnLocation;
     }
 
     public final List<Entity> getEntities() {
@@ -106,6 +114,14 @@ public final class Game {
             .filter(e -> e.getPosition().equals(position))
             .collect(Collectors.toList());
     }
+
+    public final List<Enemy> getAllEnemies() {
+        return entities
+            .stream()
+            .filter(e -> e instanceof Enemy)
+            .map(e -> (Enemy) e)
+            .collect(Collectors.toList());
+        }
 
     public final List<Portal> getAllPortals() {
         return entities
@@ -293,6 +309,7 @@ public final class Game {
             });
 
             Spider.spawnSpider(this, this.mode.damageMultiplier());
+            Mercenary.spawnMercenary(this, this.mode.damageMultiplier());
             Hydra.spawnHydra(this, this.mode.damageMultiplier());
         } catch (PlayerDeadException e) {}
 
