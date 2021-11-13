@@ -3,11 +3,8 @@ package dungeonmania.model.entities.movings.older_player;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.SubjectPlayer;
-import dungeonmania.model.entities.movings.movement.MovementState;
 import dungeonmania.util.Position;
 import java.util.List;
-
-import org.json.JSONObject;
 
 public class OlderPlayer extends Enemy {
 
