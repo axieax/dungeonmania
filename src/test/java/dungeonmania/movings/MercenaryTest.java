@@ -36,6 +36,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class MercenaryTest {
 
+    public static final String MERCENARY = "mercenary";
     public static final String CHARACTER_TYPE = "player";
     public static final String DUNGEON_NAME = "advanced";
     public static final String GAME_MODE = "Peaceful";
@@ -49,8 +50,39 @@ public class MercenaryTest {
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 18; i++) {
+            game.tick(null, Direction.NONE);
             assertTrue(game.getEntities().size() == numEntities);
+        }
+    }
+
+    @Test
+    public void testSpawnMercenary() {
+        Mode mode = new Standard();
+        // Mercenaries only spawn in dungeons with at least one enemy
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        // Move player away from spawning location (otherwise mercenary will immediately die after spawning)
+        game.tick(null, Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
+
+        // Check that mercenaries will spawn eventually
+        // Note that there will be spiders in the dungeon (which means there are enemies in the dungeon)
+        Mercenary mercenary = null;
+        for (int i = 0; i < 100; i++) {
+            game.tick(null, Direction.NONE);
+            for (Entity entity : game.getEntities()) {
+                if (entity.getType().startsWith(MERCENARY)) {
+                    mercenary = (Mercenary) entity;
+                    assertTrue(mercenary != null);
+                    // Also ensure that it spawns at the player's initial spawning location
+                    assertTrue(mercenary.getPosition().equals(new Position(1, 1)));
+                    return;
+                }
+            }
         }
     }
 
