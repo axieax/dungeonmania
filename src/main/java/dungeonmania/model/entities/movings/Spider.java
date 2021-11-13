@@ -83,9 +83,9 @@ public class Spider extends Enemy {
         int tick = game.getTick();
         int tickRate = game.getTickRate();
         if (tick != 0 && tick % tickRate == 0) {
-            // choose a random entity and spawn on it
-            List<Entity> entities = game.getEntities(); // all entities in the dungeon
-            Collections.shuffle(entities); // random order
+            // Choose a random entity in the dungeon and spawn on it
+            List<Entity> entities = game.getEntities();
+            Collections.shuffle(entities);
 
             boolean canSpawn = false;
             Position position = null;
@@ -113,9 +113,7 @@ public class Spider extends Enemy {
         List<Entity> entities = game.getEntities();
         int spiders = 0;
         for (Entity e : entities) {
-            if (e.getType().equals("spider")) {
-                spiders++;
-            }
+            if (e.getType().equals("spider")) spiders++;
         }
 
         return spiders;
@@ -123,6 +121,9 @@ public class Spider extends Enemy {
 
     //////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Spider is allows to pass through walls, doors, portals and exits
+     */
     @Override
     public boolean collision(Entity entity) {
         if (

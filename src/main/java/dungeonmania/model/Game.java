@@ -42,7 +42,6 @@ public final class Game {
     private final Mode mode;
 
     private int tick = 0;
-    private int rewindQty = 0;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
         this.dungeonId = UUID.randomUUID().toString();
@@ -159,15 +158,15 @@ public final class Game {
         return getAdjacentEntities(position)
             .stream()
             .filter(e -> {
-                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                // Cardinally adjacent if one coordinate is (1 or -1) with the other 0
                 Position difference = Position.calculatePositionBetween(e.getPosition(), position);
                 int xDiff = Math.abs(difference.getX());
                 int yDiff = Math.abs(difference.getY());
                 return (
-                    // ensure both xDiff and yDiff are either 0 or 1
+                    // Ensure both xDiff and yDiff are either 0 or 1
                     (xDiff == (xDiff & 1)) &&
                     (yDiff == (yDiff & 1)) &&
-                    // logical XOR to check x and y are different
+                    // Logical XOR to check x and y are different
                     ((xDiff == 1) ^ (yDiff == 1))
                 );
             })
@@ -200,7 +199,7 @@ public final class Game {
     private final String formatGoal() {
         if (goal == null || getCharacter() == null) return "";
         String goalString = goal.toString(this);
-        // remove starting and closing brackets
+        // Remove starting and closing brackets
         if (goalString.startsWith("(") && goalString.endsWith(")")) {
             goalString = goalString.substring(1, goalString.length() - 1);
         }
@@ -228,14 +227,14 @@ public final class Game {
      * @return list of boulder animations
      */
     private final List<AnimationQueue> boulderAnimations() {
-        // locate switch positions
+        // Locate switch positions
         Set<Position> switchPositions = new HashSet<>();
         for (Entity e : entities) {
             Position pos = e.getPosition();
             if (e instanceof FloorSwitch) switchPositions.add(pos.asLayer(0));
         }
 
-        // different skins for boulders on switches
+        // Different skins for boulders on switches
         return entities
             .stream()
             .filter(e ->
@@ -351,8 +350,7 @@ public final class Game {
             entities
                 .stream()
                 .filter(e -> e instanceof TimeTravellingPortal && e.getPosition().equals(position))
-                .count() >
-            0
+                .count() > 0
         );
     }
 
