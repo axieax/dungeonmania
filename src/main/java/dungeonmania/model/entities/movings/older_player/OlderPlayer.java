@@ -2,12 +2,8 @@ package dungeonmania.model.entities.movings.older_player;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Enemy;
-import dungeonmania.model.entities.movings.MovingEntity;
-import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.movement.MovementState;
-import dungeonmania.model.entities.movings.player.Player;
-import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.util.Position;
 import java.util.List;
 
