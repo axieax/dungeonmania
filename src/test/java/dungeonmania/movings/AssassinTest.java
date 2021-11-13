@@ -334,7 +334,13 @@ public class AssassinTest {
         
         // Assassin should not be able to go in the door position
         for(int i = 0; i < 100; i ++) {
-            game.tick(null, Direction.NONE);   
+            game.tick(null, Direction.NONE);
+
+            // Exit loop if either the player or assassin has died
+            if (game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null) {
+                break;
+            }
+            
             assertTrue(!game.getEntity(assassin.getId()).getPosition().equals(doorPos));
         }
     }
