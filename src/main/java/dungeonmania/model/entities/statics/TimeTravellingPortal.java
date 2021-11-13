@@ -7,8 +7,7 @@ import dungeonmania.util.Position;
 public class TimeTravellingPortal extends Entity {
 
     public TimeTravellingPortal(Position position) {
-        super("time_travelling_portal", position);
-        this.setPassable(true);
+        super("time_travelling_portal", position, false, true);
     }
 
     public void interact(Game game, Entity character) {}
