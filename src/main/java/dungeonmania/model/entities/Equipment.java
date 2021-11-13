@@ -27,7 +27,7 @@ public abstract class Equipment extends Item {
      */
     public double useEquipment(Player player) {
         this.durability--;
-        if (this.durability < 0) player.removeInventoryItem(this.getId());
+        if (this.durability == 0) player.removeInventoryItem(this.getId());
         return 0;
     }
 
