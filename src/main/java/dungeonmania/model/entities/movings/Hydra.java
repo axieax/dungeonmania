@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONObject;
+
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
@@ -26,6 +28,10 @@ public class Hydra extends Enemy implements Boss {
         this.setMovementState(new RandomMovementState(this));
         preventHeadRespawn = false;
         player.attach(this);
+    }
+
+    public void setPreventHeadRespawn(Boolean respawn) {
+        this.preventHeadRespawn = respawn;
     }
 
     @Override
@@ -121,5 +127,12 @@ public class Hydra extends Enemy implements Boss {
             preventHeadRespawn = false;
             super.reduceHealthFromBattle(amount);
         }
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put ("preventHeadRespawn", preventHeadRespawn);
+        return info;
     }
 }

@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.model.Game;
 import dungeonmania.model.GameWrapper;
 import dungeonmania.model.Maze;
 import dungeonmania.model.entities.Entity;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class DungeonManiaController {
@@ -253,7 +251,8 @@ public class DungeonManiaController {
         int xEnd,
         int yEnd,
         String gameMode
-    ) throws IllegalArgumentException {
+    )
+        throws IllegalArgumentException {
         // get game mode
         Mode mode = getMode(gameMode);
 

@@ -31,6 +31,7 @@ public abstract class Equipment extends Item {
         return 0;
     }
 
+    @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put("durability", durability);
