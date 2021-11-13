@@ -233,8 +233,7 @@ public class GameTest {
     }
 
     /**
-     * This tests that a buildable (bow) can be crafted if sufficient materials are
-     * present
+     * This tests that a buildable equipment (bow) can be crafted if sufficient materials are present
      */
     @Test
     public void testBuild() {
@@ -281,6 +280,7 @@ public class GameTest {
     @Test
     public void testPlayerSpawnLocation() {
         Mode mode = new Standard();
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
         Game newGame = new Game(
             "advanced",
             EntityFactory.extractEntities("advanced", mode),
@@ -288,9 +288,7 @@ public class GameTest {
             mode
         );
 
-        Player player = new Player(new Position(1, 1), mode.initialHealth());
         newGame.addEntity(player);
-
         assertTrue(new Position(1, 1).equals(newGame.getPlayerSpawnLocation()));
 
         // Check that the player's spawn location is the same even if they move

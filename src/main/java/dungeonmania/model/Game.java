@@ -52,6 +52,8 @@ public final class Game {
         this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
+        
+        if (getCharacter() != null) this.playerSpawnLocation = getCharacter().getPosition();
     }
 
     private int findMaxX() {
@@ -68,7 +70,6 @@ public final class Game {
 
     public final void addEntity(Entity entity) {
         entities.add(entity);
-        if (entity instanceof Player) playerSpawnLocation = entity.getPosition();
     }
 
     public final boolean removeEntity(Entity entity) {
