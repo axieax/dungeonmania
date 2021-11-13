@@ -19,7 +19,7 @@ import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
-import dungeonmania.model.entities.movings.older_player.OlderPlayer;
+import dungeonmania.model.entities.movings.olderPlayer.OlderPlayer;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;

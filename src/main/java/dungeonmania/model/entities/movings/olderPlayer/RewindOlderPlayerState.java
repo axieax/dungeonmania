@@ -1,4 +1,4 @@
-package dungeonmania.model.entities.movings.older_player;
+package dungeonmania.model.entities.movings.olderPlayer;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.movement.MovementState;

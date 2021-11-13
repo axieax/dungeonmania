@@ -1,7 +1,6 @@
 package dungeonmania.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.DungeonManiaController;
 import dungeonmania.response.models.DungeonResponse;
