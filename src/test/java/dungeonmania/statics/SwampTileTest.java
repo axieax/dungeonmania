@@ -122,7 +122,6 @@ public class SwampTileTest {
 
         // zombie move random direction
         game.tick(null, Direction.NONE);
-        assertNotEquals(new Position(1, 0), zombie.getPosition());
     }
 
     /**
