@@ -8,7 +8,7 @@ import dungeonmania.util.Position;
 
 public class Anduril extends AttackEquipment {
 
-    private static final int ATTACK_DAMAGE = 50;
+    private static final int ATTACK_DAMAGE = 10;
     private static final int HIT_RATE = 1;
 
     public Anduril(Position position) {

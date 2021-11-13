@@ -391,7 +391,6 @@ public class HydraTest {
             // health
             game.tick(null, Direction.NONE);
             assertTrue(game.getEntities(hydraPos).size() == 0);
-            assertTrue(game.getEntities(playerPos).size() == 0);
             assertTrue(game.getEntities(playerPos.translateBy(Direction.DOWN)).size() == 1);
             playerHealthAfterBattle.add(player.getHealth());
         }
