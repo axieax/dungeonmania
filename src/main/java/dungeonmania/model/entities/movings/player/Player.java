@@ -430,10 +430,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
-            damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
+            damageToOpponent += e.getHitRate() * e.useEquipment(this);
         }
 
-        // Any extra attack damage provided by defence equipment
+        // Any extra attack damage provided by defence equipments
         for (DefenceEquipment e : getDefenceEquipmentList()) {
             damageToOpponent += e.getBonusAttackDamage();
         }
@@ -456,7 +456,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public int applyDefenceToOpponentAttack(MovingEntity opponent) {
         int finalAttackDamage = opponent.getBaseAttackDamage();
         for (DefenceEquipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage = (int) (e.useEquipment(this, opponent));
+            finalAttackDamage *= e.useEquipment(this);
         }
         return finalAttackDamage;
     }
