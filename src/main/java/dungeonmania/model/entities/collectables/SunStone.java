@@ -8,7 +8,4 @@ public class SunStone extends Item {
     public SunStone(Position position) {
         super("sun_stone", position);
     }
-
-    
-
 }

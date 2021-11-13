@@ -3,7 +3,7 @@ package dungeonmania.model;
 import dungeonmania.GameLoader;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.movings.older_player.OlderPlayer;
+import dungeonmania.model.entities.movings.olderPlayer.OlderPlayer;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;

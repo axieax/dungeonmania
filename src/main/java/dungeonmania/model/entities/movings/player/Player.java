@@ -19,7 +19,7 @@ import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
-import dungeonmania.model.entities.movings.older_player.OlderPlayer;
+import dungeonmania.model.entities.movings.olderPlayer.OlderPlayer;
 import dungeonmania.model.entities.statics.Consumable;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
@@ -388,6 +388,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
         }
     }
 
+    /**
+     * If the player encounters their olderself and nd are carrying a sun stone or are wearing midnight armour,
+     * or they are invisible, then nothing happens. If not, then a battle ensues.
+     * @param opponent
+     * @return boolean true if the player can battle the opponent
+     */
     private boolean canBattleOpponent(Enemy opponent) {
         if (!(opponent instanceof OlderPlayer)) return true;
         return !(
@@ -495,13 +501,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
         observers.add(observer);
     }
 
-    public JSONObject toJSON() {
-        JSONObject info = super.toJSON();
-        info.put(state.getClass().getSimpleName(), state.ticksLeft());
-        info.put("inventory", inventory.toJSON());
-        return info;
-    }
-
     /**
      * Notifies all observers of the player.
      */
@@ -510,5 +509,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
         for (Observer o : observers) {
             o.update(this);
         }
+    }
+
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put(state.getClass().getSimpleName(), state.ticksLeft());
+        info.put("inventory", inventory.toJSON());
+        return info;
     }
 }

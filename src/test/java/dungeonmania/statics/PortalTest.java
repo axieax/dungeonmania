@@ -104,7 +104,7 @@ public class PortalTest {
     }
 
     /**
-     * Test teleport of there is no corresponding portal
+     * Test teleport if there is no corresponding portal
      */
     @Test
     public void testNoPortal() {
@@ -125,10 +125,10 @@ public class PortalTest {
     }
 
     /**
-     * Test teleport of there is a entity that the teleporter cannot pass through.
+     * Test teleport if the entity cannot pass through the destination.
      */
     @Test
-    public void teleportWithBloackableEntity() {
+    public void teleportWithBlockableEntity() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
 
@@ -148,7 +148,7 @@ public class PortalTest {
         assertTrue(new Position(2, 2).equals(portalEnd.getPosition()));
         assertTrue(new Position(1, 2).equals(wall.getPosition()));
 
-        // player cannot teleport since a wall is blocking the teleport position
+        // Player cannot teleport since a wall is blocking the teleport position
         player.move(game, Direction.LEFT);
         assertTrue(new Position(1, 0).equals(player.getPosition()));
     }
@@ -170,23 +170,23 @@ public class PortalTest {
         game.addEntity(portalEnd);
         game.addEntity(spider);
 
-        // spider move up
+        // Spider move up
         game.tick(null, Direction.NONE);
         assertEquals(new Position(4, 4), spider.getPosition());
 
-        // spider move right
+        // Spider move right
         game.tick(null, Direction.NONE);
         assertEquals(new Position(5, 4), spider.getPosition());
 
-        // spider goes through portal and move down
+        // Spider goes through portal and move down
         game.tick(null, Direction.NONE);
         assertEquals(new Position(7, 6), spider.getPosition());
 
-        // spider moves down
+        // Spider moves down
         game.tick(null, Direction.NONE);
         assertEquals(new Position(7, 7), spider.getPosition());
 
-        // spider moves left
+        // Spider moves left
         game.tick(null, Direction.NONE);
         assertEquals(new Position(6, 7), spider.getPosition());
     }
@@ -210,23 +210,23 @@ public class PortalTest {
         game.addEntity(portalEnd);
         game.addEntity(spider);
 
-        // spider move up into the portal
+        // Spider move up into the portal
         game.tick(null, Direction.NONE);
         assertEquals(new Position(7, 4), spider.getPosition());
 
-        // spider move right
+        // Spider move right
         game.tick(null, Direction.NONE);
         assertEquals(new Position(8, 4), spider.getPosition());
 
-        // spider moves down
+        // Spider moves down
         game.tick(null, Direction.NONE);
         assertEquals(new Position(8, 5), spider.getPosition());
 
-        // spider moves down
+        // Spider moves down
         game.tick(null, Direction.NONE);
         assertEquals(new Position(8, 6), spider.getPosition());
 
-        // spider moves left
+        // Spider moves left
         game.tick(null, Direction.NONE);
         assertEquals(new Position(7, 6), spider.getPosition());
     }
@@ -242,7 +242,7 @@ public class PortalTest {
 
         Portal portalStart = new Portal(new Position(5, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
-        // spawn zombie next to portal
+        // Spawn zombie next to portal
         ZombieToast zombie = new ZombieToast(new Position(4, 5), mode.damageMultiplier(), player);
 
         game.addEntity(player);
@@ -250,35 +250,33 @@ public class PortalTest {
         game.addEntity(portalEnd);
         game.addEntity(zombie);
 
-        // create walls around zombie
+        // Create walls around zombie
         game.addEntity(new Wall(new Position(3, 5)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 6)));
 
         game.tick(null, Direction.NONE);
-        // zombies are not affected by portals
+        // Zombies are not affected by portals
         assertEquals(new Position(4, 5), zombie.getPosition());
     }
 
     /**
      * Test if mercenary can teleport through portals.
-     * 
-     * Test Case: Player consumes invincibility potion. Mercenary is in runstate.
-     * Mercenary run to portal below.
      */
     @Test
     public void testMercenaryRunToPortal() {
+        // Player consumes invincibility potion. Mercenary is in runstate.
+        // Mercenary run to portal below.
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        
         Player player = new Player(new Position(3, 2), mode.initialHealth());
         InvincibilityPotion potion = new InvincibilityPotion(new Position(3, 6));
         player.addInventoryItem(potion);
 
-
-
         Portal portalStart = new Portal(new Position(3, 5), "BLUE");
         Portal portalEnd = new Portal(new Position(7, 5), "BLUE");
-        // spawn mercenary next to portal
+        // Spawn mercenary next to portal
         Mercenary mercenary = new Mercenary(new Position(3, 3), mode.damageMultiplier(), player);
 
         game.addEntity(player);
@@ -288,13 +286,13 @@ public class PortalTest {
 
         game.tick(potion.getId(), Direction.NONE);
 
-        // mercenary run away from player
+        // Mercenary run away from player
         assertEquals(new Position(3, 4), mercenary.getPosition());
         assertTrue(mercenary.getMovementState() instanceof RunMovementState);
 
         game.tick(null, Direction.NONE);
 
-        // mercenary move to portal and teleports
+        // Mercenary move to portal and teleports
         assertEquals(new Position(7, 6), mercenary.getPosition());
     }
 }

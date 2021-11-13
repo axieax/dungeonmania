@@ -13,13 +13,13 @@ public class Portal extends Entity {
 
     private String colour;
 
-    public String getColour() {
-        return colour;
-    }
-
     public Portal(Position position, String colour) {
         super("portal", position, false, false);
         this.colour = colour;
+    }
+    
+    public String getColour() {
+        return colour;
     }
 
     /**

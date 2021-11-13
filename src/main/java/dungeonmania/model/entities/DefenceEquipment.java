@@ -18,7 +18,7 @@ public abstract class DefenceEquipment extends Equipment {
         this.defenceMultiplier = defenceMultiplier;
     }
 
-    public double getBonusAttackDamage() {
+    public int getBonusAttackDamage() {
         return bonusAttackDamage;
     }
 
