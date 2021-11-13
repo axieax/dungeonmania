@@ -16,7 +16,7 @@ public class CircularMovementState extends MovementState {
     private boolean reverseMovement;
     private int indexOfNextMove;
 
-    public CircularMovementState(MovingEntity enemy) {
+    public CircularMovementState(Enemy enemy) {
         super(enemy);
         this.initialMovement = true;
         // Default "circling" movement

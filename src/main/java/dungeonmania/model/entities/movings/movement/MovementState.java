@@ -10,9 +10,9 @@ import java.util.List;
 
 public abstract class MovementState {
 
-    private MovingEntity enemy;
+    private Enemy enemy;
 
-    public MovementState(MovingEntity enemy) {
+    public MovementState(Enemy enemy) {
         this.enemy = enemy;
     }
 
@@ -21,7 +21,7 @@ public abstract class MovementState {
      *
      * @return Enemy
      */
-    public MovingEntity getEnemy() {
+    public Enemy getEnemy() {
         return enemy;
     }
 

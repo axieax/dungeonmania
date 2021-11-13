@@ -28,22 +28,7 @@ public class OlderPlayer extends Enemy {
         state.move(game);
     }
 
-    public void update(SubjectPlayer player) {
-        if (!(player instanceof Player)) return;
-        Player character = (Player) player;
+    @Override
+    public void update(SubjectPlayer player) {}
 
-        if (
-            // encounter
-            character.getPosition().equals(this.getPosition()) &&
-            !(
-                // player invisible, has sun stone or has midnight armour
-                character.getState() instanceof PlayerInvisibleState ||
-                character.findInventoryItem("sun_stone") != null ||
-                character.findInventoryItem("midnight_armour") != null
-            )
-        ) {
-            // transition to battle state
-            state = new BattleOlderPlayerState(character);
-        }
-    }
 }
