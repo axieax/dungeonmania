@@ -61,14 +61,21 @@ public class TimeTravellingPortalTest {
      * portal. i.e. state should be after the first tick since it takes 31 ticks to reach
      * to the time travelling portal
      */
+    // TODO: add mercenary bribe in json
     @Test
     public void testTimeTravellingPortalSecondTick() {
         DungeonManiaController dmc = new DungeonManiaController();
-        dmc.newGame("hourglass", "hard");
+        DungeonResponse resp = dmc.newGame("hourglass", "hard");
 
-        DungeonResponse resp = TimeTravelUtil.goToTimeTravellingPortal2FromSpawnPoint(dmc);
+        int initialEntityCount = resp.getEntities().size();
+
+        resp = TimeTravelUtil.goToTimeTravellingPortal2FromSpawnPoint(dmc);
 
         // confirm state of 30 ticks prior
+        // confirm entity count - only old player should have been added to dungeon
+        int timeTravelEntityCount = resp.getEntities().size();
+        assertEquals(initialEntityCount + 1, timeTravelEntityCount);
+
         // check if older player is at it's second tick position
         assertEquals(new Position(1, 12), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
 
