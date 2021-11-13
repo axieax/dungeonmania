@@ -3,6 +3,7 @@ package dungeonmania.model;
 import dungeonmania.GameLoader;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.olderPlayer.OlderPlayer;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.goal.Goal;
@@ -69,17 +70,23 @@ public final class GameWrapper {
         Player restorePlayer = (Player) restoreGame.getCharacter();
 
         // old_player in activeGame has restorePlayer's position
-        OlderPlayer ilNam = new OlderPlayer(
-            restorePlayer.getPosition().asLayer(30),
-            moves
-        );
+        OlderPlayer ilNam = new OlderPlayer(restorePlayer.getPosition().asLayer(30), moves);
         restoreGame.addEntity(ilNam);
-
-        // replace player
         restoreGame.removeEntity(restorePlayer);
+
         restoreGame.addEntity(activePlayer);
 
-        // TODO NOTE: reattach observers or you might get null pointer exception?
+        // reset active player
+        activePlayer.removeObservers();
+        activePlayer.removeAllies();
+        activePlayer.setInBattle(false);
+        activePlayer.setCurrentBattleOpponent(null);
+        // re-attach observers to updated player
+        restoreGame
+            .getEntities()
+            .stream()
+            .filter(e -> e instanceof Observer)
+            .forEach(e -> activePlayer.attach((Observer)e));
 
         // time travel
         activeGame = restoreGame;

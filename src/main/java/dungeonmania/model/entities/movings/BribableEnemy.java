@@ -8,9 +8,11 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.movement.PositionGraph;
+import dungeonmania.model.entities.movings.movement.RandomMovementState;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
+import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.util.Position;
 
 public abstract class BribableEnemy extends Enemy {
@@ -86,6 +88,8 @@ public abstract class BribableEnemy extends Enemy {
         if (character.getInBattle()) moveTwice = true;
         if (character.getState() instanceof PlayerInvincibleState && !this.isBribed()) {
             this.setMovementState(new RunMovementState(this));
+        } else if (character.getState() instanceof PlayerInvisibleState) {
+            this.setMovementState(new RandomMovementState(this));
         } else {
             this.setMovementState(new FollowPlayerMovementState(this));
         }

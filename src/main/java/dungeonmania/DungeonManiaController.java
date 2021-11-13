@@ -229,7 +229,7 @@ public class DungeonManiaController {
     public DungeonResponse build(String buildable)
         throws IllegalArgumentException, InvalidActionException {
         // check for valid buildable
-        List<String> buildables = Arrays.asList("bow", "shield");
+        List<String> buildables = Arrays.asList("bow", "shield", "sceptre", "midnight_armour");
         if (!buildables.contains(buildable)) throw new IllegalArgumentException(buildable);
 
         return currentGame.build(buildable);
