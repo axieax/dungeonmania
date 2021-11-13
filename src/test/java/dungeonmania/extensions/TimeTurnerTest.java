@@ -12,7 +12,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.junit.jupiter.api.Test;
 
-public class TimeTravelTest {
+public class TimeTurnerTest {
 
     @Test
     public void testTimeTurnerMissing() {
