@@ -93,7 +93,6 @@ public class Hydra extends Enemy implements Boss {
                 game.addEntity(new Hydra(position, damageMultiplier, game.getCharacter()));
             }
         }
-
     }
 
 	private static boolean canHydraMoveOntoPosition(List<Entity> entitiesAtPos) {

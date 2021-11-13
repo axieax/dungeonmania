@@ -1,5 +1,7 @@
 package dungeonmania.model.entities.movings;
 
+import java.util.Random;
+
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -14,7 +16,7 @@ public class Mercenary extends BribableEnemy {
     
     public static final int MAX_MERCENARY_HEALTH = 50;
     public static final int MAX_MERCENARY_ATTACK_DMG = 5;
-    
+    private static final int MERCENARY_TICK_RATE = 30;
 
     public Mercenary(Position position, int damageMultiplier, SubjectPlayer player) {
         super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, damageMultiplier);
@@ -42,6 +44,25 @@ public class Mercenary extends BribableEnemy {
 
         // Remove the treasure from the player's inventory
         if (sunstone == null) ((Treasure) treasure).consume(game, player);
+    }
+
+    public static void spawnMercenary(Game game, int damageMultiplier) {
+        // Mercenaries only spawn on maps with at least one enemy
+        if (game.getAllEnemies().size() == 0) return;
+        
+        int tick = game.getTick();
+        int tickRate = MERCENARY_TICK_RATE;
+        if (tick != 0 && tick % tickRate == 0) {
+            Position position = game.getPlayerSpawnLocation();
+
+            // 30% chance of spawning an assassin instead of a mercenary
+            Random rand = new Random();
+            if (rand.nextDouble() <= 0.3) {
+                game.addEntity(new Assassin(position, damageMultiplier, game.getCharacter()));
+            } else {
+                game.addEntity(new Mercenary(position, damageMultiplier, game.getCharacter()));
+            }
+        }
     }
 
     /**
