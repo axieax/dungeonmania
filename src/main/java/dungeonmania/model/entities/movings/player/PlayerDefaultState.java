@@ -48,8 +48,6 @@ public class PlayerDefaultState implements PlayerState {
              * Something to consider for Milestone 3.
              */
 
-            opponent.reduceHealthFromBattle(((originalHealth * playerAttackDamage) / 5));
-
             // Check if player is dead
             if (!player.isAlive()) {
                 Item item = player.findInventoryItem("one_ring");
