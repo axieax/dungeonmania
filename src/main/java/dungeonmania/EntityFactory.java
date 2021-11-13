@@ -194,17 +194,11 @@ public class EntityFactory {
         } else if (type.startsWith("anduril")) {
             position = position.asLayer(26);
             return new Anduril(position);
-        } else if (type.startsWith("sceptre")) {
-            position = position.asLayer(27);
-            return new Sceptre();
-        } else if (type.startsWith("midnight_armour")) {
-            position = position.asLayer(28);
-            return new MidnightArmour();
         } else if (type.startsWith("time_turner")) {
-            position = position.asLayer(29);
+            position = position.asLayer(27);
             return new TimeTurner(position);
         } else if (type.startsWith("player")) {
-            position = position.asLayer(30);
+            position = position.asLayer(28);
             return new Player(position, mode.initialHealth());
         }
         return null;
