@@ -11,7 +11,9 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.model.entities.movings.Boss;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
@@ -431,6 +433,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
         // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
             damageToOpponent += e.getHitRate() * e.useEquipment(this);
+            
+            // If the opponent is a boss, andurils deal triple the damage
+            if (opponent instanceof Boss && e instanceof Anduril)
+                damageToOpponent += e.getHitRate() * e.useEquipment(this) * 2;
         }
 
         // Any extra attack damage provided by defence equipments
