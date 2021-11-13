@@ -12,6 +12,11 @@
             "type": "time_turner"
         },
         {
+            "x": 21,
+            "y": 5,
+            "type": "spider"
+        },
+        {
             "x": 9,
             "y": 14,
             "type": "time_travelling_portal"
