@@ -227,10 +227,10 @@ public class GameLoader {
             Boolean moveTwice = entityInfo.getBoolean("moveTwice");
             int mindControlTicks = entityInfo.getInt("mindControlTicks");
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            // String movementState = entityInfo.getString("movementState"); // todo more
+            // String movementState = entityInfo.getString("movementState"); // TODO more
             int movementTick = entityInfo.getInt("movementTick");
             int health = entityInfo.getInt("health");
-            String direct = entityInfo.getString("movingDirection"); // todomore
+            String direct = entityInfo.getString("movingDirection"); // TODO
             Mercenary newMercenary = new Mercenary(
                 position,
                 mode.damageMultiplier(),
@@ -257,10 +257,10 @@ public class GameLoader {
             Boolean moveTwice = entityInfo.getBoolean("moveTwice");
             int mindControlTicks = entityInfo.getInt("mindControlTicks");
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            // String movementState = entityInfo.getString("movementState"); // todo more
+            // String movementState = entityInfo.getString("movementState"); // TODO more
             int movementTick = entityInfo.getInt("movementTick");
             int health = entityInfo.getInt("health");
-            String direct = entityInfo.getString("movingDirection"); // todomore
+            String direct = entityInfo.getString("movingDirection"); // TODO more
             Assassin newAssassin = new Assassin(position, damageMultiplier, currentPlayer);
             newAssassin.setBribed(bribed);
             newAssassin.update(currentPlayer);
@@ -278,10 +278,10 @@ public class GameLoader {
         } else if (type.startsWith("hydra")) { ////////
             position = position.asLayer(23);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            // String movementState = entityInfo.getString("movementState"); // todo more
+            // String movementState = entityInfo.getString("movementState"); // TODO more
             int movementTick = entityInfo.getInt("movementTick");
             int health = entityInfo.getInt("health");
-            String direct = entityInfo.getString("movingDirection"); // todomore
+            String direct = entityInfo.getString("movingDirection"); // TODO more
             Boolean preventHeadRespawn = entityInfo.getBoolean("preventHeadRespawn");
             Hydra newHydra = new Hydra(position, damageMultiplier, currentPlayer);
             newHydra.setMovementTick(movementTick);
@@ -325,7 +325,7 @@ public class GameLoader {
             return new TimeTurner(position);
         } else if (type.startsWith("older_player")) { ///////
             position = position.asLayer(30);
-            // return new OlderPlayer(position);
+            // return new OlderPlayer(position); // TODO
         } else if (type.startsWith("player")) {
             position = position.asLayer(31);
             Player player = new Player(position, mode.initialHealth());
