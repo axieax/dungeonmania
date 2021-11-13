@@ -12,7 +12,6 @@
   - InvisibilityPotion lasts for 6 in game ticks
   - HealthPotion are just simply consumed to regain to full health
 * If a player is invisible, they cannot attack another entity. Rather they can just pass through the enemy undetected.
-* All enemies will run away if a player is invincible. For spiders, if a player is no longer invincible, it will reset it's circular movement on its last position.
 * If the player is invisible, the mercenary will not follow them.
 
 ### SunStone
