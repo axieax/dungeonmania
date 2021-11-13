@@ -51,10 +51,10 @@ public class Hydra extends Enemy implements Boss {
 
         // If an anduril is going to be used in battle by a player against
         // the hydra, it will not be able to spawn another head
-        if(character.getInBattle()) {
+        if (character.getInBattle()) {
             MovingEntity opponent = character.getCurrentBattleOpponent();
             // character battling this hydra and has an anduril
-            if(opponent.equals(this) && character.hasItemQuantity("anduril", 1)) {
+            if (opponent.equals(this) && character.hasItemQuantity("anduril", 1)) {
                 this.preventHeadRespawn = true;
             }
         }
@@ -120,7 +120,7 @@ public class Hydra extends Enemy implements Boss {
     @Override
     public void reduceHealthFromBattle(int amount) {
         Random rand = new Random();
-        if(!preventHeadRespawn && rand.nextInt(100) % 2 == 0) {
+        if (!preventHeadRespawn && rand.nextInt(2) == 0) {
             super.reduceHealthFromBattle(-amount);
         } else {
             preventHeadRespawn = false;
@@ -131,7 +131,7 @@ public class Hydra extends Enemy implements Boss {
     @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put ("preventHeadRespawn", preventHeadRespawn);
+        info.put("preventHeadRespawn", preventHeadRespawn);
         return info;
     }
 }
