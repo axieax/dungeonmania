@@ -10,5 +10,6 @@ public class TimeTravellingPortal extends Entity {
         super("time_travelling_portal", position, false, true);
     }
 
+    @Override
     public void interact(Game game, Entity character) {}
 }

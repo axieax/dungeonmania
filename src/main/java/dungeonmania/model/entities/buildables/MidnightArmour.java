@@ -37,7 +37,7 @@ public class MidnightArmour extends DefenceEquipment implements Buildable {
     }
 
     @Override
-    public double getBonusAttackDamage() {
+    public int getBonusAttackDamage() {
         return BONUS_ATTACK_DAMAGE;
     }
 
