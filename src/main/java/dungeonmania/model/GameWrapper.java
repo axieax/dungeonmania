@@ -71,8 +71,7 @@ public final class GameWrapper {
         // old_player in activeGame has restorePlayer's position
         OlderPlayer ilNam = new OlderPlayer(
             restorePlayer.getPosition().asLayer(30),
-            moves,
-            activePlayer
+            moves
         );
         restoreGame.addEntity(ilNam);
 
@@ -80,8 +79,7 @@ public final class GameWrapper {
         restoreGame.removeEntity(restorePlayer);
         restoreGame.addEntity(activePlayer);
 
-        // NOTE: reattach observers or you might get null pointer exception?
-        // ISSUE: older player battle doesn't follow player
+        // TODO NOTE: reattach observers or you might get null pointer exception?
 
         // time travel
         activeGame = restoreGame;

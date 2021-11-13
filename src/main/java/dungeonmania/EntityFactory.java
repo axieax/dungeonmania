@@ -97,7 +97,8 @@ public class EntityFactory {
             for (int i = 0; i < entitiesInfo.length(); i++) {
                 JSONObject entityInfo = entitiesInfo.getJSONObject(i);
                 if (entityInfo.getString("type").startsWith("player")) continue;
-                entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
+                Entity entity = extractEntity(entityInfo, (Player) playerEntity, mode);
+                if (entity != null) entities.add(entity);
             }
         }
         return entities;

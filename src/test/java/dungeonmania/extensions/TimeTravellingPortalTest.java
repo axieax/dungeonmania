@@ -2,6 +2,7 @@ package dungeonmania.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.DungeonManiaController;
@@ -146,7 +147,7 @@ public class TimeTravellingPortalTest {
         assertEquals(new Position(9, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
 
         DungeonResponse tickRes = resp;
-        // now interact and bribe with mercenary
+        // now interact and bribe with mercenary - we are bribing mercenary with sunstone since we picked it up on the map
         assertDoesNotThrow(
             () -> {
                 DungeonResponse r = dmc.interact(
@@ -155,9 +156,6 @@ public class TimeTravellingPortalTest {
                         .get(0)
                         .getId()
                 );
-                // check inventory to see treasure is gone
-                assertTrue(r.getInventory().stream().allMatch(i -> !i.getType().startsWith("treasure")));
-
                 // check if mercenary is an ally
                 for (int i = 0; i < 5; i++) r = dmc.tick(null, Direction.NONE);
                 assertTrue(r.getEntities().stream().anyMatch(e -> e.getType().startsWith("mercenary")));
@@ -224,5 +222,51 @@ public class TimeTravellingPortalTest {
 
         // check if player is above the tile of the portal
         assertEquals(new Position(21, 11), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
+    }
+
+    /**
+     * Test if the old player teleports around as rewind is called within a rewind - since
+     * old player's movement follow the current player's position made it that tick.
+     */
+    @Test
+    public void testMidRewindState() {
+        DungeonManiaController dmc = new DungeonManiaController();
+        DungeonResponse resp = dmc.newGame("hourglass", "hard");
+        
+        for (int i = 0; i < 2; ++i) assertDoesNotThrow(() -> dmc.tick(null, Direction.DOWN));
+        for (int i = 0; i < 2; ++i) assertDoesNotThrow(() -> dmc.tick(null, Direction.RIGHT));
+        for (int i = 0; i < 2; ++i) assertDoesNotThrow(() -> dmc.tick(null, Direction.DOWN));
+        for (int i = 0; i < 5; ++i) assertDoesNotThrow(() -> dmc.tick(null, Direction.RIGHT));
+        resp = dmc.tick(null, Direction.RIGHT);
+        resp = dmc.rewind(5);
+        assertEquals(new Position(4, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        resp = dmc.tick(null, Direction.RIGHT);
+        assertEquals(new Position(5, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        resp = dmc.tick(null, Direction.RIGHT);
+        assertEquals(new Position(6, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        resp = dmc.rewind(5);
+        assertEquals(new Position(3, 13), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        resp = dmc.tick(null, Direction.RIGHT);
+        assertEquals(new Position(3, 14), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        resp = dmc.tick(null, Direction.RIGHT);
+        assertEquals(new Position(3, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        resp = dmc.tick(null, Direction.RIGHT);
+        assertEquals(new Position(4, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        resp = dmc.tick(null, Direction.RIGHT);
+        assertEquals(new Position(10, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        resp = dmc.tick(null, Direction.RIGHT);
+        assertEquals(new Position(11, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+
+        // old player should disappear since 5 ticks have passed
+        resp = dmc.tick(null, Direction.RIGHT);
+        assertNull(TimeTravelUtil.getOldPlayer(resp.getEntities()));
     }
 }
