@@ -33,6 +33,7 @@
 * Spider starts with an initial direction of clockwise when spawned.
 * Zombie/Mercenaries will the amour effect when equipped. It will halve damage inflicted by the player.
 * Mercenaries can only move twice if mercenary is aiming to attack the player.
+* When a Hydra regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
 ## Entity Mechanics
 ### Portal
 * Portals teleport all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A spider will resume moving in a circular motion after it has been teleported.
