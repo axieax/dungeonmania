@@ -67,13 +67,10 @@ public class Hydra extends Enemy implements Boss {
     
     public static void spawnHydra(Game game, int damageMultiplier) {
         // Hydra only spawns in hard mode
-        if (!(game.getMode() instanceof Hard)) {
-            return;
-        }
+        if (!(game.getMode() instanceof Hard)) return;
 
         int tick = game.getTick();
-        int tickRate = HYDRA_TICK_RATE;
-        if (tick != 0 && tick % tickRate == 0) {
+        if (tick != 0 && tick % HYDRA_TICK_RATE == 0) {
             // Choose a random entity in the dungeon and spawn on it
             List<Entity> entities = game.getEntities();
             Collections.shuffle(entities);

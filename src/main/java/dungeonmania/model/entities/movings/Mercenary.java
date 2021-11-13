@@ -51,13 +51,12 @@ public class Mercenary extends BribableEnemy {
         if (game.getAllEnemies().size() == 0) return;
         
         int tick = game.getTick();
-        int tickRate = MERCENARY_TICK_RATE;
-        if (tick != 0 && tick % tickRate == 0) {
+        if (tick != 0 && tick % MERCENARY_TICK_RATE == 0) {
             Position position = game.getPlayerSpawnLocation();
 
             // 30% chance of spawning an assassin instead of a mercenary
             Random rand = new Random();
-            if (rand.nextDouble() <= 0.3) {
+            if (rand.nextDouble() <= Assassin.ASSASSIN_SPAWN_RATE) {
                 game.addEntity(new Assassin(position, damageMultiplier, game.getCharacter()));
             } else {
                 game.addEntity(new Mercenary(position, damageMultiplier, game.getCharacter()));

@@ -75,14 +75,10 @@ public class Spider extends Enemy {
      * Spawns a spider on an entity depending on the tick rate
      */
     public static void spawnSpider(Game game, int damageMultiplier) {
-        int numSpidersInGame = getNumSpiderInGame(game);
-        if (numSpidersInGame == MAX_SPIDERS) {
-            return;
-        }
+        if (getNumSpiderInGame(game) == MAX_SPIDERS) return;
 
         int tick = game.getTick();
-        int tickRate = game.getTickRate();
-        if (tick != 0 && tick % tickRate == 0) {
+        if (tick != 0 && tick % game.getTickRate() == 0) {
             // Choose a random entity in the dungeon and spawn on it
             List<Entity> entities = game.getEntities();
             Collections.shuffle(entities);
