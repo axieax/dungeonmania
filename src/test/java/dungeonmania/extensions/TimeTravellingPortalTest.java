@@ -146,7 +146,7 @@ public class TimeTravellingPortalTest {
         assertEquals(new Position(9, 15), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
 
         DungeonResponse tickRes = resp;
-        // now interact and bribe with mercenary
+        // now interact and bribe with mercenary - we are bribing mercenary with sunstone since we picked it up on the map
         assertDoesNotThrow(
             () -> {
                 DungeonResponse r = dmc.interact(
@@ -155,9 +155,6 @@ public class TimeTravellingPortalTest {
                         .get(0)
                         .getId()
                 );
-                // check inventory to see treasure is gone
-                assertTrue(r.getInventory().stream().allMatch(i -> !i.getType().startsWith("treasure")));
-
                 // check if mercenary is an ally
                 for (int i = 0; i < 5; i++) r = dmc.tick(null, Direction.NONE);
                 assertTrue(r.getEntities().stream().anyMatch(e -> e.getType().startsWith("mercenary")));
@@ -224,5 +221,17 @@ public class TimeTravellingPortalTest {
 
         // check if player is above the tile of the portal
         assertEquals(new Position(21, 11), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
+    }
+
+    @Test
+    public void testRewindState() {
+        DungeonManiaController dmc = new DungeonManiaController();
+        DungeonResponse resp = dmc.newGame("hourglass", "hard");
+        TimeTravelUtil.goToTimeTravellingPortal1FromSpawnPoint(dmc);
+        for (int i = 0; i < 5; i++) dmc.tick(null, Direction.UP);
+        for (int i = 0; i < 6; i++) dmc.tick(null, Direction.DOWN);
+        for (int i = 0; i < 5; i++) dmc.tick(null, Direction.LEFT);
+        dmc.tick(null, Direction.LEFT);
+        dmc.rewind(5);
     }
 }

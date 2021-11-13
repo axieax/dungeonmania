@@ -25,7 +25,7 @@ public class RewindOlderPlayerState extends MovementState {
         if (nextMove != null) {
             this.setEnemyDirection(nextMove);
             this.interact(game);
-            this.updatePosition();
+            this.getEnemy().setPosition(nextMove);
         } else game.removeEntity(this.getEnemy());
     }
 
