@@ -8,6 +8,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
@@ -190,10 +191,25 @@ public class ZombieToastTest {
 
         Position expectedZombieSpawnTile = new Position(4, 5);
         // zombie should spawn in 20 ticks
-        for (int i = 0; i < 20; i++) {
-            assertTrue(game.getEntities(expectedZombieSpawnTile).size() == 0);
+        for (int i = 0; i < mode.tickRate(); i++) {
+            // remove any other moving entities that have spawned e.g. spiders
+            List<Entity> toRemove = new ArrayList<>();
+            List<Entity> entities = game.getEntities();
+            for(Entity e: entities) {
+                if(e instanceof Player || e instanceof ZombieToast) {
+                    continue;
+                } else if(e instanceof MovingEntity) {
+                    toRemove.add(e);
+                }
+            }
+            
+            for(Entity e: toRemove) {
+                game.removeEntity(e);
+            }
+            
             game.tick(null, Direction.NONE);
         }
+
 
         List<Entity> entitesAtTileAdjacentToSpawner = game.getEntities(expectedZombieSpawnTile);
         assertTrue(entitesAtTileAdjacentToSpawner.size() == 1);
@@ -295,59 +311,6 @@ public class ZombieToastTest {
         assertTrue(player.getState() instanceof PlayerInvincibleState);
         assertTrue(zombie.getMovementState() instanceof RunMovementState);
         assertTrue(game.getCardinallyAdjacentEntities(player.getPosition()).size() < entitiesBeforeZombie);
-    }
-
-    @Test
-    public void testSpiderRunAwayDistance() {
-        // if the player is invincible, the distance between the spider and player
-        // should increase every tick
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-
-        Player player = new Player(new Position(1, 1), mode.initialHealth());
-        game.addEntity(player);
-        
-        InvincibilityPotion invinc = new InvincibilityPotion(new Position(1, 2));
-        game.addEntity(invinc);
-
-        game.tick(null, Direction.DOWN); // collect potion
-        game.tick(invinc.getId(), Direction.NONE); // drink potion
-        
-        assertTrue(player.getState() instanceof PlayerInvincibleState);
-        
-        Position zombiePos = new Position(3, 3);
-        ZombieToast zombie = new ZombieToast(zombiePos, mode.damageMultiplier(), player);
-        assertTrue(game.getEntities(zombiePos).size() == 0);
-        
-        int entitiesBeforeZombie = game.getEntities().size();
-        game.addEntity(zombie);
-        assertTrue(game.getEntities(zombiePos).size() > 0);
-        
-        // zombie should now run away
-        Position prevDifference = Position.calculatePositionBetween(
-                player.getPosition(), zombie.getPosition()
-            );
-        int prevXDiff = Math.abs(prevDifference.getX());
-        int prevYDiff = Math.abs(prevDifference.getY());
-
-        game.tick(null, Direction.NONE);
-        while(player.getState() instanceof PlayerInvincibleState) {
-            assertTrue(zombie.getMovementState() instanceof RunMovementState);
-            
-            Position difference = Position.calculatePositionBetween(
-                player.getPosition(), zombie.getPosition()
-                );
-            int xDiff = Math.abs(difference.getX());
-            int yDiff = Math.abs(difference.getY());
-            
-            assertTrue(xDiff > prevXDiff || yDiff > prevYDiff);
-            assertTrue(game.getCardinallyAdjacentEntities(player.getPosition()).size() < entitiesBeforeZombie);
-            
-            prevDifference = difference;
-            prevXDiff = xDiff;
-            prevYDiff = yDiff;
-            game.tick(null, Direction.NONE);
-        }
     }
     
     @Test
