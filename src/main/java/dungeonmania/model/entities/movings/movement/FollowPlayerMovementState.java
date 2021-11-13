@@ -15,7 +15,7 @@ public class FollowPlayerMovementState extends MovementState {
     /**
      * Uses the Dijkstra's path finding algorithm to find the shortest path to the
      * player.
-     * 
+     *
      * @param game dungeon
      * @return Position to go to next
      */
@@ -29,7 +29,7 @@ public class FollowPlayerMovementState extends MovementState {
 
         // Move the mercenary to the closest possible position to the player
         Map<Integer, Position> prev = positionGraph.dijkstra(this.getEnemy().getPosition());
-        
+
         // traverse back path
         Position pos = prev.get(player.getPosition().hashCode());
         if (pos != null && pos.equals(optimalPathPosition)) {
@@ -44,5 +44,4 @@ public class FollowPlayerMovementState extends MovementState {
 
         return optimalPathPosition;
     }
-
 }

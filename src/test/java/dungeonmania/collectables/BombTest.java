@@ -7,10 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 
 import dungeonmania.model.Game;
+import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
+import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
+import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
@@ -69,18 +73,19 @@ public class BombTest {
 
         assertTrue(player.getInventoryItem(bomb.getId()).equals(bomb));
         game.tick(null, Direction.RIGHT);
-        // place bomb
+        
+        // Place bomb
         game.tick(bomb.getId(), Direction.NONE);
         assertTrue(game.getEntity(bomb.getId()) != null);
         Position pos = player.getPosition();
         assertEquals(game.getEntity(bomb.getId()).getPosition(), pos);
 
-        // move away from the bomb. user cannot pass through bomb since it has been placed.
+        // Player moves away from the bomb.
         game.tick(null, Direction.RIGHT);
         assertTrue(game.getEntity(bomb.getId()) != null);
         assertEquals(game.getEntity(bomb.getId()).getPosition(), pos);
 
-        // bomb is not passable
+        // However, player cannot move back on top of the bomb since it has been placed
         game.tick(null, Direction.LEFT);
         assertNotEquals(game.getEntity(bomb.getId()).getPosition(), player.getPosition());
     }
@@ -101,51 +106,71 @@ public class BombTest {
         FloorSwitch floorSwitch = new FloorSwitch(new Position(2, 2));
         game.addEntity(floorSwitch);
 
-        Bomb bomb1 = new Bomb(new Position(2, 1));
+        Bomb bomb1 = new Bomb(new Position(0, 1));
+        Bomb bomb2 = new Bomb(new Position(2, 1));
+        Bomb bomb3 = new Bomb(new Position(3, 1));
+
+        // Create a wall on top of the first bomb
+        Wall wall1 = new Wall(new Position(0, 0));
+        Wall wall2 = new Wall(new Position(1, 0));
+        Wall wall3 = new Wall(new Position(2, 0));
+
+        // Create other objects to be destroyed by the chain of bombs
+        Arrow arrow = new Arrow(new Position(3, 0));
+        Key key = new Key(new Position(4, 0), 1);
+        Treasure treasure = new Treasure(new Position(4, 1));
+        Portal portal1 = new Portal(new Position(4, 2), "BLUE");
+        Portal portal2 = new Portal(new Position(1, 3), "BLUE");
+
         game.addEntity(bomb1);
-
-        // create a wall on top of the bomb
-        Wall wall1 = new Wall(new Position(1, 0));
-        Wall wall2 = new Wall(new Position(2, 0));
-        Wall wall3 = new Wall(new Position(3, 0));
-
-        // create a wall to be destroyed by the chain of bombs
-        Wall wall4 = new Wall(new Position(4, 1));
-        Bomb bomb2 = new Bomb(new Position(3, 1));
+        game.addEntity(bomb2);
+        game.addEntity(bomb3);
 
         game.addEntity(wall1);
         game.addEntity(wall2);
         game.addEntity(wall3);
-        game.addEntity(wall4);
-        game.addEntity(bomb2);
-
-        // get bomb
+        game.addEntity(arrow);
+        game.addEntity(key);
+        game.addEntity(treasure);
+        game.addEntity(portal1);
+        game.addEntity(portal2);
+        
+        // Collect bombs (this is necessary since bombs cannot explode if not picked up by player)
         game.tick(null, Direction.UP);
         game.tick(null, Direction.RIGHT);
-
-        // place bomb
+        game.tick(null, Direction.RIGHT);
         game.tick(null, Direction.RIGHT);
 
-        game.tick(null, Direction.RIGHT);
-        game.tick(bomb2.getId(), Direction.NONE);
-
-        // go to initial spawn spot
-        game.tick(null, Direction.LEFT);
+        // Place bombs (order does not matter)
         game.tick(bomb1.getId(), Direction.NONE);
         game.tick(null, Direction.LEFT);
+        game.tick(bomb2.getId(), Direction.NONE);
+        game.tick(null, Direction.LEFT);
+        game.tick(bomb3.getId(), Direction.NONE);
+
+        // Go to initial spawn spot
         game.tick(null, Direction.LEFT);
         game.tick(null, Direction.DOWN);
 
-        // move boulder to trigger bomb explosion
+        // Move boulder to trigger bomb explosion
         game.tick(null, Direction.RIGHT);
 
-        // boulder explodes
+        // Check that everything in the chained bomb explosion is destroyed except the portal and player
+        assertTrue(game.getEntity(bomb1.getId()) == null);
+        assertTrue(game.getEntity(bomb2.getId()) == null);
+        assertTrue(game.getEntity(bomb3.getId()) == null);
         assertTrue(game.getEntity(wall1.getId()) == null);
         assertTrue(game.getEntity(wall2.getId()) == null);
         assertTrue(game.getEntity(wall3.getId()) == null);
-        assertTrue(game.getEntity(wall4.getId()) == null);
-        assertTrue(game.getEntity(bomb1.getId()) == null);
-        assertTrue(game.getEntity(bomb2.getId()) == null);
+        assertTrue(game.getEntity(arrow.getId()) == null);
+        assertTrue(game.getEntity(key.getId()) == null);
+        assertTrue(game.getEntity(treasure.getId()) == null);
+        assertTrue(game.getEntity(portal1.getId()) != null);
+        assertTrue(game.getEntity(portal2.getId()) != null);
         assertTrue(game.getEntity(player.getId()) != null);
+
+        // If the player moves into the portal, it should be teleported accordingly
+        game.tick(null, Direction.DOWN);
+        assertTrue(new Position(4, 3).equals(player.getPosition()));
     }
 }

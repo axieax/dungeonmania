@@ -28,8 +28,8 @@ public abstract class AttackEquipment extends Equipment {
     }
 
     @Override
-    public double useEquipment(Player player, Entity enemy) {
-        super.useEquipment(player, enemy);
+    public double useEquipment(Player player) {
+        super.useEquipment(player);
         return getAttackDamage();
     }
 }

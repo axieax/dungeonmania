@@ -24,9 +24,7 @@ public class PlayerDefaultState implements PlayerState {
     public void battle(Game game, Enemy opponent) throws PlayerDeadException {
         // Do not battle opponent if it is an ally
         List<BribableEnemy> allies = player.getAllies();
-        if (allies.contains(opponent)) {
-            return;
-        }
+        if (allies.contains(opponent)) return;
 
         // Notify the observers that the player is in battle
         player.setInBattle(true);
@@ -50,19 +48,15 @@ public class PlayerDefaultState implements PlayerState {
              * Something to consider for Milestone 3.
              */
 
-            opponent.reduceHealthFromBattle(((originalHealth * playerAttackDamage) / 5));
-
             // Check if player is dead
             if (!player.isAlive()) {
                 Item item = player.findInventoryItem("one_ring");
-                if (item != null && (item instanceof Consumable)) {
-                    // Use one ring if it is in inventory
-                    ((Consumable) item).consume(game, player);
-                }
+                // Use one ring if it is in inventory (Restore back to full health)
+                if (item != null) ((Consumable) item).consume(game, player);
             }
         }
 
-        // remove player and/or opponent if they are not alive
+        // Remove player and/or opponent if they are not alive
         if (!opponent.isAlive()) {
             game.removeEntity(opponent);
             player.removeAlly(opponent);
@@ -77,19 +71,12 @@ public class PlayerDefaultState implements PlayerState {
 
         // An opponent can have the potential to drop multiple items.
         Random armourRand = new Random();
-        if (
-            opponent instanceof Enemy &&
-            armourRand.nextDouble() <= ((Enemy) opponent).getArmourDropRate()
-        ) {
+        if (armourRand.nextDouble() <= opponent.getArmourDropRate())
             player.addInventoryItem(new Armour());
-        }
+
         Random oneRingRand = new Random();
-        if (
-            opponent instanceof Enemy &&
-            oneRingRand.nextDouble() <= ((Enemy) opponent).THE_ONE_RING_DROP_RATE
-        ) {
+        if (oneRingRand.nextDouble() <= opponent.THE_ONE_RING_DROP_RATE)
             player.addInventoryItem(new TheOneRing());
-        }
 
         player.setInBattle(false);
         player.setCurrentBattleOpponent(null);

@@ -4,11 +4,9 @@ import dungeonmania.model.entities.AttackEquipment;
 import dungeonmania.model.entities.Equipment;
 import dungeonmania.model.entities.Item;
 import dungeonmania.response.models.ItemResponse;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.json.JSONArray;
 
 public class Inventory {
@@ -17,7 +15,7 @@ public class Inventory {
 
     /**
      * Get the item with itemId from the inventory.
-     * 
+     *
      * @param itemId
      * @return
      */
@@ -43,29 +41,21 @@ public class Inventory {
     }
 
     /**
-     * Find the first instance of the item that has the specified prefix in the 
+     * Find the first instance of the item that has the specified prefix in the
      * inventory.
-     * 
+     *
      * @param prefix
      * @return
      */
     public Item findItem(String prefix) {
-        return items
-            .stream()
-            .filter(i -> i.getType().startsWith(prefix))
-            .findFirst()
-            .orElse(null);
+        return items.stream().filter(i -> i.getType().startsWith(prefix)).findFirst().orElse(null);
     }
 
     /**
      * @return the first instance of any AttackEquipment, otherwise null
      */
     public Item findWeapon() {
-        return items
-            .stream()
-            .filter(i -> i instanceof AttackEquipment)
-            .findFirst()
-            .orElse(null);
+        return items.stream().filter(i -> i instanceof AttackEquipment).findFirst().orElse(null);
     }
 
     /**
@@ -90,8 +80,6 @@ public class Inventory {
      * @param quantity
      */
     public void removeItemQuantity(String prefix, int quantity) {
-
-        
         if (this.hasItemQuantity(prefix, quantity)) {
             List<Item> toRemove = new ArrayList<>();
             items
@@ -99,9 +87,7 @@ public class Inventory {
                 .filter(item -> item.getType().startsWith(prefix))
                 .limit(quantity)
                 .forEach(item -> toRemove.add(item));
-            toRemove
-                .stream()
-                .forEach(i -> items.remove(i));
+            toRemove.stream().forEach(i -> items.remove(i));
         }
     }
 
@@ -124,7 +110,7 @@ public class Inventory {
     public List<ItemResponse> getInventoryResponses() {
         List<ItemResponse> response = new ArrayList<>();
 
-        for(Item i: items) {
+        for (Item i : items) {
             ItemResponse itemResponse = new ItemResponse(i.getId(), i.getType());
             response.add(itemResponse);
         }
@@ -134,8 +120,8 @@ public class Inventory {
 
     public JSONArray toJSON() {
         JSONArray itemsJSON = new JSONArray();
-        for (Item item:items) {
-            itemsJSON.put (item.toJSON());
+        for (Item item : items) {
+            itemsJSON.put(item.toJSON());
         }
         return itemsJSON;
     }

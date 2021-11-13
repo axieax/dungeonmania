@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Sword;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
@@ -77,5 +78,38 @@ public class SwordTest {
         game.interact(spawner.getId());
         Entity item = player.findInventoryItem("sword");
         assertTrue(item == null || ((Sword) item).getDurability() != initialDurability);
+    }
+
+    /**
+     * Test if Sword can be used in battles.
+     */
+    @Test
+    public void battleTest() {
+        Mode mode = new Standard();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+        Sword sword = new Sword(new Position(1, 1));
+        game.addEntity(sword);
+
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
+        game.addEntity(player);
+        player.move(game, Direction.RIGHT);
+
+        // Durability of sword when picked up should be 5
+        int initialDurability = 5;
+        assertTrue(sword.getDurability() == initialDurability);
+
+        // Player moves to attack the mercenaries with the sword
+        for (int i = 0; i < 5; i++) {
+            Mercenary mercenary = new Mercenary(new Position(1, 2 + i), mode.damageMultiplier(), player);
+            game.addEntity(mercenary);
+            player.move(game, Direction.DOWN);
+
+            // Mercenary should die upon battle, but restore the health of the player
+            assertTrue(game.getEntity(mercenary.getId()) == null);
+            player.setHealth(100);
+        }
+    
+        // Since swords only have 5 durability, it is guaranteed to be removed from the player's inventory
+        assertTrue(player.getInventoryItem(sword.getId()) == null);
     }
 }

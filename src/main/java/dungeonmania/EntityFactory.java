@@ -11,6 +11,7 @@ import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.TheOneRing;
+import dungeonmania.model.entities.collectables.TimeTurner;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.collectables.equipment.Anduril;
@@ -31,6 +32,7 @@ import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.SwampTile;
+import dungeonmania.model.entities.statics.TimeTravellingPortal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.AndComposite;
@@ -69,8 +71,8 @@ public class EntityFactory {
         }
     }
 
-    public static final List<Entity> extractEntities (String dungeonName, Mode mode) {
-        JSONObject json = loadDungeon(dungeonName); 
+    public static final List<Entity> extractEntities(String dungeonName, Mode mode) {
+        JSONObject json = loadDungeon(dungeonName);
         return extractEntities(json, mode);
     }
 
@@ -124,12 +126,12 @@ public class EntityFactory {
             return new Door(position, key);
         } else if (type.startsWith("time_travelling_portal")) {
             position = position.asLayer(5);
-            // return new TimeTravellingPortal(position);
+            return new TimeTravellingPortal(position);
         } else if (type.startsWith("portal")) {
             String colour = entityInfo.getString("colour");
             position = position.asLayer(6);
             return new Portal(position, colour);
-        }  else if (type.startsWith("zombie_toast_spawner")) {
+        } else if (type.startsWith("zombie_toast_spawner")) {
             position = position.asLayer(7);
             return new ZombieToastSpawner(position, mode.tickRate());
             // Collectable Entities
@@ -177,16 +179,16 @@ public class EntityFactory {
         } else if (type.startsWith("mercenary")) {
             position = position.asLayer(21);
             return new Mercenary(position, mode.damageMultiplier(), player);
-        } else if (type.startsWith("assassin")) { 
+        } else if (type.startsWith("assassin")) {
             position = position.asLayer(22);
-            return new Assassin(position, Assassin.MAX_ASSASSIN_ATTACK_DMG, player);// is the damage multiplier right?
-        }else if (type.startsWith("hydra")) {
+            return new Assassin(position, Assassin.MAX_ASSASSIN_ATTACK_DMG, player); // is the damage multiplier right?
+        } else if (type.startsWith("hydra")) {
             position = position.asLayer(23);
             return new Hydra(position, 1, player); // is damage multiplier right?
-        }else if (type.startsWith("swamp_tile")) {
+        } else if (type.startsWith("swamp_tile")) {
             position = position.asLayer(24);
-            return new SwampTile(position,2); // is movementFactor right?
-        }else if (type.startsWith("sun_stone")) {
+            return new SwampTile(position, 2); // is movementFactor right?
+        } else if (type.startsWith("sun_stone")) {
             position = position.asLayer(25);
             return new SunStone(position);
         } else if (type.startsWith("anduril")) {
@@ -200,9 +202,9 @@ public class EntityFactory {
             return new MidnightArmour();
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);
-            //return new TimeTurner(position);
+            return new TimeTurner(position);
         } else if (type.startsWith("player")) {
-            position = position.asLayer(21);
+            position = position.asLayer(30);
             return new Player(position, mode.initialHealth());
         }
         return null;
@@ -226,9 +228,11 @@ public class EntityFactory {
         Buildable item = buildableMap().get(buildable);
         return item.clone();
     }
-    public static final Goal extractGoal (String dungeonName) throws IllegalArgumentException {
+
+    public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
         return extractGoal(loadDungeon(dungeonName));
     }
+
     public static final Goal extractGoal(JSONObject dungeon) throws IllegalArgumentException {
         return (dungeon.has("goal-condition"))
             ? doExtractGoal(dungeon.getJSONObject("goal-condition"))

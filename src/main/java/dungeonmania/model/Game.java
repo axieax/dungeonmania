@@ -16,6 +16,7 @@ import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.entities.statics.SwampTile;
+import dungeonmania.model.entities.statics.TimeTravellingPortal;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Mode;
@@ -41,6 +42,7 @@ public final class Game {
     private final Mode mode;
 
     private int tick = 0;
+    private int rewindQty = 0;
 
     public Game(String dungeonName, List<Entity> entities, Goal goal, Mode mode) {
         this.dungeonId = UUID.randomUUID().toString();
@@ -124,27 +126,24 @@ public final class Game {
         positions.add(new Position(x, y - 1));
 
         List<Position> toRemove = new ArrayList<>();
-    
+
         getCardinallyAdjacentEntities(position)
             .stream()
             .forEach(e -> {
                 if (entity.collision(e)) toRemove.add(e.getPosition());
             });
-        
-        toRemove
-            .stream()
-            .forEach(p -> positions.remove(p));
-        
+
+        toRemove.stream().forEach(p -> positions.remove(p));
+
         return positions
             .stream()
-            .filter(
-                pos ->
-                    (
-                        pos.getX() >= 0 &&
-                        pos.getX() <= this.findMaxX() &&
-                        pos.getY() >= 0 &&
-                        pos.getY() <= this.findMaxY()
-                    )
+            .filter(pos ->
+                (
+                    pos.getX() >= 0 &&
+                    pos.getX() <= this.findMaxX() &&
+                    pos.getY() >= 0 &&
+                    pos.getY() <= this.findMaxY()
+                )
             )
             .collect(Collectors.toList());
     }
@@ -159,24 +158,19 @@ public final class Game {
     public final List<Entity> getCardinallyAdjacentEntities(Position position) {
         return getAdjacentEntities(position)
             .stream()
-            .filter(
-                e -> {
-                    // cardinally adjacent if one coordinate is (1 or -1) with the other 0
-                    Position difference = Position.calculatePositionBetween(
-                        e.getPosition(),
-                        position
-                    );
-                    int xDiff = Math.abs(difference.getX());
-                    int yDiff = Math.abs(difference.getY());
-                    return (
-                        // ensure both xDiff and yDiff are either 0 or 1
-                        (xDiff == (xDiff & 1)) &&
-                        (yDiff == (yDiff & 1)) &&
-                        // logical XOR to check x and y are different
-                        ((xDiff == 1) ^ (yDiff == 1))
-                    );
-                }
-            )
+            .filter(e -> {
+                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                Position difference = Position.calculatePositionBetween(e.getPosition(), position);
+                int xDiff = Math.abs(difference.getX());
+                int yDiff = Math.abs(difference.getY());
+                return (
+                    // ensure both xDiff and yDiff are either 0 or 1
+                    (xDiff == (xDiff & 1)) &&
+                    (yDiff == (yDiff & 1)) &&
+                    // logical XOR to check x and y are different
+                    ((xDiff == 1) ^ (yDiff == 1))
+                );
+            })
             .collect(Collectors.toList());
     }
 
@@ -244,18 +238,17 @@ public final class Game {
         // different skins for boulders on switches
         return entities
             .stream()
-            .filter(
-                e -> e instanceof Boulder && switchPositions.contains(e.getPosition().asLayer(0))
+            .filter(e ->
+                e instanceof Boulder && switchPositions.contains(e.getPosition().asLayer(0))
             )
-            .map(
-                e ->
-                    new AnimationQueue(
-                        "PostTick",
-                        e.getId(),
-                        Arrays.asList("sprite boulder_on_switch"),
-                        false,
-                        -1
-                    )
+            .map(e ->
+                new AnimationQueue(
+                    "PostTick",
+                    e.getId(),
+                    Arrays.asList("sprite boulder_on_switch"),
+                    false,
+                    -1
+                )
             )
             .collect(Collectors.toList());
     }
@@ -294,13 +287,11 @@ public final class Game {
                 .collect(Collectors.toList());
 
             // Separate loop to avoid concurrency issues when zombie spawner adds new entity
-            tickables.forEach(
-                e -> {
-                    if (!(e instanceof Player)) {
-                        ((Tickable) e).tick(this);
-                    }
+            tickables.forEach(e -> {
+                if (!(e instanceof Player)) {
+                    ((Tickable) e).tick(this);
                 }
-            );
+            });
 
             Spider.spawnSpider(this, this.mode.damageMultiplier());
             Hydra.spawnHydra(this, this.mode.damageMultiplier());
@@ -349,5 +340,26 @@ public final class Game {
             .map(e -> (SwampTile) e)
             .findFirst()
             .orElse(null);
+    }
+
+    public final boolean playerReachedTTPortal() {
+        Entity player = getCharacter();
+        if (player == null) return false;
+        Position position = player.getPosition();
+
+        return (
+            entities
+                .stream()
+                .filter(e -> e instanceof TimeTravellingPortal && e.getPosition().equals(position))
+                .count() >
+            0
+        );
+    }
+
+    public final boolean playerHasTimeTurner() {
+        Player player = getCharacter();
+        if (player == null) return false;
+
+        return player.findInventoryItem("time_turner") != null;
     }
 }

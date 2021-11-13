@@ -29,14 +29,25 @@ public class ZombieToastSpawner extends Entity implements Tickable {
     /**
      * If the Player interacts with the ZombieToastSpawner with a weapon equipped,
      * the player destroys the spawner and the weapon loses durability.
+     * @throws InvalidActionException if the player is not cardinally adjacent to the spawner
+     * @throws InvalidActionException if the player does not have a weapon equipped
      */
     @Override
     public void interact(Game game, Entity character) throws InvalidActionException {
         if (character instanceof Player) {
             Player player = (Player) character;
+            
+            // Check if the player is cardinally adjacent to the spawner
+            game.getCardinallyAdjacentEntities(player.getPosition())
+                .stream()
+                .filter(e -> e.equals(this))
+                .findFirst()
+                .orElseThrow(() -> new InvalidActionException(
+                    "Player is not cardinally adjacent to the spawner"));
+
             if (player.hasWeapon()) {
                 Equipment weapon = player.getWeapon();
-                weapon.useEquipment(player, this);
+                weapon.useEquipment(player);
                 game.removeEntity(this);
             } else {
                 throw new InvalidActionException(
