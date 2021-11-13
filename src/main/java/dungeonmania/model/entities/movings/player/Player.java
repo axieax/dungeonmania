@@ -68,6 +68,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public void setState(PlayerState state) {
         this.state = state;
+        this.notifyObservers();
     }
 
     /**
@@ -139,6 +140,15 @@ public class Player extends MovingEntity implements SubjectPlayer {
         }
 
         allies.remove(ally);
+    }
+
+    /**
+     * Removes all allies.
+     *
+     * @param ally
+     */
+    public void removeAllies() {
+        allies = new ArrayList<>();
     }
 
     /********************************
@@ -509,6 +519,14 @@ public class Player extends MovingEntity implements SubjectPlayer {
         for (Observer o : observers) {
             o.update(this);
         }
+    }
+
+    /**
+     * Removes all observers
+     */
+    @Override
+    public void removeObservers() {
+        observers = new ArrayList<>();
     }
 
     public JSONObject toJSON() {
