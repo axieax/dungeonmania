@@ -45,7 +45,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 @TestInstance(value = Lifecycle.PER_CLASS)
-public class CharacterTest {
+public class PlayerTest {
 
     static final String CHARACTER_TYPE = "player";
     static final String DUNGEON_NAME = "advanced";
@@ -57,7 +57,7 @@ public class CharacterTest {
         DungeonManiaController controller = new DungeonManiaController();
         controller.newGame(DUNGEON_NAME, GAME_MODE);
 
-        // a tick without movement
+        // A tick without movement
         DungeonResponse response = controller.tick(null, Direction.NONE);
 
         List<EntityResponse> entities = response.getEntities();
