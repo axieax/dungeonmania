@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Bow;
@@ -7,9 +8,12 @@ import dungeonmania.model.entities.buildables.Shield;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
+import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.TheOneRing;
+import dungeonmania.model.entities.collectables.TimeTurner;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
+import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
@@ -18,12 +22,14 @@ import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.older_player.OlderPlayer;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
+import dungeonmania.model.entities.statics.TimeTravellingPortal;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.Goal;
@@ -41,24 +47,54 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GameLoader {
-    private static final JSONObject loadSavedDungeon(String dungeonName)
+
+    public static final JSONObject gameToJSONObject(Game currentGame) {
+        JSONObject currGameJSON = new JSONObject();
+
+        // save all entities in the game
+        JSONArray entities = new JSONArray();
+        for (Entity entity : currentGame.getEntities()) {
+            entities.put(entity.toJSON());
+        }
+        currGameJSON.put("entities", entities);
+
+        // save the mode of the game and the goal of the game
+        currGameJSON.put("mode", currentGame.getMode().getClass().getSimpleName().toLowerCase());
+        Goal goal = currentGame.getGoal();
+        if (goal != null) currGameJSON.put("goal-condition", goal.toJSON());
+
+        // save the dungeon name of the game
+        currGameJSON.put("dungeonName", currentGame.getDungeonName());
+        return currGameJSON;
+    }
+
+    public static final JSONObject loadSavedDungeon(String dungeonName)
         throws IllegalArgumentException {
         try {
             String content = new String(
-                Files.readAllBytes(
-                    Paths.get("./bin/savedGames/" + dungeonName + ".json")
-                )
+                Files.readAllBytes(Paths.get("./bin/savedGames/" + dungeonName + ".json"))
             );
             return new JSONObject(content);
         } catch (IOException e) {
             throw new IllegalArgumentException(dungeonName);
         }
-    }  
+    }
 
-    public static final List<Entity> extractEntities (String dungeonName, Mode mode) {
-        JSONObject json = loadSavedDungeon(dungeonName); 
+    public static final Game JSONObjectToGame(JSONObject json) {
+        Mode mode = GameLoader.extractMode(json);
+        List<Entity> entities = GameLoader.extractEntities(json, mode);
+        Goal goal = GameLoader.extractGoal(json);
+        String dungeonName = GameLoader.extractDungeonName(json);
+
+        // load game and set this game as the current game
+        return new Game(dungeonName, entities, goal, mode);
+    }
+
+    public static final List<Entity> extractEntities(String dungeonName, Mode mode) {
+        JSONObject json = loadSavedDungeon(dungeonName);
         return extractEntities(json, mode);
     }
+
     public static final List<Entity> extractEntities(JSONObject jsonInfo, Mode mode)
         throws IllegalArgumentException {
         // Extract JSON
@@ -71,7 +107,7 @@ public class GameLoader {
 
         for (int i = 0; i < entitiesInfo.length(); i++) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            if (entityInfo.getString ("type").startsWith("player")) {
+            if (entityInfo.getString("type").startsWith("player")) {
                 playerEntity = extractEntity(entityInfo, null, mode);
                 entities.add(playerEntity);
             }
@@ -79,17 +115,20 @@ public class GameLoader {
 
         for (int i = 0; i < entitiesInfo.length(); i++) {
             JSONObject entityInfo = entitiesInfo.getJSONObject(i);
-            if (entityInfo.getString ("type").startsWith("player")) continue;
+            if (entityInfo.getString("type").startsWith("player")) continue;
             entities.add(extractEntity(entityInfo, (Player) playerEntity, mode));
         }
 
         return entities;
     }
 
-    public static final Entity extractEntity(JSONObject entityInfo, Player currentPlayer, Mode mode) {
+    public static final Entity extractEntity(
+        JSONObject entityInfo,
+        Player currentPlayer,
+        Mode mode
+    ) {
         // Extract / generate basic parameters
-        Position position = 
-        new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
+        Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
         String type = entityInfo.getString("type");
         // Static Entities
         if (type.startsWith("wall")) {
@@ -108,64 +147,122 @@ public class GameLoader {
             int key = entityInfo.getInt("key");
             position = position.asLayer(4);
             return new Door(position, key);
+        } else if (type.startsWith("time_travelling_portal")) {
+            position = position.asLayer(5);
+            return new TimeTravellingPortal(position);
         } else if (type.startsWith("portal")) {
             String colour = entityInfo.getString("colour");
-            position = position.asLayer(5);
+            position = position.asLayer(6);
             return new Portal(position, colour);
         } else if (type.startsWith("zombie_toast_spawner")) {
-            position = position.asLayer(6);
+            position = position.asLayer(7);
             return new ZombieToastSpawner(position, mode.tickRate());
             // Moving Entities
-        }  else if (type.startsWith("treasure")) {
-            position = position.asLayer(7);
+        } else if (type.startsWith("treasure")) {
+            position = position.asLayer(8);
             return new Treasure(position);
         } else if (type.startsWith("key")) {
             int key = entityInfo.getInt("key");
-            position = position.asLayer(8);
+            position = position.asLayer(9);
             return new Key(position, key);
         } else if (type.startsWith("health_potion")) {
-            position = position.asLayer(9);
+            position = position.asLayer(10);
             return new HealthPotion(position);
         } else if (type.startsWith("invincibility_potion")) {
-            position = position.asLayer(10);
+            position = position.asLayer(11);
             return new InvincibilityPotion(position);
         } else if (type.startsWith("invisibility_potion")) {
-            position = position.asLayer(11);
+            position = position.asLayer(12);
             return new InvisibilityPotion(position);
         } else if (type.startsWith("wood")) {
-            position = position.asLayer(12);
+            position = position.asLayer(13);
             return new Wood(position);
         } else if (type.startsWith("arrow")) {
-            position = position.asLayer(13);
+            position = position.asLayer(14);
             return new Arrow(position);
         } else if (type.startsWith("bomb")) {
-            position = position.asLayer(14);
-            return new Bomb(position);
-        } else if (type.startsWith("sword")) {
             position = position.asLayer(15);
+            return new Bomb(position);
+        } else if (type.startsWith("sword")) { ///////
+            position = position.asLayer(16);
             Sword newSword = new Sword(position);
             int durability = entityInfo.getInt("durability");
             newSword.setDurability(durability);
             return newSword;
-        } else if (type.startsWith("armour")) {
-            position = position.asLayer(16);
+        } else if (type.startsWith("armour")) { //////
+            position = position.asLayer(17);
             Armour newArmour = new Armour(position);
             int durability = entityInfo.getInt("durability");
             newArmour.setDurability(durability);
             return newArmour;
         } else if (type.startsWith("one_ring")) {
-            position = position.asLayer(17);
+            position = position.asLayer(18);
             return new TheOneRing(position);
-        } else if (type.startsWith("player")) {
-            position = position.asLayer(0);
+        } else if (type.startsWith("spider")) { ////
+            position = position.asLayer(19);
+            Spider newSpider = new Spider(position, mode.damageMultiplier(), currentPlayer);
+            int health = entityInfo.getInt("health");
+            newSpider.setHealth(health);
+            return newSpider;
+        } else if (type.startsWith("zombie_toast")) { ////
+            position = position.asLayer(20);
+            ZombieToast newZombieToast = new ZombieToast(
+                position,
+                mode.damageMultiplier(),
+                currentPlayer
+            );
+            int health = entityInfo.getInt("health");
+            newZombieToast.setHealth(health);
+            return newZombieToast;
+        } else if (type.startsWith("mercenary")) { ////
+            position = position.asLayer(21);
+            Mercenary newMercenary = new Mercenary(
+                position,
+                mode.damageMultiplier(),
+                currentPlayer
+            );
+            int health = entityInfo.getInt("health");
+            newMercenary.setHealth(health);
+            return newMercenary;
+            // Collectable Entities
+        } else if (type.startsWith("assassin")) { /////
+            position = position.asLayer(22);
+            // return new Assassin(position);
+        } else if (type.startsWith("hydra")) {
+            position = position.asLayer(23);
+            // return new Hydra(position);
+        } else if (type.startsWith("swamp_tile")) {
+            position = position.asLayer(24);
+            // return new SwampTile(position);
+        } else if (type.startsWith("sun_stone")) { ////
+            position = position.asLayer(25);
+            return new SunStone(position);
+        } else if (type.startsWith("anduril")) { /////
+            position = position.asLayer(26);
+            return new Anduril(position);
+        } else if (type.startsWith("sceptre")) { ///
+            position = position.asLayer(27);
+            // return new Sceptre(position);
+        } else if (type.startsWith("midnight_armour")) { //
+            position = position.asLayer(28);
+            // return new MidnightArmour(position);
+        } else if (type.startsWith("time_turner")) {
+            position = position.asLayer(29);
+            return new TimeTurner(position);
+        } else if (type.startsWith("older_player")) { ///
+            position = position.asLayer(30);
+            // moves
+            // return new OlderPlayer(position, currentPlayer);
+        } else if (type.startsWith("player")) { ///
+            position = position.asLayer(31);
             Player player = new Player(position, mode.initialHealth());
             int health = entityInfo.getInt("health");
             player.setHealth(health);
             JSONArray inventory = entityInfo.getJSONArray("inventory");
             for (int i = 0; i < inventory.length(); i++) {
                 JSONObject item = inventory.getJSONObject(i);
-                Item inventoryItem = (Item) extractEntity (item, null, mode);
-                player.addInventoryItem (inventoryItem);
+                Item inventoryItem = (Item) extractEntity(item, null, mode);
+                player.addInventoryItem(inventoryItem);
             }
             return player;
         } else if (type.startsWith("bow")) {
@@ -173,53 +270,31 @@ public class GameLoader {
             int durability = entityInfo.getInt("durability");
             newBow.setDurability(durability);
             return newBow;
-        } else if (type.startsWith ("shield")) {
+        } else if (type.startsWith("shield")) {
             Shield newShield = new Shield();
             int durability = entityInfo.getInt("durability");
             newShield.setDurability(durability);
             return newShield;
-        } else if (type.startsWith("spider")) {
-            position = position.asLayer(18);
-            Spider newSpider = new Spider(position, mode.damageMultiplier(), currentPlayer);
-            int health = entityInfo.getInt("health");
-            newSpider.setHealth (health);
-            return newSpider;
-        } else if (type.startsWith("zombie_toast")) {
-            position = position.asLayer(19);
-            ZombieToast newZombieToast = new ZombieToast(position, mode.damageMultiplier(), currentPlayer); 
-            int health = entityInfo.getInt("health");
-            newZombieToast.setHealth(health);
-            return newZombieToast;
-        } else if (type.startsWith("mercenary")) {
-            position = position.asLayer(20);
-            Mercenary newMercenary = new Mercenary(position, mode.damageMultiplier(), currentPlayer);
-            int health = entityInfo.getInt("health");
-            newMercenary.setHealth(health);
-            return newMercenary;
-            // Collectable Entities
         }
+
         return null;
     }
 
-    public static final Mode extractMode (String name) {
-        JSONObject json = loadSavedDungeon(name);
-        String gameMode = json.getString ("mode");
-        if (gameMode.equals("Hard")) return new Hard();
-        else if (gameMode.equals("Standard")) return new Standard();
-        else if (gameMode.equals("Peaceful")) return new Peaceful();
+    public static final Mode extractMode(JSONObject dungeon) {
+        String gameMode = dungeon.getString("mode");
+        if (gameMode.equals("hard")) return new Hard(); else if (
+            gameMode.equals("standard")
+        ) return new Standard(); else if (gameMode.equals("peaceful")) return new Peaceful();
         return null;
     }
 
-    public static final String extractDungeonName (String name) {
-        JSONObject json = loadSavedDungeon(name);
-        return json.getString ("dungeonName");
-    }
-
-    public static final Goal extractGoal (String dungeonName) throws IllegalArgumentException {
-        return extractGoal(loadSavedDungeon(dungeonName));
+    public static final String extractDungeonName(JSONObject dungeon) {
+        return dungeon.getString("dungeonName");
     }
 
     public static final Goal extractGoal(JSONObject savedDungeon) throws IllegalArgumentException {
-        return (savedDungeon.has("goal-condition")) ? EntityFactory.doExtractGoal(savedDungeon.getJSONObject("goal-condition")):null;
+        return (savedDungeon.has("goal-condition"))
+            ? EntityFactory.doExtractGoal(savedDungeon.getJSONObject("goal-condition"))
+            : null;
     }
 }

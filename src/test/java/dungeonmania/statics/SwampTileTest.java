@@ -112,7 +112,7 @@ public class SwampTileTest {
             }
         }
 
-        // create spider in middle of swamp tile
+        // create zombie in middle of swamp tile
         ZombieToast zombie = new ZombieToast(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(zombie);
 
@@ -122,6 +122,7 @@ public class SwampTileTest {
 
         // zombie move random direction
         game.tick(null, Direction.NONE);
+        assertNotEquals(new Position(1, 1), zombie.getPosition());
     }
 
     /**

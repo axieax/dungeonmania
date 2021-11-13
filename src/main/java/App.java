@@ -1,28 +1,26 @@
-import spark.Request;
-import spark.Spark;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import dungeonmania.DungeonManiaController;
 import dungeonmania.response.models.GenericResponseWrapper;
 import dungeonmania.util.Direction;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
 import scintilla.Scintilla;
+import spark.Request;
+import spark.Spark;
 
 /**
  * A threadsafe wrapper around your DungeonManiaController.
  * It does this by storing a series of session states
- * 
+ *
  * You shouldn't need to modify this.
- * 
+ *
  * @author Braedon Wooding, Nick Patrikeos, Noa Challis, George Litsas
  */
 public class App {
+
     private static volatile Map<String, DungeonManiaController> sessionStates = new HashMap<>();
 
     private static synchronized DungeonManiaController getDungeonManiaController(Request request) {
@@ -41,7 +39,7 @@ public class App {
         }
     }
 
-    private static<T> GenericResponseWrapper<T> callWithWrapper(Supplier<T> runnable) {
+    private static <T> GenericResponseWrapper<T> callWithWrapper(Supplier<T> runnable) {
         try {
             return GenericResponseWrapper.Ok(runnable.get());
         } catch (Exception e) {
@@ -50,7 +48,10 @@ public class App {
         }
     }
 
-    private static<T> GenericResponseWrapper<T> callUsingSessionAndArgument(Request request, Function<DungeonManiaController, T> runnable) {
+    private static <T> GenericResponseWrapper<T> callUsingSessionAndArgument(
+        Request request,
+        Function<DungeonManiaController, T> runnable
+    ) {
         try {
             DungeonManiaController dmc = getDungeonManiaController(request);
             synchronized (dmc) {
@@ -63,7 +64,7 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        Scintilla.initialize(); 
+        Scintilla.initialize();
         GsonBuilder gsonBuilder = new GsonBuilder();
 
         Gson gson = gsonBuilder.create();
@@ -75,56 +76,166 @@ public class App {
             response.header("Access-Control-Allow-Headers", "*");
         });
 
-        Spark.get("/api/dungeons/", "application/json", (request, response) -> {
-            // we don't *need* to globally lock this but we might as well just to keep a nice standard.
-            synchronized (globalLock) {
-                return callWithWrapper(() -> DungeonManiaController.dungeons());
-            }
-        }, gson::toJson);
+        Spark.get(
+            "/api/dungeons/",
+            "application/json",
+            (request, response) -> {
+                // we don't *need* to globally lock this but we might as well just to keep a nice standard.
+                synchronized (globalLock) {
+                    return callWithWrapper(() -> DungeonManiaController.dungeons());
+                }
+            },
+            gson::toJson
+        );
 
-        Spark.post("/api/game/new/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.newGame(request.queryParams("dungeonName"), request.queryParams("gameMode")));
-        }, gson::toJson);
+        Spark.post(
+            "/api/game/new/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(
+                    request,
+                    dmc ->
+                        dmc.newGame(
+                            request.queryParams("dungeonName"),
+                            request.queryParams("gameMode")
+                        )
+                );
+            },
+            gson::toJson
+        );
 
-        Spark.post("api/game/save/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.saveGame(request.queryParams("name")));
-        }, gson::toJson);
+        Spark.post(
+            "api/game/save/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(
+                    request,
+                    dmc -> dmc.saveGame(request.queryParams("name"))
+                );
+            },
+            gson::toJson
+        );
 
-        Spark.post("api/game/load/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.loadGame(request.queryParams("name")));
-        }, gson::toJson);
+        Spark.post(
+            "api/game/load/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(
+                    request,
+                    dmc -> dmc.loadGame(request.queryParams("name"))
+                );
+            },
+            gson::toJson
+        );
 
-        Spark.get("api/games/all/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.allGames());
-        }, gson::toJson);
+        Spark.get(
+            "api/games/all/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(request, dmc -> dmc.allGames());
+            },
+            gson::toJson
+        );
 
-        Spark.post("/api/game/tick/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.tick(request.queryParams("itemUsed"), Direction.valueOf(request.queryParams("movementDirection").toUpperCase())));
-        }, gson::toJson);
+        Spark.post(
+            "/api/game/tick/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(
+                    request,
+                    dmc ->
+                        dmc.tick(
+                            request.queryParams("itemUsed"),
+                            Direction.valueOf(
+                                request.queryParams("movementDirection").toUpperCase()
+                            )
+                        )
+                );
+            },
+            gson::toJson
+        );
 
-        Spark.post("/api/game/build/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.build(request.queryParams("buildable")));
-        }, gson::toJson);
+        Spark.post(
+            "/api/game/build/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(
+                    request,
+                    dmc -> dmc.build(request.queryParams("buildable"))
+                );
+            },
+            gson::toJson
+        );
 
-        Spark.get("/api/gamemode/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.getGameModes());
-        }, gson::toJson);
+        Spark.get(
+            "/api/gamemode/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(request, dmc -> dmc.getGameModes());
+            },
+            gson::toJson
+        );
 
-        Spark.get("/api/skin/current/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.getSkin());
-        }, gson::toJson);
+        Spark.get(
+            "/api/skin/current/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(request, dmc -> dmc.getSkin());
+            },
+            gson::toJson
+        );
 
-        Spark.get("/api/localisation/current/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.getLocalisation());
-        }, gson::toJson);
+        Spark.get(
+            "/api/localisation/current/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(request, dmc -> dmc.getLocalisation());
+            },
+            gson::toJson
+        );
 
-        Spark.post("/api/game/interact/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.interact(request.queryParams("entityId")));
-        }, gson::toJson);
+        Spark.post(
+            "/api/game/interact/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(
+                    request,
+                    dmc -> dmc.interact(request.queryParams("entityId"))
+                );
+            },
+            gson::toJson
+        );
 
-        Spark.post("/api/game/new/generate/", "application/json", (request, response) -> {
-            return callUsingSessionAndArgument(request, (dmc) -> dmc.generateDungeon(Integer.parseInt(request.queryParams("xStart")), Integer.parseInt(request.queryParams("yStart")), Integer.parseInt(request.queryParams("xEnd")), Integer.parseInt(request.queryParams("yEnd")), request.queryParams("gameMode")));
-        }, gson::toJson);
+        Spark.post(
+            "/api/game/rewind/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(
+                    request,
+                    dmc -> dmc.rewind(Integer.parseInt(request.queryParams("ticks")))
+                );
+            },
+            gson::toJson
+        );
+
+        Spark.post(
+            "/api/game/new/generate/",
+            "application/json",
+            (request, response) -> {
+                return callUsingSessionAndArgument(
+                    request,
+                    dmc ->
+                        dmc.generateDungeon(
+                            Integer.parseInt(request.queryParams("xStart")),
+                            Integer.parseInt(request.queryParams("yStart")),
+                            Integer.parseInt(request.queryParams("xEnd")),
+                            Integer.parseInt(request.queryParams("yEnd")),
+                            request.queryParams("gameMode")
+                        )
+                );
+            },
+            gson::toJson
+        );
 
         Scintilla.start();
     }

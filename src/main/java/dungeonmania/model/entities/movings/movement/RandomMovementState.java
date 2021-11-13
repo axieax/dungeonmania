@@ -14,7 +14,7 @@ public class RandomMovementState extends MovementState {
 
     /**
      * Finds a random adjacent position to make.
-     * 
+     *
      * @param game dungeon
      * @return Position to go to next
      */
