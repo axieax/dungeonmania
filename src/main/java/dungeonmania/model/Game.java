@@ -53,7 +53,7 @@ public final class Game {
         this.goal = goal;
         this.mode = mode;
         
-        if (getCharacter() != null) this.playerSpawnLocation = getCharacter().getPosition();
+        this.playerSpawnLocation = (getCharacter() != null) ? getCharacter().getPosition() : new Position(0, 0);
     }
 
     private int findMaxX() {

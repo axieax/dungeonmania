@@ -59,10 +59,11 @@ public class MercenaryTest {
     @Test
     public void testSpawnMercenary() {
         Mode mode = new Standard();
-        // Mercenaries only spawn in dungeons with at least one enemy
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        List<Entity> entities = sevenBySevenWallBoundary();
         Player player = new Player(new Position(1, 1), mode.initialHealth());
-        game.addEntity(player);
+        entities.add(player);
+        
+        Game game = new Game("game", entities, new ExitCondition(), mode);
 
         // Move player away from spawning location (otherwise mercenary will immediately die after spawning)
         game.tick(null, Direction.RIGHT);
@@ -291,6 +292,7 @@ public class MercenaryTest {
 
         // Mercenary should not be able to go in the door position
         for (int i = 0; i < 100; i++) {
+            
             game.tick(null, Direction.NONE);
 
             // Exit loop if either the player or mercenary has died
@@ -408,13 +410,13 @@ public class MercenaryTest {
 
             game.tick(null, movementDirection);
 
-            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
-            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
-
             // Exit the loop if the player or mercenary has died
             if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
                 break;
             }
+
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
+            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
             // Note that we have the number of entities at the player position is >= 2 since spiders may spawn

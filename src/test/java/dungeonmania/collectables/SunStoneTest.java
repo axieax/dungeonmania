@@ -256,13 +256,13 @@ public class SunStoneTest {
 
             game.tick(null, movementDirection);
 
-            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
-            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
-
             // Exit the loop if the player or mercenary has died
             if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
                 break;
             }
+
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
+            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Mercenary will always be adjacent to or at the same position as the player since it will always follow it
             // Note that we have the number of entities at the player position is >= 2 since spiders may spawn
@@ -317,13 +317,13 @@ public class SunStoneTest {
 
             game.tick(null, movementDirection);
 
-            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
-            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
-
             // Exit the loop if the player or assassin has died
             if (game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null) {
                 break;
             }
+
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
+            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
             // Assassin will always be adjacent to or at the same position as the player since it will always follow it
             // Note that we have the number of entities at the player position is >= 2 since spiders may spawn
