@@ -16,7 +16,6 @@ public class Shield extends DefenceEquipment implements Buildable {
         super("shield", DEFENCE_MULTIPLIER);
     }
 
-    @Override
     public boolean isBuildable(Game game, Inventory inventory) {
         return (
             inventory.hasItemQuantity("wood", WOOD_NEEDED) &&
@@ -28,7 +27,6 @@ public class Shield extends DefenceEquipment implements Buildable {
         );
     }
 
-    @Override
     public void craft(Inventory inventory) {
         inventory.removeItemQuantity("wood", WOOD_NEEDED);
         if (inventory.hasItemQuantity("sun_stone", TREASURE_NEEDED)) {
@@ -41,7 +39,6 @@ public class Shield extends DefenceEquipment implements Buildable {
         inventory.addItem(new Shield());
     }
 
-    @Override
     public Buildable clone() {
         return new Shield();
     }

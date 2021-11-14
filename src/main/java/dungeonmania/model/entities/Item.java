@@ -10,15 +10,13 @@ public abstract class Item extends Entity {
         super(prefix, position, false, true);
     }
 
-    /**
-     * If the Player interacts with the Item, collect the item and put it in the
-     * inventory.
-     */
     @Override
     public void interact(Game game, Entity character) {
-        if (character instanceof Player) {
-            ((Player) character).collect(this);
-            game.removeEntity(this);
-        }
+        // If the Player interacts with the Item,
+        // collect the item and put it in the inventory.
+        if (!(character instanceof Player)) return;
+
+        ((Player) character).collect(this);
+        game.removeEntity(this);
     }
 }

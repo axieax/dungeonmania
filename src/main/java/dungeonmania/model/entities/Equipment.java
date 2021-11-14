@@ -15,6 +15,7 @@ public abstract class Equipment extends Item {
     /**
      * Each equipment has a specific durability that dictates the
      * number of times it can be used before it deteriorates.
+     *
      * @return durability level of the equipment
      */
     public int getDurability() {
@@ -22,10 +23,22 @@ public abstract class Equipment extends Item {
     }
 
     /**
-     * @param durability
-     * Reduces the durability of the equipment and returns the attack/defence amount
+     * Set the durability of an Equipment
+     *
+     * @param durability level of the equipment
+     */
+    public void setDurability(int durability) {
+        this.durability = durability;
+    }
+
+    /**
+     * Simulates equipment being used by a given player
+     *
+     * @param player player to use equipment
+     * @return attack or defence amount
      */
     public double useEquipment(Player player) {
+        // Reduces the durability of the equipment
         this.durability--;
         if (this.durability == 0) player.removeInventoryItem(this.getId());
         return 0;
@@ -36,9 +49,5 @@ public abstract class Equipment extends Item {
         JSONObject info = super.toJSON();
         info.put("durability", durability);
         return info;
-    }
-
-    public void setDurability(int durability) {
-        this.durability = durability;
     }
 }

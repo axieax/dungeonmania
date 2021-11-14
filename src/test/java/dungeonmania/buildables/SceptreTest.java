@@ -3,10 +3,6 @@ package dungeonmania.buildables;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
-import org.junit.jupiter.api.Test;
-
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Arrow;
@@ -21,6 +17,8 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
 
 public class SceptreTest {
 

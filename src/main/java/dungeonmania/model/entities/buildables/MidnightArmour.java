@@ -18,33 +18,25 @@ public class MidnightArmour extends DefenceEquipment implements Buildable {
     }
 
     @Override
+    public int getBonusAttackDamage() {
+        return BONUS_ATTACK_DAMAGE;
+    }
+
     public boolean isBuildable(Game game, Inventory inventory) {
         // Midnight armour can only be built if there are no zombies currently in the dungeon
         return (
-            game
-                .getEntities()
-                .stream()
-                .filter(entity -> entity instanceof ZombieToast)
-                .findAny()
-                .isEmpty() &&
+            !(game.getEntities().stream().anyMatch(entity -> entity instanceof ZombieToast)) &&
             inventory.hasItemQuantity("armour", ARMOUR_NEEDED) &&
             inventory.hasItemQuantity("sun_stone", SUNSTONE_NEEDED)
         );
     }
 
-    @Override
     public void craft(Inventory inventory) {
         inventory.removeItemQuantity("armour", ARMOUR_NEEDED);
         inventory.removeItemQuantity("sun_stone", SUNSTONE_NEEDED);
         inventory.addItem(new MidnightArmour());
     }
 
-    @Override
-    public int getBonusAttackDamage() {
-        return BONUS_ATTACK_DAMAGE;
-    }
-
-    @Override
     public Buildable clone() {
         return new MidnightArmour();
     }

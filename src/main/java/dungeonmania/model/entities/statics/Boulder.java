@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.statics;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.player.Player;
@@ -14,7 +15,7 @@ public class Boulder extends Entity {
     }
 
     @Override
-    public void interact(Game game, Entity character) {
+    public void interact(Game game, Entity character) throws InvalidActionException {
         // If the boulder is interacted by the player, it moves the boulder to the next tile.
         if (character instanceof Player) {
             this.moveBoulder(game, ((Player) character).getDirection());

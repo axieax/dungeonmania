@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.statics;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.Enemy;
@@ -29,7 +30,7 @@ public class Portal extends Entity {
     }
 
     @Override
-    public void interact(Game game, Entity character) {
+    public void interact(Game game, Entity character) throws InvalidActionException {
         // If a entity interacts with the Portal, they can be teleported to the
         // corresponding portal if the tile on the destination portal is free for
         // the entity to go through by.
@@ -37,6 +38,13 @@ public class Portal extends Entity {
         this.teleport(game, (MovingEntity) character);
     }
 
+    /**
+     * Finds the corresponding portal for this portal
+     *
+     * @param game game state
+     *
+     * @return other Portal object
+     */
     public Portal findPortal(Game game) {
         return game
             .getAllPortals()
@@ -52,7 +60,7 @@ public class Portal extends Entity {
      * Teleports the entity exactly to the tile where the corresponding portal is located.
      *
      * @param game game state
-     * @param character entity to interact with 
+     * @param character entity to interact with
      */
     public void teleport(Game game, MovingEntity character) {
         Portal portal = this.findPortal(game);
@@ -70,16 +78,15 @@ public class Portal extends Entity {
     }
 
     @Override
-    public JSONObject toJSON() {
-        JSONObject info = super.toJSON();
-        info.put("colour", colour);
-        return info;
-    }
-
-    @Override
     public EntityResponse getEntityResponse() {
         String type = String.format("%s_%s", getType(), colour.toLowerCase());
         return new EntityResponse(getId(), type, getPosition(), isInteractable());
     }
 
+    @Override
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put("colour", colour);
+        return info;
+    }
 }

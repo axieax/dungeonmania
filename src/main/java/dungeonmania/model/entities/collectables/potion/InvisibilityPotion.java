@@ -11,7 +11,6 @@ public class InvisibilityPotion extends Potion {
         super("invisibility_potion", position);
     }
 
-    @Override
     public void consume(Game game, Player player) {
         player.setState(new PlayerInvisibleState(player));
         player.removeInventoryItem(this.getId());

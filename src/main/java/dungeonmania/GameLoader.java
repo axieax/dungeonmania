@@ -360,9 +360,7 @@ public class GameLoader {
         } else if (type.startsWith("midnight_armour")) { ///////
             MidnightArmour newMidnightArmour = new MidnightArmour();
             int durability = entityInfo.getInt("durability");
-            int bonusAttackDamage = entityInfo.getInt("bonusAttackDamage");
             newMidnightArmour.setDurability(durability);
-            newMidnightArmour.setAttackDamage(bonusAttackDamage);
             return newMidnightArmour;
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);

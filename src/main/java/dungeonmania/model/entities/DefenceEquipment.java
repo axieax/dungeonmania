@@ -18,12 +18,13 @@ public abstract class DefenceEquipment extends Equipment {
         this.defenceMultiplier = defenceMultiplier;
     }
 
+    /**
+     * Get bonus attack damage (damage dealt by DefenceEquipment)
+     *
+     * @return bonus attack damage
+     */
     public int getBonusAttackDamage() {
         return bonusAttackDamage;
-    }
-
-    public void setAttackDamage(int bonusAttackDamage) {
-        this.bonusAttackDamage = bonusAttackDamage;
     }
 
     @Override
@@ -36,7 +37,6 @@ public abstract class DefenceEquipment extends Equipment {
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put("defenceMultiplier", defenceMultiplier);
-        info.put("bonusAttackDamage", bonusAttackDamage);
         return info;
     }
 }

@@ -10,7 +10,6 @@ public class HealthPotion extends Potion {
         super("health_potion", position);
     }
 
-    @Override
     public void consume(Game game, Player player) {
         player.setHealth(player.getMaxCharacterHealth());
         player.removeInventoryItem(this.getId());

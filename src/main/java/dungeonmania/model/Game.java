@@ -385,12 +385,13 @@ public final class Game {
      */
     public final DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
-        try {
-            if (itemUsedId != null && itemUsedId.length() == 0) throw new IllegalArgumentException(
-                itemUsedId
-            );
-            this.tick += 1;
+        // empty item used
+        if (itemUsedId != null && itemUsedId.length() == 0) {
+            throw new IllegalArgumentException(itemUsedId);
+        }
+        this.tick += 1;
 
+        try {
             // Player moves before other entities (so that bribable enemies can follow the player)
             getCharacter().move(this, movementDirection, itemUsedId);
 
@@ -410,7 +411,7 @@ public final class Game {
             Spider.spawnSpider(this, this.mode.damageMultiplier());
             Mercenary.spawnMercenary(this, this.mode.damageMultiplier());
             Hydra.spawnHydra(this, this.mode.damageMultiplier());
-        }  catch (PlayerDeadException | NullPointerException e) {}
+        } catch (PlayerDeadException | NullPointerException e) {}
 
         return getDungeonResponse();
     }
@@ -447,7 +448,7 @@ public final class Game {
     public final DungeonResponse interact(String entityId)
         throws IllegalArgumentException, InvalidActionException {
         if (!entities.stream().map(Entity::getId).collect(Collectors.toList()).contains(entityId)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(entityId);
         }
         MovingEntity player = getCharacter();
         Entity entity = getEntity(entityId);

@@ -18,11 +18,8 @@ public class Bomb extends Item implements Consumable {
         isPlaced = false;
     }
 
-    /**
-     * Place a bomb at the specified position on the dungeon.
-     * @param position
-     */
     public void consume(Game game, Player player) {
+        // Place a bomb at the specified position on the dungeon.
         this.setPosition(player.getPosition());
         game.addEntity(this);
         player.removeInventoryItem(this.getId());
@@ -44,7 +41,8 @@ public class Bomb extends Item implements Consumable {
     /**
      * Explodes the bomb destroying all entities in the bomb's blast radius,
      * except for portals and the player.
-     * @param game
+     *
+     * @param game game state
      */
     public void explode(Game game) {
         List<Entity> entities = game.getAdjacentEntities(this.getPosition());
