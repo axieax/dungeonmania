@@ -131,19 +131,6 @@ public class GameLoader {
     /**
      * Extracts the entities from a given saved game
      *
-     * @param gameId id of saved game to be loaded
-     * @param mode game mode
-     *
-     * @return list of Entity objects in the game
-     */
-    public static final List<Entity> extractEntities(String gameId, Mode mode) {
-        JSONObject json = loadSavedGame(gameId);
-        return extractEntities(json, mode);
-    }
-
-    /**
-     * Extracts the entities from a given saved game
-     *
      * @param jsoninfo JSONObject for saved game to be loaded
      * @param mode game mode
      *
@@ -454,20 +441,30 @@ public class GameLoader {
     }
 
     private static final Direction extractDirection(String direct) {
-        Direction direction = Direction.NONE;
-        if (direct.equals("UP")) direction = Direction.UP; else if (
-            direct.equals("DOWN")
-        ) direction = Direction.DOWN; else if (direct.equals("RIGHT")) direction =
-            Direction.RIGHT; else if (direct.equals("LEFT")) direction = Direction.LEFT;
-        return direction;
+        if (direct.equals("UP")) {
+            return Direction.UP;
+        } else if (direct.equals("DOWN")) {
+            return Direction.DOWN;
+        } else if (direct.equals("RIGHT")) {
+            return Direction.RIGHT;
+        } else if (direct.equals("LEFT")) {
+            return Direction.LEFT;
+        } else {
+            return Direction.NONE;
+        }
     }
 
     public static final Mode extractMode(JSONObject dungeon) {
-        String gameMode = dungeon.getString("mode");
-        if (gameMode.equals("hard")) return new Hard(); else if (
-            gameMode.equals("standard")
-        ) return new Standard(); else if (gameMode.equals("peaceful")) return new Peaceful();
-        return null;
+        switch (dungeon.getString("mode")) {
+            case "peaceful":
+                return new Peaceful();
+            case "standard":
+                return new Standard();
+            case "hard":
+                return new Hard();
+            default:
+                return null;
+        }
     }
 
     /**

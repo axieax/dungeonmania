@@ -622,4 +622,14 @@ public class GoalTest {
         );
         assertEquals("", TestHelpers.tickMovement(controller, Direction.DOWN, 1).getGoals());
     }
+
+    /**
+     * Tests goals automatically achieved
+     */
+    @Test
+    public void testOrComposite() {
+        DungeonManiaController dmc = new DungeonManiaController();
+        DungeonResponse resp = dmc.newGame("zombie", "hard");
+        assertEquals("", resp.getGoals());
+    }
 }

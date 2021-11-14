@@ -17,6 +17,14 @@
         }
     ],
     "goal-condition": {
-        "goal": "enemies"
+        "goal": "OR",
+        "subgoals": [
+            {
+                "goal": "enemies"
+            },
+            {
+                "goal": "treasure"
+            }
+        ]
     }
 }
