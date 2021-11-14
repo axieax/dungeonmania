@@ -39,7 +39,7 @@ public class Door extends Entity {
     @Override
     public void interact(Game game, Entity character) {
         // If the Player interacts the Door with the correct key, it unlocks the door.
-        if (character instanceof Player) return;
+        if (!(character instanceof Player)) return;
         Player player = (Player) character;
         Key key = player.getKey();
 
