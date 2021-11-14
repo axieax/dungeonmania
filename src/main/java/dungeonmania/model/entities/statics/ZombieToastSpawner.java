@@ -20,7 +20,7 @@ public class ZombieToastSpawner extends Entity implements Tickable {
     private int currTick;
 
     public ZombieToastSpawner(Position position, int tickRate) {
-        super("zombie_toast_spawner", position);
+        super("zombie_toast_spawner", position, true, false);
         this.TICK_RATE = tickRate;
         this.currTick = 0;
     }
