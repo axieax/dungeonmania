@@ -13,6 +13,7 @@ public class Assassin extends BribableEnemy implements Boss {
 
     public static final int MAX_ASSASSIN_HEALTH = 75;
     public static final int MAX_ASSASSIN_ATTACK_DMG = 12;
+    public static final double ASSASSIN_SPAWN_RATE = 0.3;
 
     public Assassin(Position position, int damageMultiplier, SubjectPlayer player) {
         super("assassin", position, MAX_ASSASSIN_HEALTH, MAX_ASSASSIN_ATTACK_DMG, damageMultiplier);

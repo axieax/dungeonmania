@@ -8,7 +8,9 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.Tickable;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.movings.BribableEnemy;
+import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.Hydra;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.player.Player;
@@ -40,6 +42,7 @@ public final class Game {
     private final List<Entity> entities;
     private final Goal goal;
     private final Mode mode;
+    private Position playerSpawnLocation;
 
     private int tick = 0;
 
@@ -49,6 +52,8 @@ public final class Game {
         this.entities = new ArrayList<>(entities);
         this.goal = goal;
         this.mode = mode;
+        
+        this.playerSpawnLocation = (getCharacter() != null) ? getCharacter().getPosition() : new Position(0, 0);
     }
 
     private int findMaxX() {
@@ -84,6 +89,10 @@ public final class Game {
             .orElse(null);
     }
 
+    public Position getPlayerSpawnLocation() {
+        return playerSpawnLocation;
+    }
+
     public final List<Entity> getEntities() {
         return entities;
     }
@@ -106,6 +115,14 @@ public final class Game {
             .filter(e -> e.getPosition().equals(position))
             .collect(Collectors.toList());
     }
+
+    public final List<Enemy> getAllEnemies() {
+        return entities
+            .stream()
+            .filter(e -> e instanceof Enemy)
+            .map(e -> (Enemy) e)
+            .collect(Collectors.toList());
+        }
 
     public final List<Portal> getAllPortals() {
         return entities
@@ -158,15 +175,15 @@ public final class Game {
         return getAdjacentEntities(position)
             .stream()
             .filter(e -> {
-                // cardinally adjacent if one coordinate is (1 or -1) with the other 0
+                // Cardinally adjacent if one coordinate is (1 or -1) with the other 0
                 Position difference = Position.calculatePositionBetween(e.getPosition(), position);
                 int xDiff = Math.abs(difference.getX());
                 int yDiff = Math.abs(difference.getY());
                 return (
-                    // ensure both xDiff and yDiff are either 0 or 1
+                    // Ensure both xDiff and yDiff are either 0 or 1
                     (xDiff == (xDiff & 1)) &&
                     (yDiff == (yDiff & 1)) &&
-                    // logical XOR to check x and y are different
+                    // Logical XOR to check x and y are different
                     ((xDiff == 1) ^ (yDiff == 1))
                 );
             })
@@ -199,7 +216,7 @@ public final class Game {
     private final String formatGoal() {
         if (goal == null || getCharacter() == null) return "";
         String goalString = goal.toString(this);
-        // remove starting and closing brackets
+        // Remove starting and closing brackets
         if (goalString.startsWith("(") && goalString.endsWith(")")) {
             goalString = goalString.substring(1, goalString.length() - 1);
         }
@@ -227,14 +244,14 @@ public final class Game {
      * @return list of boulder animations
      */
     private final List<AnimationQueue> boulderAnimations() {
-        // locate switch positions
+        // Locate switch positions
         Set<Position> switchPositions = new HashSet<>();
         for (Entity e : entities) {
             Position pos = e.getPosition();
             if (e instanceof FloorSwitch) switchPositions.add(pos.asLayer(0));
         }
 
-        // different skins for boulders on switches
+        // Different skins for boulders on switches
         return entities
             .stream()
             .filter(e ->
@@ -293,6 +310,7 @@ public final class Game {
             });
 
             Spider.spawnSpider(this, this.mode.damageMultiplier());
+            Mercenary.spawnMercenary(this, this.mode.damageMultiplier());
             Hydra.spawnHydra(this, this.mode.damageMultiplier());
         } catch (PlayerDeadException e) {}
 
@@ -350,8 +368,7 @@ public final class Game {
             entities
                 .stream()
                 .filter(e -> e instanceof TimeTravellingPortal && e.getPosition().equals(position))
-                .count() >
-            0
+                .count() > 0
         );
     }
 

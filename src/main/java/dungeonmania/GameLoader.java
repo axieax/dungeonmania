@@ -310,8 +310,6 @@ public class GameLoader {
             return newAnduril;
         } else if (type.startsWith("sceptre")) { /////////
             Sceptre newSceptre = new Sceptre();
-            int durability = entityInfo.getInt("durability");
-            newSceptre.setDurability(durability);
             return newSceptre;
         } else if (type.startsWith("midnight_armour")) { ///////
             MidnightArmour newMidnightArmour = new MidnightArmour();
