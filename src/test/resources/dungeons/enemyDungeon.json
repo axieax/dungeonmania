@@ -1,0 +1,48 @@
+{
+    "entities": [
+      {
+        "x": 0,
+        "y": 10,
+        "type": "zombie_toast_spawner"
+      },
+      {
+        "x": 1,
+        "y": 10,
+        "type": "zombie_toast"
+      },
+      {
+        "x": 2,
+        "y": 10,
+        "type": "assassin"
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "type": "hydra"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "type": "wood"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "type": "wood"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "type": "treasure"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "type": "player"
+      }
+    ],
+    "goal-condition": {
+      "goal": "enemies"
+    }
+}
+  
