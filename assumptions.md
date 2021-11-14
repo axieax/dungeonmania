@@ -28,12 +28,13 @@
 ## Enemy Mechanics
 * Spiders can move out of the map if they spawn on the edge and their ‘circular' path causes them to go beyond the map.
 * When a spider is performing their initial movement (i.e. moving UP), if there is an entity blocking their movement, then the spider stays on their spawning position since it cannot perform it's initial movement position.
+* Spider starts with an initial direction of clockwise when spawned.
 * Zombies cannot move a boulder as this action is only conducted by a player.
 * Zombies will only randomly pick a free tile to move to.
-* Spider starts with an initial direction of clockwise when spawned.
 * Zombie/Mercenaries will the amour effect when equipped. It will halve damage inflicted by the player.
 * Mercenaries can only move twice if mercenary is aiming to attack the player.
 * When a Hydra regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
+* The Hydra entity spawns at the entry location - similar to the mercenary.
 ## Entity Mechanics
 ### Portal
 * Portals teleport all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A spider will resume moving in a circular motion after it has been teleported.
