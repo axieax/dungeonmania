@@ -169,7 +169,7 @@ public class GameLoader {
         } else if (type.startsWith("zombie_toast_spawner")) {
             position = position.asLayer(7);
             return new ZombieToastSpawner(position, mode.tickRate());
-            // Moving Entities
+            // Collectable Entities
         } else if (type.startsWith("treasure")) {
             position = position.asLayer(8);
             return new Treasure(position);
@@ -210,6 +210,7 @@ public class GameLoader {
         } else if (type.startsWith("one_ring")) {
             position = position.asLayer(18);
             return new TheOneRing(position);
+            // Moving Entities
         } else if (type.startsWith("spider")) { ////
             position = position.asLayer(19);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
@@ -264,7 +265,6 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newMercenary);
             newMercenary.setMovementState(movementState);
             return newMercenary;
-            // Collectable Entities
         } else if (type.startsWith("assassin")) { /////
             position = position.asLayer(22);
             Boolean bribed = entityInfo.getBoolean("bribed");
@@ -384,9 +384,9 @@ public class GameLoader {
 
     public static final Mode extractMode(JSONObject dungeon) {
         String gameMode = dungeon.getString("mode");
-        if (gameMode.equals("hard")) return new Hard(); else if (
-            gameMode.equals("standard")
-        ) return new Standard(); else if (gameMode.equals("peaceful")) return new Peaceful();
+        if (gameMode.equals("hard")) return new Hard();
+        else if (gameMode.equals("standard")) return new Standard();
+        else if (gameMode.equals("peaceful")) return new Peaceful();
         return null;
     }
 
