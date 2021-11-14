@@ -1,0 +1,183 @@
+Autotesting Result = 74.0/110, the final cap hasn't been defined yet but will be around 80-90
+Test 1-1
+SUCCESS DONE
+Test 1-2
+SUCCESS DONE
+Test 1-3
+FAILED due to timeout...
+Test 2-1
+SUCCESS DONE
+Test 2-2
+SUCCESS DONE
+Test 2-3
+ZombieTest > 1-3 Testing zombies spawn with armour intermittently (at least once every 200 ticks) FAILED java.lang.NullPointerException: Cannot invoke "dungeonmania.model.entities.movings.Player.getPosition()" because the return value of "dungeonmania.model.Game.getCharacter()" is null at dungeonmania.model.entities.movings.ZombieToast.tick(ZombieToast.java:31) at dungeonmania.model.Game.lambda$tick$13(Game.java:194) at java.base/java.util.ArrayList.forEach(ArrayList.java:1511) at dungeonmania.model.Game.tick(Game.java:190) at dungeonmania.DungeonManiaController.tick(DungeonManiaController.java:190) at dungeonmania.controllerTest.Utils.tick(Utils.java:20) at dungeonmania.controllerTest.ZombieTest.testZombiesHaveArmour(ZombieTest.java:76) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 9s
+Test 2-4
+SUCCESS DONE
+Test 2-5
+SUCCESS DONE
+Test 3-1
+MercenaryTest > 3-1 Test mercenary spawning FAILED org.opentest4j.AssertionFailedError: expected: <true> but was: <false> at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55) at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:40) at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:35) at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179) at dungeonmania.controllerTest.MercenaryTest.testMercenarySpawning(MercenaryTest.java:42) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 8s
+Test 3-2
+MercenaryTest > 3-2 Testing mercenaries cannot move through boulders and walls FAILED org.opentest4j.AssertionFailedError: expected: <Position [x=4, y=2, z=0]> but was: <Position [x=4, y=1, z=20]> at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55) at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62) at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182) at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177) at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141) at dungeonmania.controllerTest.MercenaryTest.testMercenaryNotMovingThroughBlockingEntities(MercenaryTest.java:60) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 8s
+Test 3-3
+FAILED due to timeout...
+Test 3-4
+FAILED due to timeout...
+Test 4-1
+SUCCESS DONE
+Test 4-2
+SUCCESS DONE
+Test 4-3
+FAILED due to timeout...
+Test 4-4
+FAILED due to timeout...
+Test 5-1
+SUCCESS DONE
+Test 5-2
+SUCCESS DONE
+Test 6-1
+SUCCESS DONE
+Test 6-2
+SUCCESS DONE
+Test 6-3
+SUCCESS DONE
+Test 6-4
+SUCCESS DONE
+Test 6-5
+SpiderTest > 6-5 Test spiders cannot move through boulders FAILED org.opentest4j.AssertionFailedError: expected: <true> but was: <false> at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55) at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:40) at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:35) at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179) at dungeonmania.controllerTest.SpiderTest.testSpiderBoulderInPath(SpiderTest.java:202) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 6s
+Test 6-6
+SUCCESS DONE
+Test 7-1
+SUCCESS DONE
+Test 7-2
+SUCCESS DONE
+Test 7-3
+BasicGoalsTest > 7-3 Testing achieving an enemies goal with a single spider on the map FAILED org.opentest4j.AssertionFailedError: expected: <> but was: <:enemies(1)> at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55) at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62) at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182) at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177) at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141) at dungeonmania.controllerTest.BasicGoalsTest.testEnemyGoalSpider(BasicGoalsTest.java:77) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 6s
+Test 7-4
+SUCCESS DONE
+Test 7-5
+SUCCESS DONE
+Test 7-6
+SUCCESS DONE
+Test 7-7
+SUCCESS DONE
+Test 7-8
+SUCCESS DONE
+Test 7-9
+SUCCESS DONE
+Test 8-1
+SUCCESS DONE
+Test 8-2
+SUCCESS DONE
+Test 8-3
+SUCCESS DONE
+Test 8-4
+SUCCESS DONE
+Test 9-1
+SUCCESS DONE
+Test 9-2
+SUCCESS DONE
+Test 9-3
+SUCCESS DONE
+Test 10-1
+SUCCESS DONE
+Test 10-2
+SUCCESS DONE
+Test 10-3
+SUCCESS DONE
+Test 10-4
+SUCCESS DONE
+Test 10-5
+BombsTest > Test placing a bomb on a map cardinally adjacent to an active switch causes the bomb to detonate, removing surrounding entites except for the player FAILED org.opentest4j.AssertionFailedError: expected: <0> but was: <1> at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55) at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62) at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150) at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145) at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:527) at dungeonmania.controllerTest.BombsTest.testBombPlaceMapCardinallyAdjacentActiveSwitch(BombsTest.java:136) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 7s
+Test 10-6
+SUCCESS DONE
+Test 10-7
+SUCCESS DONE
+Test 10-8
+SUCCESS DONE
+Test 11-1
+SUCCESS DONE
+Test 11-2
+SUCCESS DONE
+Test 11-3
+SUCCESS DONE
+Test 12-1
+SaveLoadTest > 12-1 Test saving and loading a simple maze map FAILED java.lang.IllegalArgumentException at dungeonmania.DungeonManiaController.loadGame(DungeonManiaController.java:149) at dungeonmania.controllerTest.SaveLoadTest.testMazeSave(SaveLoadTest.java:30) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 6s
+Test 12-2
+SaveLoadTest > 12-2 Test saving and loading a map with boulders and switches FAILED java.lang.IllegalArgumentException at dungeonmania.DungeonManiaController.loadGame(DungeonManiaController.java:149) at dungeonmania.controllerTest.SaveLoadTest.testBouldersSave(SaveLoadTest.java:50) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 7s
+Test 12-3
+SaveLoadTest > 12-3 Test saving and loading a map with enemies and collectables FAILED java.lang.NullPointerException: Cannot invoke "dungeonmania.util.Position.getX()" because "this.position" is null at dungeonmania.model.entities.Entity.getX(Entity.java:72) at dungeonmania.model.entities.Entity.toJSON(Entity.java:90) at dungeonmania.model.entities.movings.Inventory.toJSON(Inventory.java:126) at dungeonmania.model.entities.movings.Player.toJSON(Player.java:416) at dungeonmania.DungeonManiaController.saveGame(DungeonManiaController.java:112) at dungeonmania.controllerTest.SaveLoadTest.testAdvancedSave(SaveLoadTest.java:65) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 7s
+Test 12-4
+SaveLoadTest > 12-4 Test saving on a map containing all types of entities FAILED java.lang.NullPointerException: Cannot invoke "dungeonmania.util.Position.getX()" because "this.position" is null at dungeonmania.model.entities.Entity.getX(Entity.java:72) at dungeonmania.model.entities.Entity.toJSON(Entity.java:90) at dungeonmania.model.entities.movings.Inventory.toJSON(Inventory.java:126) at dungeonmania.model.entities.movings.Player.toJSON(Player.java:416) at dungeonmania.DungeonManiaController.saveGame(DungeonManiaController.java:112) at dungeonmania.controllerTest.SaveLoadTest.testSaveAllEntities(SaveLoadTest.java:84) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 9s
+Test 13-1
+SUCCESS DONE
+Test 13-2
+SUCCESS DONE
+Test 13-3
+SUCCESS DONE
+Test 13-4
+SUCCESS DONE
+Test 13-5
+SUCCESS DONE
+Test 13-6
+SUCCESS DONE
+Test 13-7
+SUCCESS DONE
+Test 14-1
+SUCCESS DONE
+Test 14-2
+SUCCESS DONE
+Test 14-3
+SUCCESS DONE
+Test 14-4
+SUCCESS DONE
+Test 14-5
+SUCCESS DONE
+Test 14-6
+SUCCESS DONE
+Test 15-1
+SUCCESS DONE
+Test 15-2
+SUCCESS DONE
+Test 15-3
+SUCCESS DONE
+Test 15-4
+SUCCESS DONE
+Test 15-5
+SUCCESS DONE
+Test 15-6
+SUCCESS DONE
+Test 15-7
+SUCCESS DONE
+Test 15-8
+SUCCESS DONE
+Test 15-9
+SUCCESS DONE
+Test 15-10
+SUCCESS DONE
+Test 15-11
+SUCCESS DONE
+Test 15-12
+SUCCESS DONE
+Test 15-13
+SUCCESS DONE
+Test 15-14
+SUCCESS DONE
+Test 15-15
+SUCCESS DONE
+Test 15-16
+SUCCESS DONE
+Test 16-1
+SUCCESS DONE
+Test 16-2
+BattleTest > 16-2 Test player battles zombie and player or zombie dies FAILED org.opentest4j.AssertionFailedError: expected: <true> but was: <false> at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55) at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:40) at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:35) at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179) at dungeonmania.controllerTest.BattleTest.testPlayerOrZombieDiesWhenBattle(BattleTest.java:75) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 4s
+Test 16-3
+FAILED due to timeout...
+Test 16-4
+SUCCESS DONE
+Test 16-5
+BattleTest > 16-5 Test player wins a battle against a zombie with an invincibility potion FAILED org.opentest4j.AssertionFailedError: expected: <0> but was: <1> at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55) at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62) at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150) at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145) at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:527) at dungeonmania.controllerTest.BattleTest.testPlayerWinsZombieBattleWithInvincibilityPotion(BattleTest.java:154) FAILURE DONE 1 test completed, 1 failed FAILURE: Build failed with an exception. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src What went wrong: Execution failed for task ':test'. > There were failing tests. See the report at: file:///Users/braedonwooding/project-automarking/f11a_avocado/build/reports/tests/test/index.html README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights. README.md assumptions.md build build.gradle design.pdf gradle gradlew gradlew.bat meeting-minutes planning.pdf src Get more help at https://help.gradle.org BUILD FAILED in 2s
+Test 16-6
+FAILED due to timeout...
+Test 16-7
+FAILED due to timeout...
