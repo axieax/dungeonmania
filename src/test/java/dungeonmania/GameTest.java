@@ -383,7 +383,7 @@ public class GameTest {
         assertThrows(IllegalArgumentException.class, () -> newGame.tick("", Direction.NONE));
         
         assertTrue(newGame.getEntity("non-existent-item") == null);
-        assertThrows(InvalidActionException.class, () -> newGame.tick("non-existentitem", Direction.NONE));
+        assertThrows(InvalidActionException.class, () -> newGame.tick("non-existent-item", Direction.NONE));
 
         // Pickup sword
         for (int i = 0; i < 5; i++) {
