@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
-import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.mode.Mode;
@@ -409,5 +408,8 @@ public class GameTest {
         // Bomb is a valid item to use
         String bombId = gamePlayer.findInventoryItem("bomb").getId();
         assertDoesNotThrow(() -> newGame.tick(bombId, Direction.NONE));
+
+        // If we try to use bomb again, it does not exist in player's inventory
+        assertThrows(InvalidActionException.class, () -> newGame.tick(bombId, Direction.NONE));
     }
 }

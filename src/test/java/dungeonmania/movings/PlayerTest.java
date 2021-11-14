@@ -14,7 +14,6 @@ import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
-import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.collectables.potion.Potion;
