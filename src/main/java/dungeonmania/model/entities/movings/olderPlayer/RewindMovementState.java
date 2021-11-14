@@ -5,11 +5,11 @@ import dungeonmania.model.entities.movings.movement.MovementState;
 import dungeonmania.util.Position;
 import java.util.Iterator;
 
-public class RewindOlderPlayerState extends MovementState {
+public class RewindMovementState extends MovementState {
 
     private Iterator<Position> moves;
 
-    public RewindOlderPlayerState(OlderPlayer player, Iterator<Position> moves) {
+    public RewindMovementState(OlderPlayer player, Iterator<Position> moves) {
         super(player);
         this.moves = moves;
     }

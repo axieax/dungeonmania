@@ -8,12 +8,11 @@ import java.util.List;
 
 public class OlderPlayer extends Enemy {
 
-    private static final int MAX_OLDER_PLAYER_HEALTH = 100;
     private static final int MAX_OLDER_PLAYER_ATTACK_DMG = 10;
 
-    public OlderPlayer(Position position, List<Position> moves) {
-        super("older_player", position, MAX_OLDER_PLAYER_HEALTH, MAX_OLDER_PLAYER_ATTACK_DMG, 1);
-        this.setMovementState(new RewindOlderPlayerState(this, moves.iterator()));
+    public OlderPlayer(Position position, List<Position> moves, int health) {
+        super("older_player", position, health, MAX_OLDER_PLAYER_ATTACK_DMG, 1);
+        this.setMovementState(new RewindMovementState(this, moves.iterator()));
     }
 
     public void tick(Game game) {
