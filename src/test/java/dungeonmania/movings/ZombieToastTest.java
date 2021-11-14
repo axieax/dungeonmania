@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dungeonmania.TestHelpers;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
@@ -36,8 +37,7 @@ public class ZombieToastTest {
     @Test
     public void testZombieSpawnRateNormalModes() {
         Mode mode = new Standard();
-
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -48,10 +48,7 @@ public class ZombieToastTest {
         int numEntities = game.getEntities().size();
 
         // Zombie should spawn
-        for (int i = 0; i < 20; i++) {
-            game.tick(null, Direction.NONE);
-        }
-
+        TestHelpers.gameTickMovement(game, Direction.NONE, 20);
         assertTrue(game.getEntities().size() > numEntities);
     }
 
@@ -59,7 +56,7 @@ public class ZombieToastTest {
     public void testBasicMovement() {
         Mode mode = new Standard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -79,7 +76,7 @@ public class ZombieToastTest {
     public void testWallBlockingMovement() {
         Mode mode = new Standard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -107,7 +104,7 @@ public class ZombieToastTest {
     @Test
     public void testEdgeCornerMovement() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -132,7 +129,7 @@ public class ZombieToastTest {
     @Test
     public void testZombieCannotWalkThroughClosedDoor() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -166,7 +163,7 @@ public class ZombieToastTest {
     public void testZombieCanWalkThroughOpenDoor() {
         Mode mode = new Standard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(4, 2), mode.initialHealth());
         game.addEntity(player);
@@ -223,7 +220,7 @@ public class ZombieToastTest {
     public void testPortalNoEffect() {
         // portals have no effect on zombies
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -253,7 +250,7 @@ public class ZombieToastTest {
     @Test
     public void testZombmieCannotMoveBoulder() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -284,7 +281,7 @@ public class ZombieToastTest {
     @Test
     public void testZombieRunAway() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -317,7 +314,7 @@ public class ZombieToastTest {
     @Test
     public void testZombieInteractIdempotence() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -341,7 +338,7 @@ public class ZombieToastTest {
         // at least once every 200 ticks
         Mode mode = new Standard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(3, 1), mode.initialHealth());
         game.addEntity(player);
@@ -386,40 +383,10 @@ public class ZombieToastTest {
             }
             
             // regen player
-            player.setHealth(Player.maxCharacterHealth);
+            player.setHealth(player.getMaxCharacterHealth());
         }
         
         assertTrue(player.isAlive());
         assertTrue(hasArmour);
-    }
-
-    private List<Entity> sevenBySevenWallBoundary() {
-        ArrayList<Entity> wallBorder = new ArrayList<>();
-
-        // left border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(0, i));
-            wallBorder.add(wall);
-        }
-
-        // right border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(6, i));
-            wallBorder.add(wall);
-        }
-
-        // top border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 0));
-            wallBorder.add(wall);
-        }
-
-        // bottom border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 6));
-            wallBorder.add(wall);
-        }
-
-        return wallBorder;
     }
 }
