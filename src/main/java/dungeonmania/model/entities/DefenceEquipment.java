@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
-import org.json.JSONObject;
 
 public abstract class DefenceEquipment extends Equipment {
 

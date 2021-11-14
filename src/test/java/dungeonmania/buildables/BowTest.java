@@ -1,5 +1,6 @@
 package dungeonmania.buildables;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
@@ -101,7 +102,9 @@ public class BowTest {
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the bow
         // Durability of bow decreases by 1
-        game.interact(spawner.getId());
+        assertDoesNotThrow(() -> {
+            game.interact(spawner.getId());
+        });
         assertTrue(bow.getDurability() == initialDurability - 1);
     }
 

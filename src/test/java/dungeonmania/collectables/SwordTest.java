@@ -1,5 +1,6 @@
 package dungeonmania.collectables;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
@@ -78,7 +79,9 @@ public class SwordTest {
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the sword
         // Durability of sword decreases by 1 each time it battles (within one tick)
-        game.interact(spawner.getId());
+        assertDoesNotThrow(() -> {
+            game.interact(spawner.getId());
+        });
         Entity item = player.findInventoryItem("sword");
         assertTrue(item == null || ((Sword) item).getDurability() != initialDurability);
     }
