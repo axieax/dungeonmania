@@ -148,7 +148,7 @@ public class GoalTest {
     @Test
     public final void bombsSwitchTest() {
         DungeonManiaController dmc = new DungeonManiaController();
-        dmc.newGame("bombs", "Standard");
+        dmc.newGame("bombs", "Peaceful");
         // Navigate the maze
         String switchGoal = ":switch(6)";
         // Pick up the bomb
