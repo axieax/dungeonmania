@@ -205,7 +205,7 @@ public class GameLoader {
         } else if (type.startsWith("switch")) {
             position = position.asLayer(2);
             return new FloorSwitch(position);
-        } else if (type.startsWith("door")) {
+        } else if (type.startsWith("door")) { 
             int key = entityInfo.getInt("key");
             Boolean open = entityInfo.getBoolean ("open");
             position = position.asLayer(4);
@@ -492,3 +492,4 @@ public class GameLoader {
         return EntityFactory.extractGoal(savedGame);
     }
 }
+
