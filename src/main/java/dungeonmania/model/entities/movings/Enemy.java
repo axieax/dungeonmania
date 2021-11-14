@@ -61,6 +61,7 @@ public abstract class Enemy extends MovingEntity implements Observer {
         }
     }
 
+    @Override
     public JSONObject toJSON () {
         JSONObject info = super.toJSON();
         info.put("damageMultiplier", damageMultiplier);
