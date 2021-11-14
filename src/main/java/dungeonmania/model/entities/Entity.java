@@ -157,7 +157,7 @@ public abstract class Entity {
      * Interacts witth a given entity
      *
      * @param game game state
-     * @param character to interact with
+     * @param character entity to interact with
      */
     public abstract void interact(Game game, Entity character);
 }

@@ -14,8 +14,9 @@ public class FloorSwitch extends Entity {
 
     /**
      * Checks if the FloorSwitch is triggered by a boulder.
-     * @param game
-     * @return
+     *
+     * @param game game state
+     * @return true if switch is activated, false otherwise
      */
     public boolean isTriggered(Game game) {
         List<Entity> entities = game.getEntities(this.getPosition());
@@ -28,7 +29,8 @@ public class FloorSwitch extends Entity {
     /**
      * When called, trigger the switch so that cardinally adjacent bombs explode, destroying
      * all entities in the bomb's blast radius, except for the character.
-     * @param game
+     *
+     * @param game game state
      */
     public void triggerSwitch(Game game) {
         List<Entity> entities = game.getCardinallyAdjacentEntities(this.getPosition());

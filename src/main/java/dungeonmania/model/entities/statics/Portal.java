@@ -18,18 +18,22 @@ public class Portal extends Entity {
         this.colour = colour;
     }
 
+    /**
+     * Get the colour of a Portal
+     *
+     * @return colour
+     */
     public String getColour() {
         return colour;
     }
 
-    /**
-     * If a entity interacts with the Portal, they can be teleported to the
-     * corresponding portal if the tile on the destination portal is free for
-     * the entity to go through by.
-     */
     @Override
     public void interact(Game game, Entity character) {
-        if (character instanceof MovingEntity) this.teleport(game, (MovingEntity) character);
+        // If a entity interacts with the Portal, they can be teleported to the
+        // corresponding portal if the tile on the destination portal is free for
+        // the entity to go through by.
+        if (!(character instanceof MovingEntity)) return;
+        this.teleport(game, (MovingEntity) character);
     }
 
     public Portal findPortal(Game game) {
@@ -44,8 +48,10 @@ public class Portal extends Entity {
     }
 
     /**
-     * Teleports the entity exactly to the tile where the corresponding portal is
-     * located at.
+     * Teleports the entity exactly to the tile where the corresponding portal is located.
+     *
+     * @param game game state
+     * @param character entity to interact with 
      */
     public void teleport(Game game, MovingEntity character) {
         Portal portal = this.findPortal(game);
