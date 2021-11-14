@@ -9,8 +9,6 @@ import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.mode.Hard;
 import dungeonmania.util.Position;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 import org.json.JSONObject;
 
