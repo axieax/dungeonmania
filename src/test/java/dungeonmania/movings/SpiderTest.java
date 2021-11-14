@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.DungeonManiaController;
+import dungeonmania.TestHelpers;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -239,7 +240,7 @@ public class SpiderTest {
     public void testMovementThroughDoor() {
         // can move through closed doors
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -263,7 +264,7 @@ public class SpiderTest {
     public void testMovementThroughSwitch() {
         // switches have no effect
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -286,7 +287,7 @@ public class SpiderTest {
     public void testMovementThroughPortal() {
         // portals have no effect on the spider
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -310,7 +311,7 @@ public class SpiderTest {
     @Test
     public void testSpiderMovementIntoExitNoEffect() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -560,7 +561,7 @@ public class SpiderTest {
         // a boulder exists in the tile above where the spider spawns, and so,
         // the spider should not move anywhere
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -584,7 +585,7 @@ public class SpiderTest {
         // spider spawns on the edge of the map (0, 0) and is able to traverse
         // outside the walls
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(5, 5), mode.initialHealth());
         game.addEntity(player);
@@ -658,7 +659,7 @@ public class SpiderTest {
     @Test
     public void testSpiderRunAway() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -693,7 +694,7 @@ public class SpiderTest {
         // if the player is invincible, the distance between the spider and player
         // should increase every tick
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);

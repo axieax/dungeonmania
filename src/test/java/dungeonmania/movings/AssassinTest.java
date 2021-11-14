@@ -1,5 +1,6 @@
 package dungeonmania.movings;
 
+import dungeonmania.TestHelpers;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -43,7 +44,7 @@ public class AssassinTest {
     public void testDoesNotSpawnWithNoEnemies() {
         Mode mode = new Standard();
         // Assassins only spawn in dungeons with at least one enemy
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
@@ -57,7 +58,7 @@ public class AssassinTest {
     @Test
     public void testSpawnAssassin() {
         Mode mode = new Standard();
-        List<Entity> entities = sevenBySevenWallBoundary();
+        List<Entity> entities = TestHelpers.sevenBySevenWallBoundary();
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         entities.add(player);
 
@@ -91,7 +92,7 @@ public class AssassinTest {
     public void testSimpleMovement() {
         Mode mode = new Standard();
         // Distance between the assassin and player should decrease per tick/movement
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -153,7 +154,7 @@ public class AssassinTest {
         Mode mode = new Standard();
         // Wall with 1 gap exists and assassin should go directly to player, and not move
         // outside/go through the gap
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -180,7 +181,7 @@ public class AssassinTest {
     public void testBribeWithoutOneRing() {
         Mode mode = new Standard();
         // Character attemps to bribe assassin without TheOneRing should throw an exception
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -201,7 +202,7 @@ public class AssassinTest {
     public void testBribeWithoutTreasure() {
         Mode mode = new Standard();
         // Character attemps to bribe assassin without treasure should throw an exception
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -224,7 +225,7 @@ public class AssassinTest {
         // tiles to the assassin and they are bribing
         Mode mode = new Standard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -247,7 +248,7 @@ public class AssassinTest {
     @Test
     public void testBribedAssassinDoesNotAttack() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -293,7 +294,7 @@ public class AssassinTest {
     @Test
     public void testBribedMovement() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -357,7 +358,7 @@ public class AssassinTest {
     @Test
     public void testCannotMoveThroughExit() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -378,7 +379,7 @@ public class AssassinTest {
     @Test
     public void testCannotMoveThroughClosedDoor() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(5, 5);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -415,7 +416,7 @@ public class AssassinTest {
     @Test
     public void testSimpleFight() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -437,7 +438,7 @@ public class AssassinTest {
     @Test
     public void testMindControlledMovementAndAttack() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -475,33 +476,4 @@ public class AssassinTest {
         assertTrue(game.getEntity(assassin.getId()) == null);
     }
 
-    private List<Entity> sevenBySevenWallBoundary() {
-        ArrayList<Entity> wallBorder = new ArrayList<>();
-        
-        // Left border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(0, i));
-            wallBorder.add(wall);
-        }
-        
-        // Right border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(6, i));
-            wallBorder.add(wall);
-        }
-
-        // Top border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 0));
-            wallBorder.add(wall);
-        }
-
-        // Bottom border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 6));
-            wallBorder.add(wall);
-        }
-
-        return wallBorder;
-    }
 }

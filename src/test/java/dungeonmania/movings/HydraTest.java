@@ -15,6 +15,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import dungeonmania.DungeonManiaController;
+import dungeonmania.TestHelpers;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
@@ -48,33 +49,12 @@ public class HydraTest {
 
     public static final String SPIDER = "spider";
 
-    @Test
-    public void testEnsureHydraSpawns() {
-        // at least one hydra must always spawn
-
-        // Create a new controller
-        DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse response = controller.newGame(DUNGEON_MAZE, GAME_MODE_HARD);
-
-        int numEntities = response.getEntities().size();
-        // at least one hydra must spawn
-        assertTimeout(
-            ofMinutes(1),
-            () -> {
-                DungeonResponse updatedResponse = tickGameUntilHydraSpawns(controller, response);
-                assertTrue(updatedResponse != null);
-                // hydra spawn must increase num entities
-                assertTrue(updatedResponse.getEntities().size() > numEntities);
-            }
-        );
-    }
-
     
     @Test
     public void testHydraSpawnRate() {
         Mode mode = new Hard();
         
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -106,7 +86,7 @@ public class HydraTest {
         List<Mode> modes = Arrays.asList(new Peaceful(), new Standard());
 
         for(Mode m: modes) {
-            Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), m);
+            Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), m);
             
             Player player = new Player(new Position(1, 1), m.initialHealth());
             game.addEntity(player);
@@ -138,7 +118,7 @@ public class HydraTest {
     public void testBasicMovement() {
         Mode mode = new Hard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -159,7 +139,7 @@ public class HydraTest {
         // if a hydra is surrounded by a wall, it should not move anywhere
         Mode mode = new Hard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -185,7 +165,7 @@ public class HydraTest {
     @Test
     public void testHydraCannotWalkThroughClosedDoor() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -217,7 +197,7 @@ public class HydraTest {
     public void testZombieCanWalkThroughOpenDoor() {
         Mode mode = new Hard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(4, 2), mode.initialHealth());
         game.addEntity(player);
@@ -252,7 +232,7 @@ public class HydraTest {
     public void testPortalNoEffect() {
         // portals have no effect on hydra
         Mode mode = new Hard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -281,7 +261,7 @@ public class HydraTest {
     @Test
     public void testHydraCannotMoveBoulder() {
         Mode mode = new Hard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -320,7 +300,7 @@ public class HydraTest {
 
         for(int i = 0; i < 1000; i++) {
             Mode mode = new Hard();
-            Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+            Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
             Position playerPos = new Position(1, 1);
             Player player = new Player(playerPos, mode.initialHealth());
@@ -355,7 +335,7 @@ public class HydraTest {
 
         for(int i = 0; i < 1000; i++) {
             Mode mode = new Hard();
-            Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+            Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
             Position playerPos = new Position(1, 1);
             Player player = new Player(playerPos, mode.initialHealth());
@@ -389,36 +369,6 @@ public class HydraTest {
 
         // hydra cannot regrow it's head, and so, every battle results in the same player health
         assertTrue(playerHealthAfterBattle.size() == 1);
-    }
-
-    private List<Entity> sevenBySevenWallBoundary() {
-        ArrayList<Entity> wallBorder = new ArrayList<>();
-        
-        // left border
-        for(int i = 0; i < 7; i ++) {
-            Wall wall = new Wall(new Position(0, i));
-            wallBorder.add(wall);
-        }
-        
-        // right border
-        for(int i = 0; i < 7; i ++) {
-            Wall wall = new Wall(new Position(6, i));
-            wallBorder.add(wall);
-        }
-
-        // top border
-        for(int i = 1; i < 6; i ++) {
-            Wall wall = new Wall(new Position(i, 0));
-            wallBorder.add(wall);
-        }
-
-        // bottom border
-        for(int i = 1; i < 6; i ++) {
-            Wall wall = new Wall(new Position(i, 6));
-            wallBorder.add(wall);
-        }
-
-        return wallBorder;
     }
 
     public DungeonResponse tickGameUntilHydraSpawns(

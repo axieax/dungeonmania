@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.DungeonManiaController;
+import dungeonmania.TestHelpers;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -45,7 +46,7 @@ public class MercenaryTest {
     public void testDoesNotSpawnWithNoEnemies() {
         Mode mode = new Standard();
         // Mercenaries only spawn in dungeons with at least one enemy
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
@@ -59,7 +60,7 @@ public class MercenaryTest {
     @Test
     public void testSpawnMercenary() {
         Mode mode = new Standard();
-        List<Entity> entities = sevenBySevenWallBoundary();
+        List<Entity> entities = TestHelpers.sevenBySevenWallBoundary();
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         entities.add(player);
         
@@ -91,7 +92,7 @@ public class MercenaryTest {
     public void testSimpleMovement() {
         Mode mode = new Standard();
         // Distance between the mercenary and player should decrease per tick/movement
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -152,7 +153,7 @@ public class MercenaryTest {
         Mode mode = new Standard();
         // Wall with 1 gap exists and mercenary should go directly to player, and not move
         // outside/go through the gap
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -228,7 +229,7 @@ public class MercenaryTest {
         // tiles to the mercenary and they are bribing
         Mode mode = new Standard();
 
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -248,7 +249,7 @@ public class MercenaryTest {
     @Test
     public void testCannotMoveThroughExit() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -269,7 +270,7 @@ public class MercenaryTest {
     @Test
     public void testCannotMoveThroughClosedDoor() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(5, 5);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -307,7 +308,7 @@ public class MercenaryTest {
     @Test
     public void testSimpleFight() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -329,7 +330,7 @@ public class MercenaryTest {
     @Test
     public void testBribedMercenaryDoesNotAttack() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -370,7 +371,7 @@ public class MercenaryTest {
     @Test
     public void testBribedMovement() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -427,7 +428,7 @@ public class MercenaryTest {
     @Test
     public void testMindControlledMovementAndAttack() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -463,35 +464,5 @@ public class MercenaryTest {
         game.tick(null, Direction.NONE);
 
         assertTrue(game.getEntity(mercenary.getId()) == null);
-    }
-
-    private List<Entity> sevenBySevenWallBoundary() {
-        ArrayList<Entity> wallBorder = new ArrayList<>();
-
-        // Left border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(0, i));
-            wallBorder.add(wall);
-        }
-
-        // Right border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(6, i));
-            wallBorder.add(wall);
-        }
-
-        // Top border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 0));
-            wallBorder.add(wall);
-        }
-
-        // Bottom border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 6));
-            wallBorder.add(wall);
-        }
-
-        return wallBorder;
     }
 }

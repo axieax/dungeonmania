@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dungeonmania.TestHelpers;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
@@ -220,7 +221,7 @@ public class SunStoneTest {
     @Test
     public void testBribeMercenaryWithSunstone() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -276,7 +277,7 @@ public class SunStoneTest {
     @Test
     public void testBribeAssassinWithSunstone() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -329,36 +330,5 @@ public class SunStoneTest {
             // Note that we have the number of entities at the player position is >= 2 since spiders may spawn
             assertTrue(adjacentEntites.contains(assassin) || numEntitesAtPlayerPos >= 2);
         }
-    }
-
-
-    private List<Entity> sevenBySevenWallBoundary() {
-        ArrayList<Entity> wallBorder = new ArrayList<>();
-
-        // Left border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(0, i));
-            wallBorder.add(wall);
-        }
-
-        // Right border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(6, i));
-            wallBorder.add(wall);
-        }
-
-        // Top border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 0));
-            wallBorder.add(wall);
-        }
-
-        // Bottom border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 6));
-            wallBorder.add(wall);
-        }
-
-        return wallBorder;
     }
 }
