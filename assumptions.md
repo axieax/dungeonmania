@@ -69,8 +69,9 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 
 ### Hydra
 
-* When a `Hydra` regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
-* The `Hydra` entity spawns at the entry location - similar to the mercenary. The player cannot be in its initial spawn location, otherwise the `Hydra` will not spawn.
+- When a `Hydra` regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
+- The `Hydra` entity spawns at the entry location - similar to the mercenary. The player cannot be in its initial spawn location, otherwise the `Hydra` will not spawn.
+
 ## Entity Mechanics
 
 ### Portal
