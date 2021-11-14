@@ -305,7 +305,6 @@ public class GameTest {
     }
     
     
-    // Check why the test below is throwing a null pointer exception
     @Test
     public void testInteract() {
         Mode mode = new Standard();
@@ -333,7 +332,7 @@ public class GameTest {
 
         String mercenaryId = mercenary.getId();
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 17; i++) {
             newGame.tick(null, Direction.RIGHT);
         }
 

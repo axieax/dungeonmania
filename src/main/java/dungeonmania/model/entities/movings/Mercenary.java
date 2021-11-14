@@ -16,7 +16,7 @@ public class Mercenary extends BribableEnemy {
     
     public static final int MAX_MERCENARY_HEALTH = 50;
     public static final int MAX_MERCENARY_ATTACK_DMG = 5;
-    private static final int MERCENARY_TICK_RATE = 30;
+    private static final int MERCENARY_TICK_RATE = 40;
 
     public Mercenary(Position position, int damageMultiplier, SubjectPlayer player) {
         super("mercenary", position, MAX_MERCENARY_HEALTH, MAX_MERCENARY_ATTACK_DMG, damageMultiplier);
