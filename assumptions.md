@@ -33,6 +33,8 @@
 * Spider starts with an initial direction of clockwise when spawned.
 * Zombie/Mercenaries will the amour effect when equipped. It will halve damage inflicted by the player.
 * Mercenaries can only move twice if mercenary is aiming to attack the player.
+* Apart from the base attack damage and health, as well as the mind control feature; Assassins have the same functionality as Mercenaries (e.g. same armour drop rate)
+* There is priority to mind control an assassin, before attempting to bribe it
 * When a Hydra regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
 ## Entity Mechanics
 ### Portal
