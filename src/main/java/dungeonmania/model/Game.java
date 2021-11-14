@@ -52,7 +52,7 @@ public final class Game {
         this.goal = goal;
         this.mode = mode;
         this.playerSpawnLocation =
-            (getCharacter() != null) ? getCharacter().getPosition() : new Position(0, 0);
+            (getPlayer() != null) ? getPlayer().getPosition() : new Position(0, 0);
     }
 
     /**
@@ -91,7 +91,7 @@ public final class Game {
      *
      * @return Player object
      */
-    public final Player getCharacter() {
+    public final Player getPlayer() {
         return entities
             .stream()
             .filter(e -> e instanceof Player)
@@ -105,7 +105,7 @@ public final class Game {
      * @return Position object
      */
     public Position getCharacterPosition() {
-        Player player = getCharacter();
+        Player player = getPlayer();
         return player.getPosition();
     }
 
@@ -290,7 +290,7 @@ public final class Game {
      * @return DungeonResponse for the Dungeon
      */
     public final DungeonResponse getDungeonResponse() {
-        Player player = getCharacter();
+        Player player = getPlayer();
         return new DungeonResponse(
             dungeonId,
             dungeonName,
@@ -308,7 +308,7 @@ public final class Game {
      * @return Goal string for DungeonResponse
      */
     private final String formatGoal() {
-        if (goal == null || getCharacter() == null) return "";
+        if (goal == null || getPlayer() == null) return "";
         String goalString = goal.toString(this);
         // Remove starting and closing brackets
         if (goalString.startsWith("(") && goalString.endsWith(")")) {
@@ -369,7 +369,7 @@ public final class Game {
      * @return list of buildable items (String)
      */
     private final List<String> getBuildables() {
-        Player player = getCharacter();
+        Player player = getPlayer();
         if (player == null) return new ArrayList<String>();
         return EntityFactory
             .allBuildables()
@@ -402,7 +402,7 @@ public final class Game {
 
         try {
             // Player moves before other entities (so that bribable enemies can follow the player)
-            getCharacter().move(this, movementDirection, itemUsedId);
+            getPlayer().move(this, movementDirection, itemUsedId);
 
             List<Tickable> tickables = entities
                 .stream()
@@ -435,7 +435,7 @@ public final class Game {
      *                                  to craft the buildable
      */
     public final DungeonResponse build(String buildable) throws InvalidActionException {
-        Player player = getCharacter();
+        Player player = getPlayer();
         Buildable item = EntityFactory.getBuildable(buildable);
         player.craft(this, item);
         return getDungeonResponse();
@@ -459,7 +459,7 @@ public final class Game {
         if (!entities.stream().map(Entity::getId).collect(Collectors.toList()).contains(entityId)) {
             throw new IllegalArgumentException(entityId);
         }
-        MovingEntity player = getCharacter();
+        MovingEntity player = getPlayer();
         Entity entity = getEntity(entityId);
         if (entity instanceof BribableEnemy) {
             ((BribableEnemy) entity).interact(this, (Player) player);
@@ -512,7 +512,7 @@ public final class Game {
      * @return true if player has reached the portal, false otherwise
      */
     public final boolean playerReachedTTPortal() {
-        Entity player = getCharacter();
+        Entity player = getPlayer();
         if (player == null) return false;
         Position position = player.getPosition();
 
@@ -531,7 +531,7 @@ public final class Game {
      * @return true if player has a time turner, false otherwise
      */
     public final boolean playerHasTimeTurner() {
-        Player player = getCharacter();
+        Player player = getPlayer();
         if (player == null) return false;
 
         return player.findInventoryItem("time_turner") != null;

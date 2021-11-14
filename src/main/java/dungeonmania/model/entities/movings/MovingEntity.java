@@ -19,27 +19,45 @@ public abstract class MovingEntity extends Entity implements Tickable {
         this.attackDamage = attackDamage;
     }
 
+    /**
+     * Get direction that a MovingEntity is heading towards
+     *
+     * @return Direction
+     */
     public Direction getDirection() {
         return this.movingDirection;
     }
 
+    /**
+     * Set direction that a MovingEntity is heading towards
+     *
+     * @param Direction
+     */
     public void setDirection(Direction direction) {
         this.movingDirection = direction;
     }
 
-    public void interact(Game game, Entity character) {}
-
+    /**
+     * Suicide.
+     */
     public void kill() {
         this.health = 0;
     }
 
     /**
-     * Returns true if entity has positive health, else false
+     * Checks if an Entity is alive
+     *
+     * @return true if entity has positive health, false otherwise
      */
     public boolean isAlive() {
         return getHealth() > 0;
     }
 
+    /**
+     * Reduces health from battle by the specified amount
+     *
+     * @param amount damage received
+     */
     public void reduceHealthFromBattle(int amount) {
         this.setHealth(this.getHealth() - amount);
     }

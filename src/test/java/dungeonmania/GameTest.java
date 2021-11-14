@@ -101,7 +101,7 @@ public class GameTest {
             mode
         );
 
-        Player gamePlayer = newGame.getCharacter();
+        Player gamePlayer = newGame.getPlayer();
 
         List<Entity> cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(
             gamePlayer.getPosition()
@@ -168,7 +168,7 @@ public class GameTest {
             mode
         );
 
-        Player gamePlayer = newGame.getCharacter();
+        Player gamePlayer = newGame.getPlayer();
 
         TestHelpers.gameTickMovement(newGame, Direction.DOWN, 13);
         TestHelpers.gameTickMovement(newGame, Direction.RIGHT, 12);
@@ -226,7 +226,7 @@ public class GameTest {
             mode
         );
 
-        Player gamePlayer = newGame.getCharacter();
+        Player gamePlayer = newGame.getPlayer();
         Mercenary mercenary = null;
 
         for (Entity entity : newGame.getEntities()) {

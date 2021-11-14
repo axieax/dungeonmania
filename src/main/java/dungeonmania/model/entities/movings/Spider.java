@@ -94,7 +94,7 @@ public class Spider extends Enemy {
             }
 
             if (canSpawn) {
-                game.addEntity(new Spider(position, damageMultiplier, game.getCharacter()));
+                game.addEntity(new Spider(position, damageMultiplier, game.getPlayer()));
             }
         }
     }

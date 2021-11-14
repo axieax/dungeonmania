@@ -106,10 +106,10 @@ public final class GameWrapper {
         }
 
         // retrieve activeGame player
-        Player activePlayer = (Player) activeGame.getCharacter();
+        Player activePlayer = (Player) activeGame.getPlayer();
 
         // retrieve restoreGame player
-        Player restorePlayer = (Player) restoreGame.getCharacter();
+        Player restorePlayer = (Player) restoreGame.getPlayer();
 
         // old_player in activeGame has restorePlayer's position
         OlderPlayer ilNam = new OlderPlayer(

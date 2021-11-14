@@ -54,11 +54,11 @@ public abstract class BribableEnemy extends Enemy {
     public void setMindControlTicks(int ticks) {
         this.mindControlTicks = ticks;
     }
-    
+
     public void setMoveTwice(Boolean moveTwice) {
         this.moveTwice = moveTwice;
     }
-    
+
     /**
      * Condition for player to mind control the enemy
      * @param game
@@ -69,15 +69,14 @@ public abstract class BribableEnemy extends Enemy {
         // Player must have the sceptre to mindcontrol the mercenary
         // The effect will only last 10 ticks
         Item item = player.findInventoryItem("sceptre");
-        
+
         if (item == null) return false;
-        
+
         player.addAlly(this);
         this.mindControlTicks = 10;
         this.mindControlled = true;
         return true;
     }
-    
 
     @Override
     public double getArmourDropRate() {
@@ -86,7 +85,7 @@ public abstract class BribableEnemy extends Enemy {
 
     @Override
     public void tick(Game game) {
-        Player player = (Player) game.getCharacter();
+        Player player = (Player) game.getPlayer();
 
         this.move(game);
 

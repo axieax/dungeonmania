@@ -7,8 +7,8 @@ import dungeonmania.model.entities.movings.player.Inventory;
 public class Sceptre extends Item implements Buildable {
 
     private static final int WOOD_NEEDED = 1;
-    private static final int ARROW_NEEDED = 2;
-    private static final int KEY_NEEDED = 1;
+    private static final int ARROWS_NEEDED = 2;
+    private static final int KEYS_NEEDED = 1;
     private static final int TREASURE_NEEDED = 1;
     private static final int SUNSTONE_NEEDED = 1;
 
@@ -16,7 +16,6 @@ public class Sceptre extends Item implements Buildable {
         super("sceptre", null);
     }
 
-    @Override
     public boolean isBuildable(Game game, Inventory inventory) {
         boolean useSunStone = inventory.hasItemQuantity(
             "sun_stone",
@@ -25,10 +24,10 @@ public class Sceptre extends Item implements Buildable {
         return (
             (
                 inventory.hasItemQuantity("wood", WOOD_NEEDED) ||
-                inventory.hasItemQuantity("arrow", ARROW_NEEDED)
+                inventory.hasItemQuantity("arrow", ARROWS_NEEDED)
             ) &&
             (
-                inventory.hasItemQuantity("key", KEY_NEEDED) ||
+                inventory.hasItemQuantity("key", KEYS_NEEDED) ||
                 useSunStone ||
                 inventory.hasItemQuantity("treasure", TREASURE_NEEDED)
             ) &&
@@ -39,19 +38,20 @@ public class Sceptre extends Item implements Buildable {
         );
     }
 
-    @Override
     public void craft(Inventory inventory) {
         boolean useSunStone = inventory.hasItemQuantity(
             "sun_stone",
             TREASURE_NEEDED + SUNSTONE_NEEDED
         );
+
         if (inventory.hasItemQuantity("wood", WOOD_NEEDED)) {
             inventory.removeItemQuantity("wood", WOOD_NEEDED);
         } else {
-            inventory.removeItemQuantity("arrow", ARROW_NEEDED);
+            inventory.removeItemQuantity("arrow", ARROWS_NEEDED);
         }
-        if (inventory.hasItemQuantity("key", KEY_NEEDED)) {
-            inventory.removeItemQuantity("key", KEY_NEEDED);
+
+        if (inventory.hasItemQuantity("key", KEYS_NEEDED)) {
+            inventory.removeItemQuantity("key", KEYS_NEEDED);
         } else if (useSunStone) {
             inventory.removeItemQuantity("sun_stone", TREASURE_NEEDED);
         } else {
@@ -61,7 +61,6 @@ public class Sceptre extends Item implements Buildable {
         inventory.addItem(new Sceptre());
     }
 
-    @Override
     public Buildable clone() {
         return new Sceptre();
     }

@@ -16,7 +16,6 @@ public class Bow extends AttackEquipment implements Buildable {
         super("bow", ATTACK_DAMAGE, HIT_RATE);
     }
 
-    @Override
     public boolean isBuildable(Game game, Inventory inventory) {
         return (
             inventory.hasItemQuantity("wood", WOOD_NEEDED) &&
@@ -24,14 +23,12 @@ public class Bow extends AttackEquipment implements Buildable {
         );
     }
 
-    @Override
     public void craft(Inventory inventory) {
         inventory.removeItemQuantity("wood", WOOD_NEEDED);
         inventory.removeItemQuantity("arrow", ARROW_NEEDED);
         inventory.addItem(new Bow());
     }
 
-    @Override
     public Buildable clone() {
         return new Bow();
     }
