@@ -24,7 +24,7 @@
 - If the player has a `SunStone` and the `Key` to open that door, `SunStone` takes priority to open the door. i.e Any `Key` are not consumed by the player if they have a `SunStone`.
 - `SunStone` takes priority when building an item with `Treasure`.
 - `SunStone` is consumed if it is only used as a material in building an item (retained in player inventory if used for bribing).
-- `SunStone` cannot be interchanged with `Treasure` for completing the Goals
+- `SunStone` cannot be interchanged with `Treasure` for completing the Goals.
 
 ### TheOneRing
 
@@ -47,7 +47,7 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 ### Drop Rates
 
 - `TheOneRing` has a drop rate of 10% after a battle has ended
-- `Armour` have a drop rate of 25% after a battle has ended. Only `ZombieToast`, `Mercenary` and `Assassin` can drop `Armour`.
+- `Armour` has a drop rate of 25% after a battle has ended. Only `ZombieToast`, `Mercenary` and `Assassin` can drop `Armour`.
 
 ### Spider
 
@@ -63,7 +63,7 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 ### Mercenary and Assassin
 
 - `Mercenary` can only move twice if mercenary is aiming to attack the player.
-- `Mercenary` spawn at the initial player location after 40 ticks and `Assassin` has a 30% chance of spawning instead - but there must be at least one enemy in the dungeon, and the player cannot be in its initial spawn location
+- `Mercenary` spawn at the initial player location after 40 ticks and `Assassin` has a 30% chance of spawning instead - but there must be at least one enemy in the dungeon, and the player cannot be in its initial spawn location.
 - Apart from the base attack damage and health, as well as the mind control feature; `Assassin` have the same functionality as `Mercenary` (e.g. same armour drop rate).
 - There is priority to mind control an `Assassin`, before attempting to bribe it.
 
@@ -77,15 +77,15 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 
 - `Portals` teleport all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A `Spider` will resume moving in a circular motion after it has been teleported.
 - Entities can only use `Portals` if a) there is a free tile in the direction of the entity's movement when passing the `Portal` and b) if the tile is occupied by an entity, it must be a collectable item or an entity that can be passed through. Otherwise, it will stay on the same position for the tick.
-- Assume that there exist a corresponding `Portal`. If there is no corresponding `Portal` to teleport, the entity stays on the same position.
+- Assume that there exists a corresponding `Portal`. If there is no corresponding `Portal` to teleport, the entity stays on the same position.
 
 ### FloorSwitch, Boulder, Bomb
 
 - If a `Bomb` explodes by a switch, and there are other `Bombs` in the vicinity of the explosion, those `Bombs` can also explode forming a chain reaction.
 - The blast radius of a `Bomb` is are any adjacent tiles (including diagonally adjacent tiles) to the position on where the bomb was place.
-- `Boulder` can only be moved past a switch or an empty tile. `Boulder` cannot be moved if a moving entity occupies that tile.
 - `Bombs` can only explode once it has been placed by the user - meaning that `Bombs` spawned next to a switch cannot explode initially.
 - Assume that `Bomb` explosions will not destroy portals (but will destroy floor switches).
+- `Boulder` can only be moved past a switch or an empty tile. `Boulder` cannot be moved if a moving entity occupies that tile.
 
 ## Buildable Entities Mechanics
 
@@ -116,7 +116,7 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 
 ## Time Travelling Assumptions
 
-- If the rewind is manually triggered (through endpoint/rewind buttons rather than the time travelling portal), the older player will retraced all it's moves until the moment it had rewind. If the player reaches to the position where it had rewind, then the old player disappears
+- If the rewind is manually triggered (through endpoint/rewind buttons rather than the time travelling portal), the older player will retraced all it's moves until the moment it had rewind. If the player reaches to the position where it had rewind, then the old player disappears.
 - If the rewind ticks is greater than the in game ticks, it will rewind to the beginning (as far as it can).
 - All observers (i.e. `Mercenary` following player, `InvicibilityPotion` effect) will target the 'current player' rather than the 'older player'.
 - 'Older player' will follows the original path made by the 'current player', regardless of any updates made to the game state.
