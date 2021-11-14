@@ -27,28 +27,17 @@
 * `Anduril` has a drop rate of 10% after a battle has ended
 * `Armour` have a drop rate of 20% after a battle has ended
 ## Enemy Mechanics
-<<<<<<< HEAD
-* Spiders can move out of the map if they spawn on the edge and their ‘circular' path causes them to go beyond the map.
-* When a spider is performing their initial movement (i.e. moving UP), if there is an entity blocking their movement, then the spider stays on their spawning position since it cannot perform it's initial movement position.
-* Spider starts with an initial direction of clockwise when spawned.
-* Zombies cannot move a boulder as this action is only conducted by a player.
-* Zombies will only randomly pick a free tile to move to.
-* Zombie/Mercenaries will the amour effect when equipped. It will halve damage inflicted by the player.
-* Mercenaries can only move twice if mercenary is aiming to attack the player.
-* When a Hydra regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
-* The Hydra entity spawns at the entry location - similar to the mercenary.
-=======
 * `Spiders` can move out of the map if they spawn on the edge and their ‘circular' path causes them to go beyond the map.
 * When a `Spider` is performing their initial movement (i.e. moving UP), if there is an entity blocking their movement, then it stays on its spawning position since it cannot perform its initial movement position.
+* `Spider` starts with an initial direction of clockwise when spawned.
 * `Zombie` cannot move a boulder as this action is only conducted by a player.
 * `Zombies` will only randomly pick a free tile to move to.
-* `Spider` starts with an initial direction of clockwise when spawned.
 * `Mercenary` can only move twice if mercenary is aiming to attack the player.
 * `Mercenary` spawn at the initial player location after 40 ticks and `Assassin` has a 30% chance of spawning instead - but there must be at least one enemy in the dungeon, and the player cannot be in its initial spawn location
 * Apart from the base attack damage and health, as well as the mind control feature; `Assassin` have the same functionality as `Mercenary` (e.g. same armour drop rate).
 * There is priority to mind control an `Assassin`, before attempting to bribe it.
 * When a `Hydra` regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
->>>>>>> d3b2bbfc06ff70d14145a4629ffb1662a7927a0e
+* The `Hydra` entity spawns at the entry location - similar to the mercenary. The player cannot be in its initial spawn location, otherwise the `Hydra` will not spawn.
 ## Entity Mechanics
 ### Portal
 * `Portals` teleport all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A `Spider` will resume moving in a circular motion after it has been teleported.

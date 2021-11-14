@@ -71,16 +71,12 @@ public class Hydra extends Enemy implements Boss {
         int tick = game.getTick();
         if (tick != 0 && tick % HYDRA_TICK_RATE == 0) {
             Position spawnPos = game.getPlayerSpawnLocation();
+            if(spawnPos.equals(game.getCharacterPosition())) {
+                // don't spawn
+                return;
+            }
             game.addEntity(new Hydra(spawnPos, damageMultiplier, game.getCharacter()));
         }
-    }
-
-    private static boolean canHydraMoveOntoPosition(List<Entity> entitiesAtPos) {
-        for (Entity e : entitiesAtPos) {
-            if (!e.isPassable()) return false;
-        }
-
-        return true;
     }
 
     /**
