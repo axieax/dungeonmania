@@ -295,7 +295,7 @@ public class GameLoader {
             newHydra.setDirection(direction);
             return newHydra;
         } else if (type.startsWith("swamp_tile")) { /////////
-            position = position.asLayer(24);
+            position = position.asLayer(1);
             int movementFactor = entityInfo.getInt("movementFactor");
             SwampTile newSwampTile = new SwampTile(position, movementFactor);
             return newSwampTile;

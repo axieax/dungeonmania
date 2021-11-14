@@ -21,10 +21,10 @@ public class PlayerInvisibleState implements PlayerState {
 
     @Override
     public void updateState(Player player) {
-        timeLimit--;
-        if (timeLimit == 0) {
+        if (timeLimit <= 0) {
             this.player.setState(new PlayerDefaultState(player));
         }
+        timeLimit--;
     }
 
     @Override
