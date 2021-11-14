@@ -10,6 +10,7 @@ import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Assassin;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -17,6 +18,7 @@ import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -84,6 +86,59 @@ public class AssassinTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void testAssassinSpawnWithArmourIntermittently() {
+        // Assassins have a 25% chance to spawn with armour
+        Mode mode = new Standard();
+
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(3, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        game.addEntity(new Wall(new Position(2, 1)));
+        game.addEntity(new Wall(new Position(2, 2)));
+        game.addEntity(new Wall(new Position(2, 3)));
+        
+        game.addEntity(new Wall(new Position(3, 3)));
+        
+        game.addEntity(new Wall(new Position(4, 1)));
+        game.addEntity(new Wall(new Position(4, 2)));
+        game.addEntity(new Wall(new Position(4, 3)));
+        
+        // The chance of no assassin dropping armour is 0.75^100 = 0.00000000003%
+        boolean hasArmour = false;
+        for (int i = 0; i < 100; i++) {
+            game.addEntity(new Assassin(new Position(3, 2), mode.damageMultiplier(), player));
+            game.tick(null, Direction.NONE);
+            
+            for (ItemResponse item : player.getInventoryResponses()) {
+                if (item.getType().equals("armour")) {
+                    hasArmour = true;
+                    break;
+                }
+            }
+
+            // Remove any other moving entities that have spawned
+            List<Entity> toRemove = new ArrayList<>();
+            for (Entity e : game.getEntities()) {
+                if (
+                    e instanceof MovingEntity &&
+                    !(e instanceof Player) &&
+                    !(e instanceof Assassin)
+                ) toRemove.add(e);
+            }
+            
+            for (Entity e : toRemove) game.removeEntity(e);
+            
+            // Regenerate player health
+            player.setHealth(player.getMaxCharacterHealth());
+        }
+        
+        assertTrue(player.isAlive());
+        assertTrue(hasArmour);
     }
 
     @Test

@@ -190,20 +190,15 @@ public class ZombieToastTest {
         Position expectedZombieSpawnTile = new Position(4, 5);
         // Zombie should spawn in 20 ticks
         for (int i = 0; i < mode.tickRate(); i++) {
+            
             // Remove any other moving entities that have spawned e.g. spiders
             List<Entity> toRemove = new ArrayList<>();
-            List<Entity> entities = game.getEntities();
-            for (Entity e: entities) {
-                if (e instanceof Player || e instanceof ZombieToast) {
-                    continue;
-                } else if (e instanceof MovingEntity) {
-                    toRemove.add(e);
-                }
+            for (Entity e : game.getEntities()) {
+                if (e instanceof Player || e instanceof ZombieToast) continue;
+                else if (e instanceof MovingEntity) toRemove.add(e);
             }
             
-            for (Entity e: toRemove) {
-                game.removeEntity(e);
-            }
+            for (Entity e : toRemove) game.removeEntity(e);
             
             game.tick(null, Direction.NONE);
         }
@@ -354,13 +349,13 @@ public class ZombieToastTest {
         game.addEntity(new Wall(new Position(4, 2)));
         game.addEntity(new Wall(new Position(4, 3)));
         
-        // The chance of no zombies spawning with armour is 0.8^100 = 0.00000002%
+        // The chance of no zombies dropping armour is 0.8^100 = 0.00000002%
         boolean hasArmour = false;
         for (int i = 0; i < 100; i++) {
             game.addEntity(new ZombieToast(new Position(3, 2), mode.damageMultiplier(), player));
             game.tick(null, Direction.NONE);
             
-            for (ItemResponse item: player.getInventoryResponses()) {
+            for (ItemResponse item : player.getInventoryResponses()) {
                 if (item.getType().equals("armour")) {
                     hasArmour = true;
                     break;
@@ -369,7 +364,7 @@ public class ZombieToastTest {
 
             // Remove any other moving entities that have spawned
             List<Entity> toRemove = new ArrayList<>();
-            for (Entity e: game.getEntities()) {
+            for (Entity e : game.getEntities()) {
                 if (
                     e instanceof MovingEntity &&
                     !(e instanceof Player) &&
@@ -380,7 +375,7 @@ public class ZombieToastTest {
             }
 
             
-            for (Entity e: toRemove) {
+            for (Entity e : toRemove) {
                 game.removeEntity(e);
             }
             

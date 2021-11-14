@@ -59,21 +59,17 @@ public class HydraTest {
         int numEntities = game.getEntities().size();
         
         // Hydra should spawn
-        for (int i = 0; i < HYDRA_TICK_RATE; i++) {
-            game.tick(null, Direction.NONE);
-        }
+        TestHelpers.gameTickMovement(game, Direction.NONE, HYDRA_TICK_RATE);
         
         // Any other movingEntites that spawn will be removed
         List<Entity> toRemove = new ArrayList<>();
-        for(Entity e: game.getEntities()) {
-            if(e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
+        for (Entity e : game.getEntities()) {
+            if (e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
                 toRemove.add(e);
             }
         }
 
-        for(Entity e: toRemove) {
-            game.removeEntity(e);
-        }
+        for (Entity e : toRemove) game.removeEntity(e);
 
         int numEntitesAfterFiftyTicks = game.getEntities().size();
         assertTrue(numEntitesAfterFiftyTicks == numEntities + 1);
@@ -83,7 +79,7 @@ public class HydraTest {
     public void testHydraOnlySpawnsHardMode() {
         List<Mode> modes = Arrays.asList(new Peaceful(), new Standard());
 
-        for(Mode m: modes) {
+        for (Mode m: modes) {
             Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), m);
             
             Player player = new Player(new Position(1, 1), m.initialHealth());
@@ -97,15 +93,13 @@ public class HydraTest {
             
             // Any other movingEntites that spawn will be removed (other than player)
             List<Entity> toRemove = new ArrayList<>();
-            for(Entity e: game.getEntities()) {
-                if(e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
+            for (Entity e : game.getEntities()) {
+                if (e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
                     toRemove.add(e);
                 }
             }
     
-            for(Entity e: toRemove) {
-                game.removeEntity(e);
-            }
+            for (Entity e : toRemove) game.removeEntity(e);
     
             int numEntitesAfterFiftyTicks = game.getEntities().size();
             assertTrue(numEntitesAfterFiftyTicks == numEntities);
@@ -296,7 +290,7 @@ public class HydraTest {
         // and will mean that the hydra is not regrowing its head randomly.
         Set<Integer> playerHealthAfterBattle = new HashSet<>();
 
-        for(int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1000; i++) {
             Mode mode = new Hard();
             Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
@@ -331,7 +325,7 @@ public class HydraTest {
         // i.e. player health is the same after every battle
         Set<Integer> playerHealthAfterBattle = new HashSet<>();
 
-        for(int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1000; i++) {
             Mode mode = new Hard();
             Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
     
