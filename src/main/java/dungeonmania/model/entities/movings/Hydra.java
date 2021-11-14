@@ -76,14 +76,6 @@ public class Hydra extends Enemy implements Boss {
         }
     }
 
-	private static boolean canHydraMoveOntoPosition(List<Entity> entitiesAtPos) {
-        for (Entity e : entitiesAtPos) {
-            if (!e.isPassable()) return false;
-        }
-
-        return true;
-    }
-
     /**
      * Hydra is allowed to pass through portals
      */
