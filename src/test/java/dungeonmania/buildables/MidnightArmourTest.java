@@ -3,8 +3,6 @@ package dungeonmania.buildables;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.buildables.MidnightArmour;
@@ -19,10 +17,11 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class MidnightArmourTest {
-    
+
     /**
      * Test whether the buildable entity can be built by the Player.
      */
@@ -43,7 +42,7 @@ public class MidnightArmourTest {
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
-        
+
         assertTrue(player.findInventoryItem("midnight_armour") == null);
 
         // Player builds a midnight armour
@@ -119,7 +118,9 @@ public class MidnightArmourTest {
 
         // Durability of midnight armour when built should be 5
         int initialDurability = 5;
-        MidnightArmour midnightArmour = (MidnightArmour) player.findInventoryItem("midnight_armour");
+        MidnightArmour midnightArmour = (MidnightArmour) player.findInventoryItem(
+            "midnight_armour"
+        );
         assertTrue(midnightArmour.getDurability() == initialDurability);
 
         Spider spider = new Spider(new Position(2, 1), mode.damageMultiplier(), player);

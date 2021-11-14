@@ -2,8 +2,6 @@ package dungeonmania.statics;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.TestHelpers;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Bomb;
@@ -17,6 +15,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class BoulderTest {
@@ -49,7 +48,7 @@ public class BoulderTest {
         game.addEntity(player);
         player.move(game, Direction.LEFT);
 
-        // Player and boulder should both move to the left by one 
+        // Player and boulder should both move to the left by one
         assertTrue(new Position(0, 1).equals(game.getEntity(boulder.getId()).getPosition()));
         assertTrue(new Position(1, 1).equals(player.getPosition()));
     }

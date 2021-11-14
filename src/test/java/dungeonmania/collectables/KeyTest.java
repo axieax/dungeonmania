@@ -2,8 +2,6 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.movings.Mercenary;
@@ -14,6 +12,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class KeyTest {
@@ -43,7 +42,7 @@ public class KeyTest {
         Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
-        assertTrue(new Position(1, 1).equals(player.getPosition()));        
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
 
         assertTrue(game.getEntity(key.getId()) == null);
         assertTrue(player.getInventoryItem(key.getId()).equals(key));
@@ -63,11 +62,11 @@ public class KeyTest {
         game.addEntity(key1);
         game.addEntity(key2);
 
-        Player player = new Player(new Position(0, 1), mode.initialHealth()); 
+        Player player = new Player(new Position(0, 1), mode.initialHealth());
 
         // Collect the first key
         player.move(game, Direction.RIGHT);
-        assertTrue(new Position(1, 1).equals(player.getPosition()));       
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
 
         assertTrue(game.getEntity(key1.getId()) == null);
         assertTrue(game.getEntity(key2.getId()) == key2);
@@ -75,7 +74,7 @@ public class KeyTest {
 
         // Attempt to collect the second key
         player.move(game, Direction.RIGHT);
-        assertTrue(new Position(2, 1).equals(player.getPosition()));       
+        assertTrue(new Position(2, 1).equals(player.getPosition()));
 
         // Check if the second key is still in the game
         assertTrue(game.getEntity(key2.getId()) == key2);
@@ -97,7 +96,7 @@ public class KeyTest {
 
         Key key = new Key(new Position(1, 2), 1);
         game.addEntity(key);
-        
+
         // Player moves onto the position of the key and will pick it up
         player.move(game, Direction.UP);
         assertTrue(player.getInventoryItem(key.getId()).equals(key));
@@ -124,7 +123,7 @@ public class KeyTest {
 
         Key key = new Key(new Position(1, 2), 1);
         game.addEntity(key);
-        
+
         // Mercenary moves in the direction of the player (upwards)
         // which will pass the location of the key, but cannot pick it up
         mercenary.move(game);

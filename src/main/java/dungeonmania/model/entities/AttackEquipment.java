@@ -4,6 +4,7 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
 public abstract class AttackEquipment extends Equipment {
+
     private int attackDamage;
     private int hitRate;
 
