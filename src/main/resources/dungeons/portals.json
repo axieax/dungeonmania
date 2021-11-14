@@ -18,6 +18,42 @@
             "colour": "BLUE"
         },
         {
+            "x": 5,
+            "y": 10,
+            "type": "portal",
+            "colour": "ORANGE"
+        },
+        {
+            "x": 7,
+            "y": 10,
+            "type": "portal",
+            "colour": "ORANGE"
+        },
+        {
+            "x": 7,
+            "y": 15,
+            "type": "portal",
+            "colour": "RED"
+        },
+        {
+            "x": 5,
+            "y": 15,
+            "type": "portal",
+            "colour": "GREY"
+        },
+        {
+            "x": 5,
+            "y": 20,
+            "type": "portal",
+            "colour": "RED"
+        },
+        {
+            "x": 7,
+            "y": 20,
+            "type": "portal",
+            "colour": "GREY"
+        },
+        {
             "x": 3,
             "y": 6,
             "type": "player"
