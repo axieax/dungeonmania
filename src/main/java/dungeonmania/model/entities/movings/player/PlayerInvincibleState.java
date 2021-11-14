@@ -41,6 +41,7 @@ public class PlayerInvincibleState implements PlayerState {
         }
     }
 
+    @Override
     public int ticksLeft() {
         return timeLimit;
     }

@@ -26,6 +26,8 @@ public class PlayerInvisibleState implements PlayerState {
             this.player.setState(new PlayerDefaultState(player));
         }
     }
+
+    @Override
     public int ticksLeft() {
         return timeLimit;
     }

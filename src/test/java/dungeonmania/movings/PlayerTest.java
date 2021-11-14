@@ -607,7 +607,7 @@ public class PlayerTest {
 
         for (MovingEntity enemy : enemies) {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-            player.setHealth(Player.MAX_CHARACTER_HEALTH);
+            player.setHealth(Player.maxCharacterHealth);
             player.setPosition(playerPos);
             game.addEntity(player);
             game.addEntity(enemy);
@@ -621,7 +621,7 @@ public class PlayerTest {
             game.tick(potion.getId(), Direction.NONE);
 
             assertTrue(player.getState() instanceof PlayerInvincibleState);
-            assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
+            assertTrue(player.getHealth() == Player.maxCharacterHealth);
 
             // Since the player was near the enemy when the player drank the potion,
             // in the next move it should not be in the adjacent tile
@@ -631,7 +631,7 @@ public class PlayerTest {
             // and so the player's health should not reduce
             while(!(player.getState() instanceof PlayerInvincibleState)) {
                 game.tick(null, Direction.NONE);
-                assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
+                assertTrue(player.getHealth() == Player.maxCharacterHealth);
                 assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
             }
         }
