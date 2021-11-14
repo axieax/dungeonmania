@@ -172,10 +172,6 @@ public class TestHelpers {
         return entities.stream().anyMatch(e -> e.getType().startsWith(prefix));
     }
 
-    /********************************
-     *  Response helper methods     *
-     ********************************/
-
     /**
      * Returns the player
      *

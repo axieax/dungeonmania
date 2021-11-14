@@ -16,7 +16,6 @@ import dungeonmania.model.entities.movings.Assassin;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Door;
-import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
@@ -154,10 +153,8 @@ public class SunStoneTest {
         game.addEntity(player);
 
         // Player picks up up items
-        game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.RIGHT);
+        TestHelpers.gameTickMovement(game, Direction.RIGHT, 4);
+
         assertEquals(player.getPosition(), new Position(4, 1));
 
         assertEquals(player.getInventoryResponses().size(), 4);
@@ -196,10 +193,8 @@ public class SunStoneTest {
         game.addEntity(player);
 
         // Player picks up up items
-        game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.RIGHT);
+        TestHelpers.gameTickMovement(game, Direction.RIGHT, 4);
+
         assertEquals(player.getPosition(), new Position(4, 1));
 
         assertEquals(player.getInventoryResponses().size(), 4);

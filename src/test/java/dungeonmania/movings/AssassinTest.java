@@ -65,9 +65,7 @@ public class AssassinTest {
         Game game = new Game("game", entities, new ExitCondition(), mode);
 
         // Move player away from spawning location (otherwise mercenary will immediately die after spawning)
-        game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.RIGHT);
+        TestHelpers.gameTickMovement(game, Direction.RIGHT, 3);
 
         // Check that assassins will spawn eventually
         // Note that there will be spiders in the dungeon (which means there are enemies in the dungeon)

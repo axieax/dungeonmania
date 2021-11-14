@@ -47,10 +47,7 @@ public class ZombieToastTest {
         int numEntities = game.getEntities().size();
 
         // Zombie should spawn
-        for (int i = 0; i < 20; i++) {
-            game.tick(null, Direction.NONE);
-        }
-
+        TestHelpers.gameTickMovement(game, Direction.NONE, 20);
         assertTrue(game.getEntities().size() > numEntities);
     }
 
