@@ -32,6 +32,10 @@ public abstract class BribableEnemy extends Enemy {
         this.moveTwice = false;
     }
 
+    public void setMindControlled(boolean mindControlled) {
+        this.mindControlled = mindControlled;
+    }
+
     public boolean isBribed() {
         return bribed;
     }
@@ -47,6 +51,7 @@ public abstract class BribableEnemy extends Enemy {
     public void setMoveTwice (Boolean moveTwice) {
         this.moveTwice = moveTwice;
     }
+    
 
     @Override
     public double getArmourDropRate() {

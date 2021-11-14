@@ -22,10 +22,16 @@ import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.movings.Assassin;
+import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.model.entities.movings.movement.CircularMovementState;
+import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
+import dungeonmania.model.entities.movings.movement.MovementState;
+import dungeonmania.model.entities.movings.movement.RandomMovementState;
+import dungeonmania.model.entities.movings.movement.RunMovementState;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
@@ -206,19 +212,33 @@ public class GameLoader {
             return new TheOneRing(position);
         } else if (type.startsWith("spider")) { ////
             position = position.asLayer(19);
-            Spider newSpider = new Spider(position, mode.damageMultiplier(), currentPlayer);
+            int damageMultiplier = entityInfo.getInt("damageMultiplier");
+            Spider newSpider = new Spider(position, damageMultiplier, currentPlayer);
             int health = entityInfo.getInt("health");
+            String movement = entityInfo.getString("movementState"); 
+            int movementTick = entityInfo.getInt("movementTick");
+            String direct = entityInfo.getString("movingDirection"); 
             newSpider.setHealth(health);
+            newSpider.setMovementTick(movementTick);
+            Direction direction = extractDirection(direct);
+            newSpider.setDirection(direction);
+            MovementState movementState = extractMovementState(movement, newSpider);
+            newSpider.setMovementState(movementState);
             return newSpider;
         } else if (type.startsWith("zombie_toast")) { ////
             position = position.asLayer(20);
-            ZombieToast newZombieToast = new ZombieToast(
-                position,
-                mode.damageMultiplier(),
-                currentPlayer
-            );
+            int damageMultiplier = entityInfo.getInt("damageMultiplier");
+            ZombieToast newZombieToast = new ZombieToast(position, damageMultiplier,currentPlayer);
             int health = entityInfo.getInt("health");
+            String movement = entityInfo.getString("movementState"); 
+            int movementTick = entityInfo.getInt("movementTick");
+            String direct = entityInfo.getString("movingDirection"); 
             newZombieToast.setHealth(health);
+            newZombieToast.setMovementTick(movementTick);
+            Direction direction = extractDirection(direct);
+            newZombieToast.setDirection(direction);
+            MovementState movementState = extractMovementState(movement, newZombieToast);
+            newZombieToast.setMovementState(movementState);
             return newZombieToast;
         } else if (type.startsWith("mercenary")) { ////
             position = position.asLayer(21);
@@ -227,27 +247,22 @@ public class GameLoader {
             Boolean moveTwice = entityInfo.getBoolean("moveTwice");
             int mindControlTicks = entityInfo.getInt("mindControlTicks");
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            // String movementState = entityInfo.getString("movementState"); // TODO more
+            String movement = entityInfo.getString("movementState"); 
             int movementTick = entityInfo.getInt("movementTick");
             int health = entityInfo.getInt("health");
-            String direct = entityInfo.getString("movingDirection"); // TODO
-            Mercenary newMercenary = new Mercenary(
-                position,
-                mode.damageMultiplier(),
-                currentPlayer
-            );
+            String direct = entityInfo.getString("movingDirection"); 
+            Mercenary newMercenary = new Mercenary(position, damageMultiplier, currentPlayer);
             newMercenary.setBribed(bribed);
             newMercenary.update(currentPlayer);
             newMercenary.setMoveTwice(moveTwice);
             newMercenary.setMindControlTicks(mindControlTicks);
             newMercenary.setMovementTick(movementTick);
             newMercenary.setHealth(health);
-            Direction direction = Direction.NONE;
-            if (direct.equals("UP")) direction = Direction.UP; else if (
-                direct.equals("DOWN")
-            ) direction = Direction.DOWN; else if (direct.equals("RIGHT")) direction =
-                Direction.RIGHT; else if (direct.equals("LEFT")) direction = Direction.LEFT;
+            newMercenary.setMindControlled(mindControlled);
+            Direction direction = extractDirection(direct);
             newMercenary.setDirection(direction);
+            MovementState movementState = extractMovementState(movement, newMercenary);
+            newMercenary.setMovementState(movementState);
             return newMercenary;
             // Collectable Entities
         } else if (type.startsWith("assassin")) { /////
@@ -257,10 +272,10 @@ public class GameLoader {
             Boolean moveTwice = entityInfo.getBoolean("moveTwice");
             int mindControlTicks = entityInfo.getInt("mindControlTicks");
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            // String movementState = entityInfo.getString("movementState"); // TODO more
+            String movement = entityInfo.getString("movementState");
             int movementTick = entityInfo.getInt("movementTick");
             int health = entityInfo.getInt("health");
-            String direct = entityInfo.getString("movingDirection"); // TODO more
+            String direct = entityInfo.getString("movingDirection");
             Assassin newAssassin = new Assassin(position, damageMultiplier, currentPlayer);
             newAssassin.setBribed(bribed);
             newAssassin.update(currentPlayer);
@@ -268,31 +283,28 @@ public class GameLoader {
             newAssassin.setMindControlTicks(mindControlTicks);
             newAssassin.setMovementTick(movementTick);
             newAssassin.setHealth(health);
-            Direction direction = Direction.NONE;
-            if (direct.equals("UP")) direction = Direction.UP; else if (
-                direct.equals("DOWN")
-            ) direction = Direction.DOWN; else if (direct.equals("RIGHT")) direction =
-                Direction.RIGHT; else if (direct.equals("LEFT")) direction = Direction.LEFT;
+            newAssassin.setMindControlled(mindControlled);
+            Direction direction = extractDirection(direct);
             newAssassin.setDirection(direction);
+            MovementState movementState = extractMovementState(movement, newAssassin);
+            newAssassin.setMovementState(movementState);
             return newAssassin;
         } else if (type.startsWith("hydra")) { ////////
             position = position.asLayer(23);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            // String movementState = entityInfo.getString("movementState"); // TODO more
+            String movement= entityInfo.getString("movementState");
             int movementTick = entityInfo.getInt("movementTick");
             int health = entityInfo.getInt("health");
-            String direct = entityInfo.getString("movingDirection"); // TODO more
+            String direct = entityInfo.getString("movingDirection");
             Boolean preventHeadRespawn = entityInfo.getBoolean("preventHeadRespawn");
             Hydra newHydra = new Hydra(position, damageMultiplier, currentPlayer);
             newHydra.setMovementTick(movementTick);
             newHydra.setHealth(health);
             newHydra.setPreventHeadRespawn(preventHeadRespawn);
-            Direction direction = Direction.NONE;
-            if (direct.equals("UP")) direction = Direction.UP; else if (
-                direct.equals("DOWN")
-            ) direction = Direction.DOWN; else if (direct.equals("RIGHT")) direction =
-                Direction.RIGHT; else if (direct.equals("LEFT")) direction = Direction.LEFT;
+            Direction direction = extractDirection(direct);
             newHydra.setDirection(direction);
+            MovementState movementState = extractMovementState(movement, newHydra);
+            newHydra.setMovementState(movementState);
             return newHydra;
         } else if (type.startsWith("swamp_tile")) { /////////
             position = position.asLayer(1);
@@ -345,6 +357,29 @@ public class GameLoader {
             return newShield;
         }
         return null;
+    }
+
+    private static final MovementState extractMovementState(String movement, Enemy enemy) {
+        MovementState movementState = null;
+        if (movement != null && movement.equals("CircularMovementState")) {
+            movementState = new CircularMovementState(enemy);
+        } else if (movement != null && movement.equals("FollowPlayerMovementState")) {
+            movementState = new FollowPlayerMovementState(enemy);
+        } else if (movement != null && movement.equals("RandomMovementState")) {
+            movementState = new RandomMovementState(enemy);
+        } else if (movement != null && movement.equals("RunMovementState")) {
+            movementState = new RunMovementState(enemy);     
+        }
+        return movementState;
+    }
+
+    private static final Direction extractDirection (String direct) {
+        Direction direction = Direction.NONE;
+        if (direct.equals("UP")) direction = Direction.UP; 
+        else if (direct.equals("DOWN")) direction = Direction.DOWN; 
+        else if (direct.equals("RIGHT")) direction = Direction.RIGHT;
+        else if (direct.equals("LEFT")) direction = Direction.LEFT; 
+        return direction;       
     }
 
     public static final Mode extractMode(JSONObject dungeon) {

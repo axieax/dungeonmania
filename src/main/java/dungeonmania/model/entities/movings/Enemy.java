@@ -27,6 +27,10 @@ public abstract class Enemy extends MovingEntity implements Observer {
         return super.getBaseAttackDamage() * damageMultiplier;
     }
 
+    public void setDamageMultiplier(int damageMultiplier) {
+        this.damageMultiplier = damageMultiplier;
+    }
+
     public MovementState getMovementState() {
         return movementState;
     }
