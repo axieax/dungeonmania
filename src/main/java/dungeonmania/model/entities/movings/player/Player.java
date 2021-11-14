@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
@@ -545,10 +547,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
         info.put("playerState", state.getClass().getSimpleName());
         info.put("ticksLeft", state.ticksLeft());
         info.put("inventory", inventory.toJSON());
-        info.put("inBattle", inBattle);
-        info.put ("currentBattleOpponent", currentBattleOpponent);
-        info.put ("allies", );
-        info.put ("observeres", )
         return info;
     }
 }
