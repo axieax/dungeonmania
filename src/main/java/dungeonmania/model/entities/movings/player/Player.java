@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
@@ -538,7 +540,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
     @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put(state.getClass().getSimpleName(), state.ticksLeft());
+        info.put("playerState", state.getClass().getSimpleName());
+        info.put("ticksLeft", state.ticksLeft());
         info.put("inventory", inventory.toJSON());
         return info;
     }

@@ -91,4 +91,9 @@ public class PlayerDefaultState implements PlayerState {
 
     @Override
     public void updateState(Player player) {}
+
+    @Override
+    public void setTicksLeft(int left) {
+        
+    }
 }

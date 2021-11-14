@@ -75,9 +75,8 @@ public abstract class Enemy extends MovingEntity implements Observer {
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put("damageMultiplier", damageMultiplier);
-        info.put("movementState", movementState.getClass().getSimpleName());
-        info.put("movementTick", movementTick);
-        info.put("armourDropRate", armourDropRate);
+        info.put ("movementState", movementState.getClass().getSimpleName());
+        info.put ("movementTick", movementTick);
         return info;
     }
 }

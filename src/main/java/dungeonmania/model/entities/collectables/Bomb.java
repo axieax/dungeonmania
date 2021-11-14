@@ -10,6 +10,8 @@ import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 import java.util.List;
 
+import org.json.JSONObject;
+
 public class Bomb extends Item implements Consumable {
 
     private boolean isPlaced;
@@ -18,6 +20,11 @@ public class Bomb extends Item implements Consumable {
         super("bomb", position);
         isPlaced = false;
     }
+
+    public void setPlaced(boolean isPlaced) {
+        this.isPlaced = isPlaced;
+    }
+
 
     /**
      * Place a bomb at the specified position on the dungeon.
@@ -35,6 +42,7 @@ public class Bomb extends Item implements Consumable {
             this.explode(game);
         }
     }
+    
 
     /**
      * If the Player interacts with the Item, collect the item and put it in the
@@ -61,5 +69,12 @@ public class Bomb extends Item implements Consumable {
             // Do not destroy portals or the player
             if (!(entity instanceof Player || entity instanceof Portal)) game.removeEntity(entity);
         });
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put("isPlaced", isPlaced);
+        return info;
     }
 }

@@ -10,4 +10,6 @@ public interface PlayerState {
     public void updateState(Player player);
 
     public int ticksLeft();
+
+    public void setTicksLeft (int left);
 }
