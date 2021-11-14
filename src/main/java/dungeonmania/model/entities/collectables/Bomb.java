@@ -5,9 +5,11 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 import java.util.List;
+import org.json.JSONObject;
 
 public class Bomb extends Item implements Consumable {
 
@@ -18,13 +20,26 @@ public class Bomb extends Item implements Consumable {
         isPlaced = false;
     }
 
+    public void setPlaced(boolean isPlaced) {
+        this.isPlaced = isPlaced;
+    }
+
     public void consume(Game game, Player player) {
         // Place a bomb at the specified position on the dungeon.
         this.setPosition(player.getPosition());
         game.addEntity(this);
+        this.setPassable(false);
         player.removeInventoryItem(this.getId());
         isPlaced = true;
-        this.setPassable(false);
+
+        List<Entity> entities = game.getCardinallyAdjacentEntities(this.getPosition());
+        if (
+            entities
+                .stream()
+                .anyMatch(e -> e instanceof FloorSwitch && ((FloorSwitch) e).isTriggered(game))
+        ) {
+            this.explode(game);
+        }
     }
 
     /**
@@ -53,5 +68,12 @@ public class Bomb extends Item implements Consumable {
             // Do not destroy portals or the player
             if (!(entity instanceof Player || entity instanceof Portal)) game.removeEntity(entity);
         });
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject info = super.toJSON();
+        info.put("isPlaced", isPlaced);
+        return info;
     }
 }

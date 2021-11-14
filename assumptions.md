@@ -69,9 +69,11 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 
 ### Hydra
 
-* When a `Hydra` regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
-* The `Hydra` entity spawns at the entry location - similar to the mercenary. The player cannot be in its initial spawn location, otherwise the `Hydra` will not spawn.
+- When a `Hydra` regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
+- The `Hydra` entity spawns at the entry location - similar to the mercenary. The player cannot be in its initial spawn location, otherwise the `Hydra` will not spawn.
+
 ## Entity Mechanics
+
 ### Portal
 
 - `Portals` teleport all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A `Spider` will resume moving in a circular motion after it has been teleported.
@@ -94,6 +96,7 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 
 - Durability of any weapon is not reduced if a player is invincible.
 - There's no notion of holding an item vs having it in your inventory, so if a player has multiple instances of an item e.g. 3 `Swords`, it will attack the enemy three times.
+- Every equipment has a durability of 5, meaning that an equipment can only be used up to 5 ticks in total.
 
 ### Equipment Stats
 

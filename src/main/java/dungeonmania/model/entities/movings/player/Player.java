@@ -557,7 +557,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
     @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put(state.getClass().getSimpleName(), state.ticksLeft());
+        info.put("playerState", state.getClass().getSimpleName());
+        info.put("ticksLeft", state.ticksLeft());
         info.put("inventory", inventory.toJSON());
         return info;
     }

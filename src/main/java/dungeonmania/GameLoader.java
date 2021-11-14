@@ -32,7 +32,12 @@ import dungeonmania.model.entities.movings.movement.FollowPlayerMovementState;
 import dungeonmania.model.entities.movings.movement.MovementState;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
+import dungeonmania.model.entities.movings.olderPlayer.OlderPlayer;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.movings.player.PlayerDefaultState;
+import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
+import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
+import dungeonmania.model.entities.movings.player.PlayerState;
 import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
@@ -167,7 +172,6 @@ public class GameLoader {
             Entity entity = extractEntity(entityInfo, (Player) playerEntity, mode);
             if (entity != null) entities.add(entity);
         }
-
         return entities;
     }
 
@@ -203,8 +207,11 @@ public class GameLoader {
             return new FloorSwitch(position);
         } else if (type.startsWith("door")) {
             int key = entityInfo.getInt("key");
+            Boolean open = entityInfo.getBoolean("open");
             position = position.asLayer(4);
-            return new Door(position, key);
+            Door newDoor = new Door(position, key);
+            if (open) newDoor.unlockDoor();
+            return newDoor;
         } else if (type.startsWith("time_travelling_portal")) {
             position = position.asLayer(5);
             return new TimeTravellingPortal(position);
@@ -214,7 +221,8 @@ public class GameLoader {
             return new Portal(position, colour);
         } else if (type.startsWith("zombie_toast_spawner")) {
             position = position.asLayer(7);
-            return new ZombieToastSpawner(position, mode.tickRate());
+            ZombieToastSpawner spawner = new ZombieToastSpawner(position, mode.tickRate());
+            return spawner;
             // Collectable Entities
         } else if (type.startsWith("treasure")) {
             position = position.asLayer(8);
@@ -240,8 +248,11 @@ public class GameLoader {
             return new Arrow(position);
         } else if (type.startsWith("bomb")) {
             position = position.asLayer(15);
-            return new Bomb(position);
-        } else if (type.startsWith("sword")) { ///////
+            Boolean isPlaced = entityInfo.getBoolean("isPlaced");
+            Bomb newBomb = new Bomb(position);
+            newBomb.setPlaced(isPlaced);
+            return newBomb;
+        } else if (type.startsWith("sword")) {
             position = position.asLayer(16);
             Sword newSword = new Sword(position);
             int durability = entityInfo.getInt("durability");
@@ -256,15 +267,14 @@ public class GameLoader {
         } else if (type.startsWith("one_ring")) {
             position = position.asLayer(18);
             return new TheOneRing(position);
-            // Moving Entities
-        } else if (type.startsWith("spider")) { ////
+        } else if (type.startsWith("spider")) {
             position = position.asLayer(19);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
             Spider newSpider = new Spider(position, damageMultiplier, currentPlayer);
             int health = entityInfo.getInt("health");
-            String movement = entityInfo.getString("movementState"); 
+            String movement = entityInfo.getString("movementState");
             int movementTick = entityInfo.getInt("movementTick");
-            String direct = entityInfo.getString("movingDirection"); 
+            String direct = entityInfo.getString("movingDirection");
             newSpider.setHealth(health);
             newSpider.setMovementTick(movementTick);
             Direction direction = extractDirection(direct);
@@ -272,14 +282,14 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newSpider);
             newSpider.setMovementState(movementState);
             return newSpider;
-        } else if (type.startsWith("zombie_toast")) { ////
+        } else if (type.startsWith("zombie_toast")) {
             position = position.asLayer(20);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            ZombieToast newZombieToast = new ZombieToast(position, damageMultiplier,currentPlayer);
+            ZombieToast newZombieToast = new ZombieToast(position, damageMultiplier, currentPlayer);
             int health = entityInfo.getInt("health");
-            String movement = entityInfo.getString("movementState"); 
+            String movement = entityInfo.getString("movementState");
             int movementTick = entityInfo.getInt("movementTick");
-            String direct = entityInfo.getString("movingDirection"); 
+            String direct = entityInfo.getString("movingDirection");
             newZombieToast.setHealth(health);
             newZombieToast.setMovementTick(movementTick);
             Direction direction = extractDirection(direct);
@@ -287,17 +297,17 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newZombieToast);
             newZombieToast.setMovementState(movementState);
             return newZombieToast;
-        } else if (type.startsWith("mercenary")) { ////
+        } else if (type.startsWith("mercenary")) {
             position = position.asLayer(21);
             Boolean bribed = entityInfo.getBoolean("bribed");
             Boolean mindControlled = entityInfo.getBoolean("mindControlled");
             Boolean moveTwice = entityInfo.getBoolean("moveTwice");
             int mindControlTicks = entityInfo.getInt("mindControlTicks");
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            String movement = entityInfo.getString("movementState"); 
+            String movement = entityInfo.getString("movementState");
             int movementTick = entityInfo.getInt("movementTick");
             int health = entityInfo.getInt("health");
-            String direct = entityInfo.getString("movingDirection"); 
+            String direct = entityInfo.getString("movingDirection");
             Mercenary newMercenary = new Mercenary(position, damageMultiplier, currentPlayer);
             newMercenary.setBribed(bribed);
             newMercenary.update(currentPlayer);
@@ -311,7 +321,8 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newMercenary);
             newMercenary.setMovementState(movementState);
             return newMercenary;
-        } else if (type.startsWith("assassin")) { /////
+            // Collectable Entities
+        } else if (type.startsWith("assassin")) {
             position = position.asLayer(22);
             Boolean bribed = entityInfo.getBoolean("bribed");
             Boolean mindControlled = entityInfo.getBoolean("mindControlled");
@@ -335,10 +346,10 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newAssassin);
             newAssassin.setMovementState(movementState);
             return newAssassin;
-        } else if (type.startsWith("hydra")) { ////////
+        } else if (type.startsWith("hydra")) {
             position = position.asLayer(23);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
-            String movement= entityInfo.getString("movementState");
+            String movement = entityInfo.getString("movementState");
             int movementTick = entityInfo.getInt("movementTick");
             int health = entityInfo.getInt("health");
             String direct = entityInfo.getString("movingDirection");
@@ -352,7 +363,7 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newHydra);
             newHydra.setMovementState(movementState);
             return newHydra;
-        } else if (type.startsWith("swamp_tile")) { /////////
+        } else if (type.startsWith("swamp_tile")) {
             position = position.asLayer(1);
             int movementFactor = entityInfo.getInt("movementFactor");
             SwampTile newSwampTile = new SwampTile(position, movementFactor);
@@ -360,16 +371,16 @@ public class GameLoader {
         } else if (type.startsWith("sun_stone")) {
             position = position.asLayer(25);
             return new SunStone(position);
-        } else if (type.startsWith("anduril")) { /////
+        } else if (type.startsWith("anduril")) {
             Anduril newAnduril = new Anduril(position);
             position = position.asLayer(26);
             int durability = entityInfo.getInt("durability");
             newAnduril.setDurability(durability);
             return newAnduril;
-        } else if (type.startsWith("sceptre")) { /////////
+        } else if (type.startsWith("sceptre")) {
             Sceptre newSceptre = new Sceptre();
             return newSceptre;
-        } else if (type.startsWith("midnight_armour")) { ///////
+        } else if (type.startsWith("midnight_armour")) {
             MidnightArmour newMidnightArmour = new MidnightArmour();
             int durability = entityInfo.getInt("durability");
             newMidnightArmour.setDurability(durability);
@@ -377,17 +388,42 @@ public class GameLoader {
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);
             return new TimeTurner(position);
+        } else if (type.startsWith("older_player")) {
+            position = position.asLayer(31);
+            int health = entityInfo.getInt("health");
+            JSONArray moves = entityInfo.getJSONArray("moves");
+            List<Position> history = new ArrayList<>();
+            for (int i = 0; i < moves.length(); i++) {
+                JSONObject pastPosition = moves.getJSONObject(i);
+                int x = pastPosition.getInt("x");
+                int y = pastPosition.getInt("y");
+                Position newPosition = new Position(x, y);
+                history.add(newPosition);
+            }
+            OlderPlayer olderPlayer = new OlderPlayer(position, health, history);
+            return olderPlayer;
         } else if (type.startsWith("player")) {
             position = position.asLayer(31);
-            Player player = new Player(position, mode.initialHealth());
             int health = entityInfo.getInt("health");
-            player.setHealth(health);
+            Player player = new Player(position, health);
             JSONArray inventory = entityInfo.getJSONArray("inventory");
             for (int i = 0; i < inventory.length(); i++) {
                 JSONObject item = inventory.getJSONObject(i);
                 Item inventoryItem = (Item) extractEntity(item, null, mode);
                 player.addInventoryItem(inventoryItem);
             }
+            String state = entityInfo.getString("playerState");
+            PlayerState playerState = null;
+            if (state.equals("PlayerDefaultState")) {
+                playerState = new PlayerDefaultState(player);
+            } else if (state.equals("PlayerInvincibleState")) {
+                playerState = new PlayerInvincibleState(player);
+            } else if (state.equals("PlayerInvisibleState")) {
+                playerState = new PlayerInvisibleState(player);
+            }
+            int ticksLeft = entityInfo.getInt("ticksLeft");
+            playerState.setTicksLeft(ticksLeft);
+            player.setState(playerState);
             return player;
         } else if (type.startsWith("bow")) {
             Bow newBow = new Bow();
@@ -412,25 +448,25 @@ public class GameLoader {
         } else if (movement != null && movement.equals("RandomMovementState")) {
             movementState = new RandomMovementState(enemy);
         } else if (movement != null && movement.equals("RunMovementState")) {
-            movementState = new RunMovementState(enemy);     
+            movementState = new RunMovementState(enemy);
         }
         return movementState;
     }
 
-    private static final Direction extractDirection (String direct) {
+    private static final Direction extractDirection(String direct) {
         Direction direction = Direction.NONE;
-        if (direct.equals("UP")) direction = Direction.UP; 
-        else if (direct.equals("DOWN")) direction = Direction.DOWN; 
-        else if (direct.equals("RIGHT")) direction = Direction.RIGHT;
-        else if (direct.equals("LEFT")) direction = Direction.LEFT; 
-        return direction;       
+        if (direct.equals("UP")) direction = Direction.UP; else if (
+            direct.equals("DOWN")
+        ) direction = Direction.DOWN; else if (direct.equals("RIGHT")) direction =
+            Direction.RIGHT; else if (direct.equals("LEFT")) direction = Direction.LEFT;
+        return direction;
     }
 
     public static final Mode extractMode(JSONObject dungeon) {
         String gameMode = dungeon.getString("mode");
-        if (gameMode.equals("hard")) return new Hard();
-        else if (gameMode.equals("standard")) return new Standard();
-        else if (gameMode.equals("peaceful")) return new Peaceful();
+        if (gameMode.equals("hard")) return new Hard(); else if (
+            gameMode.equals("standard")
+        ) return new Standard(); else if (gameMode.equals("peaceful")) return new Peaceful();
         return null;
     }
 

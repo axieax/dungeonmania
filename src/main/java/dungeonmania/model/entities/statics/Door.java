@@ -32,7 +32,7 @@ public class Door extends Entity {
      * Unlocks the door.
      * @param key to unlock the door with
      */
-    private void unlockDoor() {
+    public void unlockDoor() {
         this.open = true;
         this.setPassable(true);
     }
@@ -64,6 +64,7 @@ public class Door extends Entity {
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put("key", key);
+        info.put("open", open);
         return info;
     }
 }

@@ -84,4 +84,6 @@ public class PlayerDefaultState implements PlayerState {
     }
 
     public void updateState(Player player) {}
+
+    public void setTicksLeft(int ticks) {}
 }

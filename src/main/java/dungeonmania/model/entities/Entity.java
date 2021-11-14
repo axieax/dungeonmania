@@ -151,6 +151,7 @@ public abstract class Entity {
         entity.put("x", (position != null) ? getX() : 0);
         entity.put("y", (position != null) ? getY() : 0);
         entity.put("type", getType());
+        entity.put("id", getId());
         return entity;
     }
 
