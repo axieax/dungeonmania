@@ -120,7 +120,7 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 
 - If the rewind is manually triggered (through endpoint/rewind buttons rather than the time travelling portal), the older player will retraced all it's moves until the moment it had rewind. If the player reaches to the position where it had rewind, then the old player disappears.
 - If the rewind ticks is greater than the in game ticks, it will rewind to the beginning (as far as it can).
-- All observers (i.e. `Mercenary` following player, `InvicibilityPotion` effect) will target the 'current player' rather than the 'older player'.
+- All observers (i.e. `Mercenary` following player, `InvincibilityPotion` effect) will target the 'current player' rather than the 'older player'.
 - 'Older player' will follows the original path made by the 'current player', regardless of any updates made to the game state.
 - An `IllegalArgumentException` exception is thrown if `time_turner` is not in the 'current player' inventory.
 - The 'older player' does not have the inventory of the player in that point in time. It is merely a 'ghost' that retraces and battles the 'current player'. It is basically another `Enemy` in the dungeon.
