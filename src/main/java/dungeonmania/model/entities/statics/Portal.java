@@ -5,6 +5,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.ZombieToast;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import org.json.JSONObject;
@@ -68,4 +69,11 @@ public class Portal extends Entity {
         info.put("colour", colour);
         return info;
     }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        String type = String.format("%s_%s", getType(), colour.toLowerCase());
+        return new EntityResponse(getId(), type, getPosition(), isInteractable());
+    }
+
 }
