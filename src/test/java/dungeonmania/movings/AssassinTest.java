@@ -12,6 +12,7 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Assassin;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.Wall;
@@ -215,6 +216,34 @@ public class AssassinTest {
         // Create horizontal wall with 1 gap near the right game border between the player and assassin
         for(int i = 0; i < 4; i ++) {
             game.addEntity(new Wall(new Position(i + 1, 2)));
+        }
+
+        Assassin assassin = new Assassin(new Position(4, 1), mode.damageMultiplier(), player);
+        game.addEntity(assassin);
+
+        // Assassin now at same horizontal level as player and any further ticks reduce the horizontal distance
+        game.tick(null, Direction.NONE);
+        assertTrue(assassin.getX() == 3);
+        game.tick(null, Direction.NONE);
+        assertTrue(assassin.getX() == 2);
+        game.tick(null, Direction.NONE);
+        // Same position as player but assassin should be killed
+        assertTrue(assassin.getX() == 1);
+    }
+
+    @Test
+    public void testAssassinSimpleBoulder() {
+        Mode mode = new Standard();
+        // Boulder with 1 gap exists and assassin should go directly to player, and not move
+        // outside/go through the gap
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        // Create horizontal boulder with 1 gap near the right game border between the player and assassin
+        for(int i = 0; i < 4; i ++) {
+            game.addEntity(new Boulder(new Position(i + 1, 2)));
         }
 
         Assassin assassin = new Assassin(new Position(4, 1), mode.damageMultiplier(), player);

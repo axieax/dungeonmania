@@ -15,6 +15,7 @@ import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.Portal;
@@ -216,6 +217,35 @@ public class MercenaryTest {
         // create horizontal wall with 1 gap near the right game border between the player and mercenary
         for (int i = 0; i < 4; i++) {
             game.addEntity(new Wall(new Position(i + 1, 2)));
+        }
+
+        Mercenary mercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        // Mercenary now at same horizontal level as player and any further ticks reduce the horizontal distance
+        game.tick(null, Direction.NONE);
+        assertTrue(mercenary.getX() == 3);
+        game.tick(null, Direction.NONE);
+        assertTrue(mercenary.getX() == 2);
+        game.tick(null, Direction.NONE);
+        // Same position as player but mercenary should be killed
+        assertTrue(mercenary.getX() == 1);
+        assertTrue(game.getEntity(mercenary.getId()) == null);
+    }
+
+    @Test
+    public void testMercenarySimpleBoulder() {
+        Mode mode = new Standard();
+        // Boulder with 1 gap exists and mercenary should go directly to player, and not move
+        // outside/go through the gap
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        // create horizontal wall with 1 gap near the right game border between the player and mercenary
+        for (int i = 0; i < 4; i++) {
+            game.addEntity(new Boulder(new Position(i + 1, 2)));
         }
 
         Mercenary mercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
