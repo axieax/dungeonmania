@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
+import dungeonmania.TestHelpers;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.movings.Mercenary;
@@ -191,15 +192,13 @@ public class BoulderTest {
 
         // Get bomb
         game.tick(null, Direction.RIGHT);
-        game.tick(null, Direction.DOWN);
-        game.tick(null, Direction.DOWN);
+        TestHelpers.gameTickMovement(game, Direction.DOWN, 2);
 
         // Place bomb
         game.tick(bomb.getId(), Direction.NONE);
 
         // Go to initial spawn spot
-        game.tick(null, Direction.UP);
-        game.tick(null, Direction.UP);
+        TestHelpers.gameTickMovement(game, Direction.UP, 2);
         game.tick(null, Direction.LEFT);
 
         // Move boulder to trigger bomb explosion

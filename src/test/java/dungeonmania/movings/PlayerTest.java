@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.DungeonManiaController;
+import dungeonmania.TestHelpers;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -28,7 +29,6 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerDefaultState;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
-import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
@@ -39,7 +39,6 @@ import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -434,7 +433,12 @@ public class PlayerTest {
         // any items that are used to craft another buildable entity should be
         // removed from the player's inventory, and are replaced with the built item
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -465,7 +469,12 @@ public class PlayerTest {
     public void testCharacterCannotPickUpBombsItPlaced() {
         // removed from the player's inventory, and are replaced with the built item
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -499,7 +508,12 @@ public class PlayerTest {
     @Test
     public void testUsingNonExistentItem() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -508,13 +522,21 @@ public class PlayerTest {
         game.addEntity(sword);
 
         // The sword exists in the game, but the player does not have it in their inventory, so should throw exception
-        assertThrows(InvalidActionException.class, () -> player.move(game, Direction.RIGHT, sword.getId()));
+        assertThrows(
+            InvalidActionException.class,
+            () -> player.move(game, Direction.RIGHT, sword.getId())
+        );
     }
 
     @Test
     public void testMovementDoesNotAffectHealth() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -535,7 +557,12 @@ public class PlayerTest {
     @Test
     public void testBattleReducesPlayerHealth() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -559,7 +586,12 @@ public class PlayerTest {
     @Test
     public void testInvisibleState() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -606,8 +638,13 @@ public class PlayerTest {
         );
 
         for (MovingEntity enemy : enemies) {
-            Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-            player.setHealth(Player.maxCharacterHealth);
+            Game game = new Game(
+                "game",
+                TestHelpers.sevenBySevenWallBoundary(),
+                new ExitCondition(),
+                mode
+            );
+            player.setHealth(mode.initialHealth());
             player.setPosition(playerPos);
             game.addEntity(player);
             game.addEntity(enemy);
@@ -615,23 +652,23 @@ public class PlayerTest {
             Position potionPos = new Position(2, 2);
             InvincibilityPotion potion = new InvincibilityPotion(potionPos);
             game.addEntity(potion);
-    
+
             // Player picks up potion and drinks it
             game.tick(null, Direction.RIGHT);
             game.tick(potion.getId(), Direction.NONE);
 
             assertTrue(player.getState() instanceof PlayerInvincibleState);
-            assertTrue(player.getHealth() == Player.maxCharacterHealth);
+            assertTrue(player.getHealth() == mode.initialHealth());
 
             // Since the player was near the enemy when the player drank the potion,
             // in the next move it should not be in the adjacent tile
             assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
-            
+
             // Enemy should not come near the player (until the effects of the potion have finished),
             // and so the player's health should not reduce
-            while(!(player.getState() instanceof PlayerInvincibleState)) {
+            while (!(player.getState() instanceof PlayerInvincibleState)) {
                 game.tick(null, Direction.NONE);
-                assertTrue(player.getHealth() == Player.maxCharacterHealth);
+                assertTrue(player.getHealth() == mode.initialHealth());
                 assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
             }
         }
@@ -643,7 +680,12 @@ public class PlayerTest {
     @Test
     public void testInvincibilityPotionHasNoEffectInHardMode() {
         Mode mode = new Hard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -660,7 +702,7 @@ public class PlayerTest {
         // Player picks up potion
         game.tick(null, Direction.RIGHT);
         assertTrue(player.getState() instanceof PlayerDefaultState);
-        
+
         // Player drinks potion
         game.tick(potion.getId(), Direction.NONE);
         assertTrue(player.getState() instanceof PlayerDefaultState);
@@ -670,7 +712,12 @@ public class PlayerTest {
     @Test
     public void testCanPickUpMultiplePotions() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -684,12 +731,7 @@ public class PlayerTest {
 
         assertTrue(player.getInventoryResponses().size() == 0);
 
-        assertDoesNotThrow(
-            () -> {
-                game.tick(null, Direction.RIGHT);
-                game.tick(null, Direction.RIGHT);
-            }
-        );
+        assertDoesNotThrow(() -> TestHelpers.gameTickMovement(game, Direction.RIGHT, 2));
 
         assertTrue(player.getInventoryResponses().size() > 0);
     }
@@ -697,7 +739,12 @@ public class PlayerTest {
     @Test
     public void testCanDrinkTwoPotions() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -722,7 +769,12 @@ public class PlayerTest {
     @Test
     public void testCharacterDies() {
         Mode mode = new Hard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -744,18 +796,23 @@ public class PlayerTest {
         // Fight an enemy mercenary while a player has an allied mercenary
         // Fight an enemy mercenary without any allies
         // Enemy health should be less (more negative) in the former case
-        
+
         Mode mode = new Hard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         Mercenary mercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-        
-        game.addEntity(new Treasure(new Position(2, 1)));        
-        
+
+        game.addEntity(new Treasure(new Position(2, 1)));
+
         // Player collects coin and bribes mercenary
         game.tick(null, Direction.RIGHT);
         assertEquals(new Position(3, 1), mercenary.getPosition());
@@ -763,7 +820,11 @@ public class PlayerTest {
         assertTrue(player.getAllies().size() == 1);
 
         // Spawn an enemy mercenary
-        Mercenary enemyMercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
+        Mercenary enemyMercenary = new Mercenary(
+            new Position(4, 1),
+            mode.damageMultiplier(),
+            player
+        );
         game.addEntity(enemyMercenary);
 
         int playerTotalAttackDmgWithAlly = player.getTotalAttackDamage(mercenary);
@@ -775,7 +836,7 @@ public class PlayerTest {
 
         // Create a new game instance where the player does not have any allies
         mode = new Hard();
-        game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -783,8 +844,8 @@ public class PlayerTest {
         enemyMercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
         game.addEntity(enemyMercenary);
 
-        game.addEntity(new Treasure(new Position(1, 2)));        
-        
+        game.addEntity(new Treasure(new Position(1, 2)));
+
         // Player moves to battle mercenary
         game.tick(null, Direction.RIGHT);
         assertEquals(new Position(4, 1), enemyMercenary.getPosition());
@@ -811,35 +872,5 @@ public class PlayerTest {
 
         if (player == null) return null;
         return player.getPosition();
-    }
-
-    private List<Entity> sevenBySevenWallBoundary() {
-        ArrayList<Entity> wallBorder = new ArrayList<>();
-
-        // Left border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(0, i));
-            wallBorder.add(wall);
-        }
-
-        // Right border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(6, i));
-            wallBorder.add(wall);
-        }
-
-        // Top border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 0));
-            wallBorder.add(wall);
-        }
-
-        // Bottom border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 6));
-            wallBorder.add(wall);
-        }
-
-        return wallBorder;
     }
 }
