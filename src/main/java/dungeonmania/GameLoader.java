@@ -195,7 +195,7 @@ public class GameLoader {
         } else if (type.startsWith("bomb")) {
             position = position.asLayer(15);
             return new Bomb(position);
-        } else if (type.startsWith("sword")) { ///////
+        } else if (type.startsWith("sword")) {
             position = position.asLayer(16);
             Sword newSword = new Sword(position);
             int durability = entityInfo.getInt("durability");
@@ -210,7 +210,7 @@ public class GameLoader {
         } else if (type.startsWith("one_ring")) {
             position = position.asLayer(18);
             return new TheOneRing(position);
-        } else if (type.startsWith("spider")) { ////
+        } else if (type.startsWith("spider")) {
             position = position.asLayer(19);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
             Spider newSpider = new Spider(position, damageMultiplier, currentPlayer);
@@ -225,7 +225,7 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newSpider);
             newSpider.setMovementState(movementState);
             return newSpider;
-        } else if (type.startsWith("zombie_toast")) { ////
+        } else if (type.startsWith("zombie_toast")) {
             position = position.asLayer(20);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
             ZombieToast newZombieToast = new ZombieToast(position, damageMultiplier,currentPlayer);
@@ -240,7 +240,7 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newZombieToast);
             newZombieToast.setMovementState(movementState);
             return newZombieToast;
-        } else if (type.startsWith("mercenary")) { ////
+        } else if (type.startsWith("mercenary")) { 
             position = position.asLayer(21);
             Boolean bribed = entityInfo.getBoolean("bribed");
             Boolean mindControlled = entityInfo.getBoolean("mindControlled");
@@ -265,7 +265,7 @@ public class GameLoader {
             newMercenary.setMovementState(movementState);
             return newMercenary;
             // Collectable Entities
-        } else if (type.startsWith("assassin")) { /////
+        } else if (type.startsWith("assassin")) { 
             position = position.asLayer(22);
             Boolean bribed = entityInfo.getBoolean("bribed");
             Boolean mindControlled = entityInfo.getBoolean("mindControlled");
@@ -289,7 +289,7 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newAssassin);
             newAssassin.setMovementState(movementState);
             return newAssassin;
-        } else if (type.startsWith("hydra")) { ////////
+        } else if (type.startsWith("hydra")) {
             position = position.asLayer(23);
             int damageMultiplier = entityInfo.getInt("damageMultiplier");
             String movement= entityInfo.getString("movementState");
@@ -306,7 +306,7 @@ public class GameLoader {
             MovementState movementState = extractMovementState(movement, newHydra);
             newHydra.setMovementState(movementState);
             return newHydra;
-        } else if (type.startsWith("swamp_tile")) { /////////
+        } else if (type.startsWith("swamp_tile")) {
             position = position.asLayer(1);
             int movementFactor = entityInfo.getInt("movementFactor");
             SwampTile newSwampTile = new SwampTile(position, movementFactor);
@@ -314,30 +314,29 @@ public class GameLoader {
         } else if (type.startsWith("sun_stone")) {
             position = position.asLayer(25);
             return new SunStone(position);
-        } else if (type.startsWith("anduril")) { /////
+        } else if (type.startsWith("anduril")) {
             Anduril newAnduril = new Anduril(position);
             position = position.asLayer(26);
             int durability = entityInfo.getInt("durability");
             newAnduril.setDurability(durability);
             return newAnduril;
-        } else if (type.startsWith("sceptre")) { /////////
+        } else if (type.startsWith("sceptre")) {
             Sceptre newSceptre = new Sceptre();
             return newSceptre;
-        } else if (type.startsWith("midnight_armour")) { ///////
+        } else if (type.startsWith("midnight_armour")) {
             MidnightArmour newMidnightArmour = new MidnightArmour();
             int durability = entityInfo.getInt("durability");
-            int bonusAttackDamage = entityInfo.getInt("bonusAttackDamage");
             newMidnightArmour.setDurability(durability);
-            newMidnightArmour.setAttackDamage(bonusAttackDamage);
             return newMidnightArmour;
         } else if (type.startsWith("time_turner")) {
             position = position.asLayer(29);
             return new TimeTurner(position);
+        } else if () {
+
         } else if (type.startsWith("player")) {
             position = position.asLayer(31);
-            Player player = new Player(position, mode.initialHealth());
             int health = entityInfo.getInt("health");
-            player.setHealth(health);
+            Player player = new Player(position, health);
             JSONArray inventory = entityInfo.getJSONArray("inventory");
             for (int i = 0; i < inventory.length(); i++) {
                 JSONObject item = inventory.getJSONObject(i);
