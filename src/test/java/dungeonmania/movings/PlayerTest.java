@@ -502,11 +502,11 @@ public class PlayerTest {
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
-        Sword sword = new Sword(new Position(2, 1));
-        game.addEntity(sword);
+        Arrow arrow = new Arrow(new Position(2, 1));
+        game.addEntity(arrow);
 
-        // The sword exists in the game, but the player does not have it in their inventory, so should throw exception
-        assertThrows(InvalidActionException.class, () -> player.move(game, Direction.RIGHT, sword.getId()));
+        // The arrow exists in the game, but the player does not have it in their inventory, so should throw exception
+        assertThrows(InvalidActionException.class, () -> player.move(game, Direction.RIGHT, arrow.getId()));
     }
 
     @Test

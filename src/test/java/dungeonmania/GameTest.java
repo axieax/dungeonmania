@@ -2,10 +2,13 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.mode.Mode;
@@ -277,6 +280,9 @@ public class GameTest {
         assertTrue(builtBow);
     }
 
+    /**
+     * This tests that the player's spawn location is correct regardless of where the player is
+     */
     @Test
     public void testPlayerSpawnLocation() {
         Mode mode = new Standard();
@@ -304,7 +310,9 @@ public class GameTest {
         assertTrue(new Position(1, 1).equals(newGame.getPlayerSpawnLocation()));
     }
     
-    
+    /**
+     * This tests that the player interacts as intended
+     */
     @Test
     public void testInteract() {
         Mode mode = new Standard();
@@ -350,5 +358,56 @@ public class GameTest {
 
         assertDoesNotThrow(() -> newGame.interact(mercenaryId));
         assertEquals (1, gamePlayer.getAllies().size());
+    }
+
+    /**
+     * This tests that the game ticks as intended
+     */
+    @Test
+    public void testTick() {
+        Mode mode = new Standard();
+        Game newGame = new Game(
+            "advanced",
+            EntityFactory.extractEntities("advanced", mode),
+            null,
+            mode
+        );
+
+        Player gamePlayer = null;
+
+        for (Entity entity : newGame.getEntities()) {
+            if (entity.getClass().getSimpleName().toLowerCase().equals("player")) {
+                gamePlayer = (Player) entity;
+            }
+        }
+
+        assertThrows(IllegalArgumentException.class, () -> newGame.tick("", Direction.NONE));
+        
+        assertTrue(newGame.getEntity("non-existent-item") == null);
+        assertThrows(InvalidActionException.class, () -> newGame.tick("non-existentitem", Direction.NONE));
+
+        // Pickup sword
+        for (int i = 0; i < 5; i++) {
+            newGame.tick(null, Direction.RIGHT);
+        }
+
+        // Sword is not a valid item to use
+        String swordId = gamePlayer.findInventoryItem("sword").getId();
+        assertThrows(IllegalArgumentException.class, () -> newGame.tick(swordId, Direction.NONE));
+
+        // Pickup bomb
+        for (int i = 0; i < 5; i++) {
+            newGame.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 3; i++) {
+            newGame.tick(null, Direction.DOWN);
+        }
+        for (int i = 0; i < 2; i++) {
+            newGame.tick(null, Direction.RIGHT);
+        }
+
+        // Bomb is a valid item to use
+        String bombId = gamePlayer.findInventoryItem("bomb").getId();
+        assertDoesNotThrow(() -> newGame.tick(bombId, Direction.NONE));
     }
 }
