@@ -2,10 +2,12 @@ package dungeonmania.model.entities;
 
 import org.json.JSONObject;
 
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
 
 public abstract class DefenceEquipment extends Equipment {
+
     private double defenceMultiplier;
     private int bonusAttackDamage = 0;
 
@@ -27,16 +29,16 @@ public abstract class DefenceEquipment extends Equipment {
     }
 
     @Override
-    public double useEquipment(Player player) {
-        super.useEquipment(player);
-        return defenceMultiplier;
+    public double useEquipment(Player player, Entity enemy) {
+        super.useEquipment(player, enemy);
+        return ((MovingEntity) enemy).getBaseAttackDamage() * defenceMultiplier;
     }
-
+    
     @Override 
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put ("defenceMultiplier", defenceMultiplier);
-        info.put ("bonusAttackDamage", bonusAttackDamage);
+        info.put("defenceMultiplier", defenceMultiplier);
+        info.put("bonusAttackDamage", bonusAttackDamage);
         return info;
     }
 }

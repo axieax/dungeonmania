@@ -44,10 +44,7 @@ public class TimeTravelBattleTest {
 
         // next tick, old player should continue to next path
         resp = dmc.tick(null, Direction.NONE);
-        assertEquals(
-            new Position(18, 13),
-            TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-        );
+        assertEquals(new Position(18, 13), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
     }
 
     /**
@@ -72,7 +69,9 @@ public class TimeTravelBattleTest {
 
         // build midnight armour
         resp = dmc.build("midnight_armour");
-        assertTrue(resp.getInventory().stream().anyMatch(e -> e.getType().startsWith("midnight_armour")));
+        assertTrue(
+            resp.getInventory().stream().anyMatch(e -> e.getType().startsWith("midnight_armour"))
+        );
 
         // go left and wait for player
         resp = TimeTravelUtil.tickMovement(dmc, Direction.LEFT, 5);
@@ -88,10 +87,7 @@ public class TimeTravelBattleTest {
 
         // next tick, old player should continue to next path
         resp = dmc.tick(null, Direction.NONE);
-        assertEquals(
-            new Position(18, 13),
-            TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-        );
+        assertEquals(new Position(18, 13), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
     }
 
     /**
@@ -108,8 +104,12 @@ public class TimeTravelBattleTest {
         resp = TimeTravelUtil.tickMovement(dmc, Direction.DOWN, 1);
 
         // assert that there is no sun stone or midnight armour
-        assertFalse(resp.getInventory().stream().anyMatch(e -> e.getType().startsWith("sun_stone")));
-        assertFalse(resp.getInventory().stream().anyMatch(e -> e.getType().startsWith("midnight_armour")));
+        assertFalse(
+            resp.getInventory().stream().anyMatch(e -> e.getType().startsWith("sun_stone"))
+        );
+        assertFalse(
+            resp.getInventory().stream().anyMatch(e -> e.getType().startsWith("midnight_armour"))
+        );
 
         // go left and wait for player
         resp = TimeTravelUtil.tickMovement(dmc, Direction.LEFT, 4);
@@ -117,7 +117,10 @@ public class TimeTravelBattleTest {
         // wait until old player reaches to current player position
         resp = TimeTravelUtil.tickMovement(dmc, Direction.NONE, 18);
         // consume potion
-        ItemResponse item = TimeTravelUtil.getItemFromInventory(resp.getInventory(), "invisibility_potion");
+        ItemResponse item = TimeTravelUtil.getItemFromInventory(
+            resp.getInventory(),
+            "invisibility_potion"
+        );
         assertNotNull(item);
         resp = dmc.tick(item.getId(), Direction.NONE);
 
@@ -132,10 +135,6 @@ public class TimeTravelBattleTest {
 
         // next tick, old player should continue to next path
         resp = dmc.tick(null, Direction.NONE);
-        assertEquals(
-            new Position(18, 13),
-            TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-        );
+        assertEquals(new Position(18, 13), TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
     }
-
 }

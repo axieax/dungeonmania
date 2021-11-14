@@ -11,9 +11,7 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.potion.Potion;
-import dungeonmania.model.entities.movings.Boss;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
@@ -21,6 +19,7 @@ import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.olderPlayer.OlderPlayer;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -36,8 +35,8 @@ import org.json.JSONObject;
 public class Player extends MovingEntity implements SubjectPlayer {
 
     public static final int CHARACTER_ATTACK_DMG = 10;
-    
-    private int maxCharacterHealth = 100;
+    private final int maxCharacterHealth;
+
     private PlayerState state;
     private boolean inBattle;
     private MovingEntity currentBattleOpponent;
@@ -105,7 +104,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     /**
      * Get maxCharacterHealth attribute
-     * 
+     *
      * @return int
      */
     public int getMaxCharacterHealth() {
@@ -355,7 +354,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
             Item item = getInventoryItem(itemId);
-            
+
             // Check if item is in the player's inventory
             if (item == null) throw new InvalidActionException(
                 "At Player move method - itemUsed is not in the player's inventory"
@@ -376,8 +375,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(
             entity -> {
-                // Cannot interact with moving entities when moving
-                if (!(entity instanceof MovingEntity)) entity.interact(game, this);
+                // Cannot interact with moving entities or spawners when moving
+                if (!(entity instanceof MovingEntity || entity instanceof ZombieToastSpawner))
+                    entity.interact(game, this);
             }
         );
 
@@ -389,7 +389,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
         }
-        
+
         this.state.updateState(this);
         // should be notified regardless of if player can move e.g. if player drinks invincibility potion
         this.notifyObservers();
@@ -474,11 +474,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
-            damageToOpponent += e.getHitRate() * e.useEquipment(this);
-            
-            // If the opponent is a boss, andurils deal triple the damage
-            if (opponent instanceof Boss && e instanceof Anduril)
-                damageToOpponent += e.getHitRate() * e.useEquipment(this) * 2;
+            damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
         }
 
         // Any extra attack damage provided by defence equipments
@@ -504,7 +500,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public int applyDefenceToOpponentAttack(MovingEntity opponent) {
         int finalAttackDamage = opponent.getBaseAttackDamage();
         for (DefenceEquipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage *= e.useEquipment(this);
+            finalAttackDamage = (int) (e.useEquipment(this, opponent));
         }
         return finalAttackDamage;
     }

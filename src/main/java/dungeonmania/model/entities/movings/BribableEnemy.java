@@ -1,7 +1,5 @@
 package dungeonmania.model.entities.movings;
 
-import org.json.JSONObject;
-
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -14,18 +12,26 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
 import dungeonmania.util.Position;
+import org.json.JSONObject;
 
 public abstract class BribableEnemy extends Enemy {
+
     public static final int BATTLE_RADIUS = 5;
     public static final int MAX_DISTANCE_TO_BRIBE = 2;
     public static final double ARMOUR_DROP_RATE = 0.25;
-    
+
     private boolean bribed;
     private boolean mindControlled;
     private boolean moveTwice;
     private int mindControlTicks = 10;
 
-    public BribableEnemy(String prefix, Position position, int health, int attackDamage, int damageMultiplier) {
+    public BribableEnemy(
+        String prefix,
+        Position position,
+        int health,
+        int attackDamage,
+        int damageMultiplier
+    ) {
         super(prefix, position, health, attackDamage, damageMultiplier);
         this.bribed = false;
         this.mindControlled = false;
@@ -81,11 +87,15 @@ public abstract class BribableEnemy extends Enemy {
     @Override
     public void tick(Game game) {
         Player player = (Player) game.getCharacter();
-        
+
         this.move(game);
-        
+
         // If a player is fighting an enemy within the battle radius, BribableEnemy moves twice as fast
-        if (this.isAlive() && moveTwice && getDistanceToPlayer(game, player.getPosition()) <= BATTLE_RADIUS) {
+        if (
+            this.isAlive() &&
+            moveTwice &&
+            getDistanceToPlayer(game, player.getPosition()) <= BATTLE_RADIUS
+        ) {
             moveTwice = false;
             this.move(game);
         }
@@ -106,10 +116,10 @@ public abstract class BribableEnemy extends Enemy {
      * change the state of the enemy to make sure it runs away
      */
     @Override
-    public void update(SubjectPlayer player) { 
+    public void update(SubjectPlayer player) {
         if (!(player instanceof Player)) return;
 
-        Player character = (Player) player; 
+        Player character = (Player) player;
         if (character.getInBattle()) moveTwice = true;
         if (character.getState() instanceof PlayerInvincibleState && !this.isBribed()) {
             this.setMovementState(new RunMovementState(this));
@@ -126,8 +136,10 @@ public abstract class BribableEnemy extends Enemy {
      */
     @Override
     public void interact(Game game, Entity character) {
-        if (character instanceof Player && !mindControl(game, (Player) character))
-            bribe(game, (Player) character);
+        if (character instanceof Player && !mindControl(game, (Player) character)) bribe(
+            game,
+            (Player) character
+        );
     }
 
     /**
@@ -144,12 +156,12 @@ public abstract class BribableEnemy extends Enemy {
     @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put ("bribed", bribed); 
-        info.put ("mindControlled", mindControlled);  
-        info.put ("moveTwice", moveTwice);  
-        info.put ("mindControlTicks", mindControlTicks);    
-        return info;   
-    } 
+        info.put("bribed", bribed);
+        info.put("mindControlled", mindControlled);
+        info.put("moveTwice", moveTwice);
+        info.put("mindControlTicks", mindControlTicks);
+        return info;
+    }
 
     /**
      * Condition for player to bribe the enemy

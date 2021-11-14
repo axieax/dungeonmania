@@ -2,8 +2,6 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.movings.Mercenary;
@@ -14,6 +12,7 @@ import dungeonmania.model.mode.Peaceful;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class TheOneRingTest {
@@ -43,7 +42,7 @@ public class TheOneRingTest {
         Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
-        assertTrue(new Position(1, 1).equals(player.getPosition()));        
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
 
         assertTrue(game.getEntity(ring.getId()) == null);
         assertTrue(player.getInventoryItem(ring.getId()).equals(ring));
@@ -65,7 +64,7 @@ public class TheOneRingTest {
         assertTrue(player.getInventoryItem(ring.getId()).equals(ring));
 
         // After collecting the ring, the player then engages in a series of battles until it is 'defeated'.
-        
+
         // Initially, the player's health is 100
         assertTrue(player.getHealth() == 100);
 
@@ -74,7 +73,11 @@ public class TheOneRingTest {
         // Player health - (50 * 5) / 10 --> e.g. 100 - 25 = 75.
         int previousHealth = 100;
         for (int i = 0; i < 3; i++) {
-            Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+            Mercenary mercenary = new Mercenary(
+                new Position(1, 2),
+                mode.damageMultiplier(),
+                player
+            );
             game.addEntity(mercenary);
             game.tick(null, Direction.NONE);
 
@@ -85,7 +88,11 @@ public class TheOneRingTest {
         // Continue spawning mercenaries until the player is 'defeated'.
         // Since the player has the one ring, they should respawn to full health and continue battling.
         for (int i = 0; i < 20; i++) {
-            Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+            Mercenary mercenary = new Mercenary(
+                new Position(1, 2),
+                mode.damageMultiplier(),
+                player
+            );
             game.addEntity(mercenary);
             game.tick(null, Direction.NONE);
 
@@ -111,10 +118,9 @@ public class TheOneRingTest {
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
         assertTrue(player.getInventoryItem(ring.getId()).equals(ring));
-        
+
         Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-        
 
         // Set the player's health to 25.
         // Normally, player's health upon battling the mercenary would be 25 - (50 * 5) / 10 = 0
@@ -139,7 +145,11 @@ public class TheOneRingTest {
         // Spawn mercenaries next to the player - upon ticking, the mercenary would move to the player
         // Since this is peaceful mode, the player's health will not change, so mercenaries will always die
         for (int i = 0; i < 50; i++) {
-            Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+            Mercenary mercenary = new Mercenary(
+                new Position(1, 2),
+                mode.damageMultiplier(),
+                player
+            );
             game.addEntity(mercenary);
             game.tick(null, Direction.NONE);
 

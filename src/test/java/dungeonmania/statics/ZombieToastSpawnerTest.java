@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -20,6 +18,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class ZombieToastSpawnerTest {
@@ -44,7 +43,7 @@ public class ZombieToastSpawnerTest {
     public void zombieToastSpawnEveryCycle() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
         game.addEntity(new Player(new Position(10, 10), mode.initialHealth()));
@@ -76,7 +75,7 @@ public class ZombieToastSpawnerTest {
     public void zombieToastSurroundedByWalls() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
 
@@ -112,7 +111,7 @@ public class ZombieToastSpawnerTest {
     public void zombieToastCannotSpawn() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
 
@@ -136,7 +135,7 @@ public class ZombieToastSpawnerTest {
             }
         }
     }
-    
+
     /**
      * Test if player can destroy spawner if they have a weapon and are cardinally adjacent to the spawner.
      */
@@ -144,22 +143,22 @@ public class ZombieToastSpawnerTest {
     public void zombieToastDestroySpawner() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(0, 1), mode.tickRate());
         game.addEntity(spawner);
-        
+
         game.addEntity(new Sword(new Position(2, 1)));
 
         Player player = new Player(new Position(2, 2), mode.initialHealth());
         game.addEntity(player);
-        
+
         // Player picks up sword
         player.move(game, Direction.UP);
 
         // Player moves to the right of the zombie toast spawner
         player.move(game, Direction.LEFT);
         assertTrue(game.getEntity(spawner.getId()) != null);
-        
+
         // They will interact with it, destroying the zombie toast spawner with the sword
         game.interact(spawner.getId());
         assertTrue(game.getEntity(spawner.getId()) == null);
@@ -172,13 +171,13 @@ public class ZombieToastSpawnerTest {
     public void DestroyZombieToastSpawnerWithoutWeapon() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(1, 1), mode.tickRate());
         game.addEntity(spawner);
-        
+
         Player player = new Player(new Position(1, 0), mode.initialHealth());
         game.addEntity(player);
-        
+
         assertThrows(InvalidActionException.class, () -> game.interact(spawner.getId()));
     }
 
@@ -197,7 +196,7 @@ public class ZombieToastSpawnerTest {
 
         Player player = new Player(new Position(2, 2), mode.initialHealth());
         game.addEntity(player);
-        
+
         // Player picks up sword
         player.move(game, Direction.UP);
 

@@ -1,11 +1,5 @@
 package dungeonmania.model.entities.movings;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-import org.json.JSONObject;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
@@ -15,12 +9,15 @@ import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.mode.Hard;
 import dungeonmania.util.Position;
+import java.util.Random;
+import org.json.JSONObject;
 
 public class Hydra extends Enemy implements Boss {
+
     public static final int MAX_HYDRA_HEALTH = 50;
     public static final int MAX_HYDRA_ATTACK_DMG = 5;
     public static final int HYDRA_TICK_RATE = 50;
-    
+
     private boolean preventHeadRespawn;
 
     public Hydra(Position position, int damageMultiplier, SubjectPlayer player) {
@@ -64,40 +61,20 @@ public class Hydra extends Enemy implements Boss {
     public void tick(Game game) {
         this.move(game);
     }
-    
+
     public static void spawnHydra(Game game, int damageMultiplier) {
         // Hydra only spawns in hard mode
         if (!(game.getMode() instanceof Hard)) return;
 
         int tick = game.getTick();
         if (tick != 0 && tick % HYDRA_TICK_RATE == 0) {
-            // Choose a random entity in the dungeon and spawn on it
-            List<Entity> entities = game.getEntities();
-            Collections.shuffle(entities);
-
-            boolean canSpawn = false;
-            Position position = null;
-            for (Entity e : entities) {
-                position = e.getPosition();
-                List<Entity> entitiesAtPos = game.getEntities(position);
-                if (canHydraMoveOntoPosition(entitiesAtPos)) {
-                    canSpawn = true;
-                    break;
-                }
+            Position spawnPos = game.getPlayerSpawnLocation();
+            if(spawnPos.equals(game.getCharacterPosition())) {
+                // don't spawn
+                return;
             }
-
-            if (canSpawn) {
-                game.addEntity(new Hydra(position, damageMultiplier, game.getCharacter()));
-            }
+            game.addEntity(new Hydra(spawnPos, damageMultiplier, game.getCharacter()));
         }
-    }
-
-	private static boolean canHydraMoveOntoPosition(List<Entity> entitiesAtPos) {
-        for (Entity e : entitiesAtPos) {
-            if (!e.isPassable()) return false;
-        }
-
-        return true;
     }
 
     /**

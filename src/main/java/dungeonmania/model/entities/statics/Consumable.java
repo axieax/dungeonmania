@@ -4,7 +4,6 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.player.Player;
 
 public interface Consumable {
-    
     /**
      * Apply any effects of any consumable item
      * @param game

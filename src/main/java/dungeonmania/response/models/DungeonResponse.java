@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class DungeonResponse {
+
     private final String dungeonId;
     private final String dungeonName;
     private final List<EntityResponse> entities;
@@ -12,14 +13,26 @@ public final class DungeonResponse {
     private final String goals;
     private final List<AnimationQueue> animations;
 
-    public DungeonResponse(String dungeonId, String dungeonName, List<EntityResponse> entities,
-            List<ItemResponse> inventory, List<String> buildables, String goals) {
+    public DungeonResponse(
+        String dungeonId,
+        String dungeonName,
+        List<EntityResponse> entities,
+        List<ItemResponse> inventory,
+        List<String> buildables,
+        String goals
+    ) {
         this(dungeonId, dungeonName, entities, inventory, buildables, goals, new ArrayList<>());
     }
 
-    public DungeonResponse(String dungeonId, String dungeonName, List<EntityResponse> entities,
-            List<ItemResponse> inventory, List<String> buildables, String goals,
-            List<AnimationQueue> animations) {
+    public DungeonResponse(
+        String dungeonId,
+        String dungeonName,
+        List<EntityResponse> entities,
+        List<ItemResponse> inventory,
+        List<String> buildables,
+        String goals,
+        List<AnimationQueue> animations
+    ) {
         this.dungeonId = dungeonId;
         this.dungeonName = dungeonName;
         this.entities = entities;

@@ -1,8 +1,7 @@
 package dungeonmania.buildables;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
 
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.buildables.Bow;
@@ -16,10 +15,11 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class BowTest {
-    
+
     /**
      * Test whether the buildable entity can be built by the Player.
      */
@@ -92,14 +92,19 @@ public class BowTest {
         Bow bow = (Bow) player.findInventoryItem("bow");
         assertTrue(bow.getDurability() == initialDurability);
 
-        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(3, 3), mode.damageMultiplier());
+        ZombieToastSpawner spawner = new ZombieToastSpawner(
+            new Position(3, 3),
+            mode.damageMultiplier()
+        );
         game.addEntity(spawner);
 
         player.move(game, Direction.RIGHT);
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the bow
         // Durability of bow decreases by 1
-        game.interact(spawner.getId());
+        assertDoesNotThrow(() -> {
+            game.interact(spawner.getId());
+        });
         assertTrue(bow.getDurability() == initialDurability - 1);
     }
 

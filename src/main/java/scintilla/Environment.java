@@ -1,20 +1,21 @@
 package scintilla;
 
 public class Environment {
+
     private static final String PREFIX = "scintilla:";
 
-    private volatile static String IPAddress = null;
-    private volatile static Integer Port = null;
-    private volatile static Boolean IsHeadless = null;
-    private volatile static Boolean IsSecure = null;
+    private static volatile String IPAddress = null;
+    private static volatile Integer Port = null;
+    private static volatile Boolean IsHeadless = null;
+    private static volatile Boolean IsSecure = null;
 
-    public synchronized final static String getIPAddress() {
+    public static final synchronized String getIPAddress() {
         return (IPAddress == null && (IPAddress = System.getenv(PREFIX + "ADDRESS")) == null)
             ? IPAddress = "localhost" // default to localhost
             : IPAddress;
     }
 
-    public synchronized final static int getPort() {
+    public static final synchronized int getPort() {
         if (Port != null) return Port;
         try {
             return Port = Integer.parseInt(System.getenv(PREFIX + "PORT"));
@@ -22,12 +23,16 @@ public class Environment {
             return Port = 4568;
         }
     }
-    
-    public synchronized final static boolean isHeadless() {
-        return IsHeadless != null ? IsHeadless.booleanValue() : (IsHeadless = (System.getenv(PREFIX + "HEADLESS") != null));
+
+    public static final synchronized boolean isHeadless() {
+        return IsHeadless != null
+            ? IsHeadless.booleanValue()
+            : (IsHeadless = (System.getenv(PREFIX + "HEADLESS") != null));
     }
 
-    public synchronized final static boolean isSecure() {
-        return IsSecure != null ? IsSecure.booleanValue() : (IsSecure = (System.getenv(PREFIX + "SECURE") != null));
+    public static final synchronized boolean isSecure() {
+        return IsSecure != null
+            ? IsSecure.booleanValue()
+            : (IsSecure = (System.getenv(PREFIX + "SECURE") != null));
     }
 }

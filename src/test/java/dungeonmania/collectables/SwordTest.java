@@ -1,5 +1,6 @@
 package dungeonmania.collectables;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.model.Game;
@@ -68,14 +69,19 @@ public class SwordTest {
         int initialDurability = 5;
         assertTrue(sword.getDurability() == initialDurability);
 
-        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(3, 1), mode.damageMultiplier());
+        ZombieToastSpawner spawner = new ZombieToastSpawner(
+            new Position(3, 1),
+            mode.damageMultiplier()
+        );
         game.addEntity(spawner);
 
         player.move(game, Direction.RIGHT);
 
         // Player is now next to the zombie toast spawner and will proceed to destroy it with the sword
         // Durability of sword decreases by 1 each time it battles (within one tick)
-        game.interact(spawner.getId());
+        assertDoesNotThrow(() -> {
+            game.interact(spawner.getId());
+        });
         Entity item = player.findInventoryItem("sword");
         assertTrue(item == null || ((Sword) item).getDurability() != initialDurability);
     }
@@ -100,7 +106,11 @@ public class SwordTest {
 
         // Player moves to attack the mercenaries with the sword
         for (int i = 0; i < 5; i++) {
-            Mercenary mercenary = new Mercenary(new Position(1, 2 + i), mode.damageMultiplier(), player);
+            Mercenary mercenary = new Mercenary(
+                new Position(1, 2 + i),
+                mode.damageMultiplier(),
+                player
+            );
             game.addEntity(mercenary);
             player.move(game, Direction.DOWN);
 
@@ -108,7 +118,7 @@ public class SwordTest {
             assertTrue(game.getEntity(mercenary.getId()) == null);
             player.setHealth(100);
         }
-    
+
         // Since swords only have 5 durability, it is guaranteed to be removed from the player's inventory
         assertTrue(player.getInventoryItem(sword.getId()) == null);
     }

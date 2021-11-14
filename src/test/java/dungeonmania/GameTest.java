@@ -2,9 +2,9 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.exceptions.InvalidActionException;
@@ -212,7 +212,7 @@ public class GameTest {
         newGame.tick(null, Direction.LEFT);
         assertTrue(new Position(1, 1).equals(newGame.getPlayerSpawnLocation()));
     }
-    
+
     /**
      * This tests that the player interacts as intended
      */
@@ -268,9 +268,12 @@ public class GameTest {
         }
 
         assertThrows(IllegalArgumentException.class, () -> newGame.tick("", Direction.NONE));
-        
+
         assertTrue(newGame.getEntity("non-existent-item") == null);
-        assertThrows(InvalidActionException.class, () -> newGame.tick("non-existent-item", Direction.NONE));
+        assertThrows(
+            InvalidActionException.class,
+            () -> newGame.tick("non-existent-item", Direction.NONE)
+        );
 
         // Pickup sword
         TestHelpers.gameTickMovement(newGame, Direction.RIGHT, 5);

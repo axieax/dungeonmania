@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import org.junit.jupiter.api.Test;
 
 public class SunStoneTest {
@@ -88,7 +87,7 @@ public class SunStoneTest {
         // Player unlocks door with sunstone
         game.tick(null, Direction.RIGHT);
         assertEquals(player.getPosition(), door.getPosition());
-        
+
         // Sunstone is not consumed
         assertTrue(player.getInventoryItem(stone.getId()).equals(stone));
     }
@@ -143,7 +142,6 @@ public class SunStoneTest {
                 new Wood(new Position(2, 1)),
                 new Key(new Position(3, 1), 1),
                 new SunStone(new Position(4, 1))
-                
             ),
             new ExitCondition(),
             mode
@@ -183,7 +181,6 @@ public class SunStoneTest {
                 new Treasure(new Position(2, 1)),
                 new SunStone(new Position(4, 1)),
                 new SunStone(new Position(4, 1))
-                
             ),
             new ExitCondition(),
             mode
@@ -198,7 +195,7 @@ public class SunStoneTest {
         assertEquals(player.getPosition(), new Position(4, 1));
 
         assertEquals(player.getInventoryResponses().size(), 4);
-        
+
         // Building the shield
         assertDoesNotThrow(() -> game.build("sceptre"));
 
@@ -216,7 +213,12 @@ public class SunStoneTest {
     @Test
     public void testBribeMercenaryWithSunstone() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -226,7 +228,7 @@ public class SunStoneTest {
 
         SunStone sunStone = new SunStone(new Position(1, 2));
         game.addEntity(sunStone);
-        
+
         // Player picks up the sunstone
         player.move(game, Direction.DOWN);
         Position updatedPlayerPos = new Position(1, 2);
@@ -244,16 +246,23 @@ public class SunStoneTest {
 
         // Mercenary stays either next to or on top of the player regardless of where the latter moves
         // Since mercenary is bribed, it will not engage in battle with the player
-        List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
+        List<Direction> possibleDirections = Arrays.asList(
+            Direction.UP,
+            Direction.RIGHT,
+            Direction.LEFT,
+            Direction.DOWN
+        );
         Random rand = new Random(5);
         for (int i = 0; i < 100; i++) {
             int index = rand.nextInt(100) % 4;
-            Direction movementDirection = possibleDirections.get(index); 
+            Direction movementDirection = possibleDirections.get(index);
 
             game.tick(null, movementDirection);
 
             // Exit the loop if the player or mercenary has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null
+            ) {
                 break;
             }
 
@@ -272,7 +281,12 @@ public class SunStoneTest {
     @Test
     public void testBribeAssassinWithSunstone() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -285,7 +299,7 @@ public class SunStoneTest {
 
         TheOneRing ring = new TheOneRing(new Position(1, 3));
         game.addEntity(ring);
-        
+
         // Player picks up the sunstone and ring
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
@@ -305,16 +319,23 @@ public class SunStoneTest {
 
         // Assassin stays either next to or on top of the player regardless of where the latter moves
         // Since assassin is bribed, it will not engage in battle with the player
-        List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
+        List<Direction> possibleDirections = Arrays.asList(
+            Direction.UP,
+            Direction.RIGHT,
+            Direction.LEFT,
+            Direction.DOWN
+        );
         Random rand = new Random(5);
         for (int i = 0; i < 100; i++) {
             int index = rand.nextInt(100) % 4;
-            Direction movementDirection = possibleDirections.get(index); 
+            Direction movementDirection = possibleDirections.get(index);
 
             game.tick(null, movementDirection);
 
             // Exit the loop if the player or assassin has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null
+            ) {
                 break;
             }
 
