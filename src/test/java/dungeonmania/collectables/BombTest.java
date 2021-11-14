@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
@@ -21,6 +19,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class BombTest {
@@ -33,7 +32,7 @@ public class BombTest {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Bomb bomb = new Bomb(new Position(1, 1));
         game.addEntity(bomb);
-        
+
         assertTrue(new Position(1, 1).equals(game.getEntity(bomb.getId()).getPosition()));
     }
 
@@ -51,7 +50,7 @@ public class BombTest {
         game.addEntity(player);
         player.move(game, Direction.RIGHT);
 
-        assertTrue(new Position(1, 1).equals(player.getPosition()));        
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
 
         assertTrue(game.getEntity(bomb.getId()) == null);
         assertTrue(player.getInventoryItem(bomb.getId()).equals(bomb));
@@ -73,7 +72,7 @@ public class BombTest {
 
         assertTrue(player.getInventoryItem(bomb.getId()).equals(bomb));
         game.tick(null, Direction.RIGHT);
-        
+
         // Place bomb
         game.tick(bomb.getId(), Direction.NONE);
         assertTrue(game.getEntity(bomb.getId()) != null);
@@ -134,7 +133,7 @@ public class BombTest {
         game.addEntity(treasure);
         game.addEntity(portal1);
         game.addEntity(portal2);
-        
+
         // Collect bombs (this is necessary since bombs cannot explode if not picked up by player)
         game.tick(null, Direction.UP);
         game.tick(null, Direction.RIGHT);

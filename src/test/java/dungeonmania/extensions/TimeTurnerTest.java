@@ -64,19 +64,14 @@ public class TimeTurnerTest {
         TimeTravelUtil.goToTimeTurnerFromSpawnPoint(dmc);
 
         // try to rewind more than 2 moves
-        assertDoesNotThrow(
-            () -> {
-                DungeonResponse resp = dmc.rewind(3);
-                assertEquals(
-                    new Position(1, 13),
-                    TimeTravelUtil.getPlayerPosition(resp.getEntities())
-                );
-                assertEquals(
-                    new Position(1, 11),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
-            }
-        );
+        assertDoesNotThrow(() -> {
+            DungeonResponse resp = dmc.rewind(3);
+            assertEquals(new Position(1, 13), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
+            assertEquals(
+                new Position(1, 11),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
+        });
     }
 
     @Test
@@ -87,19 +82,14 @@ public class TimeTurnerTest {
         TimeTravelUtil.goToTimeTurnerFromSpawnPoint(dmc);
 
         // try to rewind 2 moves
-        assertDoesNotThrow(
-            () -> {
-                DungeonResponse resp = dmc.rewind(2);
-                assertEquals(
-                    new Position(1, 13),
-                    TimeTravelUtil.getPlayerPosition(resp.getEntities())
-                );
-                assertEquals(
-                    new Position(1, 11),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
-            }
-        );
+        assertDoesNotThrow(() -> {
+            DungeonResponse resp = dmc.rewind(2);
+            assertEquals(new Position(1, 13), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
+            assertEquals(
+                new Position(1, 11),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
+        });
     }
 
     /**
@@ -114,38 +104,27 @@ public class TimeTurnerTest {
         assertDoesNotThrow(() -> dmc.tick(null, Direction.RIGHT));
 
         // try to rewind 1 move
-        assertDoesNotThrow(
-            () -> {
-                DungeonResponse resp = dmc.rewind(1);
-                assertEquals(
-                    new Position(2, 13),
-                    TimeTravelUtil.getPlayerPosition(resp.getEntities())
-                );
-                assertEquals(
-                    new Position(1, 13),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
+        assertDoesNotThrow(() -> {
+            DungeonResponse resp = dmc.rewind(1);
+            assertEquals(new Position(2, 13), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
+            assertEquals(
+                new Position(1, 13),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
 
-                // checks past player moves right
-                resp = dmc.tick(null, Direction.RIGHT);
-                assertEquals(
-                    new Position(2, 13),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
-                assertEquals(
-                    new Position(3, 13),
-                    TimeTravelUtil.getPlayerPosition(resp.getEntities())
-                );
+            // checks past player moves right
+            resp = dmc.tick(null, Direction.RIGHT);
+            assertEquals(
+                new Position(2, 13),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
+            assertEquals(new Position(3, 13), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
 
-                // old player should disappear
-                resp = dmc.tick(null, Direction.RIGHT);
-                assertEquals(null, TimeTravelUtil.getOldPlayer(resp.getEntities()));
-                assertEquals(
-                    new Position(4, 13),
-                    TimeTravelUtil.getPlayerPosition(resp.getEntities())
-                );
-            }
-        );
+            // old player should disappear
+            resp = dmc.tick(null, Direction.RIGHT);
+            assertEquals(null, TimeTravelUtil.getOldPlayer(resp.getEntities()));
+            assertEquals(new Position(4, 13), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
+        });
     }
 
     /**
@@ -164,50 +143,45 @@ public class TimeTurnerTest {
         assertDoesNotThrow(() -> dmc.tick(null, Direction.RIGHT));
 
         // try to rewind 5 move
-        assertDoesNotThrow(
-            () -> {
-                DungeonResponse resp = dmc.rewind(5);
-                assertEquals(
-                    new Position(4, 13),
-                    TimeTravelUtil.getPlayerPosition(resp.getEntities())
-                );
-                assertEquals(
-                    new Position(1, 13),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
+        assertDoesNotThrow(() -> {
+            DungeonResponse resp = dmc.rewind(5);
+            assertEquals(new Position(4, 13), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
+            assertEquals(
+                new Position(1, 13),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
 
-                // checks past player movements
-                resp = dmc.tick(null, Direction.NONE);
-                assertEquals(
-                    new Position(2, 13),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
-                resp = dmc.tick(null, Direction.NONE);
-                assertEquals(
-                    new Position(3, 13),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
-                resp = dmc.tick(null, Direction.NONE);
-                assertEquals(
-                    new Position(3, 12),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
-                resp = dmc.tick(null, Direction.NONE);
-                assertEquals(
-                    new Position(3, 13),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
+            // checks past player movements
+            resp = dmc.tick(null, Direction.NONE);
+            assertEquals(
+                new Position(2, 13),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
+            resp = dmc.tick(null, Direction.NONE);
+            assertEquals(
+                new Position(3, 13),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
+            resp = dmc.tick(null, Direction.NONE);
+            assertEquals(
+                new Position(3, 12),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
+            resp = dmc.tick(null, Direction.NONE);
+            assertEquals(
+                new Position(3, 13),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
 
-                // old player be on the tile where the current player used the time turner
-                Position currPos = TimeTravelUtil.getPlayerPosition(resp.getEntities());
-                resp = dmc.tick(null, Direction.RIGHT);
-                assertEquals(currPos, TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
+            // old player be on the tile where the current player used the time turner
+            Position currPos = TimeTravelUtil.getPlayerPosition(resp.getEntities());
+            resp = dmc.tick(null, Direction.RIGHT);
+            assertEquals(currPos, TimeTravelUtil.getOldPlayerPosition(resp.getEntities()));
 
-                // old player should now disappear
-                resp = dmc.tick(null, Direction.NONE);
-                assertEquals(null, TimeTravelUtil.getOldPlayer(resp.getEntities()));
-            }
-        );
+            // old player should now disappear
+            resp = dmc.tick(null, Direction.NONE);
+            assertEquals(null, TimeTravelUtil.getOldPlayer(resp.getEntities()));
+        });
     }
 
     /**
@@ -221,25 +195,20 @@ public class TimeTurnerTest {
         TimeTravelUtil.goToTimeTurnerFromSpawnPoint(dmc);
 
         // try to rewind 1 move
-        assertDoesNotThrow(
-            () -> {
-                DungeonResponse resp = dmc.rewind(1);
-                assertEquals(
-                    new Position(1, 13),
-                    TimeTravelUtil.getPlayerPosition(resp.getEntities())
-                );
-                assertEquals(
-                    new Position(1, 12),
-                    TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
-                );
+        assertDoesNotThrow(() -> {
+            DungeonResponse resp = dmc.rewind(1);
+            assertEquals(new Position(1, 13), TimeTravelUtil.getPlayerPosition(resp.getEntities()));
+            assertEquals(
+                new Position(1, 12),
+                TimeTravelUtil.getOldPlayerPosition(resp.getEntities())
+            );
 
-                // past player starts battle with current player
-                resp = dmc.tick(null, Direction.NONE);
-                assertTrue(
-                    TimeTravelUtil.getOldPlayer(resp.getEntities()) == null ||
-                    TimeTravelUtil.getPlayer(resp.getEntities()) == null
-                );
-            }
-        );
+            // past player starts battle with current player
+            resp = dmc.tick(null, Direction.NONE);
+            assertTrue(
+                TimeTravelUtil.getOldPlayer(resp.getEntities()) == null ||
+                TimeTravelUtil.getPlayer(resp.getEntities()) == null
+            );
+        });
     }
 }

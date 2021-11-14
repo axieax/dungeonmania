@@ -1,10 +1,5 @@
 package dungeonmania.model.entities.statics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -14,6 +9,10 @@ import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class ZombieToastSpawner extends Entity implements Tickable {
 
@@ -36,14 +35,16 @@ public class ZombieToastSpawner extends Entity implements Tickable {
     public void interact(Game game, Entity character) throws InvalidActionException {
         if (character instanceof Player) {
             Player player = (Player) character;
-            
+
             // Check if the player is cardinally adjacent to the spawner
-            game.getCardinallyAdjacentEntities(player.getPosition())
+            game
+                .getCardinallyAdjacentEntities(player.getPosition())
                 .stream()
                 .filter(e -> e.equals(this))
                 .findFirst()
-                .orElseThrow(() -> new InvalidActionException(
-                    "Player is not cardinally adjacent to the spawner"));
+                .orElseThrow(() ->
+                    new InvalidActionException("Player is not cardinally adjacent to the spawner")
+                );
 
             if (player.hasWeapon()) {
                 Equipment weapon = player.getWeapon();
@@ -76,7 +77,7 @@ public class ZombieToastSpawner extends Entity implements Tickable {
                 .forEach(position -> {
                     if (game.getEntities(position).isEmpty()) openSquares.add(position);
                 });
-                
+
             if (!openSquares.isEmpty()) {
                 Random rand = new Random();
                 Position randPosition = openSquares.get(rand.nextInt(openSquares.size()));
@@ -91,4 +92,3 @@ public class ZombieToastSpawner extends Entity implements Tickable {
         }
     }
 }
-

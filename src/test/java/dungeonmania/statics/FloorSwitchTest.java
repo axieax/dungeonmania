@@ -3,8 +3,6 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Boulder;
@@ -14,6 +12,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class FloorSwitchTest {

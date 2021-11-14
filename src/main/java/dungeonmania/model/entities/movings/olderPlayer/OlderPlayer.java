@@ -21,5 +21,4 @@ public class OlderPlayer extends Enemy {
 
     @Override
     public void update(SubjectPlayer player) {}
-
 }

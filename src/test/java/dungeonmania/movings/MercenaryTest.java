@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -69,7 +68,7 @@ public class MercenaryTest {
         List<Entity> entities = TestHelpers.sevenBySevenWallBoundary();
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         entities.add(player);
-        
+
         Game game = new Game("game", entities, new ExitCondition(), mode);
 
         // Move player away from spawning location (otherwise mercenary will immediately die after spawning)
@@ -163,7 +162,7 @@ public class MercenaryTest {
 
         // Mercenary should move to the left or upwards
         assertTrue(
-            (mercenary.getX() == 2 && mercenary.getY() == 3) || 
+            (mercenary.getX() == 2 && mercenary.getY() == 3) ||
             (mercenary.getX() == 3 && mercenary.getY() == 2)
         );
     }
@@ -381,11 +380,12 @@ public class MercenaryTest {
 
         // Mercenary should not be able to go in the door position
         for (int i = 0; i < 100; i++) {
-            
             game.tick(null, Direction.NONE);
 
             // Exit loop if either the player or mercenary has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null
+            ) {
                 break;
             }
 
@@ -414,7 +414,7 @@ public class MercenaryTest {
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntity(mercenary.getId()) == null);
     }
-    
+
     @Test
     public void testBribedMercenaryDoesNotAttack() {
         Mode mode = new Standard();
@@ -430,7 +430,6 @@ public class MercenaryTest {
         game.addEntity(new Treasure(new Position(1, 3)));
         game.addEntity(new Treasure(new Position(1, 4)));
 
-        
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
@@ -446,7 +445,7 @@ public class MercenaryTest {
         // Mercenary in adjacent tile, so bribe (player stil at tile)
         game.interact(mercenary.getId());
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
-        
+
         // Mercenary will not attack the player
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
@@ -471,7 +470,6 @@ public class MercenaryTest {
         game.addEntity(new Treasure(new Position(1, 3)));
         game.addEntity(new Treasure(new Position(1, 4)));
 
-        
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
@@ -491,16 +489,23 @@ public class MercenaryTest {
 
         // Mercenary stays either next to or on top of the player regardless of where the latter moves
         // Since mercenary is bribed, it will not engage in battle with the player
-        List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
+        List<Direction> possibleDirections = Arrays.asList(
+            Direction.UP,
+            Direction.RIGHT,
+            Direction.LEFT,
+            Direction.DOWN
+        );
         Random rand = new Random(5);
         for (int i = 0; i < 100; i++) {
             int index = rand.nextInt(100) % 4;
-            Direction movementDirection = possibleDirections.get(index); 
+            Direction movementDirection = possibleDirections.get(index);
 
             game.tick(null, movementDirection);
 
             // Exit the loop if the player or mercenary has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null
+            ) {
                 break;
             }
 
