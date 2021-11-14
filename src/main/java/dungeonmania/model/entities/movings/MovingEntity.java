@@ -37,7 +37,7 @@ public abstract class MovingEntity extends Entity implements Tickable {
     }
 
     /**
-     * Suicide.
+     * Moving entity loses all of its health
      */
     public void kill() {
         this.health = 0;

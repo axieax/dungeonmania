@@ -10,7 +10,7 @@ public class MidnightArmour extends DefenceEquipment implements Buildable {
     private static final int ARMOUR_NEEDED = 1;
     private static final int SUNSTONE_NEEDED = 1;
 
-    private static final double DEFENCE_MULTIPLIER = 0.3;
+    private static final double DEFENCE_MULTIPLIER = 0.2;
     public static final int BONUS_ATTACK_DAMAGE = 15;
 
     public MidnightArmour() {
