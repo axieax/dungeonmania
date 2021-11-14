@@ -45,12 +45,31 @@ public abstract class BribableEnemy extends Enemy {
         this.bribed = bribed;
     }
 
-    public void setMindControlTicks (int ticks) {
+    public void setMindControlTicks(int ticks) {
         this.mindControlTicks = ticks;
     }
     
-    public void setMoveTwice (Boolean moveTwice) {
+    public void setMoveTwice(Boolean moveTwice) {
         this.moveTwice = moveTwice;
+    }
+    
+    /**
+     * Condition for player to mind control the enemy
+     * @param game
+     * @param player
+     * @return true if conditions are met, false otherwise
+     */
+    public boolean mindControl(Game game, Player player) {
+        // Player must have the sceptre to mindcontrol the mercenary
+        // The effect will only last 10 ticks
+        Item item = player.findInventoryItem("sceptre");
+        
+        if (item == null) return false;
+        
+        player.addAlly(this);
+        this.mindControlTicks = 10;
+        this.mindControlled = true;
+        return true;
     }
     
 
@@ -122,25 +141,6 @@ public abstract class BribableEnemy extends Enemy {
         return positionGraph.bfs(this.getPosition(), playerPos);
     }
 
-    /**
-     * Condition for player to mind control the enemy
-     * @param game
-     * @param player
-     * @return true if conditions are met, false otherwise
-     */
-    public boolean mindControl(Game game, Player player) {
-        // Player must have the sceptre to mindcontrol the mercenary
-        // The effect will only last 10 ticks
-        Item item = player.findInventoryItem("sceptre");
-        
-        if (item == null) return false;
-        
-        player.addAlly(this);
-        this.mindControlTicks = 10;
-        this.mindControlled = true;
-        return true;
-    }
-
     @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
@@ -158,6 +158,4 @@ public abstract class BribableEnemy extends Enemy {
      * @throws InvalidActionException
      */
     public abstract void bribe(Game game, Player player) throws InvalidActionException;
-
-
 }

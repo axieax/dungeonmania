@@ -169,7 +169,7 @@ public class GameLoader {
         } else if (type.startsWith("zombie_toast_spawner")) {
             position = position.asLayer(7);
             return new ZombieToastSpawner(position, mode.tickRate());
-            // Moving Entities
+            // Collectable Entities
         } else if (type.startsWith("treasure")) {
             position = position.asLayer(8);
             return new Treasure(position);
@@ -383,9 +383,9 @@ public class GameLoader {
 
     public static final Mode extractMode(JSONObject dungeon) {
         String gameMode = dungeon.getString("mode");
-        if (gameMode.equals("hard")) return new Hard(); else if (
-            gameMode.equals("standard")
-        ) return new Standard(); else if (gameMode.equals("peaceful")) return new Peaceful();
+        if (gameMode.equals("hard")) return new Hard();
+        else if (gameMode.equals("standard")) return new Standard();
+        else if (gameMode.equals("peaceful")) return new Peaceful();
         return null;
     }
 
