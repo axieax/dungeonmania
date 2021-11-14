@@ -11,9 +11,7 @@ import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.buildables.Buildable;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Key;
-import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.potion.Potion;
-import dungeonmania.model.entities.movings.Boss;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.MovingEntity;
@@ -21,6 +19,7 @@ import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.olderPlayer.OlderPlayer;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -372,10 +371,13 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(entity -> {
-            // Cannot interact with moving entities when moving
-            if (!(entity instanceof MovingEntity)) entity.interact(game, this);
-        });
+        entities.forEach(
+            entity -> {
+                // Cannot interact with moving entities or spawners when moving
+                if (!(entity instanceof MovingEntity || entity instanceof ZombieToastSpawner))
+                    entity.interact(game, this);
+            }
+        );
 
         // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
@@ -470,11 +472,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
-            damageToOpponent += e.getHitRate() * e.useEquipment(this);
-
-            // If the opponent is a boss, andurils deal triple the damage
-            if (opponent instanceof Boss && e instanceof Anduril) damageToOpponent +=
-                e.getHitRate() * e.useEquipment(this) * 2;
+            damageToOpponent += e.getHitRate() * e.useEquipment(this, opponent);
         }
 
         // Any extra attack damage provided by defence equipments
@@ -500,7 +498,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     public int applyDefenceToOpponentAttack(MovingEntity opponent) {
         int finalAttackDamage = opponent.getBaseAttackDamage();
         for (DefenceEquipment e : this.getDefenceEquipmentList()) {
-            finalAttackDamage *= e.useEquipment(this);
+            finalAttackDamage = (int) (e.useEquipment(this, opponent));
         }
         return finalAttackDamage;
     }

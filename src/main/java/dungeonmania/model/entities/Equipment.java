@@ -35,9 +35,10 @@ public abstract class Equipment extends Item {
      * Simulates equipment being used by a given player
      *
      * @param player player to use equipment
+     * @param enemy battle opponent
      * @return attack or defence amount
      */
-    public double useEquipment(Player player) {
+    public double useEquipment(Player player, Entity enemy) {
         // Reduces the durability of the equipment
         this.durability--;
         if (this.durability == 0) player.removeInventoryItem(this.getId());

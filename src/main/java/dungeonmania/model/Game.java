@@ -101,6 +101,15 @@ public final class Game {
     }
 
     /**
+     * Return the current Player position
+     * @return Position object
+     */
+    public Position getCharacterPosition() {
+        Player player = getCharacter();
+        return player.getPosition();
+    }
+
+    /**
      * Get the list of entities in the current game
      *
      * @return list of Entity objects

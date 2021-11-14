@@ -3,6 +3,7 @@ package dungeonmania.model.entities.statics;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -33,12 +34,10 @@ public class Boulder extends Entity {
         Position newPosition = this.getOffsetPosition(direction);
         List<Entity> entities = game.getEntities(newPosition);
 
-        if (entities.isEmpty()) {
+        if (entities.isEmpty() || entities.stream().allMatch(e -> e.isPassable() && !(e instanceof MovingEntity))) {
             this.setPosition(newPosition);
-        } else {
             for (Entity entity : entities) {
                 if (entity instanceof FloorSwitch) {
-                    this.setPosition(newPosition);
                     ((FloorSwitch) entity).triggerSwitch(game);
                     return;
                 }
