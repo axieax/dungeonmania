@@ -70,7 +70,7 @@
         { "type": "swamp_tile", "x": 3, "y": 1, "movement_factor": 5 },
         { "type": "swamp_tile", "x": 3, "y": 2, "movement_factor": 5 },
         { "type": "swamp_tile", "x": 3, "y": 3, "movement_factor": 5 },
-        { "type": "swamp_tile", "x": 2, "y": 3, "movement_factor": 5 },
+        { "type": "swamp_tile", "x": 2, "y": 3, "movement_factor": 2 },
         { "type": "swamp_tile", "x": 1, "y": 3, "movement_factor": 5 },
         {
             "x": 1,
