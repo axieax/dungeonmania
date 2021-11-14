@@ -72,13 +72,12 @@
             "y": 2,
             "type": "player"
         },
-        
+
         {
             "x": 13,
             "y": 13,
             "type": "anduril"
         }
-
     ],
     "goal-condition": {
         "goal": "exit"

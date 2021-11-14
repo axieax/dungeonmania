@@ -1,126 +1,125 @@
 {
     "entities": [
-      {
-        "x": 0,
-        "y": 0,
-        "type": "boulder"
-      },
-      {
-        "x": 1,
-        "y": 0,
-        "type": "switch"
-      },
-      {
-        "x": 2,
-        "y": 0,
-        "type": "portal",
-        "colour": "PINK"
-      },
-      {
-        "x": 3,
-        "y": 0,
-        "type": "portal",
-        "colour": "PINK"
-      },
-      {
-        "x": 5,
-        "y": 0,
-        "type": "health_potion"
-      },
-      {
-        "x": 6,
-        "y": 0,
-        "type": "one_ring"
-      },
-      {
-        "x": 8,
-        "y": 0,
-        "type": "assassin"
-      },
-      {
-        "x": 9,
-        "y": 0,
-        "type": "hyra"
-      },
-      {
-        "x": 10,
-        "y": 0,
-        "type": "swamp_tile",
-        "movement_factor":2
-      },
-      {
-        "x": 11,
-        "y": 0,
-        "type": "anduril"
-      },
-      {
-        "x": 12,
-        "y": 0,
-        "type": "wood"
-      },
-      {
-        "x": 13,
-        "y": 0,
-        "type": "treasure"
-      },
-      {
-        "x": 14,
-        "y": 0,
-        "type": "sun_stone"
-      },
-      {
-        "x": 15,
-        "y": 0,
-        "type": "armour"
-      },
-      {
-        "x": 16,
-        "y": 0,
-        "type": "sun_stone"
-      },
-      {
-        "x": 17,
-        "y": 0,
-        "type": "wood"
-      },
-      {
-        "x": 18,
-        "y": 0,
-        "type": "arrow"
-      },
-      {
-        "x": 19,
-        "y": 0,
-        "type": "arrow"
-      },
-      {
-        "x": 20,
-        "y": 1,
-        "type": "arrow"
-      },
-      {
-        "x": 1,
-        "y": 1,
-        "type": "player"
-      },
-      {
-        "x": 2,
-        "y": 1,
-        "type": "wood"
-      },
-      {
-        "x": 3,
-        "y": 1,
-        "type": "wood"
-      },
-      {
-        "x": 4,
-        "y": 1,
-        "type": "treasure"
-      }
+        {
+            "x": 0,
+            "y": 0,
+            "type": "boulder"
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "switch"
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "type": "portal",
+            "colour": "PINK"
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "type": "portal",
+            "colour": "PINK"
+        },
+        {
+            "x": 5,
+            "y": 0,
+            "type": "health_potion"
+        },
+        {
+            "x": 6,
+            "y": 0,
+            "type": "one_ring"
+        },
+        {
+            "x": 8,
+            "y": 0,
+            "type": "assassin"
+        },
+        {
+            "x": 9,
+            "y": 0,
+            "type": "hyra"
+        },
+        {
+            "x": 10,
+            "y": 0,
+            "type": "swamp_tile",
+            "movement_factor": 2
+        },
+        {
+            "x": 11,
+            "y": 0,
+            "type": "anduril"
+        },
+        {
+            "x": 12,
+            "y": 0,
+            "type": "wood"
+        },
+        {
+            "x": 13,
+            "y": 0,
+            "type": "treasure"
+        },
+        {
+            "x": 14,
+            "y": 0,
+            "type": "sun_stone"
+        },
+        {
+            "x": 15,
+            "y": 0,
+            "type": "armour"
+        },
+        {
+            "x": 16,
+            "y": 0,
+            "type": "sun_stone"
+        },
+        {
+            "x": 17,
+            "y": 0,
+            "type": "wood"
+        },
+        {
+            "x": 18,
+            "y": 0,
+            "type": "arrow"
+        },
+        {
+            "x": 19,
+            "y": 0,
+            "type": "arrow"
+        },
+        {
+            "x": 20,
+            "y": 1,
+            "type": "arrow"
+        },
+        {
+            "x": 1,
+            "y": 1,
+            "type": "player"
+        },
+        {
+            "x": 2,
+            "y": 1,
+            "type": "wood"
+        },
+        {
+            "x": 3,
+            "y": 1,
+            "type": "wood"
+        },
+        {
+            "x": 4,
+            "y": 1,
+            "type": "treasure"
+        }
     ],
     "goal-condition": {
-      "goal": "exit"
+        "goal": "exit"
     }
-  }
-  
+}

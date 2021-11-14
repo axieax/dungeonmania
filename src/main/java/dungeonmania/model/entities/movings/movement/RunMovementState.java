@@ -21,7 +21,7 @@ public class RunMovementState extends MovementState {
      */
     @Override
     public Position findNextPosition(Game game) {
-        Player player = game.getCharacter();
+        Player player = game.getPlayer();
 
         List<Position> possiblePositionsToMove = game.getMoveablePositions(
             this.getEnemy(),

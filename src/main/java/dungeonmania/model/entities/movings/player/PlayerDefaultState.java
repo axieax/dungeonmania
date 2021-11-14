@@ -15,13 +15,11 @@ import java.util.Random;
 public class PlayerDefaultState implements PlayerState {
 
     private Player player;
-    public static final int ARMOUR_DROP_CHANCE = 10;
 
     public PlayerDefaultState(Player player) {
         this.player = player;
     }
 
-    @Override
     public void battle(Game game, Enemy opponent) throws PlayerDeadException {
         // Do not battle opponent if it is an ally
         List<BribableEnemy> allies = player.getAllies();
@@ -34,7 +32,7 @@ public class PlayerDefaultState implements PlayerState {
 
         // Battles only last a single tick
         while (player.getHealth() > 0 && opponent.getHealth() > 0) {
-            // equipment is "worn" (durability reduced) when getting applying attack/defence
+            // Equipment is "worn" (durability reduced) when getting applying attack/defence
             int playerAttackDamage = player.getTotalAttackDamage(opponent);
             int opponentAttackDamage = player.applyDefenceToOpponentAttack(opponent);
 
@@ -64,36 +62,28 @@ public class PlayerDefaultState implements PlayerState {
         // dropped and be added to the character's inventory.
 
         // An opponent can have the potential to drop multiple items.
-        Random armourRand = new Random();
-        if (armourRand.nextDouble() <= opponent.getArmourDropRate()) player.addInventoryItem(
-            new Armour()
-        );
+        Random random = new Random();
+        if (random.nextDouble() <= opponent.getArmourDropRate()) {
+            player.addInventoryItem(new Armour());
+        }
 
         // only one rare collectable item drops
-        if((new Random()).nextInt(100) % 2 == 0) {
-            Random oneRingRand = new Random();
-            if (oneRingRand.nextDouble() <= opponent.THE_ONE_RING_DROP_RATE)
-                player.addInventoryItem(new TheOneRing());
-        } else {
-            Random andurilRand = new Random();
-            if (andurilRand.nextDouble() <= opponent.ANDURIL_DROP_RATE)
-                player.addInventoryItem(new Anduril());
+        boolean dropRing = random.nextBoolean();
+        if (dropRing && random.nextDouble() <= TheOneRing.DROP_RATE) {
+            player.addInventoryItem(new TheOneRing());
+        } else if (!dropRing && random.nextDouble() <= Anduril.DROP_RATE) {
+            player.addInventoryItem(new Anduril());
         }
 
         player.setInBattle(false);
         player.setCurrentBattleOpponent(null);
     }
 
-    @Override
     public int ticksLeft() {
         return 0;
     }
 
-    @Override
     public void updateState(Player player) {}
 
-    @Override
-    public void setTicksLeft(int left) {
-        
-    }
+    public void setTicksLeft(int ticks) {}
 }

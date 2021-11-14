@@ -12,7 +12,6 @@ public class InvincibilityPotion extends Potion {
         super("invincibility_potion", position);
     }
 
-    @Override
     public void consume(Game game, Player player) {
         // Invincibility potions have no effect in hard mode
         if (!(game.getMode() instanceof Hard)) {

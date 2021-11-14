@@ -48,7 +48,12 @@ public class MercenaryTest {
     public void testDoesNotSpawnWithNoEnemies() {
         Mode mode = new Standard();
         // Mercenaries only spawn in dungeons with at least one enemy
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
@@ -98,7 +103,12 @@ public class MercenaryTest {
         // Mercenaries have a 25% chance to spawn with armour
         Mode mode = new Standard();
 
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(3, 1), mode.initialHealth());
         game.addEntity(player);
@@ -106,19 +116,19 @@ public class MercenaryTest {
         game.addEntity(new Wall(new Position(2, 1)));
         game.addEntity(new Wall(new Position(2, 2)));
         game.addEntity(new Wall(new Position(2, 3)));
-        
+
         game.addEntity(new Wall(new Position(3, 3)));
-        
+
         game.addEntity(new Wall(new Position(4, 1)));
         game.addEntity(new Wall(new Position(4, 2)));
         game.addEntity(new Wall(new Position(4, 3)));
-        
+
         // The chance of no mercenaries dropping armour is 0.75^100 = 0.00000000003%
         boolean hasArmour = false;
         for (int i = 0; i < 100; i++) {
             game.addEntity(new Mercenary(new Position(3, 2), mode.damageMultiplier(), player));
             game.tick(null, Direction.NONE);
-            
+
             for (ItemResponse item : player.getInventoryResponses()) {
                 if (item.getType().equals("armour")) {
                     hasArmour = true;
@@ -130,18 +140,16 @@ public class MercenaryTest {
             List<Entity> toRemove = new ArrayList<>();
             for (Entity e : game.getEntities()) {
                 if (
-                    e instanceof MovingEntity &&
-                    !(e instanceof Player) &&
-                    !(e instanceof Mercenary)
+                    e instanceof MovingEntity && !(e instanceof Player) && !(e instanceof Mercenary)
                 ) toRemove.add(e);
             }
-            
+
             for (Entity e : toRemove) game.removeEntity(e);
-            
+
             // Regenerate player health
             player.setHealth(player.getMaxCharacterHealth());
         }
-        
+
         assertTrue(player.isAlive());
         assertTrue(hasArmour);
     }
@@ -150,7 +158,12 @@ public class MercenaryTest {
     public void testSimpleMovement() {
         Mode mode = new Standard();
         // Distance between the mercenary and player should decrease per tick/movement
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -211,7 +224,12 @@ public class MercenaryTest {
         Mode mode = new Standard();
         // Wall with 1 gap exists and mercenary should go directly to player, and not move
         // outside/go through the gap
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -240,7 +258,12 @@ public class MercenaryTest {
         Mode mode = new Standard();
         // Boulder with 1 gap exists and mercenary should go directly to player, and not move
         // outside/go through the gap
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -316,7 +339,12 @@ public class MercenaryTest {
         // tiles to the mercenary and they are bribing
         Mode mode = new Standard();
 
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -336,7 +364,12 @@ public class MercenaryTest {
     @Test
     public void testCannotMoveThroughExit() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -350,14 +383,19 @@ public class MercenaryTest {
         game.addEntity(exit);
 
         assertTrue(game.getEntities(exitPos).size() == 1);
-        mercenary.moveTo(exitPos);
+        mercenary.setPosition(exitPos);
         assertTrue(game.getEntities(exitPos).size() == 2);
     }
 
     @Test
     public void testCannotMoveThroughClosedDoor() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(5, 5);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -396,7 +434,12 @@ public class MercenaryTest {
     @Test
     public void testSimpleFight() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -418,7 +461,12 @@ public class MercenaryTest {
     @Test
     public void testBribedMercenaryDoesNotAttack() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -458,7 +506,12 @@ public class MercenaryTest {
     @Test
     public void testBribedMovement() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -521,7 +574,12 @@ public class MercenaryTest {
     @Test
     public void testMindControlledMovementAndAttack() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);

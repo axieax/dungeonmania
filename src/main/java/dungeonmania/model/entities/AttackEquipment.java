@@ -18,10 +18,20 @@ public abstract class AttackEquipment extends Equipment {
         this.hitRate = hitRate;
     }
 
+    /**
+     * Get attack damage of the AttackEquipment
+     *
+     * @return attack damage
+     */
     public int getAttackDamage() {
         return attackDamage;
     }
 
+    /**
+     * Get hit rate of the AttackEquipment
+     *
+     * @return attack damage
+     */
     public int getHitRate() {
         return hitRate;
     }
@@ -29,6 +39,6 @@ public abstract class AttackEquipment extends Equipment {
     @Override
     public double useEquipment(Player player, Entity enemy) {
         super.useEquipment(player, enemy);
-        return getAttackDamage();
+        return attackDamage;
     }
 }

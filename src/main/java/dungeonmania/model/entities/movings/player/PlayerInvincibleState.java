@@ -20,7 +20,6 @@ public class PlayerInvincibleState implements PlayerState {
      * NOTE: Durability of any weapons e.g. sword or bow
      *       are not reduced while a player is invincible.
      */
-    @Override
     public void battle(Game game, Enemy opponent) {
         // Notify the observers that the player is in battle
         player.setInBattle(true);
@@ -33,7 +32,6 @@ public class PlayerInvincibleState implements PlayerState {
         player.setCurrentBattleOpponent(null);
     }
 
-    @Override
     public void updateState(Player player) {
         if (timeLimit <= 0) {
             this.player.setState(new PlayerDefaultState(player));
@@ -41,13 +39,12 @@ public class PlayerInvincibleState implements PlayerState {
         timeLimit--;
     }
 
-    @Override
     public int ticksLeft() {
         return timeLimit;
     }
 
     @Override
-    public void setTicksLeft(int left) {
-        timeLimit = left; 
+    public void setTicksLeft(int ticks) {
+        timeLimit = ticks; 
     }
 }

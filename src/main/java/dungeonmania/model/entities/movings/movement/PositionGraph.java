@@ -104,7 +104,7 @@ public class PositionGraph {
     /**
      * Performs the Dijkstra's algorithm to find the shortest costing path.
      *
-     * @param src
+     * @param src source
      * @return HashMap<Integer, Position> pred that gives us the shortest path
      * to traverse from. The key in the HashMap is the hashcode of the position.
      */

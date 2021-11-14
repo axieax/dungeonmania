@@ -1,5 +1,6 @@
 package dungeonmania.model.entities;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.EntityResponse;
@@ -155,10 +156,15 @@ public abstract class Entity {
     }
 
     /**
-     * Interacts witth a given entity
+     * Interacts with a given entity
      *
      * @param game game state
      * @param character entity to interact with
+     * @throws InvalidActionException  if the player is not cardinally adjacent to
+     *                                 the given entity; if the player does not have
+     *                                 any gold/sun stones and attempts to bribe or
+     *                                 mind-control a mercenary; if the player does
+     *                                 not have a weapon and attempts to destroy a spawner
      */
-    public abstract void interact(Game game, Entity character);
+    public void interact(Game game, Entity character) throws InvalidActionException {}
 }

@@ -18,7 +18,7 @@ public abstract class BribableEnemy extends Enemy {
 
     public static final int BATTLE_RADIUS = 5;
     public static final int MAX_DISTANCE_TO_BRIBE = 2;
-    public static final double ARMOUR_DROP_RATE = 0.25;
+    private static final double ARMOUR_DROP_RATE = 0.25;
 
     private boolean bribed;
     private boolean mindControlled;
@@ -39,28 +39,54 @@ public abstract class BribableEnemy extends Enemy {
         this.setArmourDropRate(ARMOUR_DROP_RATE);
     }
 
+    /**
+     * Set mind controlled status
+     *
+     * @param mindControlled
+     */
     public void setMindControlled(boolean mindControlled) {
         this.mindControlled = mindControlled;
     }
 
+    /**
+     * Checks if enemy is bribed
+     *
+     * @return true if bribed, false otherwise
+     */
     public boolean isBribed() {
         return bribed;
     }
 
+    /**
+     * Set bribed status
+     *
+     * @param bribed
+     */
     public void setBribed(boolean bribed) {
         this.bribed = bribed;
     }
 
+    /**
+     * Set mind controlled ticks
+     *
+     * @param ticks
+     */
     public void setMindControlTicks(int ticks) {
         this.mindControlTicks = ticks;
     }
-    
-    public void setMoveTwice(Boolean moveTwice) {
+
+    /**
+     * Set move twice status
+     *
+     * @param moveTwice
+     */
+    public void setMoveTwice(boolean moveTwice) {
         this.moveTwice = moveTwice;
     }
-    
+
     /**
      * Condition for player to mind control the enemy
+     *
      * @param game
      * @param player
      * @return true if conditions are met, false otherwise
@@ -69,24 +95,18 @@ public abstract class BribableEnemy extends Enemy {
         // Player must have the sceptre to mindcontrol the mercenary
         // The effect will only last 10 ticks
         Item item = player.findInventoryItem("sceptre");
-        
+
         if (item == null) return false;
-        
+
         player.addAlly(this);
         this.mindControlTicks = 10;
         this.mindControlled = true;
         return true;
     }
-    
-
-    @Override
-    public double getArmourDropRate() {
-        return ARMOUR_DROP_RATE;
-    }
 
     @Override
     public void tick(Game game) {
-        Player player = (Player) game.getCharacter();
+        Player player = (Player) game.getPlayer();
 
         this.move(game);
 

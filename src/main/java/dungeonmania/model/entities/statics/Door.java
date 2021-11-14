@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.statics;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Key;
@@ -37,7 +38,7 @@ public class Door extends Entity {
     }
 
     @Override
-    public void interact(Game game, Entity character) {
+    public void interact(Game game, Entity character) throws InvalidActionException {
         // If the Player interacts the Door with the correct key, it unlocks the door.
         if (!(character instanceof Player)) return;
         Player player = (Player) character;
@@ -63,7 +64,7 @@ public class Door extends Entity {
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put("key", key);
-        info.put ("open", open);
+        info.put("open", open);
         return info;
     }
 }

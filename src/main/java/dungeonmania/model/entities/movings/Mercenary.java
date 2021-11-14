@@ -53,22 +53,28 @@ public class Mercenary extends BribableEnemy {
         if (sunstone == null) ((Treasure) treasure).consume(game, player);
     }
 
+    /**
+     * Spawns a Mercenary
+     *
+     * @param game game state
+     * @param damageMultiplier damage multiplier
+     */
     public static void spawnMercenary(Game game, int damageMultiplier) {
         // Mercenaries only spawn on maps with at least one enemy
         if (game.getAllEnemies() == null || game.getAllEnemies().size() == 0) return;
 
         // Do not spawn if the player is currently at its spawn location
         Position position = game.getPlayerSpawnLocation();
-        if (game.getCharacter().getPosition() == position) return;
+        if (game.getPlayer().getPosition() == position) return;
 
         int tick = game.getTick();
         if (tick != 0 && tick % MERCENARY_TICK_RATE == 0) {
             // 30% chance of spawning an assassin instead of a mercenary
             Random rand = new Random();
             if (rand.nextDouble() <= Assassin.ASSASSIN_SPAWN_RATE) {
-                game.addEntity(new Assassin(position, damageMultiplier, game.getCharacter()));
+                game.addEntity(new Assassin(position, damageMultiplier, game.getPlayer()));
             } else {
-                game.addEntity(new Mercenary(position, damageMultiplier, game.getCharacter()));
+                game.addEntity(new Mercenary(position, damageMultiplier, game.getPlayer()));
             }
         }
     }

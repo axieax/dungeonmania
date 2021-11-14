@@ -14,7 +14,7 @@ public class DestroyEnemies extends GoalLeaf {
 
     @Override
     public int numRemaining(Game game) {
-        Entity character = game.getCharacter();
+        Entity character = game.getPlayer();
         return (int) game
             .getEntities()
             .stream()

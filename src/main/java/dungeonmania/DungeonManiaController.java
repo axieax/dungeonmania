@@ -107,7 +107,7 @@ public class DungeonManiaController {
     public DungeonResponse newGame(String dungeonName, String gameMode)
         throws IllegalArgumentException {
         // checks
-        if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException();
+        if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException(dungeonName);
 
         // get game mode
         Mode mode = getMode(gameMode);

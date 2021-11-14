@@ -9,7 +9,6 @@ import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 import java.util.List;
-
 import org.json.JSONObject;
 
 public class Bomb extends Item implements Consumable {
@@ -25,12 +24,8 @@ public class Bomb extends Item implements Consumable {
         this.isPlaced = isPlaced;
     }
 
-
-    /**
-     * Place a bomb at the specified position on the dungeon.
-     * @param position
-     */
     public void consume(Game game, Player player) {
+        // Place a bomb at the specified position on the dungeon.
         this.setPosition(player.getPosition());
         game.addEntity(this);
         this.setPassable(false);
@@ -38,11 +33,14 @@ public class Bomb extends Item implements Consumable {
         isPlaced = true;
 
         List<Entity> entities = game.getCardinallyAdjacentEntities(this.getPosition());
-        if (entities.stream().anyMatch(e -> e instanceof FloorSwitch && ((FloorSwitch)e).isTriggered(game))) {
+        if (
+            entities
+                .stream()
+                .anyMatch(e -> e instanceof FloorSwitch && ((FloorSwitch) e).isTriggered(game))
+        ) {
             this.explode(game);
         }
     }
-    
 
     /**
      * If the Player interacts with the Item, collect the item and put it in the
@@ -58,7 +56,8 @@ public class Bomb extends Item implements Consumable {
     /**
      * Explodes the bomb destroying all entities in the bomb's blast radius,
      * except for portals and the player.
-     * @param game
+     *
+     * @param game game state
      */
     public void explode(Game game) {
         List<Entity> entities = game.getAdjacentEntities(this.getPosition());

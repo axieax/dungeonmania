@@ -15,14 +15,14 @@ public class ZombieToast extends Enemy {
 
     public static final int MAX_ZOMBIE_HEALTH = 20;
     public static final int MAX_ZOMBIE_ATTACK_DMG = 2;
-    public final double ARMOUR_DROP_RATE = 0.2;
+    private static final double ARMOUR_DROP_RATE = 0.2;
     private int animationTick = 0;
 
     public ZombieToast(Position position, int damageMultiplier, SubjectPlayer player) {
         super("zombie_toast", position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG, damageMultiplier);
         this.setMovementState(new RandomMovementState(this));
-        player.attach(this);
         this.setArmourDropRate(ARMOUR_DROP_RATE);
+        player.attach(this);
     }
 
     @Override
@@ -31,31 +31,28 @@ public class ZombieToast extends Enemy {
         this.move(game);
     }
 
-    /**
-     * If a player drinks an invincibility potion, change the state
-     * of the zombie to make sure it runs away
-     */
     @Override
     public void update(SubjectPlayer player) {
-        if (player instanceof Player) {
-            Player character = (Player) player;
-            if (character.getState() instanceof PlayerInvincibleState) {
-                this.setMovementState(new RunMovementState(this));
-            } else {
-                this.setMovementState(new RandomMovementState(this));
-            }
+        // If a player drinks an invincibility potion, change the state
+        // of the zombie to make sure it runs away
+        if (!(player instanceof Player)) return;
+        Player character = (Player) player;
+
+        if (character.getState() instanceof PlayerInvincibleState) {
+            this.setMovementState(new RunMovementState(this));
+        } else {
+            this.setMovementState(new RandomMovementState(this));
         }
     }
 
-    /**
-     * Zombie Toast is not allowed to pass through portals
-     */
     @Override
     public boolean collision(Entity entity) {
+        // Zombie Toast is not allowed to pass through portals
         if (entity instanceof Portal) return true;
         return !entity.isPassable();
     }
 
+    @Override
     public AnimationQueue getAnimation() {
         final int skin = animationTick % 15;
         return new AnimationQueue(

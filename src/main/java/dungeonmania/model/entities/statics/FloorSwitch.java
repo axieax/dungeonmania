@@ -23,9 +23,6 @@ public class FloorSwitch extends Entity {
         return entities.stream().anyMatch(entity -> (entity instanceof Boulder));
     }
 
-    @Override
-    public void interact(Game game, Entity character) {}
-
     /**
      * When called, trigger the switch so that cardinally adjacent bombs explode, destroying
      * all entities in the bomb's blast radius, except for the character.

@@ -156,12 +156,12 @@ public class SpiderTest {
         Spider spider = new Spider(new Position(3, 3), mode.damageMultiplier(), player);
         game.addEntity(spider);
         Position oldSpiderPos = spider.getPosition();
-        
+
         // initially spider moves 1 block up
         game.tick(null, Direction.NONE);
         Position spiderPos = spider.getPosition();
         assertTrue(spiderPos.equals(oldSpiderPos.translateBy(Direction.UP)));
-        
+
         // next movement is to the right
         oldSpiderPos = spider.getPosition();
         game.tick(null, Direction.NONE);

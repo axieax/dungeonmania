@@ -26,11 +26,9 @@ public class Spider extends Enemy {
         player.attach(this);
     }
 
-    /**
-     * Moves the spider onto the next tile, as per its current movement type
-     */
     @Override
     public void tick(Game game) {
+        // Moves the spider onto the next tile, as per its current movement type
         this.move(game);
     }
 
@@ -57,8 +55,9 @@ public class Spider extends Enemy {
 
     /**
      * Determines if a spider can move onto a position that contains the given entities
+     *
      * @param entitiesAtPos list of entities on the new position
-     * @return true if the spider is free to pass, else false
+     * @return true if the spider is free to pass, false otherwise
      */
     public static boolean canSpiderMoveOntoPosition(List<Entity> entitiesAtPos) {
         for (Entity e : entitiesAtPos) {
@@ -72,6 +71,9 @@ public class Spider extends Enemy {
 
     /**
      * Spawns a spider on an entity depending on the tick rate
+     *
+     * @param game game state
+     * @param damageMultiplier
      */
     public static void spawnSpider(Game game, int damageMultiplier) {
         if (getNumSpiderInGame(game) == MAX_SPIDERS) return;
@@ -94,13 +96,14 @@ public class Spider extends Enemy {
             }
 
             if (canSpawn) {
-                game.addEntity(new Spider(position, damageMultiplier, game.getCharacter()));
+                game.addEntity(new Spider(position, damageMultiplier, game.getPlayer()));
             }
         }
     }
 
     /**
      * Determines the number of spiders that currently exist in the game
+     *
      * @param game Game reference
      * @return number of spiders
      */
@@ -115,14 +118,15 @@ public class Spider extends Enemy {
     }
 
     /**
-     * 
+     * Calls the isInitialMovement method if state is a CircularMovementState
+     *
      * @return true if spider is in the circular movement state and
      *         is in its initial movement (moving upwards), otherwise false
      */
     public boolean isInitialIfCircularMovement() {
-        if(this.getMovementState() instanceof CircularMovementState) {
+        if (this.getMovementState() instanceof CircularMovementState) {
             CircularMovementState state = (CircularMovementState) this.getMovementState();
-            if(state.isInitialMovement()) {
+            if (state.isInitialMovement()) {
                 return true;
             }
         }
@@ -131,14 +135,15 @@ public class Spider extends Enemy {
     }
 
     /**
-     * 
+     * Calls the isReverseMovement method if state is a CircularMovementState
+     *
      * @return true if spider is in the circular movement state and
      *         its movement is reversed, otherwise false
      */
     public boolean isReverseIfCircularMovement() {
-        if(this.getMovementState() instanceof CircularMovementState) {
+        if (this.getMovementState() instanceof CircularMovementState) {
             CircularMovementState state = (CircularMovementState) this.getMovementState();
-            if(state.isReverseMovement()) {
+            if (state.isReverseMovement()) {
                 return true;
             }
         }
@@ -147,26 +152,23 @@ public class Spider extends Enemy {
     }
 
     /**
-     * 
-     * @return integer greater than 0 if spider is in the 
+     * Calls the getIndexOfNextMove method if state is a CircularMovementState
+     *
+     * @return integer greater than 0 if spider is in the
      *         circular movement state otherwise -1
      */
     public int getIndexOfNextMoveIfCircularMovement() {
-        if(this.getMovementState() instanceof CircularMovementState) {
+        if (this.getMovementState() instanceof CircularMovementState) {
             CircularMovementState state = (CircularMovementState) this.getMovementState();
             return state.getIndexOfNextMove();
         }
-        
+
         return -1;
     }
 
-    //////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Spider is allows to pass through walls, doors, portals and exits
-     */
     @Override
     public boolean collision(Entity entity) {
+        // Spider is allows to pass through walls, doors, portals and exits
         if (
             entity instanceof Wall ||
             entity instanceof Door ||

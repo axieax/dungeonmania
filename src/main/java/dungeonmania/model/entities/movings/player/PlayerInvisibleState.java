@@ -30,7 +30,7 @@ public class PlayerInvisibleState implements PlayerState {
     }
 
     @Override
-    public void setTicksLeft(int left) {
-        timeLimit = left;
+    public void setTicksLeft(int ticks) {
+        timeLimit = ticks;
     }
 }

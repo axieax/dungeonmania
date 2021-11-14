@@ -13,7 +13,7 @@ public class ExitCondition extends GoalLeaf {
 
     public int numRemaining(Game game) {
         // Number of exits without a player on them
-        Entity character = game.getCharacter();
+        Entity character = game.getPlayer();
         Position characterPosition = character.getPosition();
         return (int) game
             .getEntities()

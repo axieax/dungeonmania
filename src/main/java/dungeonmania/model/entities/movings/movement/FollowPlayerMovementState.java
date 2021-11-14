@@ -21,7 +21,7 @@ public class FollowPlayerMovementState extends MovementState {
      */
     @Override
     public Position findNextPosition(Game game) {
-        Player player = (Player) game.getCharacter();
+        Player player = (Player) game.getPlayer();
 
         Position optimalPathPosition = this.getEnemy().getPosition();
 
