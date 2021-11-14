@@ -4,6 +4,7 @@ import dungeonmania.exceptions.PlayerDeadException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.collectables.TheOneRing;
+import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.collectables.equipment.Armour;
 import dungeonmania.model.entities.movings.BribableEnemy;
 import dungeonmania.model.entities.movings.Enemy;
@@ -67,9 +68,16 @@ public class PlayerDefaultState implements PlayerState {
         if (armourRand.nextDouble() <= opponent.getArmourDropRate())
             player.addInventoryItem(new Armour());
 
-        Random oneRingRand = new Random();
-        if (oneRingRand.nextDouble() <= opponent.THE_ONE_RING_DROP_RATE)
-            player.addInventoryItem(new TheOneRing());
+        // only one rare collectable item drops
+        if((new Random()).nextInt(100) % 2 == 0) {
+            Random oneRingRand = new Random();
+            if (oneRingRand.nextDouble() <= opponent.THE_ONE_RING_DROP_RATE)
+                player.addInventoryItem(new TheOneRing());
+        } else {
+            Random andurilRand = new Random();
+            if (andurilRand.nextDouble() <= opponent.THE_ONE_RING_DROP_RATE)
+                player.addInventoryItem(new Anduril());
+        }
 
         player.setInBattle(false);
         player.setCurrentBattleOpponent(null);

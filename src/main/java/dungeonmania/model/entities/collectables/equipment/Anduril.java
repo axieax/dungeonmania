@@ -10,9 +10,14 @@ public class Anduril extends AttackEquipment {
 
     private static final int ATTACK_DAMAGE = 10;
     private static final int HIT_RATE = 1;
+    public final double ANDURIL_DROP_RATE = 0.1;
 
     public Anduril(Position position) {
         super("anduril", ATTACK_DAMAGE, HIT_RATE, position);
+    }
+
+    public Anduril() {
+        super("anduril", ATTACK_DAMAGE, HIT_RATE);
     }
 
     @Override

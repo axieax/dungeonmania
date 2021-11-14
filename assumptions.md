@@ -24,6 +24,7 @@
 * For `Shield`, `Treasure` takes priority over `Key` if the user have enough materials.
 ### Drop Rates
 * `TheOneRing` has a drop rate of 10% after a battle has ended
+* `Anduril` has a drop rate of 10% after a battle has ended
 * `Armour` have a drop rate of 20% after a battle has ended
 ## Enemy Mechanics
 * Spiders can move out of the map if they spawn on the edge and their ‘circular' path causes them to go beyond the map.

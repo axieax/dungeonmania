@@ -16,12 +16,14 @@ import dungeonmania.model.entities.collectables.equipment.Anduril;
 import dungeonmania.model.entities.movings.Assassin;
 import dungeonmania.model.entities.movings.Enemy;
 import dungeonmania.model.entities.movings.Hydra;
+import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
+import dungeonmania.model.mode.Peaceful;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -135,5 +137,32 @@ public class AndurilTest {
             int enemyHealthWithAnduril = e.getHealth();
             assertTrue(enemyHealthWithAnduril < enemyHealthWithoutAnduril);
         }
+    }
+
+    /**
+     * Test Anduril drop rate after winning a battle.
+     */
+    @Test
+    public void dropRateTest() {
+        Mode mode = new Peaceful();
+        Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+        player.move(game, Direction.RIGHT);
+
+        // Spawn mercenaries next to the player - upon ticking, the mercenary would move to the player
+        // Since this is peaceful mode, the player's health will not change, so mercenaries will always die
+        for (int i = 0; i < 50; i++) {
+            Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+            game.addEntity(mercenary);
+            game.tick(null, Direction.NONE);
+
+            if (player.findInventoryItem("anduril") != null) break;
+        }
+
+        assertTrue(player.getHealth() == 100);
+        // Check that Anduril is in the player's inventory
+        assertTrue(player.findInventoryItem("anduril") != null);
     }
 }
