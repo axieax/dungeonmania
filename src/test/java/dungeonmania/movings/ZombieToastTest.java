@@ -22,6 +22,7 @@ import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
@@ -332,4 +333,60 @@ public class ZombieToastTest {
         });
     }
 
+    @Test
+    public void testZombieSpawnWithArmourIntermittently() {
+        // at least once every 200 ticks
+        Mode mode = new Standard();
+
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(3, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        game.addEntity(new Wall(new Position(2, 1)));
+        game.addEntity(new Wall(new Position(2, 2)));
+        game.addEntity(new Wall(new Position(2, 3)));
+        
+        game.addEntity(new Wall(new Position(3, 3)));
+        
+        game.addEntity(new Wall(new Position(4, 1)));
+        game.addEntity(new Wall(new Position(4, 2)));
+        game.addEntity(new Wall(new Position(4, 3)));
+        
+        boolean hasArmour = false;
+        for(int i = 0; i < 200; i++) {
+            game.addEntity(new ZombieToast(new Position(3, 2), mode.damageMultiplier(), player));
+            game.tick(null, Direction.NONE);
+            
+            for(ItemResponse item: player.getInventoryResponses()) {
+                if(item.getType().equals("armour")) {
+                    hasArmour = true;
+                    break;
+                }
+            }
+
+            // remove any other moving entities that have spawned
+            List<Entity> toRemove = new ArrayList<>();
+            for(Entity e: game.getEntities()) {
+                if(
+                    e instanceof MovingEntity &&
+                    !(e instanceof Player) &&
+                    !(e instanceof ZombieToast)
+                ) {
+                    toRemove.add(e);
+                }
+            }
+
+            
+            for(Entity e: toRemove) {
+                game.removeEntity(e);
+            }
+            
+            // regen player
+            player.setHealth(player.getMaxCharacterHealth());
+        }
+        
+        assertTrue(player.isAlive());
+        assertTrue(hasArmour);
+    }
 }
