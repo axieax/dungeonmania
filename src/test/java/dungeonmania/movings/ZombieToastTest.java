@@ -386,7 +386,7 @@ public class ZombieToastTest {
             }
             
             // regen player
-            player.setHealth(Player.MAX_CHARACTER_HEALTH);
+            player.setHealth(Player.maxCharacterHealth);
         }
         
         assertTrue(player.isAlive());
