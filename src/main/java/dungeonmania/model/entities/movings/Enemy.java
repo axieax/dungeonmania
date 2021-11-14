@@ -14,6 +14,7 @@ public abstract class Enemy extends MovingEntity implements Observer {
 
     private double armourDropRate;
     public final double THE_ONE_RING_DROP_RATE = 0.1;
+    public final double ANDURIL_DROP_RATE = 0.1;
 
     public Enemy(
         String prefix,
