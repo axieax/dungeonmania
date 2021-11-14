@@ -319,7 +319,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
                 this.battle(game, opponent);
             }
         }
-        this.state.updateState(this);
     }
 
     /**
@@ -378,7 +377,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
             this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
         }
-
+        
+        this.state.updateState(this);
         // should be notified regardless of if player can move e.g. if player drinks invincibility potion
         this.notifyObservers();
     }

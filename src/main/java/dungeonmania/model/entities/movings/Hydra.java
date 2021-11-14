@@ -51,10 +51,10 @@ public class Hydra extends Enemy implements Boss {
 
         // If an anduril is going to be used in battle by a player against
         // the hydra, it will not be able to spawn another head
-        if(character.getInBattle()) {
+        if (character.getInBattle()) {
             MovingEntity opponent = character.getCurrentBattleOpponent();
             // character battling this hydra and has an anduril
-            if(opponent.equals(this) && character.hasItemQuantity("anduril", 1)) {
+            if (opponent.equals(this) && character.hasItemQuantity("anduril", 1)) {
                 this.preventHeadRespawn = true;
             }
         }
@@ -67,16 +67,13 @@ public class Hydra extends Enemy implements Boss {
     
     public static void spawnHydra(Game game, int damageMultiplier) {
         // Hydra only spawns in hard mode
-        if(!(game.getMode() instanceof Hard)) {
-            return;
-        }
+        if (!(game.getMode() instanceof Hard)) return;
 
         int tick = game.getTick();
-        int tickRate = HYDRA_TICK_RATE;
-        if (tick != 0 && tick % tickRate == 0) {
-            // choose a random entity and spawn on it
-            List<Entity> entities = game.getEntities(); // all entities in the dungeon
-            Collections.shuffle(entities); // random order
+        if (tick != 0 && tick % HYDRA_TICK_RATE == 0) {
+            // Choose a random entity in the dungeon and spawn on it
+            List<Entity> entities = game.getEntities();
+            Collections.shuffle(entities);
 
             boolean canSpawn = false;
             Position position = null;
@@ -93,24 +90,22 @@ public class Hydra extends Enemy implements Boss {
                 game.addEntity(new Hydra(position, damageMultiplier, game.getCharacter()));
             }
         }
-
     }
 
 	private static boolean canHydraMoveOntoPosition(List<Entity> entitiesAtPos) {
         for (Entity e : entitiesAtPos) {
-            if (!e.isPassable()) {
-                return false;
-            }
+            if (!e.isPassable()) return false;
         }
 
         return true;
     }
 
+    /**
+     * Hydra is allowed to pass through portals
+     */
     @Override
     public boolean collision(Entity entity) {
-        if(
-            entity instanceof Portal
-        ) return false;
+        if (entity instanceof Portal) return false;
         return !entity.isPassable();
     }
 
@@ -121,7 +116,7 @@ public class Hydra extends Enemy implements Boss {
     @Override
     public void reduceHealthFromBattle(int amount) {
         Random rand = new Random();
-        if(!preventHeadRespawn && rand.nextInt(100) % 2 == 0) {
+        if (!preventHeadRespawn && rand.nextInt(2) == 0) {
             super.reduceHealthFromBattle(-amount);
         } else {
             preventHeadRespawn = false;
@@ -132,7 +127,7 @@ public class Hydra extends Enemy implements Boss {
     @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put ("preventHeadRespawn", preventHeadRespawn);
+        info.put("preventHeadRespawn", preventHeadRespawn);
         return info;
     }
 }

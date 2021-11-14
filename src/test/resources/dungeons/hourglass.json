@@ -49,11 +49,11 @@
         {
             "x": 22,
             "y": 13,
-            "type": "midnight_armour"
+            "type": "armour"
         },
         {
             "x": 19,
-            "y": 12,
+            "y": 13,
             "type": "invisibility_potion"
         },
         {
