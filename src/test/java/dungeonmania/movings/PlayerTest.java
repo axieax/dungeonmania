@@ -10,12 +10,10 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.TestHelpers;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
-import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.collectables.potion.Potion;
@@ -518,14 +516,11 @@ public class PlayerTest {
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
-        Sword sword = new Sword(new Position(2, 1));
-        game.addEntity(sword);
+        Arrow arrow = new Arrow(new Position(2, 1));
+        game.addEntity(arrow);
 
-        // The sword exists in the game, but the player does not have it in their inventory, so should throw exception
-        assertThrows(
-            InvalidActionException.class,
-            () -> player.move(game, Direction.RIGHT, sword.getId())
-        );
+        // The arrow exists in the game, but the player does not have it in their inventory, so should throw exception
+        assertThrows(InvalidActionException.class, () -> player.move(game, Direction.RIGHT, arrow.getId()));
     }
 
     @Test
