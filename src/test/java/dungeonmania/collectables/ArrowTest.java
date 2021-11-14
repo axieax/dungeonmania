@@ -2,8 +2,6 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.movings.player.Player;
@@ -12,6 +10,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class ArrowTest {
@@ -41,7 +40,7 @@ public class ArrowTest {
         Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
-        assertTrue(new Position(1, 1).equals(player.getPosition()));        
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
 
         assertTrue(game.getEntity(arrow.getId()) == null);
         assertTrue(player.getInventoryItem(arrow.getId()).equals(arrow));

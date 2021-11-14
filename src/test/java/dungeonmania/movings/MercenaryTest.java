@@ -13,7 +13,9 @@ import dungeonmania.model.entities.collectables.SunStone;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Mercenary;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.Portal;
@@ -23,13 +25,13 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -50,9 +52,12 @@ public class MercenaryTest {
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
+        assertTrue(game.getAllEnemies().size() == 0);
+
         int numEntities = game.getEntities().size();
         for (int i = 0; i < 18; i++) {
             game.tick(null, Direction.NONE);
+            assertTrue(game.getAllEnemies().size() == 0);
             assertTrue(game.getEntities().size() == numEntities);
         }
     }
@@ -63,7 +68,7 @@ public class MercenaryTest {
         List<Entity> entities = TestHelpers.sevenBySevenWallBoundary();
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         entities.add(player);
-        
+
         Game game = new Game("game", entities, new ExitCondition(), mode);
 
         // Move player away from spawning location (otherwise mercenary will immediately die after spawning)
@@ -89,6 +94,59 @@ public class MercenaryTest {
     }
 
     @Test
+    public void testMercenarySpawnWithArmourIntermittently() {
+        // Mercenaries have a 25% chance to spawn with armour
+        Mode mode = new Standard();
+
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(3, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        game.addEntity(new Wall(new Position(2, 1)));
+        game.addEntity(new Wall(new Position(2, 2)));
+        game.addEntity(new Wall(new Position(2, 3)));
+        
+        game.addEntity(new Wall(new Position(3, 3)));
+        
+        game.addEntity(new Wall(new Position(4, 1)));
+        game.addEntity(new Wall(new Position(4, 2)));
+        game.addEntity(new Wall(new Position(4, 3)));
+        
+        // The chance of no mercenaries dropping armour is 0.75^100 = 0.00000000003%
+        boolean hasArmour = false;
+        for (int i = 0; i < 100; i++) {
+            game.addEntity(new Mercenary(new Position(3, 2), mode.damageMultiplier(), player));
+            game.tick(null, Direction.NONE);
+            
+            for (ItemResponse item : player.getInventoryResponses()) {
+                if (item.getType().equals("armour")) {
+                    hasArmour = true;
+                    break;
+                }
+            }
+
+            // Remove any other moving entities that have spawned
+            List<Entity> toRemove = new ArrayList<>();
+            for (Entity e : game.getEntities()) {
+                if (
+                    e instanceof MovingEntity &&
+                    !(e instanceof Player) &&
+                    !(e instanceof Mercenary)
+                ) toRemove.add(e);
+            }
+            
+            for (Entity e : toRemove) game.removeEntity(e);
+            
+            // Regenerate player health
+            player.setHealth(player.getMaxCharacterHealth());
+        }
+        
+        assertTrue(player.isAlive());
+        assertTrue(hasArmour);
+    }
+
+    @Test
     public void testSimpleMovement() {
         Mode mode = new Standard();
         // Distance between the mercenary and player should decrease per tick/movement
@@ -104,7 +162,7 @@ public class MercenaryTest {
 
         // Mercenary should move to the left or upwards
         assertTrue(
-            (mercenary.getX() == 2 && mercenary.getY() == 3) || 
+            (mercenary.getX() == 2 && mercenary.getY() == 3) ||
             (mercenary.getX() == 3 && mercenary.getY() == 2)
         );
     }
@@ -161,6 +219,35 @@ public class MercenaryTest {
         // create horizontal wall with 1 gap near the right game border between the player and mercenary
         for (int i = 0; i < 4; i++) {
             game.addEntity(new Wall(new Position(i + 1, 2)));
+        }
+
+        Mercenary mercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        // Mercenary now at same horizontal level as player and any further ticks reduce the horizontal distance
+        game.tick(null, Direction.NONE);
+        assertTrue(mercenary.getX() == 3);
+        game.tick(null, Direction.NONE);
+        assertTrue(mercenary.getX() == 2);
+        game.tick(null, Direction.NONE);
+        // Same position as player but mercenary should be killed
+        assertTrue(mercenary.getX() == 1);
+        assertTrue(game.getEntity(mercenary.getId()) == null);
+    }
+
+    @Test
+    public void testMercenarySimpleBoulder() {
+        Mode mode = new Standard();
+        // Boulder with 1 gap exists and mercenary should go directly to player, and not move
+        // outside/go through the gap
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        // create horizontal wall with 1 gap near the right game border between the player and mercenary
+        for (int i = 0; i < 4; i++) {
+            game.addEntity(new Boulder(new Position(i + 1, 2)));
         }
 
         Mercenary mercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
@@ -293,11 +380,12 @@ public class MercenaryTest {
 
         // Mercenary should not be able to go in the door position
         for (int i = 0; i < 100; i++) {
-            
             game.tick(null, Direction.NONE);
 
             // Exit loop if either the player or mercenary has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null
+            ) {
                 break;
             }
 
@@ -326,7 +414,7 @@ public class MercenaryTest {
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntity(mercenary.getId()) == null);
     }
-    
+
     @Test
     public void testBribedMercenaryDoesNotAttack() {
         Mode mode = new Standard();
@@ -342,7 +430,6 @@ public class MercenaryTest {
         game.addEntity(new Treasure(new Position(1, 3)));
         game.addEntity(new Treasure(new Position(1, 4)));
 
-        
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
@@ -358,7 +445,7 @@ public class MercenaryTest {
         // Mercenary in adjacent tile, so bribe (player stil at tile)
         game.interact(mercenary.getId());
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
-        
+
         // Mercenary will not attack the player
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
@@ -383,7 +470,6 @@ public class MercenaryTest {
         game.addEntity(new Treasure(new Position(1, 3)));
         game.addEntity(new Treasure(new Position(1, 4)));
 
-        
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
@@ -403,16 +489,23 @@ public class MercenaryTest {
 
         // Mercenary stays either next to or on top of the player regardless of where the latter moves
         // Since mercenary is bribed, it will not engage in battle with the player
-        List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
+        List<Direction> possibleDirections = Arrays.asList(
+            Direction.UP,
+            Direction.RIGHT,
+            Direction.LEFT,
+            Direction.DOWN
+        );
         Random rand = new Random(5);
         for (int i = 0; i < 100; i++) {
             int index = rand.nextInt(100) % 4;
-            Direction movementDirection = possibleDirections.get(index); 
+            Direction movementDirection = possibleDirections.get(index);
 
             game.tick(null, movementDirection);
 
             // Exit the loop if the player or mercenary has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null
+            ) {
                 break;
             }
 

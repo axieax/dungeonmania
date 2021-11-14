@@ -1,5 +1,8 @@
 package dungeonmania.movings;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import dungeonmania.TestHelpers;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
@@ -10,24 +13,22 @@ import dungeonmania.model.entities.collectables.TheOneRing;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
 import dungeonmania.model.entities.movings.Assassin;
+import dungeonmania.model.entities.movings.MovingEntity;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Boulder;
 import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -44,13 +45,21 @@ public class AssassinTest {
     public void testDoesNotSpawnWithNoEnemies() {
         Mode mode = new Standard();
         // Assassins only spawn in dungeons with at least one enemy
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
+
+        assertTrue(game.getAllEnemies().size() == 0);
 
         int numEntities = game.getEntities().size();
         for (int i = 0; i < 18; i++) {
             game.tick(null, Direction.NONE);
+            assertTrue(game.getAllEnemies().size() == 0);
             assertTrue(game.getEntities().size() == numEntities);
         }
     }
@@ -87,10 +96,71 @@ public class AssassinTest {
     }
 
     @Test
+    public void testAssassinSpawnWithArmourIntermittently() {
+        // Assassins have a 25% chance to spawn with armour
+        Mode mode = new Standard();
+
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
+        Player player = new Player(new Position(3, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        game.addEntity(new Wall(new Position(2, 1)));
+        game.addEntity(new Wall(new Position(2, 2)));
+        game.addEntity(new Wall(new Position(2, 3)));
+
+        game.addEntity(new Wall(new Position(3, 3)));
+
+        game.addEntity(new Wall(new Position(4, 1)));
+        game.addEntity(new Wall(new Position(4, 2)));
+        game.addEntity(new Wall(new Position(4, 3)));
+
+        // The chance of no assassin dropping armour is 0.75^100 = 0.00000000003%
+        boolean hasArmour = false;
+        for (int i = 0; i < 100; i++) {
+            game.addEntity(new Assassin(new Position(3, 2), mode.damageMultiplier(), player));
+            game.tick(null, Direction.NONE);
+
+            for (ItemResponse item : player.getInventoryResponses()) {
+                if (item.getType().equals("armour")) {
+                    hasArmour = true;
+                    break;
+                }
+            }
+
+            // Remove any other moving entities that have spawned
+            List<Entity> toRemove = new ArrayList<>();
+            for (Entity e : game.getEntities()) {
+                if (
+                    e instanceof MovingEntity && !(e instanceof Player) && !(e instanceof Assassin)
+                ) toRemove.add(e);
+            }
+
+            for (Entity e : toRemove) game.removeEntity(e);
+
+            // Regenerate player health
+            player.setHealth(player.getMaxCharacterHealth());
+        }
+
+        assertTrue(player.isAlive());
+        assertTrue(hasArmour);
+    }
+
+    @Test
     public void testSimpleMovement() {
         Mode mode = new Standard();
         // Distance between the assassin and player should decrease per tick/movement
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -102,7 +172,7 @@ public class AssassinTest {
 
         // Assassin should move to the left or upwards
         assertTrue(
-            (assassin.getX() == 2 && assassin.getY() == 3) || 
+            (assassin.getX() == 2 && assassin.getY() == 3) ||
             (assassin.getX() == 3 && assassin.getY() == 2)
         );
     }
@@ -144,7 +214,6 @@ public class AssassinTest {
 
         // Assassin should battle player
         assertTrue(!game.getEntities().contains(assassin) || !game.getEntities().contains(player));
-
     }
 
     @Test
@@ -152,14 +221,52 @@ public class AssassinTest {
         Mode mode = new Standard();
         // Wall with 1 gap exists and assassin should go directly to player, and not move
         // outside/go through the gap
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         // Create horizontal wall with 1 gap near the right game border between the player and assassin
-        for(int i = 0; i < 4; i ++) {
+        for (int i = 0; i < 4; i++) {
             game.addEntity(new Wall(new Position(i + 1, 2)));
+        }
+
+        Assassin assassin = new Assassin(new Position(4, 1), mode.damageMultiplier(), player);
+        game.addEntity(assassin);
+
+        // Assassin now at same horizontal level as player and any further ticks reduce the horizontal distance
+        game.tick(null, Direction.NONE);
+        assertTrue(assassin.getX() == 3);
+        game.tick(null, Direction.NONE);
+        assertTrue(assassin.getX() == 2);
+        game.tick(null, Direction.NONE);
+        // Same position as player but assassin should be killed
+        assertTrue(assassin.getX() == 1);
+    }
+
+    @Test
+    public void testAssassinSimpleBoulder() {
+        Mode mode = new Standard();
+        // Boulder with 1 gap exists and assassin should go directly to player, and not move
+        // outside/go through the gap
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        // Create horizontal boulder with 1 gap near the right game border between the player and assassin
+        for (int i = 0; i < 4; i++) {
+            game.addEntity(new Boulder(new Position(i + 1, 2)));
         }
 
         Assassin assassin = new Assassin(new Position(4, 1), mode.damageMultiplier(), player);
@@ -179,13 +286,18 @@ public class AssassinTest {
     public void testBribeWithoutOneRing() {
         Mode mode = new Standard();
         // Character attemps to bribe assassin without TheOneRing should throw an exception
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         game.addEntity(new Treasure(new Position(1, 2)));
-        
+
         // Player collects coin
         player.move(game, Direction.DOWN);
 
@@ -200,13 +312,18 @@ public class AssassinTest {
     public void testBribeWithoutTreasure() {
         Mode mode = new Standard();
         // Character attemps to bribe assassin without treasure should throw an exception
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
         game.addEntity(new TheOneRing(new Position(1, 2)));
-        
+
         // Player collects TheOneRing
         player.move(game, Direction.DOWN);
 
@@ -223,8 +340,13 @@ public class AssassinTest {
         // tiles to the assassin and they are bribing
         Mode mode = new Standard();
 
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
@@ -234,7 +356,7 @@ public class AssassinTest {
 
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
-        
+
         Position assassinPos = new Position(5, 5);
         Assassin assassin = new Assassin(assassinPos, mode.damageMultiplier(), player);
         game.addEntity(assassin);
@@ -246,7 +368,12 @@ public class AssassinTest {
     @Test
     public void testBribedAssassinDoesNotAttack() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -257,20 +384,20 @@ public class AssassinTest {
         game.addEntity(new Treasure(new Position(1, 2)));
         game.addEntity(new Treasure(new Position(1, 3)));
         game.addEntity(new Treasure(new Position(1, 4)));
-        
+
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
 
-        game.addEntity(new TheOneRing(new Position(2,4)));
+        game.addEntity(new TheOneRing(new Position(2, 4)));
 
         // Make player collect TheOneRing
         player.move(game, Direction.RIGHT);
 
         Position updatedPlayerPos = new Position(2, 4);
 
-        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -279,7 +406,7 @@ public class AssassinTest {
         // Assassin in adjacent tile, so bribe (player stil at tile)
         game.interact(assassin.getId());
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
-        
+
         // Assassin will not attack the player
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
@@ -292,7 +419,12 @@ public class AssassinTest {
     @Test
     public void testBribedMovement() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -303,22 +435,22 @@ public class AssassinTest {
         game.addEntity(new Treasure(new Position(1, 2)));
         game.addEntity(new Treasure(new Position(1, 3)));
         game.addEntity(new Treasure(new Position(1, 4)));
-        
+
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
 
-        game.addEntity(new TheOneRing(new Position(2,4)));
-        game.addEntity(new TheOneRing(new Position(3,4)));
-        
+        game.addEntity(new TheOneRing(new Position(2, 4)));
+        game.addEntity(new TheOneRing(new Position(3, 4)));
+
         // Make player collect TheOneRing
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.RIGHT);
 
         Position updatedPlayerPos = new Position(3, 4);
 
-        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -331,16 +463,23 @@ public class AssassinTest {
 
         // Assassin stays either next to or on top of the player regardless of where the latter moves
         // Since assassin is bribed, it will not engage in battle with the player
-        List<Direction> possibleDirections = Arrays.asList(Direction.UP, Direction.RIGHT, Direction.LEFT, Direction.DOWN);
+        List<Direction> possibleDirections = Arrays.asList(
+            Direction.UP,
+            Direction.RIGHT,
+            Direction.LEFT,
+            Direction.DOWN
+        );
         Random rand = new Random(5);
         for (int i = 0; i < 100; i++) {
             int index = rand.nextInt(100) % 4;
-            Direction movementDirection = possibleDirections.get(index); 
+            Direction movementDirection = possibleDirections.get(index);
 
             game.tick(null, movementDirection);
 
             // Exit the loop if the player or assassin has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null
+            ) {
                 break;
             }
 
@@ -356,34 +495,44 @@ public class AssassinTest {
     @Test
     public void testCannotMoveThroughExit() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
-        Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(),player);
+        Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(assassin);
 
         Position exitPos = new Position(1, 2);
         Exit exit = new Exit(exitPos);
         game.addEntity(exit);
-        
+
         assertTrue(game.getEntities(exitPos).size() == 1);
         assassin.moveTo(exitPos);
         assertTrue(game.getEntities(exitPos).size() == 2);
     }
-    
+
     @Test
     public void testCannotMoveThroughClosedDoor() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
         Position playerPos = new Position(5, 5);
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
-        Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(),player);
+        Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(assassin);
 
         // Surround assassin and door with wall
@@ -391,22 +540,24 @@ public class AssassinTest {
         game.addEntity(new Wall(new Position(2, 2)));
         game.addEntity(new Wall(new Position(3, 2)));
         game.addEntity(new Wall(new Position(3, 1)));
-    
+
         Position doorPos = new Position(2, 1);
         Door door = new Door(doorPos, 0);
         game.addEntity(door);
-        
+
         assertTrue(game.getEntities(doorPos).size() == 1);
-        
+
         // Assassin should not be able to go in the door position
-        for (int i = 0; i < 100; i ++) {
+        for (int i = 0; i < 100; i++) {
             game.tick(null, Direction.NONE);
 
             // Exit loop if either the player or assassin has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null
+            ) {
                 break;
             }
-            
+
             assertTrue(!game.getEntity(assassin.getId()).getPosition().equals(doorPos));
         }
     }
@@ -414,16 +565,21 @@ public class AssassinTest {
     @Test
     public void testSimpleFight() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
+
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
-        
+
         Position assassinPos = new Position(2, 1);
         Assassin assassin = new Assassin(assassinPos, mode.damageMultiplier(), player);
         game.addEntity(assassin);
-    
+
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntities(assassinPos).size() == 1);
         game.tick(null, Direction.NONE);
@@ -436,7 +592,12 @@ public class AssassinTest {
     @Test
     public void testMindControlledMovementAndAttack() {
         Mode mode = new Standard();
-        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -473,5 +634,4 @@ public class AssassinTest {
 
         assertTrue(game.getEntity(assassin.getId()) == null);
     }
-
 }

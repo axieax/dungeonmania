@@ -53,6 +53,33 @@ import org.json.JSONObject;
 
 public class GameLoader {
 
+    /**
+     * Creates a JSONObject for a given saved game
+     *
+     * @param gameId id referring to a saved game
+     *
+     * @return JSONObject for the saved game
+     *
+     * @throws IllegalArgumentException if saved game could not be found
+     */
+    public static final JSONObject loadSavedGame(String gameId) throws IllegalArgumentException {
+        try {
+            String content = new String(
+                Files.readAllBytes(Paths.get("./bin/savedGames/" + gameId + ".json"))
+            );
+            return new JSONObject(content);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(gameId);
+        }
+    }
+
+    /**
+     * Converts a Game object to a JSONObject
+     *
+     * @param currentGame game to be converted
+     *
+     * @return JSONObject for the game
+     */
     public static final JSONObject gameToJSONObject(Game currentGame) {
         JSONObject currGameJSON = new JSONObject();
 
@@ -73,18 +100,13 @@ public class GameLoader {
         return currGameJSON;
     }
 
-    public static final JSONObject loadSavedDungeon(String dungeonName)
-        throws IllegalArgumentException {
-        try {
-            String content = new String(
-                Files.readAllBytes(Paths.get("./bin/savedGames/" + dungeonName + ".json"))
-            );
-            return new JSONObject(content);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(dungeonName);
-        }
-    }
-
+    /**
+     * Converts a JSONObject to a Game object
+     *
+     * @param json game to be converted
+     *
+     * @return Game object
+     */
     public static final Game JSONObjectToGame(JSONObject json) {
         Mode mode = GameLoader.extractMode(json);
         List<Entity> entities = GameLoader.extractEntities(json, mode);
@@ -95,13 +117,28 @@ public class GameLoader {
         return new Game(dungeonName, entities, goal, mode);
     }
 
-    public static final List<Entity> extractEntities(String dungeonName, Mode mode) {
-        JSONObject json = loadSavedDungeon(dungeonName);
+    /**
+     * Extracts the entities from a given saved game
+     *
+     * @param gameId id of saved game to be loaded
+     * @param mode game mode
+     *
+     * @return list of Entity objects in the game
+     */
+    public static final List<Entity> extractEntities(String gameId, Mode mode) {
+        JSONObject json = loadSavedGame(gameId);
         return extractEntities(json, mode);
     }
 
-    public static final List<Entity> extractEntities(JSONObject jsonInfo, Mode mode)
-        throws IllegalArgumentException {
+    /**
+     * Extracts the entities from a given saved game
+     *
+     * @param jsoninfo JSONObject for saved game to be loaded
+     * @param mode game mode
+     *
+     * @return list of Entity objects in the game
+     */
+    public static final List<Entity> extractEntities(JSONObject jsonInfo, Mode mode) {
         // Extract JSON
         JSONArray entitiesInfo = jsonInfo.getJSONArray("entities");
 
@@ -128,6 +165,15 @@ public class GameLoader {
         return entities;
     }
 
+    /**
+     * Maps a JSONObject for an entity to its Entity object
+     *
+     * @param entityInfo entity to extract
+     * @param player game character
+     * @param mode game mode
+     *
+     * @return Entity object for given entity
+     */
     public static final Entity extractEntity(
         JSONObject entityInfo,
         Player currentPlayer,
@@ -347,21 +393,45 @@ public class GameLoader {
         return null;
     }
 
-    public static final Mode extractMode(JSONObject dungeon) {
-        String gameMode = dungeon.getString("mode");
-        if (gameMode.equals("hard")) return new Hard(); else if (
-            gameMode.equals("standard")
-        ) return new Standard(); else if (gameMode.equals("peaceful")) return new Peaceful();
-        return null;
+    /**
+     * Extracts the mode from a given game JSONObject
+     *
+     * @param savedGame JSONObject for a saved game
+     *
+     * @return mode of the game
+     */
+    public static final Mode extractMode(JSONObject savedGame) {
+        switch (savedGame.getString("mode")) {
+            case "peaceful":
+                return new Peaceful();
+            case "standard":
+                return new Standard();
+            case "hard":
+                return new Hard();
+            default:
+                return null;
+        }
     }
 
-    public static final String extractDungeonName(JSONObject dungeon) {
-        return dungeon.getString("dungeonName");
+    /**
+     * Extracts the name of the dungeon from a saved game
+     *
+     * @param savedGame JSONObject for saved game
+     *
+     * @return name of the dungeon
+     */
+    public static final String extractDungeonName(JSONObject savedGame) {
+        return savedGame.getString("dungeonName");
     }
 
-    public static final Goal extractGoal(JSONObject savedDungeon) throws IllegalArgumentException {
-        return (savedDungeon.has("goal-condition"))
-            ? EntityFactory.doExtractGoal(savedDungeon.getJSONObject("goal-condition"))
-            : null;
+    /**
+     * Extracts the goal from
+     *
+     * @param savedGame game to be extracted from
+     *
+     * @return Goal of the game
+     */
+    public static final Goal extractGoal(JSONObject savedGame) {
+        return EntityFactory.extractGoal(savedGame);
     }
 }

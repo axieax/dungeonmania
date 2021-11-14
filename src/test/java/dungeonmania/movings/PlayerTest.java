@@ -10,12 +10,10 @@ import dungeonmania.DungeonManiaController;
 import dungeonmania.TestHelpers;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
-import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.collectables.potion.Potion;
@@ -336,50 +334,48 @@ public class PlayerTest {
 
         // load the game
         final DungeonManiaController innerController = controller;
-        assertDoesNotThrow(
-            () -> {
-                // move down
-                DungeonResponse loadedResponse = innerController.tick(null, Direction.DOWN);
+        assertDoesNotThrow(() -> {
+            // move down
+            DungeonResponse loadedResponse = innerController.tick(null, Direction.DOWN);
 
-                List<EntityResponse> loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
+            List<EntityResponse> loadedEntities = loadedResponse.getEntities();
+            assertTrue(loadedEntities.size() > 0);
 
-                Position loadedCharacterPos = getCharacterPosition(loadedEntities);
-                assertNotNull(loadedCharacterPos);
-                assertTrue(new Position(1, 2).equals(loadedCharacterPos));
+            Position loadedCharacterPos = getCharacterPosition(loadedEntities);
+            assertNotNull(loadedCharacterPos);
+            assertTrue(new Position(1, 2).equals(loadedCharacterPos));
 
-                // move right
-                loadedResponse = innerController.tick(null, Direction.RIGHT);
+            // move right
+            loadedResponse = innerController.tick(null, Direction.RIGHT);
 
-                loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
+            loadedEntities = loadedResponse.getEntities();
+            assertTrue(loadedEntities.size() > 0);
 
-                loadedCharacterPos = getCharacterPosition(loadedEntities);
-                assertNotNull(loadedCharacterPos);
-                assertTrue(new Position(2, 2).equals(loadedCharacterPos));
+            loadedCharacterPos = getCharacterPosition(loadedEntities);
+            assertNotNull(loadedCharacterPos);
+            assertTrue(new Position(2, 2).equals(loadedCharacterPos));
 
-                // move up
-                loadedResponse = innerController.tick(null, Direction.UP);
+            // move up
+            loadedResponse = innerController.tick(null, Direction.UP);
 
-                loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
+            loadedEntities = loadedResponse.getEntities();
+            assertTrue(loadedEntities.size() > 0);
 
-                loadedCharacterPos = getCharacterPosition(loadedEntities);
-                assertNotNull(loadedCharacterPos);
-                assertTrue(new Position(2, 1).equals(loadedCharacterPos));
+            loadedCharacterPos = getCharacterPosition(loadedEntities);
+            assertNotNull(loadedCharacterPos);
+            assertTrue(new Position(2, 1).equals(loadedCharacterPos));
 
-                // move left
-                // move up
-                loadedResponse = innerController.tick(null, Direction.LEFT);
+            // move left
+            // move up
+            loadedResponse = innerController.tick(null, Direction.LEFT);
 
-                loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
+            loadedEntities = loadedResponse.getEntities();
+            assertTrue(loadedEntities.size() > 0);
 
-                loadedCharacterPos = getCharacterPosition(loadedEntities);
-                assertNotNull(loadedCharacterPos);
-                assertTrue(new Position(1, 1).equals(loadedCharacterPos));
-            }
-        );
+            loadedCharacterPos = getCharacterPosition(loadedEntities);
+            assertNotNull(loadedCharacterPos);
+            assertTrue(new Position(1, 1).equals(loadedCharacterPos));
+        });
     }
 
     @Test
@@ -518,13 +514,13 @@ public class PlayerTest {
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
-        Sword sword = new Sword(new Position(2, 1));
-        game.addEntity(sword);
+        Arrow arrow = new Arrow(new Position(2, 1));
+        game.addEntity(arrow);
 
-        // The sword exists in the game, but the player does not have it in their inventory, so should throw exception
+        // The arrow exists in the game, but the player does not have it in their inventory, so should throw exception
         assertThrows(
             InvalidActionException.class,
-            () -> player.move(game, Direction.RIGHT, sword.getId())
+            () -> player.move(game, Direction.RIGHT, arrow.getId())
         );
     }
 

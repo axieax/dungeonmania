@@ -93,7 +93,11 @@ public class ArmourTest {
         // Spawn mercenaries next to the player - upon ticking, the mercenary would move to the player
         // Since this is peaceful mode, the player's health will not change, so mercenaries will always die
         for (int i = 0; i < 50; i++) {
-            Mercenary mercenary = new Mercenary(new Position(1, 2), mode.damageMultiplier(), player);
+            Mercenary mercenary = new Mercenary(
+                new Position(1, 2),
+                mode.damageMultiplier(),
+                player
+            );
             game.addEntity(mercenary);
             game.tick(null, Direction.NONE);
 
