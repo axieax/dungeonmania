@@ -13,23 +13,20 @@ public class Boulder extends Entity {
         super("boulder", position);
     }
 
-    /**
-     * If the boulder is interacted by the player, it moves the boulder to the next tile.
-     */
     @Override
     public void interact(Game game, Entity character) {
-        if (character instanceof Player) this.moveBoulder(
-                game,
-                ((Player) character).getDirection()
-            );
+        // If the boulder is interacted by the player, it moves the boulder to the next tile.
+        if (character instanceof Player) {
+            this.moveBoulder(game, ((Player) character).getDirection());
+        }
     }
 
     /**
      * Moves the boulder to the specified direction if it is an empty tile or the
      * entity in the directed position is a floor switch.
      *
-     * @param game
-     * @param direction
+     * @param game game state
+     * @param direction to move the boulder
      */
     private void moveBoulder(Game game, Direction direction) {
         Position newPosition = this.getOffsetPosition(direction);
@@ -42,7 +39,7 @@ public class Boulder extends Entity {
                 if (entity instanceof FloorSwitch) {
                     this.setPosition(newPosition);
                     ((FloorSwitch) entity).triggerSwitch(game);
-                    break;
+                    return;
                 }
             }
         }
