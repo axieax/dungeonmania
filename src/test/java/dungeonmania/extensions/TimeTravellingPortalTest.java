@@ -156,7 +156,7 @@ public class TimeTravellingPortalTest {
                     .getId()
             );
             // check if mercenary is an ally
-            for (int i = 0; i < 5; i++) r = dmc.tick(null, Direction.NONE);
+            r = TimeTravelUtil.tickMovement(dmc, Direction.NONE, 5);
             assertTrue(r.getEntities().stream().anyMatch(e -> e.getType().startsWith("mercenary")));
         });
     }

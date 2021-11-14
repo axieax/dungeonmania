@@ -19,6 +19,6 @@ public class TheOneRing extends Item implements Consumable {
     @Override
     public void consume(Game game, Player player) {
         player.removeInventoryItem(this.getId());
-        player.setHealth(player.MAX_CHARACTER_HEALTH);
+        player.setHealth(player.getMaxCharacterHealth());
     }
 }

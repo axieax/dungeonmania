@@ -112,7 +112,11 @@ public final class GameWrapper {
         Player restorePlayer = (Player) restoreGame.getCharacter();
 
         // old_player in activeGame has restorePlayer's position
-        OlderPlayer ilNam = new OlderPlayer(restorePlayer.getPosition().asLayer(30), moves);
+        OlderPlayer ilNam = new OlderPlayer(
+            restorePlayer.getPosition().asLayer(30),
+            restorePlayer.getMaxCharacterHealth(),
+            moves
+        );
         restoreGame.addEntity(ilNam);
         restoreGame.removeEntity(restorePlayer);
 

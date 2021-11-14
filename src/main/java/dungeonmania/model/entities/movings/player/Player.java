@@ -33,8 +33,8 @@ import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
 
-    public final int MAX_CHARACTER_HEALTH;
     public static final int CHARACTER_ATTACK_DMG = 10;
+    private final int maxCharacterHealth;
 
     private PlayerState state;
     private boolean inBattle;
@@ -48,7 +48,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
         this.currentBattleOpponent = null;
-        MAX_CHARACTER_HEALTH = health;
+        maxCharacterHealth = health;
     }
 
     /********************************
@@ -99,6 +99,15 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public void setCurrentBattleOpponent(MovingEntity opponent) {
         this.currentBattleOpponent = opponent;
+    }
+
+    /**
+     * Get maxCharacterHealth attribute
+     *
+     * @return int
+     */
+    public int getMaxCharacterHealth() {
+        return maxCharacterHealth;
     }
 
     /**
@@ -258,7 +267,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     @Override
     public AnimationQueue getAnimation() {
-        double health = (double) getHealth() / MAX_CHARACTER_HEALTH;
+        double health = (double) getHealth() / maxCharacterHealth;
         return new AnimationQueue(
             "PostTick",
             getId(),
@@ -293,6 +302,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *  Action Methods              *
      ********************************/
 
+    @Override
     public void interact(Game game, Entity character) {
         if (character instanceof Enemy) this.battle(game, (Enemy) character);
     }
@@ -397,7 +407,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * If the player encounters their olderself and nd are carrying a sun stone or are wearing midnight armour,
+     * If the player encounters their olderself and are carrying a sun stone or are wearing midnight armour,
      * or they are invisible, then nothing happens. If not, then a battle ensues.
      * @param opponent
      * @return boolean true if the player can battle the opponent
@@ -527,6 +537,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         observers = new ArrayList<>();
     }
 
+    @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put(state.getClass().getSimpleName(), state.ticksLeft());

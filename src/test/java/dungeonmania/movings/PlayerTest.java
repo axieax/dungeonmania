@@ -7,14 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.DungeonManiaController;
+import dungeonmania.TestHelpers;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.Arrow;
 import dungeonmania.model.entities.collectables.Bomb;
 import dungeonmania.model.entities.collectables.Treasure;
 import dungeonmania.model.entities.collectables.Wood;
-import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.collectables.potion.Potion;
@@ -28,7 +27,6 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerDefaultState;
 import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.movings.player.PlayerInvisibleState;
-import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
@@ -39,7 +37,6 @@ import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -432,7 +429,12 @@ public class PlayerTest {
         // any items that are used to craft another buildable entity should be
         // removed from the player's inventory, and are replaced with the built item
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -463,7 +465,12 @@ public class PlayerTest {
     public void testCharacterCannotPickUpBombsItPlaced() {
         // removed from the player's inventory, and are replaced with the built item
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -497,25 +504,35 @@ public class PlayerTest {
     @Test
     public void testUsingNonExistentItem() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
-        Sword sword = new Sword(new Position(2, 1));
-        game.addEntity(sword);
+        Arrow arrow = new Arrow(new Position(2, 1));
+        game.addEntity(arrow);
 
-        // The sword exists in the game, but the player does not have it in their inventory, so should throw exception
+        // The arrow exists in the game, but the player does not have it in their inventory, so should throw exception
         assertThrows(
             InvalidActionException.class,
-            () -> player.move(game, Direction.RIGHT, sword.getId())
+            () -> player.move(game, Direction.RIGHT, arrow.getId())
         );
     }
 
     @Test
     public void testMovementDoesNotAffectHealth() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -536,7 +553,12 @@ public class PlayerTest {
     @Test
     public void testBattleReducesPlayerHealth() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -560,7 +582,12 @@ public class PlayerTest {
     @Test
     public void testInvisibleState() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -607,7 +634,12 @@ public class PlayerTest {
         );
 
         for (MovingEntity enemy : enemies) {
-            Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+            Game game = new Game(
+                "game",
+                TestHelpers.sevenBySevenWallBoundary(),
+                new ExitCondition(),
+                mode
+            );
             player.setHealth(mode.initialHealth());
             player.setPosition(playerPos);
             game.addEntity(player);
@@ -644,7 +676,12 @@ public class PlayerTest {
     @Test
     public void testInvincibilityPotionHasNoEffectInHardMode() {
         Mode mode = new Hard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -671,7 +708,12 @@ public class PlayerTest {
     @Test
     public void testCanPickUpMultiplePotions() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -685,10 +727,7 @@ public class PlayerTest {
 
         assertTrue(player.getInventoryResponses().size() == 0);
 
-        assertDoesNotThrow(() -> {
-            game.tick(null, Direction.RIGHT);
-            game.tick(null, Direction.RIGHT);
-        });
+        assertDoesNotThrow(() -> TestHelpers.gameTickMovement(game, Direction.RIGHT, 2));
 
         assertTrue(player.getInventoryResponses().size() > 0);
     }
@@ -696,7 +735,12 @@ public class PlayerTest {
     @Test
     public void testCanDrinkTwoPotions() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 2);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -721,7 +765,12 @@ public class PlayerTest {
     @Test
     public void testCharacterDies() {
         Mode mode = new Hard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
@@ -745,7 +794,12 @@ public class PlayerTest {
         // Enemy health should be less (more negative) in the former case
 
         Mode mode = new Hard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game(
+            "game",
+            TestHelpers.sevenBySevenWallBoundary(),
+            new ExitCondition(),
+            mode
+        );
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -778,7 +832,7 @@ public class PlayerTest {
 
         // Create a new game instance where the player does not have any allies
         mode = new Hard();
-        game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -814,35 +868,5 @@ public class PlayerTest {
 
         if (player == null) return null;
         return player.getPosition();
-    }
-
-    private List<Entity> sevenBySevenWallBoundary() {
-        ArrayList<Entity> wallBorder = new ArrayList<>();
-
-        // Left border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(0, i));
-            wallBorder.add(wall);
-        }
-
-        // Right border
-        for (int i = 0; i < 7; i++) {
-            Wall wall = new Wall(new Position(6, i));
-            wallBorder.add(wall);
-        }
-
-        // Top border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 0));
-            wallBorder.add(wall);
-        }
-
-        // Bottom border
-        for (int i = 1; i < 6; i++) {
-            Wall wall = new Wall(new Position(i, 6));
-            wallBorder.add(wall);
-        }
-
-        return wallBorder;
     }
 }

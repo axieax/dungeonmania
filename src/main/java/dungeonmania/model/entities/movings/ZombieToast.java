@@ -22,6 +22,7 @@ public class ZombieToast extends Enemy {
         super("zombie_toast", position, MAX_ZOMBIE_HEALTH, MAX_ZOMBIE_ATTACK_DMG, damageMultiplier);
         this.setMovementState(new RandomMovementState(this));
         player.attach(this);
+        this.setArmourDropRate(ARMOUR_DROP_RATE);
     }
 
     @Override

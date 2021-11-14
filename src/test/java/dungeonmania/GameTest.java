@@ -2,8 +2,12 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.Mercenary;
@@ -11,11 +15,9 @@ import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 public class GameTest {
@@ -29,41 +31,16 @@ public class GameTest {
         assertDoesNotThrow(() -> controller.newGame("zombie", "Standard"));
 
         DungeonResponse responseOne = controller.tick(null, Direction.NONE);
-        assertEquals(
-            0,
-            responseOne
-                .getEntities()
-                .stream()
-                .filter(e -> e.getType().equals("zombie_toast"))
-                .collect(Collectors.toList())
-                .size()
-        );
+        assertNull(TestHelpers.findFirstInstance(responseOne.getEntities(), "zombie_toast"));
 
-        responseOne.getEntities();
         for (int i = 0; i < 18; i++) {
             DungeonResponse responseTwo = controller.tick(null, Direction.NONE);
-            assertEquals(
-                0,
-                responseTwo
-                    .getEntities()
-                    .stream()
-                    .filter(e -> e.getType().equals("zombie_toast"))
-                    .collect(Collectors.toList())
-                    .size()
-            );
+            assertNull(TestHelpers.findFirstInstance(responseTwo.getEntities(), "zombie_toast"));
         }
 
         // 20 ticks have passed
         DungeonResponse responseThree = controller.tick(null, Direction.NONE);
-        assertEquals(
-            1,
-            responseThree
-                .getEntities()
-                .stream()
-                .filter(e -> e.getType().equals("zombie_toast"))
-                .collect(Collectors.toList())
-                .size()
-        );
+        assertNotNull(TestHelpers.findFirstInstance(responseThree.getEntities(), "zombie_toast"));
     }
 
     /**
@@ -75,41 +52,17 @@ public class GameTest {
         assertDoesNotThrow(() -> controller.newGame("zombie", "Peaceful"));
 
         DungeonResponse responseOne = controller.tick(null, Direction.NONE);
-        assertEquals(
-            0,
-            responseOne
-                .getEntities()
-                .stream()
-                .filter(e -> e.getType().equals("zombie_toast"))
-                .collect(Collectors.toList())
-                .size()
-        );
+        assertNull(TestHelpers.findFirstInstance(responseOne.getEntities(), "zombie_toast"));
 
         responseOne.getEntities();
         for (int i = 0; i < 18; i++) {
             DungeonResponse responseTwo = controller.tick(null, Direction.NONE);
-            assertEquals(
-                0,
-                responseTwo
-                    .getEntities()
-                    .stream()
-                    .filter(e -> e.getType().equals("zombie_toast"))
-                    .collect(Collectors.toList())
-                    .size()
-            );
+            assertNull(TestHelpers.findFirstInstance(responseTwo.getEntities(), "zombie_toast"));
         }
 
         // 20 ticks have passed
         DungeonResponse responseThree = controller.tick(null, Direction.NONE);
-        assertEquals(
-            1,
-            responseThree
-                .getEntities()
-                .stream()
-                .filter(e -> e.getType().equals("zombie_toast"))
-                .collect(Collectors.toList())
-                .size()
-        );
+        assertNotNull(TestHelpers.findFirstInstance(responseThree.getEntities(), "zombie_toast"));
     }
 
     /**
@@ -121,41 +74,17 @@ public class GameTest {
         DungeonManiaController controller = new DungeonManiaController();
         assertDoesNotThrow(() -> controller.newGame("zombie", "Hard"));
         DungeonResponse responseOne = controller.tick(null, Direction.NONE);
-        assertEquals(
-            0,
-            responseOne
-                .getEntities()
-                .stream()
-                .filter(e -> e.getType().equals("zombie_toast"))
-                .collect(Collectors.toList())
-                .size()
-        );
+        assertNull(TestHelpers.findFirstInstance(responseOne.getEntities(), "zombie_toast"));
 
         responseOne.getEntities();
         for (int i = 0; i < 13; i++) {
             DungeonResponse responseTwo = controller.tick(null, Direction.NONE);
-            assertEquals(
-                0,
-                responseTwo
-                    .getEntities()
-                    .stream()
-                    .filter(e -> e.getType().equals("zombie_toast"))
-                    .collect(Collectors.toList())
-                    .size()
-            );
+            assertNull(TestHelpers.findFirstInstance(responseTwo.getEntities(), "zombie_toast"));
         }
 
-        // 15 ticks have passed
         DungeonResponse responseThree = controller.tick(null, Direction.NONE);
-        assertEquals(
-            1,
-            responseThree
-                .getEntities()
-                .stream()
-                .filter(e -> e.getType().equals("zombie_toast"))
-                .collect(Collectors.toList())
-                .size()
-        );
+        // 15 ticks have passed
+        assertNotNull(TestHelpers.findFirstInstance(responseThree.getEntities(), "zombie_toast"));
     }
 
     /**
@@ -172,12 +101,7 @@ public class GameTest {
             mode
         );
 
-        Player gamePlayer = null;
-        for (Entity entity : newGame.getEntities()) {
-            if (entity.getClass().getSimpleName().toLowerCase().equals("player")) {
-                gamePlayer = (Player) entity;
-            }
-        }
+        Player gamePlayer = newGame.getCharacter();
 
         List<Entity> cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(
             gamePlayer.getPosition()
@@ -190,9 +114,7 @@ public class GameTest {
             newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
         assertEquals(1, cardinallyAdjacentEntities.size());
 
-        newGame.tick(null, Direction.DOWN);
-        newGame.tick(null, Direction.DOWN);
-        newGame.tick(null, Direction.DOWN);
+        TestHelpers.gameTickMovement(newGame, Direction.DOWN, 3);
         newGame.tick(null, Direction.RIGHT);
 
         cardinallyAdjacentEntities =
@@ -246,24 +168,11 @@ public class GameTest {
             mode
         );
 
-        Player gamePlayer = null;
-        for (Entity entity : newGame.getEntities()) {
-            if (entity.getClass().getSimpleName().toLowerCase().equals("player")) {
-                gamePlayer = (Player) entity;
-            }
-        }
+        Player gamePlayer = newGame.getCharacter();
 
-        for (int i = 0; i < 13; i++) {
-            newGame.tick(null, Direction.DOWN);
-        }
-
-        for (int i = 0; i < 12; i++) {
-            newGame.tick(null, Direction.RIGHT);
-        }
-
-        for (int i = 0; i < 2; i++) {
-            newGame.tick(null, Direction.LEFT);
-        }
+        TestHelpers.gameTickMovement(newGame, Direction.DOWN, 13);
+        TestHelpers.gameTickMovement(newGame, Direction.RIGHT, 12);
+        TestHelpers.gameTickMovement(newGame, Direction.LEFT, 2);
 
         DungeonResponse gameResponseOne = newGame.tick(null, Direction.UP);
         assertTrue(gameResponseOne.getBuildables().contains("bow"));
@@ -271,13 +180,12 @@ public class GameTest {
         assertDoesNotThrow(() -> newGame.build("bow"));
 
         // Bow is in inventory
-        boolean builtBow = false;
-        for (ItemResponse item : gamePlayer.getInventoryResponses()) {
-            if (item.getType().contains("bow")) builtBow = true;
-        }
-        assertTrue(builtBow);
+        assertNotNull(TestHelpers.getItemFromInventory(gamePlayer.getInventoryResponses(), "bow"));
     }
 
+    /**
+     * This tests that the player's spawn location is correct regardless of where the player is
+     */
     @Test
     public void testPlayerSpawnLocation() {
         Mode mode = new Standard();
@@ -305,6 +213,9 @@ public class GameTest {
         assertTrue(new Position(1, 1).equals(newGame.getPlayerSpawnLocation()));
     }
 
+    /**
+     * This tests that the player interacts as intended
+     */
     @Test
     public void testInteract() {
         Mode mode = new Standard();
@@ -315,14 +226,8 @@ public class GameTest {
             mode
         );
 
-        Player gamePlayer = null;
+        Player gamePlayer = newGame.getCharacter();
         Mercenary mercenary = null;
-
-        for (Entity entity : newGame.getEntities()) {
-            if (entity.getClass().getSimpleName().toLowerCase().equals("player")) {
-                gamePlayer = (Player) entity;
-            }
-        }
 
         for (Entity entity : newGame.getEntities()) {
             if (entity.getClass().getSimpleName().toLowerCase().equals("mercenary")) {
@@ -332,23 +237,61 @@ public class GameTest {
 
         String mercenaryId = mercenary.getId();
 
-        for (int i = 0; i < 17; i++) {
-            newGame.tick(null, Direction.RIGHT);
-        }
-
-        for (int i = 0; i < 9; i++) {
-            newGame.tick(null, Direction.DOWN);
-        }
-
-        for (int i = 0; i < 9; i++) {
-            newGame.tick(null, Direction.LEFT);
-        }
-
-        for (int i = 0; i < 3; i++) {
-            newGame.tick(null, Direction.UP);
-        }
+        TestHelpers.gameTickMovement(newGame, Direction.RIGHT, 17);
+        TestHelpers.gameTickMovement(newGame, Direction.DOWN, 9);
+        TestHelpers.gameTickMovement(newGame, Direction.LEFT, 9);
+        TestHelpers.gameTickMovement(newGame, Direction.UP, 3);
 
         assertDoesNotThrow(() -> newGame.interact(mercenaryId));
         assertEquals(1, gamePlayer.getAllies().size());
+    }
+
+    /**
+     * This tests that the game ticks as intended
+     */
+    @Test
+    public void testTick() {
+        Mode mode = new Standard();
+        Game newGame = new Game(
+            "advanced",
+            EntityFactory.extractEntities("advanced", mode),
+            null,
+            mode
+        );
+
+        Player gamePlayer = null;
+
+        for (Entity entity : newGame.getEntities()) {
+            if (entity.getClass().getSimpleName().toLowerCase().equals("player")) {
+                gamePlayer = (Player) entity;
+            }
+        }
+
+        assertThrows(IllegalArgumentException.class, () -> newGame.tick("", Direction.NONE));
+
+        assertTrue(newGame.getEntity("non-existent-item") == null);
+        assertThrows(
+            InvalidActionException.class,
+            () -> newGame.tick("non-existent-item", Direction.NONE)
+        );
+
+        // Pickup sword
+        TestHelpers.gameTickMovement(newGame, Direction.RIGHT, 5);
+
+        // Sword is not a valid item to use
+        String swordId = gamePlayer.findInventoryItem("sword").getId();
+        assertThrows(IllegalArgumentException.class, () -> newGame.tick(swordId, Direction.NONE));
+
+        // Pickup bomb
+        TestHelpers.gameTickMovement(newGame, Direction.RIGHT, 5);
+        TestHelpers.gameTickMovement(newGame, Direction.DOWN, 3);
+        TestHelpers.gameTickMovement(newGame, Direction.RIGHT, 2);
+
+        // Bomb is a valid item to use
+        String bombId = gamePlayer.findInventoryItem("bomb").getId();
+        assertDoesNotThrow(() -> newGame.tick(bombId, Direction.NONE));
+
+        // If we try to use bomb again, it does not exist in player's inventory
+        assertThrows(InvalidActionException.class, () -> newGame.tick(bombId, Direction.NONE));
     }
 }

@@ -41,13 +41,6 @@ public class PlayerDefaultState implements PlayerState {
             player.setHealth(originalHealth - ((opponent.getHealth() * opponentAttackDamage) / 10));
             opponent.reduceHealthFromBattle(((originalHealth * playerAttackDamage) / 5));
 
-            /**
-             * TODO: Instead of using all attack equipment for each battle, only use them if the default
-             * attack of the character is not enough to kill the opponent.
-             *
-             * Something to consider for Milestone 3.
-             */
-
             // Check if player is dead
             if (!player.isAlive()) {
                 Item item = player.findInventoryItem("one_ring");
@@ -84,6 +77,7 @@ public class PlayerDefaultState implements PlayerState {
         player.setCurrentBattleOpponent(null);
     }
 
+    @Override
     public int ticksLeft() {
         return 0;
     }

@@ -16,10 +16,8 @@ public class PlayerInvisibleState implements PlayerState {
      * Player immediately become "invisible" and can move past all other entities undetected.
      * This is implemented by simulating attacks from both parties as having no effect.
      */
-    @Override
     public void battle(Game game, Enemy opponent) {}
 
-    @Override
     public void updateState(Player player) {
         if (timeLimit <= 0) {
             this.player.setState(new PlayerDefaultState(player));

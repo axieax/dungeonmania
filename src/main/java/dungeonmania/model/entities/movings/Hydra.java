@@ -16,11 +16,11 @@ import org.json.JSONObject;
 
 public class Hydra extends Enemy implements Boss {
 
-    private static final int MAX_HYDRA_HEALTH = 50;
-    private static final int MAX_HYDRA_ATTACK_DMG = 5;
-    private static final int HYDRA_TICK_RATE = 50;
+    public static final int MAX_HYDRA_HEALTH = 50;
+    public static final int MAX_HYDRA_ATTACK_DMG = 5;
+    public static final int HYDRA_TICK_RATE = 50;
 
-    boolean preventHeadRespawn;
+    private boolean preventHeadRespawn;
 
     public Hydra(Position position, int damageMultiplier, SubjectPlayer player) {
         super("hydra", position, MAX_HYDRA_HEALTH, MAX_HYDRA_ATTACK_DMG, damageMultiplier);

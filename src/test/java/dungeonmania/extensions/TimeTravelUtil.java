@@ -3,34 +3,15 @@ package dungeonmania.extensions;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import dungeonmania.DungeonManiaController;
+import dungeonmania.TestHelpers;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 
-public class TimeTravelUtil {
-
-    public static DungeonResponse tickMovement(
-        DungeonManiaController dmc,
-        Direction direction,
-        int times
-    ) {
-        DungeonResponse resp = null;
-        for (int i = 0; i < times; i++) resp = dmc.tick(null, direction);
-        return resp;
-    }
-
-    public static ItemResponse getItemFromInventory(List<ItemResponse> inventory, String prefix) {
-        return inventory
-            .stream()
-            .filter(e -> e.getType().startsWith(prefix))
-            .findFirst()
-            .orElse(null);
-    }
+public class TimeTravelUtil extends TestHelpers {
 
     /**
      * Helper method for checking whether a DungeonResponse contains a time_turner
@@ -91,33 +72,6 @@ public class TimeTravelUtil {
     }
 
     /**
-     * Returns the player
-     *
-     * @param entities entities from DungeonResponse
-     *
-     * @return player response, or null if old player does not exist
-     */
-    public static EntityResponse getPlayer(List<EntityResponse> entities) {
-        return entities.stream().filter(e -> e.getType().equals("player")).findFirst().orElse(null);
-    }
-
-    /**
-     * Returns the position of the player
-     *
-     * @param entities entities from DungeonResponse
-     *
-     * @return position of player, or null if player does not exist
-     */
-    public static Position getPlayerPosition(List<EntityResponse> entities) {
-        EntityResponse player = entities
-            .stream()
-            .filter(e -> e.getType().equals("player"))
-            .findFirst()
-            .orElse(null);
-        return (player != null) ? player.getPosition().asLayer(0) : null;
-    }
-
-    /**
      * Returns the position of the old player
      *
      * @param entities entities from DungeonResponse
@@ -134,48 +88,18 @@ public class TimeTravelUtil {
     }
 
     /**
-     * Gets a list of entities at position given
+     * Returns the position of the player
+     *
+     * @param entities entities from DungeonResponse
+     *
+     * @return position of player, or null if player does not exist
      */
-    @Test
-    public static List<EntityResponse> getEntitiesAtPosition(
-        List<EntityResponse> entities,
-        Position pos
-    ) {
-        return entities
+    public static Position getPlayerPosition(List<EntityResponse> entities) {
+        EntityResponse player = entities
             .stream()
-            .filter(e -> e.getPosition().equals(pos))
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Returns whether there is an entity with the given prefix in the list given
-     */
-    @Test
-    public static boolean isEntityInEntitiesList(List<EntityResponse> entities, String prefix) {
-        return entities.stream().anyMatch(e -> e.getType().startsWith(prefix));
-    }
-
-    /**
-     * Returns whether there is an entity with the given prefix on the position
-     */
-    @Test
-    public static boolean isEntityAtPosition(
-        List<EntityResponse> entities,
-        String prefix,
-        Position pos
-    ) {
-        List<EntityResponse> entitiesAtPos = getEntitiesAtPosition(entities, pos);
-        return isEntityInEntitiesList(entitiesAtPos, prefix);
-    }
-
-    /**
-     * Returns the entity count with the specified prefix.
-     */
-    public static int entityCount(List<EntityResponse> entities, String prefix) {
-        return entities
-            .stream()
-            .filter(e -> e.getType().startsWith(prefix))
-            .collect(Collectors.toList())
-            .size();
+            .filter(e -> e.getType().equals("player"))
+            .findFirst()
+            .orElse(null);
+        return (player != null) ? player.getPosition().asLayer(0) : null;
     }
 }

@@ -12,7 +12,7 @@ public abstract class Enemy extends MovingEntity implements Observer {
     private MovementState movementState;
     private int movementTick;
 
-    private double armourDropRate = 0;
+    private double armourDropRate;
     public final double THE_ONE_RING_DROP_RATE = 0.1;
 
     public Enemy(
@@ -25,6 +25,7 @@ public abstract class Enemy extends MovingEntity implements Observer {
         super(prefix, position, health, attackDamage);
         this.damageMultiplier = damageMultiplier;
         this.movementTick = 1;
+        this.armourDropRate = 0.2;
     }
 
     public int getBaseAttackDamage() {
@@ -41,6 +42,10 @@ public abstract class Enemy extends MovingEntity implements Observer {
 
     public double getArmourDropRate() {
         return armourDropRate;
+    }
+
+    public void setArmourDropRate(double armourDropRate) {
+        this.armourDropRate = armourDropRate;
     }
 
     public int getMovementTick() {
@@ -61,6 +66,7 @@ public abstract class Enemy extends MovingEntity implements Observer {
         }
     }
 
+    @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put("damageMultiplier", damageMultiplier);

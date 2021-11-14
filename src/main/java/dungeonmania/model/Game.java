@@ -410,7 +410,7 @@ public final class Game {
             Spider.spawnSpider(this, this.mode.damageMultiplier());
             Mercenary.spawnMercenary(this, this.mode.damageMultiplier());
             Hydra.spawnHydra(this, this.mode.damageMultiplier());
-        } catch (PlayerDeadException e) {}
+        }  catch (PlayerDeadException | NullPointerException e) {}
 
         return getDungeonResponse();
     }

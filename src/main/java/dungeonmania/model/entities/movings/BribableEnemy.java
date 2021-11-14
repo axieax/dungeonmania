@@ -36,6 +36,7 @@ public abstract class BribableEnemy extends Enemy {
         this.bribed = false;
         this.mindControlled = false;
         this.moveTwice = false;
+        this.setArmourDropRate(ARMOUR_DROP_RATE);
     }
 
     public boolean isBribed() {
