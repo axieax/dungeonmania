@@ -2,6 +2,7 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
+import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.response.models.DungeonResponse;
@@ -82,6 +83,24 @@ public class TestHelpers {
     ) {
         DungeonResponse resp = null;
         for (int i = 0; i < times; i++) resp = dmc.tick(null, direction);
+        return resp;
+    }
+
+    /********************************
+     *  Game endpoints              *
+     ********************************/
+
+    /**
+     * Ticks the player to move to the given direction.
+     *
+     * @param game
+     * @param direction
+     * @param times
+     * @return DungeonResponse
+     */
+    public static DungeonResponse gameTickMovement(Game game, Direction direction, int times) {
+        DungeonResponse resp = null;
+        for (int i = 0; i < times; i++) resp = game.tick(null, direction);
         return resp;
     }
 
@@ -172,13 +191,16 @@ public class TestHelpers {
      * Find first instance of entity with prefix in the entity responses
      * @param entities
      * @param prefix
-     * 
+     *
      * @return EntityResponse
      */
-    public static EntityResponse findFirstInstance(List<EntityResponse> entities, String prefix) {
+    public static EntityResponse findFirstInstance(
+        List<EntityResponse> entities,
+        String objectType
+    ) {
         return entities
             .stream()
-            .filter(e -> e.getType().startsWith(prefix))
+            .filter(e -> e.getType().equals(objectType))
             .findFirst()
             .orElse(null);
     }
