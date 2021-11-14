@@ -61,7 +61,7 @@ public class MercenaryTest {
         List<Entity> entities = sevenBySevenWallBoundary();
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         entities.add(player);
-        
+
         Game game = new Game("game", entities, new ExitCondition(), mode);
 
         // Move player away from spawning location (otherwise mercenary will immediately die after spawning)
@@ -291,11 +291,12 @@ public class MercenaryTest {
 
         // Mercenary should not be able to go in the door position
         for (int i = 0; i < 100; i++) {
-            
             game.tick(null, Direction.NONE);
 
             // Exit loop if either the player or mercenary has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null
+            ) {
                 break;
             }
 
@@ -340,7 +341,6 @@ public class MercenaryTest {
         game.addEntity(new Treasure(new Position(1, 3)));
         game.addEntity(new Treasure(new Position(1, 4)));
 
-        
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
@@ -356,7 +356,7 @@ public class MercenaryTest {
         // Mercenary in adjacent tile, so bribe (player stil at tile)
         game.interact(mercenary.getId());
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
-        
+
         // Mercenary will not attack the player
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
@@ -414,7 +414,9 @@ public class MercenaryTest {
             game.tick(null, movementDirection);
 
             // Exit the loop if the player or mercenary has died
-            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null
+            ) {
                 break;
             }
 

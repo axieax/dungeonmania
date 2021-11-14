@@ -1,4 +1,4 @@
-package dungeonmania.model;
+package dungeonmania;
 
 import dungeonmania.util.Position;
 import java.util.ArrayList;
@@ -209,24 +209,22 @@ public class Maze {
      *
      * @return list of Positions which are one move away from the current position
      */
-    private List<Position> firstNeighbours(Position currPos) {
+    public List<Position> firstNeighbours(Position currPos) {
         int x = currPos.getX();
         int y = currPos.getY();
 
         // find the positions that could be the possible first neighbours of  currPos
-        List<Position> positions = Arrays.asList(
-            new Position(x, y + 1),
-            new Position(x - 1, y),
-            new Position(x + 1, y),
-            new Position(x, y - 1)
+        List<Position> positions = new ArrayList<Position>(
+            Arrays.asList(
+                new Position(x, y + 1),
+                new Position(x - 1, y),
+                new Position(x + 1, y),
+                new Position(x, y - 1)
+            )
         );
 
         // remove positions on the boundary
-        Iterator<Position> iter = positions.iterator();
-        while (iter.hasNext()) {
-            Position possiblePosition = iter.next();
-            if (isOnBoundary(possiblePosition)) iter.remove();
-        }
+        positions.removeIf(pos -> isOnBoundary(pos));
         return positions;
     }
 
@@ -236,21 +234,20 @@ public class Maze {
      *
      * @return list of Positions which are two moves away from the current position
      */
-    private List<Position> secondNeighbours(Position currPos) {
+    public List<Position> secondNeighbours(Position currPos) {
         int x = currPos.getX();
         int y = currPos.getY();
-        List<Position> positions = Arrays.asList(
-            new Position(x, y + 2),
-            new Position(x - 2, y),
-            new Position(x + 2, y),
-            new Position(x, y - 2)
+        List<Position> positions = new ArrayList<Position>(
+            Arrays.asList(
+                new Position(x, y + 2),
+                new Position(x - 2, y),
+                new Position(x + 2, y),
+                new Position(x, y - 2)
+            )
         );
 
-        Iterator<Position> iter = positions.iterator();
-        while (iter.hasNext()) {
-            Position possiblePosition = iter.next();
-            if (isOnBoundary(possiblePosition)) iter.remove();
-        }
+        // remove positions on the boundary
+        positions.removeIf(pos -> isOnBoundary(pos));
         return positions;
     }
 

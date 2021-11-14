@@ -218,11 +218,13 @@ public final class Game {
         // all positions
         int x = position.getX();
         int y = position.getY();
-        List<Position> positions = Arrays.asList(
-            new Position(x, y + 1),
-            new Position(x - 1, y),
-            new Position(x + 1, y),
-            new Position(x, y - 1)
+        List<Position> positions = new ArrayList<Position>(
+            Arrays.asList(
+                new Position(x, y + 1),
+                new Position(x - 1, y),
+                new Position(x + 1, y),
+                new Position(x, y - 1)
+            )
         );
 
         // filter out collisions

@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.GameWrapper;
-import dungeonmania.model.Maze;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.goal.Goal;
 import dungeonmania.model.mode.Hard;

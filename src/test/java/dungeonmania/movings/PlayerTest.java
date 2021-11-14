@@ -18,9 +18,11 @@ import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.model.entities.movings.Assassin;
 import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerDefaultState;
@@ -599,12 +601,14 @@ public class PlayerTest {
         List<MovingEntity> enemies = Arrays.asList(
             new Mercenary(enemyPos, mode.damageMultiplier(), player),
             new ZombieToast(enemyPos, mode.damageMultiplier(), player),
-            new Hydra(enemyPos, mode.damageMultiplier(), player)
+            new Hydra(enemyPos, mode.damageMultiplier(), player),
+            new Assassin(enemyPos, mode.damageMultiplier(), player),
+            new Spider(enemyPos, mode.damageMultiplier(), player)
         );
 
         for (MovingEntity enemy : enemies) {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-            player.setHealth(Player.MAX_CHARACTER_HEALTH);
+            player.setHealth(mode.initialHealth());
             player.setPosition(playerPos);
             game.addEntity(player);
             game.addEntity(enemy);
@@ -618,7 +622,7 @@ public class PlayerTest {
             game.tick(potion.getId(), Direction.NONE);
 
             assertTrue(player.getState() instanceof PlayerInvincibleState);
-            assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
+            assertTrue(player.getHealth() == mode.initialHealth());
 
             // Since the player was near the enemy when the player drank the potion,
             // in the next move it should not be in the adjacent tile
@@ -628,7 +632,7 @@ public class PlayerTest {
             // and so the player's health should not reduce
             while (!(player.getState() instanceof PlayerInvincibleState)) {
                 game.tick(null, Direction.NONE);
-                assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
+                assertTrue(player.getHealth() == mode.initialHealth());
                 assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
             }
         }

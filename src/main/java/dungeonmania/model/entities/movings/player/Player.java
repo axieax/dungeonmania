@@ -33,7 +33,7 @@ import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
 
-    public int maxCharacterHealth = 100;
+    public final int MAX_CHARACTER_HEALTH;
     public static final int CHARACTER_ATTACK_DMG = 10;
 
     private PlayerState state;
@@ -48,7 +48,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
         this.currentBattleOpponent = null;
-        maxCharacterHealth = health;
+        MAX_CHARACTER_HEALTH = health;
     }
 
     /********************************
@@ -258,7 +258,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     @Override
     public AnimationQueue getAnimation() {
-        double health = (double) getHealth() / maxCharacterHealth;
+        double health = (double) getHealth() / MAX_CHARACTER_HEALTH;
         return new AnimationQueue(
             "PostTick",
             getId(),
