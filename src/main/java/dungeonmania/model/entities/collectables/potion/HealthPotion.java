@@ -12,7 +12,7 @@ public class HealthPotion extends Potion {
 
     @Override
     public void consume(Game game, Player player) {
-        player.setHealth(Player.MAX_CHARACTER_HEALTH);
+        player.setHealth(player.getMaxCharacterHealth());
         player.removeInventoryItem(this.getId());
     }
 }

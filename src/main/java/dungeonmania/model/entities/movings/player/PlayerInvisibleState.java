@@ -26,6 +26,8 @@ public class PlayerInvisibleState implements PlayerState {
         }
         timeLimit--;
     }
+
+    @Override
     public int ticksLeft() {
         return timeLimit;
     }
