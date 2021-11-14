@@ -59,17 +59,19 @@ public class PlayerDefaultState implements PlayerState {
             throw new PlayerDeadException("Player has died");
         }
 
-        // If a player wins a battle, there is a small chance that items could be 
+        // If a player wins a battle, there is a small chance that items could be
         // dropped and be added to the character's inventory.
 
         // An opponent can have the potential to drop multiple items.
         Random armourRand = new Random();
-        if (armourRand.nextDouble() <= opponent.getArmourDropRate())
-            player.addInventoryItem(new Armour());
+        if (armourRand.nextDouble() <= opponent.getArmourDropRate()) player.addInventoryItem(
+            new Armour()
+        );
 
         Random oneRingRand = new Random();
-        if (oneRingRand.nextDouble() <= opponent.THE_ONE_RING_DROP_RATE)
-            player.addInventoryItem(new TheOneRing());
+        if (oneRingRand.nextDouble() <= opponent.THE_ONE_RING_DROP_RATE) player.addInventoryItem(
+            new TheOneRing()
+        );
 
         player.setInBattle(false);
         player.setCurrentBattleOpponent(null);

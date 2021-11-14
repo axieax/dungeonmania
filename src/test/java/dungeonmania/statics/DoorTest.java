@@ -3,8 +3,6 @@ package dungeonmania.statics;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.Key;
 import dungeonmania.model.entities.movings.player.Player;
@@ -14,6 +12,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class DoorTest {
@@ -51,7 +50,7 @@ public class DoorTest {
 
     /**
      * If the player has the correct key, test that the door will unlock.
-    */
+     */
     @Test
     public void doorUnlockWithKey() {
         Mode mode = new Standard();
@@ -63,7 +62,7 @@ public class DoorTest {
 
         Key key = new Key(new Position(1, 2), 1);
         game.addEntity(key);
-        
+
         // Player moves onto the position of the key and will pick it up
         player.move(game, Direction.UP);
         assertTrue(player.getInventoryItem(key.getId()).equals(key));
@@ -101,7 +100,7 @@ public class DoorTest {
 
     /**
      * If the player has the correct key, test that the door will unlock.
-    */
+     */
     @Test
     public void multipleDoorUnlocking() {
         Mode mode = new Standard();
@@ -123,7 +122,7 @@ public class DoorTest {
         // __  D1  D2  __
         // __  __  __  __
         // __  K2  K1  P
-        
+
         // Player moves onto the position of key1 and will pick it up
         player.move(game, Direction.LEFT);
         assertTrue(player.getInventoryItem(key1.getId()).equals(key1));

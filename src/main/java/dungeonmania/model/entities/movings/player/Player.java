@@ -35,8 +35,8 @@ import org.json.JSONObject;
 public class Player extends MovingEntity implements SubjectPlayer {
 
     public static final int CHARACTER_ATTACK_DMG = 10;
-    
-    private int maxCharacterHealth = 100;
+    private final int maxCharacterHealth;
+
     private PlayerState state;
     private boolean inBattle;
     private MovingEntity currentBattleOpponent;
@@ -104,7 +104,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     /**
      * Get maxCharacterHealth attribute
-     * 
+     *
      * @return int
      */
     public int getMaxCharacterHealth() {
@@ -354,7 +354,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         throws IllegalArgumentException, InvalidActionException {
         if (itemId != null && itemId.length() > 0) {
             Item item = getInventoryItem(itemId);
-            
+
             // Check if item is in the player's inventory
             if (item == null) throw new InvalidActionException(
                 "At Player move method - itemUsed is not in the player's inventory"
@@ -389,7 +389,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             this.setPosition(this.getPosition().translateBy(direction));
             this.tick(game);
         }
-        
+
         this.state.updateState(this);
         // should be notified regardless of if player can move e.g. if player drinks invincibility potion
         this.notifyObservers();
@@ -475,10 +475,10 @@ public class Player extends MovingEntity implements SubjectPlayer {
         // Any extra attack damage provided by weapons
         for (AttackEquipment e : getAttackEquipmentList()) {
             damageToOpponent += e.getHitRate() * e.useEquipment(this);
-            
+
             // If the opponent is a boss, andurils deal triple the damage
-            if (opponent instanceof Boss && e instanceof Anduril)
-                damageToOpponent += e.getHitRate() * e.useEquipment(this) * 2;
+            if (opponent instanceof Boss && e instanceof Anduril) damageToOpponent +=
+                e.getHitRate() * e.useEquipment(this) * 2;
         }
 
         // Any extra attack damage provided by defence equipments

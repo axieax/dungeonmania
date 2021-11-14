@@ -3,10 +3,6 @@ package dungeonmania.collectables;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
-import org.junit.jupiter.api.Test;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Anduril;
@@ -17,6 +13,8 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
 
 public class AndurilTest {
 

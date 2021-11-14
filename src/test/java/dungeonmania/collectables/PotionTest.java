@@ -2,8 +2,6 @@ package dungeonmania.collectables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.collectables.potion.HealthPotion;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
@@ -18,6 +16,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class PotionTest {
@@ -43,7 +42,9 @@ public class PotionTest {
         InvincibilityPotion invincibilityPotion = new InvincibilityPotion(new Position(1, 1));
         game.addEntity(invincibilityPotion);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity(invincibilityPotion.getId()).getPosition()));
+        assertTrue(
+            new Position(1, 1).equals(game.getEntity(invincibilityPotion.getId()).getPosition())
+        );
     }
 
     /**
@@ -55,7 +56,9 @@ public class PotionTest {
         InvisibilityPotion invisibilityPotion = new InvisibilityPotion(new Position(1, 1));
         game.addEntity(invisibilityPotion);
 
-        assertTrue(new Position(1, 1).equals(game.getEntity(invisibilityPotion.getId()).getPosition()));
+        assertTrue(
+            new Position(1, 1).equals(game.getEntity(invisibilityPotion.getId()).getPosition())
+        );
     }
 
     /**
@@ -71,7 +74,7 @@ public class PotionTest {
         Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
-        assertTrue(new Position(1, 1).equals(player.getPosition()));        
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
 
         assertTrue(game.getEntity(healthPotion.getId()) == null);
         assertTrue(player.getInventoryItem(healthPotion.getId()).equals(healthPotion));
@@ -90,10 +93,12 @@ public class PotionTest {
         Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
-        assertTrue(new Position(1, 1).equals(player.getPosition()));        
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
 
         assertTrue(game.getEntity(invincibilityPotion.getId()) == null);
-        assertTrue(player.getInventoryItem(invincibilityPotion.getId()).equals(invincibilityPotion));
+        assertTrue(
+            player.getInventoryItem(invincibilityPotion.getId()).equals(invincibilityPotion)
+        );
     }
 
     /**
@@ -109,7 +114,7 @@ public class PotionTest {
         Player player = new Player(new Position(0, 1), mode.initialHealth());
         player.move(game, Direction.RIGHT);
 
-        assertTrue(new Position(1, 1).equals(player.getPosition()));        
+        assertTrue(new Position(1, 1).equals(player.getPosition()));
 
         assertTrue(game.getEntity(invisibilityPotion.getId()) == null);
         assertTrue(player.getInventoryItem(invisibilityPotion.getId()).equals(invisibilityPotion));
@@ -143,11 +148,11 @@ public class PotionTest {
         game.tick(potion.getId(), Direction.NONE);
         // zombie can only move right to run away
         assertTrue(zombie.getMovementState() instanceof RunMovementState);
-        assertTrue(new Position(6, 0).equals(zombie.getPosition()));        
+        assertTrue(new Position(6, 0).equals(zombie.getPosition()));
 
         game.tick(null, Direction.NONE);
-        assertTrue(new Position(7, 0).equals(zombie.getPosition())); 
-        assertTrue(zombie.getMovementState() instanceof RunMovementState); 
+        assertTrue(new Position(7, 0).equals(zombie.getPosition()));
+        assertTrue(zombie.getMovementState() instanceof RunMovementState);
 
         game.tick(null, Direction.NONE);
         assertTrue(new Position(8, 0).equals(zombie.getPosition())); 
@@ -155,6 +160,6 @@ public class PotionTest {
 
         game.tick(null, Direction.NONE);
         // after 3 ticks, zombie should be in random state
-        assertTrue(zombie.getMovementState() instanceof RandomMovementState);        
+        assertTrue(zombie.getMovementState() instanceof RandomMovementState);
     }
 }

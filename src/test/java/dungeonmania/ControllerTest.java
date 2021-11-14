@@ -168,10 +168,10 @@ public class ControllerTest {
     @Test
     public void testItemIllegal() {
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse resp = controller.newGame ("advanced", "standard");
+        DungeonResponse resp = controller.newGame("advanced", "standard");
 
         TestHelpers.tickMovement(controller, Direction.RIGHT, 5);
-        
+
         assertThrows(
             IllegalArgumentException.class,
             () -> controller.tick(TestHelpers.getEntityId(resp, "sword"), Direction.NONE)
@@ -199,8 +199,11 @@ public class ControllerTest {
     @Test
     public void testItemNotValid() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "standard"));  
-        assertThrows (InvalidActionException.class, () ->controller.tick ("id-does-not-exist", Direction.NONE));    
+        assertDoesNotThrow(() -> controller.newGame("advanced", "standard"));
+        assertThrows(
+            InvalidActionException.class,
+            () -> controller.tick("id-does-not-exist", Direction.NONE)
+        );
     }
 
     /**
@@ -331,7 +334,10 @@ public class ControllerTest {
     public void testTooFarFromMercenary() {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse gameResponse = controller.newGame("advanced", "Standard");
-        EntityResponse mercenary = TestHelpers.findFirstInstance(gameResponse.getEntities(), "mercenary");
+        EntityResponse mercenary = TestHelpers.findFirstInstance(
+            gameResponse.getEntities(),
+            "mercenary"
+        );
         assertNotNull(mercenary);
         assertThrows(InvalidActionException.class, () -> controller.interact(mercenary.getId()));
     }
@@ -343,7 +349,10 @@ public class ControllerTest {
     public void testNoGoldBribe() {
         DungeonManiaController controller = new DungeonManiaController();
         DungeonResponse gameResponse = controller.newGame("advanced", "Standard");
-        EntityResponse mercenary = TestHelpers.findFirstInstance(gameResponse.getEntities(), "mercenary");
+        EntityResponse mercenary = TestHelpers.findFirstInstance(
+            gameResponse.getEntities(),
+            "mercenary"
+        );
         assertNotNull(mercenary);
         TestHelpers.tickMovement(controller, Direction.RIGHT, 2);
         assertThrows(InvalidActionException.class, () -> controller.interact(mercenary.getId()));

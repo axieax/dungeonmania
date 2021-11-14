@@ -269,7 +269,7 @@ public class PortalTest {
         // Mercenary run to portal below.
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         Player player = new Player(new Position(3, 2), mode.initialHealth());
         InvincibilityPotion potion = new InvincibilityPotion(new Position(3, 6));
         player.addInventoryItem(potion);

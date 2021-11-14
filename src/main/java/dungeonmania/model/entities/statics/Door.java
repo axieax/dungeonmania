@@ -15,50 +15,39 @@ public class Door extends Entity {
 
     public Door(Position position, int key) {
         super("door", position, false, false);
-        this.key = key;
         this.open = false;
+        this.key = key;
     }
 
     /**
      * Returns if the door is open.
-     * @return
+     * @return true if open, false otherwise
      */
     public boolean isOpen() {
         return this.open;
     }
 
     /**
-     * Unlocks the door given the corresponding key.
-     * @param key
-     * @return
-     */
-    private boolean checkKey(Key key) {
-        if (key.getKey() == this.key) this.unlockDoor();
-        return this.open;
-    }
-
-    /**
      * Unlocks the door.
-     * @param key
-     * @return
+     * @param key to unlock the door with
      */
     private void unlockDoor() {
         this.open = true;
         this.setPassable(true);
     }
 
-    /**
-     * If the Player interacts the Door with the correct key, it unlocks the door.
-     * @param game
-     * @param character
-     */
     @Override
     public void interact(Game game, Entity character) {
-        if (character instanceof Player) {
-            Player player = (Player) character;
-            Key key = player.getKey();
-            if (player.hasItemQuantity("sun_stone", 1)) this.unlockDoor();
-            else if (key != null && this.checkKey(key)) key.consume(game, player);
+        // If the Player interacts the Door with the correct key, it unlocks the door.
+        if (!(character instanceof Player)) return;
+        Player player = (Player) character;
+        Key key = player.getKey();
+
+        if (player.hasItemQuantity("sun_stone", 1)) {
+            this.unlockDoor();
+        } else if (key != null && key.getKey() == this.key) {
+            this.unlockDoor();
+            key.consume(game, player);
         }
     }
 

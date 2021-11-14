@@ -34,7 +34,7 @@ public class ZombieToast extends Enemy {
     /**
      * If a player drinks an invincibility potion, change the state
      * of the zombie to make sure it runs away
-     */ 
+     */
     @Override
     public void update(SubjectPlayer player) {
         if (player instanceof Player) {
@@ -46,7 +46,7 @@ public class ZombieToast extends Enemy {
             }
         }
     }
-    
+
     /**
      * Zombie Toast is not allowed to pass through portals
      */
@@ -55,7 +55,7 @@ public class ZombieToast extends Enemy {
         if (entity instanceof Portal) return true;
         return !entity.isPassable();
     }
-    
+
     public AnimationQueue getAnimation() {
         final int skin = animationTick % 15;
         return new AnimationQueue(
