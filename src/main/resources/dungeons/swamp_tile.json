@@ -82,6 +82,16 @@
             "x": 5,
             "y": 5,
             "type": "mercenary"
+        },
+        {
+            "x": 3,
+            "y": 3,
+            "type": "zombie_toast"
+        },
+        {
+            "x": 5,
+            "y": 5,
+            "type": "zombie_toast_spawner"
         }
     ],
     "goal-condition": {
