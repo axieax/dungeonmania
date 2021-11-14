@@ -63,8 +63,8 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 ### Hydra
 
 * When a `Hydra` regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
-
-## Static Entity Assumptions
+* The Hydra entity spawns at the entry location - similar to the mercenary.
+## Entity Mechanics
 ### Portal
 * `Portals` teleport all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A `Spider` will resume moving in a circular motion after it has been teleported.
 * Entities can only use `Portals` if a) there is a free tile in the direction of the entity's movement when passing the `Portal` and b) if the tile is occupied by an entity, it must be a collectable item or an entity that can be passed through. Otherwise, it will stay on the same position for the tick.
