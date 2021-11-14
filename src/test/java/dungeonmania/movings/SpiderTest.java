@@ -695,22 +695,21 @@ public class SpiderTest {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
-        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        Player player = new Player(new Position(5, 3), mode.initialHealth());
         game.addEntity(player);
         
-        InvincibilityPotion invinc = new InvincibilityPotion(new Position(1, 2));
+        InvincibilityPotion invinc = new InvincibilityPotion(new Position(4, 3));
         game.addEntity(invinc);
 
-        game.tick(null, Direction.DOWN); // collect potion
-        game.tick(invinc.getId(), Direction.NONE); // drink potion
-        
-        assertTrue(player.getState() instanceof PlayerInvincibleState);
-        
+        game.tick(null, Direction.LEFT); // collect potion
         Position spiderPos = new Position(3, 3);
         Spider spider = new Spider(spiderPos, mode.damageMultiplier(), player);
         assertTrue(game.getEntities(spiderPos).size() == 0);
+
+        game.tick(invinc.getId(), Direction.NONE); // drink potion
+        assertTrue(player.getState() instanceof PlayerInvincibleState);
         
-        int entitiesBeforeZombie = game.getEntities().size();
+        int entitiesBeforeSpider = game.getEntities().size();
         game.addEntity(spider);
         assertTrue(game.getEntities(spiderPos).size() > 0);
         
@@ -721,7 +720,8 @@ public class SpiderTest {
         int prevXDiff = Math.abs(prevDifference.getX());
         int prevYDiff = Math.abs(prevDifference.getY());
 
-        game.tick(null, Direction.NONE);
+        // player is now at the original spawn position of the spider
+        game.tick(null, Direction.LEFT);
         while(player.getState() instanceof PlayerInvincibleState) {
             assertTrue(spider.getMovementState() instanceof RunMovementState);
             
@@ -732,7 +732,7 @@ public class SpiderTest {
             int yDiff = Math.abs(difference.getY());
             
             assertTrue(xDiff > prevXDiff || yDiff > prevYDiff);
-            assertTrue(game.getCardinallyAdjacentEntities(player.getPosition()).size() < entitiesBeforeZombie);
+            assertTrue(game.getCardinallyAdjacentEntities(player.getPosition()).size() < entitiesBeforeSpider);
             
             prevDifference = difference;
             prevXDiff = xDiff;
