@@ -4,15 +4,23 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import dungeonmania.TestHelpers;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.equipment.Anduril;
+import dungeonmania.model.entities.movings.Assassin;
+import dungeonmania.model.entities.movings.Enemy;
+import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.player.Player;
+import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.model.goal.ExitCondition;
+import dungeonmania.model.mode.Hard;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
@@ -75,5 +83,57 @@ public class AndurilTest {
         });
         Entity item = player.getInventoryItem(anduril.getId());
         assertTrue(item == null || ((Anduril) item).getDurability() != initialDurability);
+    }
+    
+    @Test
+    public void testTripleDamage() {
+        Mode mode = new Hard();
+        Player player = new Player(new Position(1, 2), mode.initialHealth());
+        
+        List<Enemy> enemies = Arrays.asList(
+            new Hydra(new Position(1, 3), mode.damageMultiplier(), player),
+            new Assassin(new Position(1, 3), mode.damageMultiplier(), player)
+            );
+            
+        for(Enemy e: enemies) {
+            // find health remaining without anduril
+            // player.setHealth(player.getMaxCharacterHealth());
+            Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+            game.addEntity(new Wall(new Position(2, 1)));
+            game.addEntity(new Wall(new Position(2, 2)));
+            game.addEntity(new Wall(new Position(2, 3)));
+            game.addEntity(new Wall(new Position(2, 4)));
+            game.addEntity(new Wall(new Position(1, 4)));
+            
+            game.addEntity(player);
+            game.addEntity(e); // spawn enemy
+            game.tick(null, Direction.NONE); // fight
+
+            int enemyHealthWithoutAnduril = e.getHealth();
+
+            game.removeEntity(e);
+            game.removeEntity(player);
+            
+            // find health remaining with anduril
+            player.setHealth(player.getMaxCharacterHealth());
+            if(e instanceof Hydra) {
+                Hydra hydra = (Hydra) e;
+                hydra.setHealth(Hydra.MAX_HYDRA_HEALTH);
+            } else if(e instanceof Assassin) {
+                Assassin assassin = (Assassin) e;
+                assassin.setHealth(Assassin.MAX_ASSASSIN_HEALTH);
+            }
+            
+            player.addInventoryItem(new Anduril(new Position(0, 0)));
+            
+            game.addEntity(player);
+            game.addEntity(e); // spawn enemy
+
+            game.tick(null, Direction.NONE); // fight
+            
+            int enemyHealthWithAnduril = e.getHealth();
+            assertTrue(enemyHealthWithAnduril < enemyHealthWithoutAnduril);
+        }
     }
 }
