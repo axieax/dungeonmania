@@ -94,6 +94,7 @@ Here is a table detailing the spawn rate, health and attack damage that we assum
 
 - Durability of any weapon is not reduced if a player is invincible.
 - There's no notion of holding an item vs having it in your inventory, so if a player has multiple instances of an item e.g. 3 `Swords`, it will attack the enemy three times.
+- All equipment has a durability of 5. Meaning that after 5 ticks, the equipment will be used up.
 
 ### Equipment Stats
 
