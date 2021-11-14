@@ -37,25 +37,25 @@ public class TestHelpers {
     public static List<Entity> sevenBySevenWallBoundary() {
         List<Entity> wallBorder = new ArrayList<>();
 
-        // left border
+        // Left border
         for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(0, i));
             wallBorder.add(wall);
         }
 
-        // right border
+        // Right border
         for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(6, i));
             wallBorder.add(wall);
         }
 
-        // top border
+        // Top border
         for (int i = 1; i < 6; i++) {
             Wall wall = new Wall(new Position(i, 0));
             wallBorder.add(wall);
         }
 
-        // bottom border
+        // Bottom border
         for (int i = 1; i < 6; i++) {
             Wall wall = new Wall(new Position(i, 6));
             wallBorder.add(wall);
