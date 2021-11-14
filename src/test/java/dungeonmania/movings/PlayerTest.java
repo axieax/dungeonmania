@@ -425,6 +425,23 @@ public class PlayerTest {
     }
 
     @Test
+    public void testCraftResources() {
+        DungeonManiaController dmc = new DungeonManiaController();
+        dmc.newGame("enemyDungeon", "standard");
+        // pick up treasure
+        dmc.tick(null, Direction.LEFT);
+        // pick up 1 wood
+        DungeonResponse resp = dmc.tick(null, Direction.LEFT);
+        // cannot build shield
+        assertEquals(0, resp.getBuildables().size());
+        assertThrows(InvalidActionException.class, () -> dmc.build("shield"));
+        // pick up another wood
+        resp = dmc.tick(null, Direction.LEFT);
+        assertEquals("shield", resp.getBuildables().get(0));
+        assertDoesNotThrow(() -> dmc.build("shield"));
+    }
+
+    @Test
     public void testItemsUsedToCraftRemoved() {
         // any items that are used to craft another buildable entity should be
         // removed from the player's inventory, and are replaced with the built item

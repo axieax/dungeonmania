@@ -24,7 +24,7 @@ public class ControllerTest {
      * is given
      */
     @Test
-    public void testInCorrectGameMode() {
+    public void testIncorrectGameMode() {
         DungeonManiaController controller = new DungeonManiaController();
         assertThrows(
             IllegalArgumentException.class,
@@ -37,7 +37,7 @@ public class ControllerTest {
      * Dungeon name is given
      */
     @Test
-    public void testInCorrectDungeonName() {
+    public void testIncorrectDungeonName() {
         DungeonManiaController controller = new DungeonManiaController();
         assertThrows(
             IllegalArgumentException.class,
@@ -367,23 +367,39 @@ public class ControllerTest {
         assertDoesNotThrow(() -> controller.newGame("specialEntities", "Standard"));
 
         // Collect Entities
-        assertDoesNotThrow (()->TestHelpers.tickMovement(controller, Direction.RIGHT, 3));
-        assertDoesNotThrow (()->TestHelpers.tickMovement(controller, Direction.UP, 1));
-        assertDoesNotThrow (()->TestHelpers.tickMovement(controller, Direction.RIGHT, 16));
+        assertDoesNotThrow(() -> TestHelpers.tickMovement(controller, Direction.RIGHT, 3));
+        assertDoesNotThrow(() -> TestHelpers.tickMovement(controller, Direction.UP, 1));
+        assertDoesNotThrow(() -> TestHelpers.tickMovement(controller, Direction.RIGHT, 16));
         DungeonResponse currGame = TestHelpers.tickMovement(controller, Direction.DOWN, 1);
         // Shield, Midnight Armour and Scepter should be buildable
         assertEquals(4, currGame.getBuildables().size());
-        assertDoesNotThrow (()->controller.build("midnight_armour"));
-        assertDoesNotThrow (()->controller.build("bow"));
-        assertDoesNotThrow (()->controller.build("sceptre"));
+        assertDoesNotThrow(() -> controller.build("midnight_armour"));
+        assertDoesNotThrow(() -> controller.build("bow"));
+        assertDoesNotThrow(() -> controller.build("sceptre"));
         // save game
         String gameName = LocalTime.now().toString();
         assertDoesNotThrow(() -> controller.saveGame(gameName));
 
-        // New controller is made 
+        // New controller is made
         DungeonManiaController controllerNew = new DungeonManiaController();
         // Load game
-        assertDoesNotThrow(() ->controllerNew.loadGame(gameName));
+        assertDoesNotThrow(() -> controllerNew.loadGame(gameName));
+    }
+
+    @Test
+    public void testCanLoadGameTimeTravel() {
+        DungeonManiaController controller = new DungeonManiaController();
+        assertDoesNotThrow(() -> controller.newGame("hourglass", "peaceful"));
+        // Pick up time_turner
+        assertDoesNotThrow(() -> TestHelpers.tickMovement(controller, Direction.DOWN, 2));
+        // Move off time_turner
+        assertDoesNotThrow(() -> TestHelpers.tickMovement(controller, Direction.RIGHT, 1));
+        // Rewind
+        assertDoesNotThrow(() -> controller.rewind(1));
+        // Save and load game
+        String gameName = LocalTime.now().toString();
+        assertDoesNotThrow(() -> controller.saveGame(gameName));
+        assertDoesNotThrow(() -> controller.loadGame(gameName));
     }
 
     /**
@@ -392,19 +408,26 @@ public class ControllerTest {
     @Test
     public void testCanLoadGameWithEnemies() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame("enemyDungeon", "Standard"));
+        assertDoesNotThrow(() -> controller.newGame("enemyDungeon", "hard"));
 
         // Collect Entities
         DungeonResponse currGame = TestHelpers.tickMovement(controller, Direction.LEFT, 3);
         // Shield should be buildable
         assertEquals(1, currGame.getBuildables().size());
-        assertDoesNotThrow (()->controller.build("shield"));
+        assertDoesNotThrow(() -> controller.build("shield"));
 
         String gameName = LocalTime.now().toString();
         assertDoesNotThrow(() -> controller.saveGame(gameName));
 
         // New controller is made
         DungeonManiaController controllerNew = new DungeonManiaController();
-        assertDoesNotThrow(() ->controllerNew.loadGame(gameName));
+        assertDoesNotThrow(() -> controllerNew.loadGame(gameName));
+    }
+
+    @Test
+    public void testDefaults() {
+        DungeonManiaController dmc = new DungeonManiaController();
+        assertEquals("default", dmc.getSkin());
+        assertEquals("en_US", dmc.getLocalisation());
     }
 }

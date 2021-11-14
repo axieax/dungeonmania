@@ -44,10 +44,9 @@ import dungeonmania.model.goal.GoalComposite;
 import dungeonmania.model.goal.OrComposite;
 import dungeonmania.model.goal.ToggleSwitch;
 import dungeonmania.model.mode.Mode;
+import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,11 +68,7 @@ public class EntityFactory {
     private static final JSONObject loadDungeon(String dungeonName)
         throws IllegalArgumentException {
         try {
-            String content = new String(
-                Files.readAllBytes(
-                    Paths.get("src/main/resources/dungeons/" + dungeonName + ".json")
-                )
-            );
+            String content = FileLoader.loadResourceFile("/dungeons/" + dungeonName + ".json");
             return new JSONObject(content);
         } catch (IOException e) {
             throw new IllegalArgumentException(dungeonName);
