@@ -258,6 +258,11 @@ public class SunStoneTest {
 
             game.tick(null, movementDirection);
 
+            // Exit the loop if the player or mercenary has died
+            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+                break;
+            }
+
             List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
 
@@ -318,6 +323,11 @@ public class SunStoneTest {
             Direction movementDirection = possibleDirections.get(index);
 
             game.tick(null, movementDirection);
+
+            // Exit the loop if the player or assassin has died
+            if (game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null) {
+                break;
+            }
 
             List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();

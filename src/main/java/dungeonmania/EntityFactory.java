@@ -220,8 +220,8 @@ public class EntityFactory {
             position = position.asLayer(23);
             return new Hydra(position, mode.damageMultiplier(), player);
         } else if (type.startsWith("swamp_tile")) {
-            position = position.asLayer(24);
-            return new SwampTile(position, 2); // TODO: is movementFactor right?
+            position = position.asLayer(1);
+            return new SwampTile(position, entityInfo.getInt("movement_factor"));
         } else if (type.startsWith("sun_stone")) {
             position = position.asLayer(25);
             return new SunStone(position);

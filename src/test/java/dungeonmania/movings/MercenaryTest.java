@@ -35,6 +35,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class MercenaryTest {
 
+    public static final String MERCENARY = "mercenary";
     public static final String CHARACTER_TYPE = "player";
     public static final String DUNGEON_NAME = "advanced";
     public static final String GAME_MODE = "Peaceful";
@@ -48,8 +49,40 @@ public class MercenaryTest {
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 18; i++) {
+            game.tick(null, Direction.NONE);
             assertTrue(game.getEntities().size() == numEntities);
+        }
+    }
+
+    @Test
+    public void testSpawnMercenary() {
+        Mode mode = new Standard();
+        List<Entity> entities = sevenBySevenWallBoundary();
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        entities.add(player);
+        
+        Game game = new Game("game", entities, new ExitCondition(), mode);
+
+        // Move player away from spawning location (otherwise mercenary will immediately die after spawning)
+        game.tick(null, Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
+
+        // Check that mercenaries will spawn eventually
+        // Note that there will be spiders in the dungeon (which means there are enemies in the dungeon)
+        Mercenary mercenary = null;
+        for (int i = 0; i < 100; i++) {
+            game.tick(null, Direction.NONE);
+            for (Entity entity : game.getEntities()) {
+                if (entity.getType().startsWith(MERCENARY)) {
+                    mercenary = (Mercenary) entity;
+                    assertTrue(mercenary != null);
+                    // Also ensure that it spawns at the player's initial spawning location
+                    assertTrue(mercenary.getPosition().equals(new Position(1, 1)));
+                    return;
+                }
+            }
         }
     }
 
@@ -189,47 +222,6 @@ public class MercenaryTest {
     }
 
     @Test
-    public void testBribedMercenaryDoesNotAttack() {
-        Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-
-        Player player = new Player(new Position(1, 1), mode.initialHealth());
-        game.addEntity(player);
-
-        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
-        game.addEntity(mercenary);
-
-        game.addEntity(new Treasure(new Position(1, 2)));
-        game.addEntity(new Treasure(new Position(1, 3)));
-        game.addEntity(new Treasure(new Position(1, 4)));
-
-        Position updatedPlayerPos = new Position(1, 4);
-
-        // Make player collect all 3 coins
-        player.move(game, Direction.DOWN);
-        player.move(game, Direction.DOWN);
-        player.move(game, Direction.DOWN);
-
-        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
-            game.tick(null, Direction.NONE);
-        }
-
-        // Mercenary in adjacent tile, so bribe
-        int playerHealth = player.getHealth();
-
-        game.interact(mercenary.getId());
-        // Player still at tile
-        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
-
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == playerHealth);
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == playerHealth);
-        game.tick(null, Direction.NONE);
-        assertTrue(player.getHealth() == playerHealth);
-    }
-
-    @Test
     public void testInteractMercenaryNotAdjacent() {
         // InvalidActionException if the player is not within 2 cardinal
         // tiles to the mercenary and they are bribing
@@ -299,7 +291,14 @@ public class MercenaryTest {
 
         // Mercenary should not be able to go in the door position
         for (int i = 0; i < 100; i++) {
+            
             game.tick(null, Direction.NONE);
+
+            // Exit loop if either the player or mercenary has died
+            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+                break;
+            }
+
             assertTrue(!game.getEntity(mercenary.getId()).getPosition().equals(doorPos));
         }
     }
@@ -324,6 +323,47 @@ public class MercenaryTest {
         // Mercenary should move towards player, the two should fight and character should win
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntity(mercenary.getId()) == null);
+    }
+
+    @Test
+    public void testBribedMercenaryDoesNotAttack() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        Mercenary mercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(mercenary);
+
+        game.addEntity(new Treasure(new Position(1, 2)));
+        game.addEntity(new Treasure(new Position(1, 3)));
+        game.addEntity(new Treasure(new Position(1, 4)));
+
+        
+        // Make player collect all 3 coins
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        Position updatedPlayerPos = new Position(1, 4);
+
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(mercenary)) {
+            game.tick(null, Direction.NONE);
+        }
+
+        int playerHealth = player.getHealth();
+
+        // Mercenary in adjacent tile, so bribe (player stil at tile)
+        game.interact(mercenary.getId());
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
+        
+        // Mercenary will not attack the player
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == playerHealth);
+        game.tick(null, Direction.NONE);
+        assertTrue(player.getHealth() == playerHealth);
     }
 
     @Test
@@ -372,6 +412,11 @@ public class MercenaryTest {
             Direction movementDirection = possibleDirections.get(index);
 
             game.tick(null, movementDirection);
+
+            // Exit the loop if the player or mercenary has died
+            if (game.getEntity(player.getId()) == null || game.getEntity(mercenary.getId()) == null) {
+                break;
+            }
 
             List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
             int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();

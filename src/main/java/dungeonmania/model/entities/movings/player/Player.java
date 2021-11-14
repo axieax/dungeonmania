@@ -33,7 +33,7 @@ import org.json.JSONObject;
 
 public class Player extends MovingEntity implements SubjectPlayer {
 
-    public static int MAX_CHARACTER_HEALTH = 100;
+    public int maxCharacterHealth = 100;
     public static final int CHARACTER_ATTACK_DMG = 10;
 
     private PlayerState state;
@@ -48,7 +48,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
         this.state = new PlayerDefaultState(this);
         this.inBattle = false;
         this.currentBattleOpponent = null;
-        MAX_CHARACTER_HEALTH = health;
+        maxCharacterHealth = health;
     }
 
     /********************************
@@ -258,7 +258,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     @Override
     public AnimationQueue getAnimation() {
-        double health = (double) getHealth() / MAX_CHARACTER_HEALTH;
+        double health = (double) getHealth() / maxCharacterHealth;
         return new AnimationQueue(
             "PostTick",
             getId(),
@@ -319,7 +319,6 @@ public class Player extends MovingEntity implements SubjectPlayer {
                 this.battle(game, opponent);
             }
         }
-        this.state.updateState(this);
     }
 
     /**
@@ -377,6 +376,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
             this.tick(game);
         }
 
+        this.state.updateState(this);
         // should be notified regardless of if player can move e.g. if player drinks invincibility potion
         this.notifyObservers();
     }

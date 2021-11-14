@@ -2,6 +2,7 @@ package dungeonmania.model;
 
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -13,17 +14,10 @@ public class Maze {
 
     private int width;
     private int height;
-    Position start;
-    Position end;
-    ArrayList<ArrayList<Boolean>> maze;
+    private Position start;
+    private Position end;
+    private List<List<Boolean>> maze;
 
-    /**
-     *
-     * @param width width of maze
-     * @param height height of maze
-     * @param start starting position of the player
-     * @param end exit location of the maze
-     */
     public Maze(int width, int height, Position start, Position end) {
         this.width = width;
         this.height = height;
@@ -32,43 +26,64 @@ public class Maze {
         this.maze = generateRandomisedPrimsMaze();
     }
 
+    /**
+     * Get start position
+     *
+     * @return start Position
+     */
     public Position getStart() {
         return start;
     }
 
+    /**
+     * Get end position
+     *
+     * @return end Position
+     */
     public Position getEnd() {
         return end;
     }
 
+    /**
+     * Get width of the map
+     *
+     * @return map width
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Get height of the map
+     *
+     * @return map height
+     */
     public int getHeight() {
         return height;
     }
 
     /**
+     * Get maze position by coordinate
      *
      * @param x x-cordinate
-     * @param y y- cordinate
-     * @return whether the position is empty space (true) or wall (false)
+     * @param y y-cordinate
+     * @return true if the position is empty space, false if it is a wall
      */
     public boolean getMazePosition(int x, int y) {
         return maze.get(y).get(x);
     }
 
     /**
-     * This function uses the pseudo code based on prims algorithm to randomly
-     * generate a maze
+     * This function uses the pseudo code based on prims algorithm to randomly generate a maze
+     *
      * @return a two dimensional array representing a maze with true as empty
      * space and false representing a wall
      */
-    private ArrayList<ArrayList<Boolean>> generateRandomisedPrimsMaze() {
+    private List<List<Boolean>> generateRandomisedPrimsMaze() {
         // generating the map
-        ArrayList<ArrayList<Boolean>> mazeMap = new ArrayList<>();
+        List<List<Boolean>> mazeMap = new ArrayList<>();
         for (int i = 0; i < height; i++) {
-            ArrayList<Boolean> rowInMap = new ArrayList<>();
+            List<Boolean> rowInMap = new ArrayList<>();
             for (int j = 0; j < width; j++) {
                 rowInMap.add(false); // default false
             }
@@ -112,6 +127,7 @@ public class Maze {
                 .collect(Collectors.toList());
             options.addAll(nextNeighbours);
         }
+
         // incase the end position is not connected to the map
         if (!mazeMap.get(end.getY()).get(end.getX())) {
             mazeMap.get(end.getY()).set(end.getX(), true); // maze[end] = empty
@@ -128,8 +144,14 @@ public class Maze {
         return mazeMap;
     }
 
-    // check if a position is on the boundary
-    public Boolean isOnBoundary(Position currPos) {
+    /**
+     * Checks if a position is on the boundary
+     *
+     * @param currPos current position
+     *
+     * @return true if on boundary, false if not
+     */
+    private Boolean isOnBoundary(Position currPos) {
         int x = currPos.getX();
         int y = currPos.getY();
         if (x <= 0 || x >= width - 1) return true;
@@ -137,11 +159,15 @@ public class Maze {
         return false;
     }
 
-    // check if a list of possible positions is all walls
-    public Boolean allWalls(
-        List<Position> possiblePositions,
-        ArrayList<ArrayList<Boolean>> mazeMap
-    ) {
+    /**
+     * Checks if a list of possible positions is all walls
+     *
+     * @param possiblePositions positions to check
+     * @param mazeMap maze
+     *
+     * @return true if all positions are walls, false otherwise
+     */
+    private Boolean allWalls(List<Position> possiblePositions, List<List<Boolean>> mazeMap) {
         for (Position position : possiblePositions) {
             int x = position.getX();
             int y = position.getY();
@@ -150,9 +176,15 @@ public class Maze {
         return true;
     }
 
-    // set a position between position one and position two on the maze map as empty
-    public void setBetweenPositionAsEmpty(
-        ArrayList<ArrayList<Boolean>> mazeMap,
+    /**
+     * set a position between position one and position two on the maze map as empty
+     *
+     * @param mazeMap maze
+     * @param one first position
+     * @param two second position
+     */
+    private void setBetweenPositionAsEmpty(
+        List<List<Boolean>> mazeMap,
         Position one,
         Position two
     ) {
@@ -171,17 +203,23 @@ public class Maze {
         }
     }
 
-    // find neighbours one move from current position
-    public List<Position> firstNeighbours(Position currPos) {
+    /**
+     * Find neighbours one move from current position
+     * @param currPos current position
+     *
+     * @return list of Positions which are one move away from the current position
+     */
+    private List<Position> firstNeighbours(Position currPos) {
         int x = currPos.getX();
         int y = currPos.getY();
 
         // find the positions that could be the possible first neighbours of  currPos
-        List<Position> positions = new ArrayList<>();
-        positions.add(new Position(x, y + 1));
-        positions.add(new Position(x - 1, y));
-        positions.add(new Position(x + 1, y));
-        positions.add(new Position(x, y - 1));
+        List<Position> positions = Arrays.asList(
+            new Position(x, y + 1),
+            new Position(x - 1, y),
+            new Position(x + 1, y),
+            new Position(x, y - 1)
+        );
 
         // remove positions on the boundary
         Iterator<Position> iter = positions.iterator();
@@ -192,15 +230,21 @@ public class Maze {
         return positions;
     }
 
-    // find neighbours two moves from current position
-    public List<Position> secondNeighbours(Position currPos) {
+    /**
+     * Find neighbours two moves from current position
+     * @param currPos current position
+     *
+     * @return list of Positions which are two moves away from the current position
+     */
+    private List<Position> secondNeighbours(Position currPos) {
         int x = currPos.getX();
         int y = currPos.getY();
-        List<Position> positions = new ArrayList<>();
-        positions.add(new Position(x, y + 2));
-        positions.add(new Position(x - 2, y));
-        positions.add(new Position(x + 2, y));
-        positions.add(new Position(x, y - 2));
+        List<Position> positions = Arrays.asList(
+            new Position(x, y + 2),
+            new Position(x - 2, y),
+            new Position(x + 2, y),
+            new Position(x, y - 2)
+        );
 
         Iterator<Position> iter = positions.iterator();
         while (iter.hasNext()) {
@@ -212,31 +256,39 @@ public class Maze {
 
     /**
      * Makes a JSON object given information about the entity
-     * @param x_position entity's x co-ordinate
-     * @param y_position entity's y co-ordinate
+     *
+     * @param xPosition entity's x co-ordinate
+     * @param yPosition entity's y co-ordinate
      * @param type type of entity
      * @return JSON object representing the entity
      */
-    public JSONObject makeJSONEntity(int x_position, int y_position, String type) {
+    private JSONObject makeJSONEntity(int xPosition, int yPosition, String type) {
         JSONObject newEntity = new JSONObject();
-        newEntity.put("x", x_position);
-        newEntity.put("y", y_position);
+        newEntity.put("x", xPosition);
+        newEntity.put("y", yPosition);
         newEntity.put("type", type);
         return newEntity;
     }
 
-    // returns the json object representing the dungeon
+    /**
+     * Returns the JSONObject representation for the dungeon
+     *
+     * @return JSONObject for dungeon
+     */
     public JSONObject toJSON() {
         JSONObject mazeJSON = new JSONObject();
         JSONArray entities = new JSONArray();
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (start.getX() == j && start.getY() == i) { // player starts here
+                if (start.getX() == j && start.getY() == i) {
+                    // player starts here
                     entities.put(makeJSONEntity(j, i, "player"));
-                } else if (end.getX() == j && end.getY() == i) { // exit is here
+                } else if (end.getX() == j && end.getY() == i) {
+                    // exit is here
                     entities.put(makeJSONEntity(j, i, "exit"));
-                } else if (!maze.get(i).get(j)) { // wall
+                } else if (!maze.get(i).get(j)) {
+                    // place wall
                     entities.put(makeJSONEntity(j, i, "wall"));
                 }
             }

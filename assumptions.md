@@ -8,11 +8,10 @@
 ## Consumable Mechanics
 ### Potions
 * Potions are consumed once. However, the effect lasts for a certain amount of in game ticks (depending for the type of potion). In our implementation,
-  - InvincibilityPotion lasts 3 in game ticks (including the tick where the player consumes the potion)
-  - InvisibilityPotion lasts for 6 in game ticks
+  - InvincibilityPotion lasts for 3 in game ticks after it has been consumed (including the tick where the player consumes the potion)
+  - InvisibilityPotion lasts for 6 in game ticks (including the tick where the player consumes the potion)
   - HealthPotion are just simply consumed to regain to full health
 * If a player is invisible, they cannot attack another entity. Rather they can just pass through the enemy undetected.
-* All enemies will run away if a player is invincible. For spiders, if a player is no longer invincible, it will reset it's circular movement on its last position.
 * If the player is invisible, the mercenary will not follow them.
 
 ### SunStone
@@ -34,6 +33,7 @@
 * Spider starts with an initial direction of clockwise when spawned.
 * Zombie/Mercenaries will the amour effect when equipped. It will halve damage inflicted by the player.
 * Mercenaries can only move twice if mercenary is aiming to attack the player.
+* When a Hydra regrows its head, and as a result its health increases, the total health can exceed the original maximum health.
 ## Entity Mechanics
 ### Portal
 * Portals teleport all moving entities (except ZombieToast). Moving entities that teleport will still follow their original moving pattern. i.e. A spider will resume moving in a circular motion after it has been teleported.

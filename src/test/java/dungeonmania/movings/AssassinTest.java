@@ -22,7 +22,9 @@ import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -30,6 +32,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class AssassinTest {
 
+    public static final String ASSASSIN = "assassin";
     public static final String CHARACTER_TYPE = "player";
     public static final String DUNGEON_NAME = "advanced";
     public static final String GAME_MODE = "Peaceful";
@@ -43,8 +46,42 @@ public class AssassinTest {
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 18; i++) {
+            game.tick(null, Direction.NONE);
             assertTrue(game.getEntities().size() == numEntities);
+        }
+    }
+
+    @Test
+    public void testSpawnAssassin() {
+        Mode mode = new Standard();
+        List<Entity> entities = sevenBySevenWallBoundary();
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        entities.add(player);
+
+        Game game = new Game("game", entities, new ExitCondition(), mode);
+
+        // Move player away from spawning location (otherwise mercenary will immediately die after spawning)
+        game.tick(null, Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
+        game.tick(null, Direction.RIGHT);
+
+        // Check that assassins will spawn eventually
+        // Note that there will be spiders in the dungeon (which means there are enemies in the dungeon)
+        // Since there's a 30% chance assassins will spawn instead of a mercenary, this means that
+        // the chance of this not happening in 600 ticks (20 chances to spawn) is 0.7^20 = 0.08%
+        Assassin assassin = null;
+        for (int i = 0; i < 3000; i++) {
+            game.tick(null, Direction.NONE);
+            for (Entity entity : game.getEntities()) {
+                if (entity.getType().startsWith(ASSASSIN)) {
+                    assassin = (Assassin) entity;
+                    assertTrue(assassin != null);
+                    // Also ensure that it spawns at the player's initial spawning location
+                    assertTrue(assassin.getPosition().equals(new Position(1, 1)));
+                    return;
+                }
+            }
         }
     }
 
@@ -235,19 +272,90 @@ public class AssassinTest {
             game.tick(null, Direction.NONE);
         }
 
-        // Assassin in adjacent tile, so bribe
         int playerHealth = player.getHealth();
 
+        // Assassin in adjacent tile, so bribe (player stil at tile)
         game.interact(assassin.getId());
-        // Player still at tile
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
 
+        // Assassin will not attack the player
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
+    }
+
+    @Test
+    public void testBribedMovement() {
+        Mode mode = new Standard();
+        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+
+        Player player = new Player(new Position(1, 1), mode.initialHealth());
+        game.addEntity(player);
+
+        Assassin assassin = new Assassin(new Position(5, 1), mode.damageMultiplier(), player);
+        game.addEntity(assassin);
+
+        game.addEntity(new Treasure(new Position(1, 2)));
+        game.addEntity(new Treasure(new Position(1, 3)));
+        game.addEntity(new Treasure(new Position(1, 4)));
+
+        // Make player collect all 3 coins
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+        player.move(game, Direction.DOWN);
+
+        game.addEntity(new TheOneRing(new Position(2, 4)));
+        game.addEntity(new TheOneRing(new Position(3, 4)));
+
+        // Make player collect TheOneRing
+        player.move(game, Direction.RIGHT);
+        player.move(game, Direction.RIGHT);
+
+        Position updatedPlayerPos = new Position(3, 4);
+
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
+            game.tick(null, Direction.NONE);
+        }
+
+        // Assassin in adjacent tile, so bribe (player still at original tile)
+        game.interact(assassin.getId());
+        assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
+
+        // Nothing should happen if the assassin gets bribed again
+        game.interact(assassin.getId());
+
+        // Assassin stays either next to or on top of the player regardless of where the latter moves
+        // Since assassin is bribed, it will not engage in battle with the player
+        List<Direction> possibleDirections = Arrays.asList(
+            Direction.UP,
+            Direction.RIGHT,
+            Direction.LEFT,
+            Direction.DOWN
+        );
+        Random rand = new Random(5);
+        for (int i = 0; i < 100; i++) {
+            int index = rand.nextInt(100) % 4;
+            Direction movementDirection = possibleDirections.get(index);
+
+            game.tick(null, movementDirection);
+
+            // Exit the loop if the player or assassin has died
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null
+            ) {
+                break;
+            }
+
+            List<Entity> adjacentEntites = game.getCardinallyAdjacentEntities(player.getPosition());
+            int numEntitesAtPlayerPos = game.getEntities(player.getPosition()).size();
+
+            // Assassin will always be adjacent to or at the same position as the player since it will always follow it
+            // Note that we have the number of entities at the player position is >= 2 since spiders may spawn
+            assertTrue(adjacentEntites.contains(assassin) || numEntitesAtPlayerPos >= 2);
+        }
     }
 
     @Test
@@ -298,6 +406,14 @@ public class AssassinTest {
         // Assassin should not be able to go in the door position
         for (int i = 0; i < 100; i++) {
             game.tick(null, Direction.NONE);
+
+            // Exit loop if either the player or assassin has died
+            if (
+                game.getEntity(player.getId()) == null || game.getEntity(assassin.getId()) == null
+            ) {
+                break;
+            }
+
             assertTrue(!game.getEntity(assassin.getId()).getPosition().equals(doorPos));
         }
     }

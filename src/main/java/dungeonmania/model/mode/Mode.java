@@ -2,21 +2,27 @@ package dungeonmania.model.mode;
 
 public interface Mode {
     /**
-     * @return the damage multipler of the mode
+     * Get the damage multiplier defined by a mode
+     *
+     * @return damage multiplier
      */
     default int damageMultiplier() {
         return 1;
     }
 
     /**
-     * @return the tick rate of zombie toast spawner
+     * Get the tick rate defined by a mode
+     *
+     * @return tick rate for zombie toast spawner and spider spawning
      */
     default int tickRate() {
         return 20;
     }
 
     /**
-     * @return gets the initial health of the player
+     * Get the initial health
+     *
+     * @return initial health of the player
      */
     default int initialHealth() {
         return 100;

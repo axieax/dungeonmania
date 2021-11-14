@@ -341,7 +341,7 @@ public class GameLoader {
             newHydra.setDirection(direction);
             return newHydra;
         } else if (type.startsWith("swamp_tile")) { /////////
-            position = position.asLayer(24);
+            position = position.asLayer(1);
             int movementFactor = entityInfo.getInt("movementFactor");
             SwampTile newSwampTile = new SwampTile(position, movementFactor);
             return newSwampTile;
@@ -356,8 +356,6 @@ public class GameLoader {
             return newAnduril;
         } else if (type.startsWith("sceptre")) { /////////
             Sceptre newSceptre = new Sceptre();
-            int durability = entityInfo.getInt("durability");
-            newSceptre.setDurability(durability);
             return newSceptre;
         } else if (type.startsWith("midnight_armour")) { ///////
             MidnightArmour newMidnightArmour = new MidnightArmour();
