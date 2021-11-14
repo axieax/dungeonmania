@@ -39,17 +39,22 @@ public abstract class MovementState {
 
     /**
      * Given a new position, find and set the direction that the entity is going to.
+     *
      * @param newPos
      */
     public void setEnemyDirection(Position newPos) {
         Position offset = Position.calculatePositionBetween(enemy.getPosition(), newPos);
-        if (Direction.LEFT.getOffset().equals(offset)) enemy.setDirection(Direction.LEFT); else if (
-            Direction.UP.getOffset().equals(offset)
-        ) enemy.setDirection(Direction.UP); else if (
-            Direction.RIGHT.getOffset().equals(offset)
-        ) enemy.setDirection(Direction.RIGHT); else if (
-            Direction.DOWN.getOffset().equals(offset)
-        ) enemy.setDirection(Direction.DOWN); else enemy.setDirection(Direction.NONE);
+        if (Direction.LEFT.getOffset().equals(offset)) {
+            enemy.setDirection(Direction.LEFT);
+        } else if (Direction.UP.getOffset().equals(offset)) {
+            enemy.setDirection(Direction.UP);
+        } else if (Direction.RIGHT.getOffset().equals(offset)) {
+            enemy.setDirection(Direction.RIGHT);
+        } else if (Direction.DOWN.getOffset().equals(offset)) {
+            enemy.setDirection(Direction.DOWN);
+        } else {
+            enemy.setDirection(Direction.NONE);
+        }
     }
 
     /**
@@ -78,7 +83,7 @@ public abstract class MovementState {
      * Finds the next availiable position that the entity can make.
      *
      * @param game
-     * @return
+     * @return next position
      */
     public abstract Position findNextPosition(Game game);
 }

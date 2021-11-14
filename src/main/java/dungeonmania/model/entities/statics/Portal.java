@@ -73,7 +73,7 @@ public class Portal extends Entity {
             for (Entity e : game.getEntities(teleportedPosition)) {
                 if (character.collision(e)) collision = true;
             }
-            if (!collision) character.moveTo(portal.getPosition());
+            if (!collision) character.setPosition(portal.getPosition());
         } else if (character instanceof Enemy) ((Enemy) character).setDirection(Direction.NONE);
     }
 

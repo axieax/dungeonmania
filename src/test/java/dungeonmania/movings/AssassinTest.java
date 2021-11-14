@@ -514,7 +514,7 @@ public class AssassinTest {
         game.addEntity(exit);
 
         assertTrue(game.getEntities(exitPos).size() == 1);
-        assassin.moveTo(exitPos);
+        assassin.setPosition(exitPos);
         assertTrue(game.getEntities(exitPos).size() == 2);
     }
 

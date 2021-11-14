@@ -13,8 +13,6 @@ public abstract class Enemy extends MovingEntity implements Observer {
     private int movementTick;
 
     private double armourDropRate;
-    public final double THE_ONE_RING_DROP_RATE = 0.1;
-    public final double ANDURIL_DROP_RATE = 0.1;
 
     public Enemy(
         String prefix,
@@ -29,38 +27,83 @@ public abstract class Enemy extends MovingEntity implements Observer {
         this.armourDropRate = 0.2;
     }
 
+    /**
+     * Get base attack damage of Enemy
+     *
+     * @return base attack damage
+     */
     public int getBaseAttackDamage() {
         return super.getBaseAttackDamage() * damageMultiplier;
     }
 
+    /**
+     * Set damage multiplier of Enemy
+     *
+     * @param damageMultiplier damage multiplier
+     */
     public void setDamageMultiplier(int damageMultiplier) {
         this.damageMultiplier = damageMultiplier;
     }
 
+    /**
+     * Get movement state of Enemy
+     *
+     * @return MovementState
+     */
     public MovementState getMovementState() {
         return movementState;
     }
 
+    /**
+     * Set movement state of Enemy
+     *
+     * @param movementState
+     */
     public void setMovementState(MovementState movementState) {
         this.movementState = movementState;
     }
 
+    /**
+     * Get armour drop rate
+     *
+     * @return armourDropRate
+     */
     public double getArmourDropRate() {
         return armourDropRate;
     }
 
+    /**
+     * Set armour drop rate
+     *
+     * @param armourDropRate
+     */
     public void setArmourDropRate(double armourDropRate) {
         this.armourDropRate = armourDropRate;
     }
 
+    /**
+     * Get movement tick
+     *
+     * @return movement tick
+     */
     public int getMovementTick() {
         return movementTick;
     }
 
+    /**
+     * Set movement tick
+     *
+     * @param movementTick 
+     */
     public void setMovementTick(int movementTick) {
         this.movementTick = movementTick;
     }
 
+    /**
+     * Move an Enemy
+     *
+     * @param game game state
+     */
     public void move(Game game) {
         SwampTile swampTile = game.getSwampTile(this.getPosition());
         if (swampTile != null && this.movementTick < swampTile.getMovementFactor()) {

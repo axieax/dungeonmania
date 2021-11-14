@@ -30,7 +30,7 @@ public class CircularMovementState extends MovementState {
                 Direction.UP,
                 Direction.RIGHT
             );
-        // index of circularMovementPath
+        // Index of circularMovementPath
         this.indexOfNextMove = 0;
         this.reverseMovement = false;
     }
@@ -84,14 +84,29 @@ public class CircularMovementState extends MovementState {
         }
     }
 
+    /**
+     * Checks if is initial movement
+     *
+     * @return true if initial movement, false otherwise
+     */
     public boolean isInitialMovement() {
         return initialMovement;
     }
 
+    /**
+     * Checks if is reverse movement
+     *
+     * @return true if reverse movement, false otherwise
+     */
     public boolean isReverseMovement() {
         return reverseMovement;
     }
 
+    /**
+     * Get index of next move
+     *
+     * @return index
+     */
     public int getIndexOfNextMove() {
         return indexOfNextMove;
     }

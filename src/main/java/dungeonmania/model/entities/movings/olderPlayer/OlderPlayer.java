@@ -19,6 +19,5 @@ public class OlderPlayer extends Enemy {
         this.getMovementState().move(game);
     }
 
-    @Override
     public void update(SubjectPlayer player) {}
 }

@@ -383,7 +383,7 @@ public class MercenaryTest {
         game.addEntity(exit);
 
         assertTrue(game.getEntities(exitPos).size() == 1);
-        mercenary.moveTo(exitPos);
+        mercenary.setPosition(exitPos);
         assertTrue(game.getEntities(exitPos).size() == 2);
     }
 

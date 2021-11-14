@@ -55,6 +55,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
      ********************************/
 
     /**
+     * Get the player state
+     *
      * @return PlayerState
      */
     public PlayerState getState() {
@@ -63,6 +65,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     /**
      * Sets the player state.
+     *
      * @param state
      */
     public void setState(PlayerState state) {
@@ -71,14 +74,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean true if the player is currently in battle
+     * Checks if a player is in battle
+     *
+     * @return true if the player is currently in battle, false otherwise
      */
     public boolean getInBattle() {
         return inBattle;
     }
 
     /**
-     * Sets the player battle status.
+     * Set the player battle status.
+     *
      * @param inBattle
      */
     public void setInBattle(boolean inBattle) {
@@ -86,6 +92,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
+     * Get the current battle opponent
+     *
      * @return true if in battle, false otherwise
      */
     public MovingEntity getCurrentBattleOpponent() {
@@ -93,8 +101,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Sets the current opponent that the player is fighting against.
-     * @return
+     * Set the current opponent that the player is fighting against.
+     *
+     * @param opponent
      */
     public void setCurrentBattleOpponent(MovingEntity opponent) {
         this.currentBattleOpponent = opponent;
@@ -103,24 +112,24 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Get maxCharacterHealth attribute
      *
-     * @return int
+     * @return maximum character health
      */
     public int getMaxCharacterHealth() {
         return maxCharacterHealth;
     }
 
+    /********************************
+     *  Ally Methods                *
+     ********************************/
+
     /**
      * Get a list of all allies that the player has.
      *
-     * @return List<Enemy>
+     * @return list of allies
      */
     public List<BribableEnemy> getAllies() {
         return this.allies;
     }
-
-    /********************************
-     *  Ally Methods                *
-     ********************************/
 
     /**
      * Add an ally (becomes bribed) to the player.
@@ -176,8 +185,8 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Finds and return the item that has the prefix from the inventory
      *
-     * @param prefix
-     * @return Item
+     * @param prefix of item
+     * @return Item if found, else null
      */
     public Item findInventoryItem(String prefix) {
         return inventory.findItem(prefix);
@@ -204,7 +213,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Get a list of all equipments from the inventory.
      *
-     * @return List<Equipment>
+     * @return list of equipments
      */
     public List<Equipment> getEquipmentList() {
         return inventory.getEquipmentList();
@@ -213,7 +222,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * Get a list of all attackable equipments from the inventory.
      *
-     * @return List<AttackEquipment>
+     * @return list of attack equipments
      */
     public List<AttackEquipment> getAttackEquipmentList() {
         return this.getEquipmentList()
@@ -224,9 +233,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * Get a list of all defendable eqipments from the inventory.
+     * Get a list of all defendable equipments from the inventory.
      *
-     * @return List<DefenceEquipment>
+     * @return list of defence equipments
      */
     public List<DefenceEquipment> getDefenceEquipmentList() {
         return this.getEquipmentList()
@@ -237,13 +246,17 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return booleant true if the player has a key
+     * Checks if the player has a key
+     *
+     * @return true if player has a key, false otherwise
      */
     public boolean hasKey() {
         return this.getKey() != null;
     }
 
     /**
+     * Get the key from a player's inventory
+     *
      * @return Key
      */
     public Key getKey() {
@@ -251,29 +264,19 @@ public class Player extends MovingEntity implements SubjectPlayer {
     }
 
     /**
-     * @return boolean true if the player has a weapon
+     * Check if a player has a weapon
+     * @return true if the player has a weapon, false otherwise
      */
     public boolean hasWeapon() {
         return !this.getAttackEquipmentList().isEmpty();
     }
 
     /**
-     * @return first weapon in the player inventory
+     * Get the first weapon in the player's inventory
+     * @return weapon
      */
     public Equipment getWeapon() {
         return (AttackEquipment) inventory.findWeapon();
-    }
-
-    @Override
-    public AnimationQueue getAnimation() {
-        double health = (double) getHealth() / maxCharacterHealth;
-        return new AnimationQueue(
-            "PostTick",
-            getId(),
-            Arrays.asList("healthbar set " + health, "healthbar tint 0xff0000, over 0.5s"),
-            false,
-            10
-        );
     }
 
     /**
@@ -334,17 +337,19 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * Interacts with any entity that is on the tile the character is about to move into.
      * Upon movement, any observers are notified. If an entity blocks the player, then the
      * player does not move at all.
+     *
      * @param game
      * @param direction
      */
     public void move(Game game, Direction direction) throws PlayerDeadException {
-        this.move(game, direction, "");
+        this.move(game, direction, null);
     }
 
     /**
      * Interacts with any entity that is on the tile the character is about to move into.
      * Upon movement, any observers are notified. If an entity blocks the player, then the
      * player does not move at all.
+     *
      * @param game
      * @param direction
      */
@@ -371,13 +376,12 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
-        entities.forEach(
-            entity -> {
-                // Cannot interact with moving entities or spawners when moving
-                if (!(entity instanceof MovingEntity || entity instanceof ZombieToastSpawner))
-                    entity.interact(game, this);
-            }
-        );
+        entities.forEach(entity -> {
+            // Cannot interact with moving entities or spawners when moving
+            if (
+                !(entity instanceof MovingEntity || entity instanceof ZombieToastSpawner)
+            ) entity.interact(game, this);
+        });
 
         // Gets the updated entities after the interaction
         List<Entity> updatedEntities = game.getEntities(this.getPosition().translateBy(direction));
@@ -401,7 +405,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
      *
      * @param opponent entity the character is fighting
      */
-    public void battle(Game game, Enemy opponent) throws PlayerDeadException {
+    private void battle(Game game, Enemy opponent) throws PlayerDeadException {
         if (this.canBattleOpponent(opponent)) {
             state.battle(game, opponent);
             if (!this.isAlive()) throw new PlayerDeadException("Player has died... Ending game...");
@@ -411,6 +415,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
     /**
      * If the player encounters their olderself and are carrying a sun stone or are wearing midnight armour,
      * or they are invisible, then nothing happens. If not, then a battle ensues.
+     *
      * @param opponent
      * @return boolean true if the player can battle the opponent
      */
@@ -439,11 +444,13 @@ public class Player extends MovingEntity implements SubjectPlayer {
      * @throws InvalidActionException if the player doesn't have enough resources or fails zombie check
      */
     public void craft(Game game, Buildable equipment) throws InvalidActionException {
-        if (equipment.isBuildable(game, inventory)) equipment.craft(
-            inventory
-        ); else throw new InvalidActionException(
-            "You do not meet the requirements to build this equipment"
-        );
+        if (equipment.isBuildable(game, inventory)) {
+            equipment.craft(inventory);
+        } else {
+            throw new InvalidActionException(
+                "You do not meet the requirements to build this equipment"
+            );
+        }
     }
 
     /**
@@ -533,6 +540,18 @@ public class Player extends MovingEntity implements SubjectPlayer {
     @Override
     public void removeObservers() {
         observers = new ArrayList<>();
+    }
+
+    @Override
+    public AnimationQueue getAnimation() {
+        double health = (double) getHealth() / maxCharacterHealth;
+        return new AnimationQueue(
+            "PostTick",
+            getId(),
+            Arrays.asList("healthbar set " + health, "healthbar tint 0xff0000, over 0.5s"),
+            false,
+            10
+        );
     }
 
     @Override

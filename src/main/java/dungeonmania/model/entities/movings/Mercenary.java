@@ -53,6 +53,12 @@ public class Mercenary extends BribableEnemy {
         if (sunstone == null) ((Treasure) treasure).consume(game, player);
     }
 
+    /**
+     * Spawns a Mercenary
+     *
+     * @param game game state
+     * @param damageMultiplier damage multiplier
+     */
     public static void spawnMercenary(Game game, int damageMultiplier) {
         // Mercenaries only spawn on maps with at least one enemy
         if (game.getAllEnemies() == null || game.getAllEnemies().size() == 0) return;

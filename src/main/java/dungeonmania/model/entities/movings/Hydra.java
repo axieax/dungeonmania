@@ -27,7 +27,12 @@ public class Hydra extends Enemy implements Boss {
         player.attach(this);
     }
 
-    public void setPreventHeadRespawn(Boolean respawn) {
+    /**
+     * Set prevent head respawn status
+     *
+     * @param respawn
+     */
+    public void setPreventHeadRespawn(boolean respawn) {
         this.preventHeadRespawn = respawn;
     }
 
@@ -62,6 +67,12 @@ public class Hydra extends Enemy implements Boss {
         this.move(game);
     }
 
+    /**
+     * Spawns a Hydra
+     *
+     * @param game game state
+     * @param damageMultiplier
+     */
     public static void spawnHydra(Game game, int damageMultiplier) {
         // Hydra only spawns in hard mode
         if (!(game.getMode() instanceof Hard)) return;
@@ -77,11 +88,9 @@ public class Hydra extends Enemy implements Boss {
         }
     }
 
-    /**
-     * Hydra is allowed to pass through portals
-     */
     @Override
     public boolean collision(Entity entity) {
+        // Hydra is allowed to pass through portals
         if (entity instanceof Portal) return false;
         return !entity.isPassable();
     }
@@ -93,7 +102,7 @@ public class Hydra extends Enemy implements Boss {
     @Override
     public void reduceHealthFromBattle(int amount) {
         Random rand = new Random();
-        if (!preventHeadRespawn && rand.nextInt(2) == 0) {
+        if (!preventHeadRespawn && rand.nextBoolean()) {
             super.reduceHealthFromBattle(-amount);
         } else {
             preventHeadRespawn = false;

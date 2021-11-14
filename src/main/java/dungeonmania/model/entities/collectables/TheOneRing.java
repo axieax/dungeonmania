@@ -8,6 +8,8 @@ import dungeonmania.util.Position;
 
 public class TheOneRing extends Item implements Consumable {
 
+    public static final double DROP_RATE = 0.1;
+
     public TheOneRing(Position position) {
         super("one_ring", position);
     }
