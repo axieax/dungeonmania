@@ -10,7 +10,7 @@ public class OlderPlayer extends Enemy {
 
     private static final int MAX_OLDER_PLAYER_ATTACK_DMG = 10;
 
-    public OlderPlayer(Position position, List<Position> moves, int health) {
+    public OlderPlayer(Position position, int health, List<Position> moves) {
         super("older_player", position, health, MAX_OLDER_PLAYER_ATTACK_DMG, 1);
         this.setMovementState(new RewindMovementState(this, moves.iterator()));
     }
