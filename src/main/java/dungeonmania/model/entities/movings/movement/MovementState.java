@@ -1,5 +1,6 @@
 package dungeonmania.model.entities.movings.movement;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.Enemy;
@@ -56,7 +57,7 @@ public abstract class MovementState {
      *
      * @param game
      */
-    public void interact(Game game) {
+    public void interact(Game game) throws InvalidActionException {
         // Interact with all entities in that direction
         List<Entity> entities = game.getEntities(
             enemy.getPosition().translateBy(enemy.getDirection())
