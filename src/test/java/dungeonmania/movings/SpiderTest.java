@@ -109,6 +109,7 @@ public class SpiderTest {
 
         response = controller.tick(null, Direction.NONE);
         entities = response.getEntities();
+
         // initially spider must always move 1 block upwards
         Position spiderPos = getSpiderPosition(entities);
         assertTrue(spiderPos.equals(spiderSpawnPos.translateBy(Direction.UP)));
@@ -228,10 +229,12 @@ public class SpiderTest {
 
         game.tick(null, Direction.NONE);
         assertTrue(spider.getPosition().equals(new Position(3, 2)));
+        assertFalse(spider.isReverseIfCircularMovement());
 
         // reverse direction
         game.tick(null, Direction.NONE);
         assertTrue(spider.getPosition().equals(new Position(3, 2)));
+        assertTrue(spider.isReverseIfCircularMovement());
 
         // remove boulder
         game.removeEntity(boulder);
@@ -283,6 +286,7 @@ public class SpiderTest {
         // after the first tick, spider should move straight up, into the door
         game.tick(null, Direction.NONE);
 
+        assertFalse(spider.isInitialIfCircularMovement());
         assertTrue(spider.getPosition().equals(doorPos));
         assertTrue(game.getEntities(doorPos).size() == 2); // door and spider in same tile
     }
@@ -602,8 +606,11 @@ public class SpiderTest {
         game.addEntity(spider);
 
         assertTrue(game.getEntities(initialSpiderPos).size() == 1);
+        assertTrue(spider.isInitialIfCircularMovement());
+        
         // spider cannot move up
         game.tick(null, Direction.NONE);
+        assertTrue(spider.isInitialIfCircularMovement());
         assertTrue(game.getEntities(initialSpiderPos).size() == 1);
     }
 
@@ -708,11 +715,12 @@ public class SpiderTest {
         game.addEntity(spider);
         assertTrue(game.getEntities(spiderPos).size() > 0);
         
-        // zombie should now run away
+        // spider should now run away
         game.tick(null, Direction.NONE);
         assertTrue(spider.getHealth() > 0);
         assertTrue(player.getState() instanceof PlayerInvincibleState);
         assertTrue(spider.getMovementState() instanceof RunMovementState);
+        assertTrue(spider.getIndexOfNextMoveIfCircularMovement() == -1);
         assertTrue(game.getCardinallyAdjacentEntities(player.getPosition()).size() < entitiesBeforeZombie);
     }
 
@@ -804,5 +812,4 @@ public class SpiderTest {
         assertTrue(game.getEntities(playerPos).size() == numEntitiesAtPlayerPos);
         assertTrue(game.getEntities(initialSpiderPos).size() == numEntitiesAtSpiderPos);
     }
-    
 }
