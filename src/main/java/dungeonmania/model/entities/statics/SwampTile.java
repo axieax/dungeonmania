@@ -1,10 +1,9 @@
 package dungeonmania.model.entities.statics;
 
-import org.json.JSONObject;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.util.Position;
+import org.json.JSONObject;
 
 public class SwampTile extends Entity {
 

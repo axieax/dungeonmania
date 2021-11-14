@@ -1,11 +1,12 @@
 package dungeonmania.response.models;
 
 public final class GenericResponseWrapper<T> {
+
     private final T result;
     private final String errorTitle;
     private final String errorMessage;
     private final boolean isError;
-    
+
     private GenericResponseWrapper(T result) {
         this.result = result;
         this.errorTitle = this.errorMessage = null;
@@ -19,11 +20,11 @@ public final class GenericResponseWrapper<T> {
         this.isError = true;
     }
 
-    public static<T> GenericResponseWrapper<T> Ok(T result) {
+    public static <T> GenericResponseWrapper<T> Ok(T result) {
         return new GenericResponseWrapper<T>(result);
     }
 
-    public static<T> GenericResponseWrapper<T> Err(Exception e) {
+    public static <T> GenericResponseWrapper<T> Err(Exception e) {
         return new GenericResponseWrapper<T>(e.getClass().getSimpleName(), e.getLocalizedMessage());
     }
 

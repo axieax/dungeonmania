@@ -1,5 +1,3 @@
 package dungeonmania.model.entities.movings;
 
-public interface Boss {
-    
-}
+public interface Boss {}

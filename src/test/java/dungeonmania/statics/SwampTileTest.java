@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.Spider;
@@ -17,10 +15,11 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
-
 public class SwampTileTest {
+
     /**
      * Test whether the entity instance has been created with the correct positions.
      */
@@ -62,7 +61,7 @@ public class SwampTileTest {
     public void hasEffectSpiders() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         Player player = new Player(new Position(10, 10), mode.initialHealth());
         game.addEntity(player);
 
@@ -101,7 +100,7 @@ public class SwampTileTest {
     public void hasEffectZombies() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         Player player = new Player(new Position(10, 10), mode.initialHealth());
         game.addEntity(player);
 
@@ -132,7 +131,7 @@ public class SwampTileTest {
     public void testHighMovementFactor() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         Player player = new Player(new Position(10, 10), mode.initialHealth());
         game.addEntity(player);
 
@@ -165,7 +164,7 @@ public class SwampTileTest {
     public void swampPathFinding() {
         Mode mode = new Standard();
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
-        
+
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
@@ -181,17 +180,26 @@ public class SwampTileTest {
 
         // check if mercenary did not go to swamp tile but rather around it
         assertNotEquals(swampTile.getPosition(), mercenary.getPosition());
-        assertTrue(mercenary.getPosition().equals(new Position(0, 3)) || mercenary.getPosition().equals(new Position(2, 3)));
+        assertTrue(
+            mercenary.getPosition().equals(new Position(0, 3)) ||
+            mercenary.getPosition().equals(new Position(2, 3))
+        );
 
         // mercenary should be adjacent to swamp tile
         game.tick(null, Direction.NONE);
         assertTrue(Position.isAdjacent(swampTile.getPosition(), mercenary.getPosition()));
-        assertTrue(mercenary.getPosition().equals(new Position(0, 2)) || mercenary.getPosition().equals(new Position(2, 2)));
+        assertTrue(
+            mercenary.getPosition().equals(new Position(0, 2)) ||
+            mercenary.getPosition().equals(new Position(2, 2))
+        );
 
         // mercenary should be adjacent to player
         game.tick(null, Direction.NONE);
         assertTrue(Position.isAdjacent(mercenary.getPosition(), player.getPosition()));
-        assertTrue(mercenary.getPosition().equals(new Position(0, 1)) || mercenary.getPosition().equals(new Position(2, 1)));
+        assertTrue(
+            mercenary.getPosition().equals(new Position(0, 1)) ||
+            mercenary.getPosition().equals(new Position(2, 1))
+        );
 
         // mercenary should be move to player's position
         game.tick(null, Direction.NONE);

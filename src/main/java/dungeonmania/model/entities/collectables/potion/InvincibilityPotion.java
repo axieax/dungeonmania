@@ -15,11 +15,10 @@ public class InvincibilityPotion extends Potion {
     @Override
     public void consume(Game game, Player player) {
         // Invincibility potions have no effect in hard mode
-        if(!(game.getMode() instanceof Hard)) {
+        if (!(game.getMode() instanceof Hard)) {
             player.setState(new PlayerInvincibleState(player));
         }
-        
+
         player.removeInventoryItem(this.getId());
     }
-
 }

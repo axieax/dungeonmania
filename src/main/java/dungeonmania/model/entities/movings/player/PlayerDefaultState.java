@@ -60,13 +60,14 @@ public class PlayerDefaultState implements PlayerState {
             throw new PlayerDeadException("Player has died");
         }
 
-        // If a player wins a battle, there is a small chance that items could be 
+        // If a player wins a battle, there is a small chance that items could be
         // dropped and be added to the character's inventory.
 
         // An opponent can have the potential to drop multiple items.
         Random armourRand = new Random();
-        if (armourRand.nextDouble() <= opponent.getArmourDropRate())
-            player.addInventoryItem(new Armour());
+        if (armourRand.nextDouble() <= opponent.getArmourDropRate()) player.addInventoryItem(
+            new Armour()
+        );
 
         // only one rare collectable item drops
         if((new Random()).nextInt(100) % 2 == 0) {
@@ -75,7 +76,7 @@ public class PlayerDefaultState implements PlayerState {
                 player.addInventoryItem(new TheOneRing());
         } else {
             Random andurilRand = new Random();
-            if (andurilRand.nextDouble() <= opponent.THE_ONE_RING_DROP_RATE)
+            if (andurilRand.nextDouble() <= opponent.ANDURIL_DROP_RATE)
                 player.addInventoryItem(new Anduril());
         }
 
