@@ -5,6 +5,7 @@ import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.Item;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.util.Position;
 import java.util.List;
@@ -25,9 +26,14 @@ public class Bomb extends Item implements Consumable {
     public void consume(Game game, Player player) {
         this.setPosition(player.getPosition());
         game.addEntity(this);
+        this.setPassable(false);
         player.removeInventoryItem(this.getId());
         isPlaced = true;
-        this.setPassable(false);
+
+        List<Entity> entities = game.getCardinallyAdjacentEntities(this.getPosition());
+        if (entities.stream().anyMatch(e -> e instanceof FloorSwitch && ((FloorSwitch)e).isTriggered(game))) {
+            this.explode(game);
+        }
     }
 
     /**
