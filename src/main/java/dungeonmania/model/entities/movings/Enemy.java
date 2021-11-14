@@ -20,7 +20,7 @@ public abstract class Enemy extends MovingEntity implements Observer {
         super(prefix, position, health, attackDamage);
         this.damageMultiplier = damageMultiplier;
         this.movementTick = 1;
-        this.armourDropRate = 0;
+        this.armourDropRate = 0.2;
     }
 
     public int getBaseAttackDamage() {
