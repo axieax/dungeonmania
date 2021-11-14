@@ -134,6 +134,8 @@ public abstract class BribableEnemy extends Enemy {
         this.mindControlled = true;
         return true;
     }
+
+    @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
         info.put ("bribed", bribed); 
