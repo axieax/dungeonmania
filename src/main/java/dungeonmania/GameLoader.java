@@ -207,8 +207,11 @@ public class GameLoader {
             return new FloorSwitch(position);
         } else if (type.startsWith("door")) {
             int key = entityInfo.getInt("key");
+            Boolean open = entityInfo.getBoolean ("open");
             position = position.asLayer(4);
-            return new Door(position, key);
+            Door newDoor = new Door(position, key);
+            if (open) newDoor.unlockDoor();
+            return newDoor;
         } else if (type.startsWith("time_travelling_portal")) {
             position = position.asLayer(5);
             return new TimeTravellingPortal(position);
@@ -245,7 +248,10 @@ public class GameLoader {
             return new Arrow(position);
         } else if (type.startsWith("bomb")) {
             position = position.asLayer(15);
-            return new Bomb(position);
+            Boolean isPlaced = entityInfo.getBoolean("isPlaced");
+            Bomb newBomb = new Bomb (position);
+            newBomb.setPlaced(isPlaced);
+            return newBomb;
         } else if (type.startsWith("sword")) {
             position = position.asLayer(16);
             Sword newSword = new Sword(position);
