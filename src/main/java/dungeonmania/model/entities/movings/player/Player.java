@@ -35,7 +35,7 @@ public class Player extends MovingEntity implements SubjectPlayer {
 
     public static final int CHARACTER_ATTACK_DMG = 10;
     
-    public static int maxCharacterHealth = 100;
+    private int maxCharacterHealth = 100;
     private PlayerState state;
     private boolean inBattle;
     private MovingEntity currentBattleOpponent;
@@ -99,6 +99,15 @@ public class Player extends MovingEntity implements SubjectPlayer {
      */
     public void setCurrentBattleOpponent(MovingEntity opponent) {
         this.currentBattleOpponent = opponent;
+    }
+
+    /**
+     * Get maxCharacterHealth attribute
+     * 
+     * @return int
+     */
+    public int getMaxCharacterHealth() {
+        return maxCharacterHealth;
     }
 
     /**

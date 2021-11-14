@@ -6,9 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dungeonmania.DungeonManiaController;
-import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.TestHelpers;
 import dungeonmania.model.Game;
-import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.movement.RunMovementState;
@@ -19,7 +18,6 @@ import dungeonmania.model.entities.statics.Door;
 import dungeonmania.model.entities.statics.Exit;
 import dungeonmania.model.entities.statics.FloorSwitch;
 import dungeonmania.model.entities.statics.Portal;
-import dungeonmania.model.entities.statics.Wall;
 import dungeonmania.model.goal.ExitCondition;
 import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Peaceful;
@@ -39,6 +37,36 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class SpiderTest {
+
+    /**
+     * Helper method to tick until a spider spawns
+     */
+    private static DungeonResponse tickGameUntilSpiderSpawns(
+        DungeonManiaController controller,
+        DungeonResponse response
+    ) {
+        // Won't be an infinite loop as spider guaranteed to spawn
+        DungeonResponse updatedResponse = null;
+        while (true) {
+            updatedResponse = controller.tick(null, Direction.NONE);
+            List<EntityResponse> entities = updatedResponse.getEntities();
+            EntityResponse spider = TestHelpers.findFirstInstance(entities, "spider");
+            if (spider != null) {
+                return updatedResponse;
+            }
+        }
+    }
+
+    /**
+     * Helper method to get the spider's position
+     */
+    private static Position getSpiderPosition(List<EntityResponse> entities) {
+        EntityResponse spider = TestHelpers.findFirstInstance(entities, "spider");
+        if(spider == null) {
+            return null;
+        }
+        return spider.getPosition();
+    }
 
     public static final String SPIDER = "spider";
     public static final String DUNGEON_ADVANCED = "advanced";
@@ -76,7 +104,7 @@ public class SpiderTest {
         response = tickGameUntilSpiderSpawns(controller, response);
         List<EntityResponse> entities = response.getEntities();
 
-        EntityResponse spider = getSpiderEntity(entities);
+        EntityResponse spider = TestHelpers.findFirstInstance(entities, "spider");
         Position spiderSpawnPos = spider.getPosition();
 
         response = controller.tick(null, Direction.NONE);
@@ -122,7 +150,7 @@ public class SpiderTest {
         response = tickGameUntilSpiderSpawns(controller, response);
         List<EntityResponse> entities = response.getEntities();
 
-        EntityResponse spider = getSpiderEntity(entities);
+        EntityResponse spider = TestHelpers.findFirstInstance(entities, "spider");
         Position oldSpiderPos = spider.getPosition();
         
         // initially spider moves 1 block up
@@ -180,7 +208,7 @@ public class SpiderTest {
 
         Game game = new Game(
             "game",
-            sevenBySevenWallBoundary(),
+            TestHelpers.sevenBySevenWallBoundary(),
             new ExitCondition(),
             mode
         );
@@ -239,7 +267,7 @@ public class SpiderTest {
     public void testMovementThroughDoor() {
         // can move through closed doors
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -263,7 +291,7 @@ public class SpiderTest {
     public void testMovementThroughSwitch() {
         // switches have no effect
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), new Peaceful());
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -286,7 +314,7 @@ public class SpiderTest {
     public void testMovementThroughPortal() {
         // portals have no effect on the spider
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -310,7 +338,7 @@ public class SpiderTest {
     @Test
     public void testSpiderMovementIntoExitNoEffect() {
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -337,7 +365,7 @@ public class SpiderTest {
 
         Game game = new Game(
             "game",
-            sevenBySevenWallBoundary(),
+            TestHelpers.sevenBySevenWallBoundary(),
             new ExitCondition(),
             mode
         );
@@ -376,7 +404,7 @@ public class SpiderTest {
 
         Game game = new Game(
             "game",
-            sevenBySevenWallBoundary(),
+            TestHelpers.sevenBySevenWallBoundary(),
             new ExitCondition(),
             mode
         );
@@ -421,7 +449,7 @@ public class SpiderTest {
 
         Game game = new Game(
             "game",
-            sevenBySevenWallBoundary(),
+            TestHelpers.sevenBySevenWallBoundary(),
             new ExitCondition(),
             mode
         );
@@ -473,7 +501,7 @@ public class SpiderTest {
 
         Game game = new Game(
             "game",
-            sevenBySevenWallBoundary(),
+            TestHelpers.sevenBySevenWallBoundary(),
             new ExitCondition(),
             mode
         );
@@ -515,7 +543,7 @@ public class SpiderTest {
 
         Game game = new Game(
             "game",
-            sevenBySevenWallBoundary(),
+            TestHelpers.sevenBySevenWallBoundary(),
             new ExitCondition(),
             mode
         );
@@ -560,7 +588,7 @@ public class SpiderTest {
         // a boulder exists in the tile above where the spider spawns, and so,
         // the spider should not move anywhere
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -584,7 +612,7 @@ public class SpiderTest {
         // spider spawns on the edge of the map (0, 0) and is able to traverse
         // outside the walls
         Mode mode = new Peaceful();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
         
         Player player = new Player(new Position(5, 5), mode.initialHealth());
         game.addEntity(player);
@@ -610,7 +638,7 @@ public class SpiderTest {
 
         Game game = new Game(
             "game",
-            sevenBySevenWallBoundary(),
+            TestHelpers.sevenBySevenWallBoundary(),
             new ExitCondition(),
             mode
         );
@@ -658,7 +686,7 @@ public class SpiderTest {
     @Test
     public void testSpiderRunAway() {
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
@@ -693,7 +721,7 @@ public class SpiderTest {
         // if the player is invincible, the distance between the spider and player
         // should increase every tick
         Mode mode = new Standard();
-        Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
+        Game game = new Game("game", TestHelpers.sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
         Player player = new Player(new Position(5, 3), mode.initialHealth());
         game.addEntity(player);
@@ -748,7 +776,7 @@ public class SpiderTest {
 
         Game game = new Game(
             "game",
-            sevenBySevenWallBoundary(),
+            TestHelpers.sevenBySevenWallBoundary(),
             new ExitCondition(),
             mode
         );
@@ -776,69 +804,5 @@ public class SpiderTest {
         assertTrue(game.getEntities(playerPos).size() == numEntitiesAtPlayerPos);
         assertTrue(game.getEntities(initialSpiderPos).size() == numEntitiesAtSpiderPos);
     }
-
-    private List<Entity> sevenBySevenWallBoundary() {
-        ArrayList<Entity> wallBorder = new ArrayList<>();
-        
-        // left border
-        for(int i = 0; i < 7; i ++) {
-            Wall wall = new Wall(new Position(0, i));
-            wallBorder.add(wall);
-        }
-        
-        // right border
-        for(int i = 0; i < 7; i ++) {
-            Wall wall = new Wall(new Position(6, i));
-            wallBorder.add(wall);
-        }
-
-        // top border
-        for(int i = 1; i < 6; i ++) {
-            Wall wall = new Wall(new Position(i, 0));
-            wallBorder.add(wall);
-        }
-
-        // bottom border
-        for(int i = 1; i < 6; i ++) {
-            Wall wall = new Wall(new Position(i, 6));
-            wallBorder.add(wall);
-        }
-
-        return wallBorder;
-    }
     
-    public DungeonResponse tickGameUntilSpiderSpawns(
-        DungeonManiaController controller,
-        DungeonResponse response
-    ) {
-        // Won't be an infinite loop as spider guaranteed to spawn
-        DungeonResponse updatedResponse = null;
-        while (true) {
-            updatedResponse = controller.tick(null, Direction.NONE);
-            List<EntityResponse> entities = updatedResponse.getEntities();
-            EntityResponse spider = getSpiderEntity(entities);
-            if (spider != null) {
-                return updatedResponse;
-            }
-        }
-    }
-
-    private Position getSpiderPosition(List<EntityResponse> entities) {
-        EntityResponse spider = getSpiderEntity(entities);
-        if(spider == null) {
-            return null;
-        }
-        return spider.getPosition();
-    }
-
-    public EntityResponse getSpiderEntity(List<EntityResponse> entities)
-        throws IllegalArgumentException, InvalidActionException {
-        for (EntityResponse e : entities) {
-            if (e.getType().startsWith(SPIDER)) {
-                return e;
-            }
-        }
-
-        return null;
-    }
 }
