@@ -18,9 +18,11 @@ import dungeonmania.model.entities.collectables.equipment.Sword;
 import dungeonmania.model.entities.collectables.potion.InvincibilityPotion;
 import dungeonmania.model.entities.collectables.potion.InvisibilityPotion;
 import dungeonmania.model.entities.collectables.potion.Potion;
+import dungeonmania.model.entities.movings.Assassin;
 import dungeonmania.model.entities.movings.Hydra;
 import dungeonmania.model.entities.movings.Mercenary;
 import dungeonmania.model.entities.movings.MovingEntity;
+import dungeonmania.model.entities.movings.Spider;
 import dungeonmania.model.entities.movings.ZombieToast;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.movings.player.PlayerDefaultState;
@@ -598,7 +600,9 @@ public class PlayerTest {
         List<MovingEntity> enemies = Arrays.asList(
             new Mercenary(enemyPos, mode.damageMultiplier(), player),
             new ZombieToast(enemyPos, mode.damageMultiplier(), player),
-            new Hydra(enemyPos, mode.damageMultiplier(), player)
+            new Hydra(enemyPos, mode.damageMultiplier(), player),
+            new Assassin(enemyPos, mode.damageMultiplier(), player),
+            new Spider(enemyPos, mode.damageMultiplier(), player)
         );
 
         for (MovingEntity enemy : enemies) {
