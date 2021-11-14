@@ -21,6 +21,7 @@ import dungeonmania.model.entities.movings.Observer;
 import dungeonmania.model.entities.movings.SubjectPlayer;
 import dungeonmania.model.entities.movings.olderPlayer.OlderPlayer;
 import dungeonmania.model.entities.statics.Consumable;
+import dungeonmania.model.entities.statics.ZombieToastSpawner;
 import dungeonmania.response.models.AnimationQueue;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
@@ -374,8 +375,9 @@ public class Player extends MovingEntity implements SubjectPlayer {
         List<Entity> entities = game.getEntities(this.getPosition().translateBy(direction));
         entities.forEach(
             entity -> {
-                // Cannot interact with moving entities when moving
-                if (!(entity instanceof MovingEntity)) entity.interact(game, this);
+                // Cannot interact with moving entities or spawners when moving
+                if (!(entity instanceof MovingEntity || entity instanceof ZombieToastSpawner))
+                    entity.interact(game, this);
             }
         );
 
