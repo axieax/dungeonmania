@@ -53,9 +53,12 @@ public class MercenaryTest {
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
 
+        assertTrue(game.getAllEnemies().size() == 0);
+
         int numEntities = game.getEntities().size();
         for (int i = 0; i < 18; i++) {
             game.tick(null, Direction.NONE);
+            assertTrue(game.getAllEnemies().size() == 0);
             assertTrue(game.getEntities().size() == numEntities);
         }
     }
