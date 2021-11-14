@@ -37,8 +37,7 @@ public class Sceptre extends AttackEquipment implements Buildable {
             ) &&
             inventory.hasItemQuantity(
                 "sun_stone",
-                SUNSTONE_NEEDED +
-                (useSunStone ? TREASURE_NEEDED : 0)
+                SUNSTONE_NEEDED + (useSunStone ? TREASURE_NEEDED : 0)
             )
         );
     }

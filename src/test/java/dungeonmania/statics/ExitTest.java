@@ -2,8 +2,6 @@ package dungeonmania.statics;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.player.Player;
 import dungeonmania.model.entities.statics.Exit;
@@ -12,6 +10,7 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class ExitTest {
@@ -24,7 +23,7 @@ public class ExitTest {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), new Standard());
         Exit exit = new Exit(new Position(1, 1));
         game.addEntity(exit);
-                
+
         assertTrue(new Position(1, 1).equals(game.getEntity(exit.getId()).getPosition()));
     }
 
@@ -37,7 +36,7 @@ public class ExitTest {
         Game game = new Game("game", new ArrayList<>(), new ExitCondition(), mode);
         Exit exit = new Exit(new Position(1, 1));
         game.addEntity(exit);
-                
+
         Player player = new Player(new Position(0, 1), mode.initialHealth());
         game.addEntity(player);
 

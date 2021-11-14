@@ -12,7 +12,6 @@ import dungeonmania.model.mode.Standard;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -181,20 +180,22 @@ public class GameTest {
         List<Entity> cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(
             gamePlayer.getPosition()
         );
-        assertEquals (2, cardinallyAdjacentEntities.size());
+        assertEquals(2, cardinallyAdjacentEntities.size());
 
         newGame.tick(null, Direction.DOWN);
 
-        cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
-        assertEquals (1, cardinallyAdjacentEntities.size());
+        cardinallyAdjacentEntities =
+            newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
+        assertEquals(1, cardinallyAdjacentEntities.size());
 
         newGame.tick(null, Direction.DOWN);
         newGame.tick(null, Direction.DOWN);
         newGame.tick(null, Direction.DOWN);
         newGame.tick(null, Direction.RIGHT);
 
-        cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
-        assertEquals (0, cardinallyAdjacentEntities.size());
+        cardinallyAdjacentEntities =
+            newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
+        assertEquals(0, cardinallyAdjacentEntities.size());
     }
 
     /**
@@ -220,13 +221,14 @@ public class GameTest {
         List<Entity> cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(
             gamePlayer.getPosition()
         );
-        assertEquals (4, cardinallyAdjacentEntities.size());
+        assertEquals(4, cardinallyAdjacentEntities.size());
 
         newGame.tick(null, Direction.RIGHT);
 
         // player is only cardinally adjacent to boulder
-        cardinallyAdjacentEntities = newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
-        assertEquals (1, cardinallyAdjacentEntities.size());
+        cardinallyAdjacentEntities =
+            newGame.getCardinallyAdjacentEntities(gamePlayer.getPosition());
+        assertEquals(1, cardinallyAdjacentEntities.size());
     }
 
     /**
@@ -269,12 +271,11 @@ public class GameTest {
 
         // bow is in inventory
         boolean builtBow = false;
-        for (ItemResponse item: gamePlayer.getInventoryResponses()) {
+        for (ItemResponse item : gamePlayer.getInventoryResponses()) {
             if (item.getType().contains("bow")) builtBow = true;
         }
         assertTrue(builtBow);
     }
-    
     /*
     @Test
     public void testInteract() {

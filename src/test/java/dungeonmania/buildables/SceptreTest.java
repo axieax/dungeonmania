@@ -2,8 +2,6 @@ package dungeonmania.buildables;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.buildables.Sceptre;
 import dungeonmania.model.entities.collectables.Arrow;
@@ -19,10 +17,11 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 public class SceptreTest {
-    
+
     /**
      * Test whether the buildable entity can be built by the Player.
      */
@@ -46,7 +45,7 @@ public class SceptreTest {
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.LEFT);
-        
+
         assertTrue(player.findInventoryItem("sceptre") == null);
 
         // Player builds a sceptre
@@ -87,7 +86,7 @@ public class SceptreTest {
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.LEFT);
-        
+
         assertTrue(player.findInventoryItem("sceptre") == null);
 
         // Player builds a sceptre
@@ -125,7 +124,7 @@ public class SceptreTest {
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.LEFT);
-        
+
         assertTrue(player.findInventoryItem("sceptre") == null);
 
         // Player builds a sceptre
@@ -166,7 +165,7 @@ public class SceptreTest {
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.LEFT);
-        
+
         assertTrue(player.findInventoryItem("sceptre") == null);
 
         // Player builds a sceptre
@@ -202,7 +201,7 @@ public class SceptreTest {
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.LEFT);
-        
+
         game.build("sceptre");
 
         // Durability of sceptre when built should be 5
@@ -210,7 +209,10 @@ public class SceptreTest {
         Sceptre sceptre = (Sceptre) player.findInventoryItem("sceptre");
         assertTrue(sceptre.getDurability() == initialDurability);
 
-        ZombieToastSpawner spawner = new ZombieToastSpawner(new Position(0, 3), mode.damageMultiplier());
+        ZombieToastSpawner spawner = new ZombieToastSpawner(
+            new Position(0, 3),
+            mode.damageMultiplier()
+        );
         game.addEntity(spawner);
 
         player.move(game, Direction.DOWN);
@@ -242,7 +244,7 @@ public class SceptreTest {
         player.move(game, Direction.RIGHT);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.LEFT);
-        
+
         game.build("sceptre");
 
         int initialDurability = 5;

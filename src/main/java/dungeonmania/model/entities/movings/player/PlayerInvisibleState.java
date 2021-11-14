@@ -4,7 +4,7 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.Enemy;
 
 public class PlayerInvisibleState implements PlayerState {
-    
+
     private Player player;
     private int timeLimit = 6;
 
@@ -26,6 +26,7 @@ public class PlayerInvisibleState implements PlayerState {
             this.player.setState(new PlayerDefaultState(player));
         }
     }
+
     public int ticksLeft() {
         return timeLimit;
     }

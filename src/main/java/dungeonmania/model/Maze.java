@@ -1,18 +1,16 @@
 package dungeonmania.model;
 
+import dungeonmania.util.Position;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import dungeonmania.util.Position;
-
-
 public class Maze {
+
     private int width;
     private int height;
     Position start;
@@ -20,7 +18,7 @@ public class Maze {
     ArrayList<ArrayList<Boolean>> maze;
 
     /**
-     * 
+     *
      * @param width width of maze
      * @param height height of maze
      * @param start starting position of the player
@@ -51,12 +49,12 @@ public class Maze {
     }
 
     /**
-     * 
+     *
      * @param x x-cordinate
      * @param y y- cordinate
      * @return whether the position is empty space (true) or wall (false)
      */
-    public boolean getMazePosition (int x, int y) {
+    public boolean getMazePosition(int x, int y) {
         return maze.get(y).get(x);
     }
 
@@ -77,14 +75,14 @@ public class Maze {
             mazeMap.add(rowInMap);
         }
         // set start as non empty
-        mazeMap.get(start.getY()).set(start.getX(),true);
+        mazeMap.get(start.getY()).set(start.getX(), true);
 
         // add to options all neighbours of 'start' not on boundary that are of
         // distance 2 away and are walls
         List<Position> options = secondNeighbours(start)
-                                 .stream()
-                                 .filter(e->!mazeMap.get(e.getY()).get(e.getX()))
-                                 .collect(Collectors.toList());
+            .stream()
+            .filter(e -> !mazeMap.get(e.getY()).get(e.getX()))
+            .collect(Collectors.toList());
 
         while (options.size() > 0) { // while options is not empty
             // let next = remove random from options
@@ -93,7 +91,10 @@ public class Maze {
 
             // let neighbours = each neighbour of distance 2 from next not on boundary
             // that are empty
-            List <Position> neighbours = secondNeighbours(next).stream().filter(e->mazeMap.get(e.getY()).get(e.getX())).collect(Collectors.toList());
+            List<Position> neighbours = secondNeighbours(next)
+                .stream()
+                .filter(e -> mazeMap.get(e.getY()).get(e.getX()))
+                .collect(Collectors.toList());
             if (neighbours.size() != 0) { // if neighbours is not empty
                 Position neighbour = neighbours.get(random.nextInt(neighbours.size()));
                 mazeMap.get(next.getY()).set(next.getX(), true);
@@ -101,14 +102,14 @@ public class Maze {
                 setBetweenPositionAsEmpty(mazeMap, next, neighbour);
                 mazeMap.get(neighbour.getY()).set(neighbour.getX(), true);
             }
-            
+
             // add to options all neighbours of 'next' not on boundary that are of
             // distance 2 away and are walls
             List<Position> nextNeighbours = secondNeighbours(next)
-                                            .stream()
-                                            .filter(e->!mazeMap.get(e.getY()).get(e.getX()))
-                                            .filter(e->!options.contains(e))
-                                            .collect(Collectors.toList());
+                .stream()
+                .filter(e -> !mazeMap.get(e.getY()).get(e.getX()))
+                .filter(e -> !options.contains(e))
+                .collect(Collectors.toList());
             options.addAll(nextNeighbours);
         }
         // incase the end position is not connected to the map
@@ -123,13 +124,12 @@ public class Maze {
                 Position neighbour = firstNeighbours.get(random.nextInt(firstNeighbours.size()));
                 mazeMap.get(neighbour.getY()).set(neighbour.getX(), true);
             }
-        
         }
         return mazeMap;
     }
 
     // check if a position is on the boundary
-    public Boolean isOnBoundary (Position currPos) {
+    public Boolean isOnBoundary(Position currPos) {
         int x = currPos.getX();
         int y = currPos.getY();
         if (x <= 0 || x >= width - 1) return true;
@@ -138,8 +138,11 @@ public class Maze {
     }
 
     // check if a list of possible positions is all walls
-    public Boolean allWalls (List<Position> possiblePositions, ArrayList<ArrayList<Boolean>> mazeMap) {
-        for (Position position: possiblePositions) {
+    public Boolean allWalls(
+        List<Position> possiblePositions,
+        ArrayList<ArrayList<Boolean>> mazeMap
+    ) {
+        for (Position position : possiblePositions) {
             int x = position.getX();
             int y = position.getY();
             if (mazeMap.get(y).get(x)) return false;
@@ -148,27 +151,31 @@ public class Maze {
     }
 
     // set a position between position one and position two on the maze map as empty
-    public void setBetweenPositionAsEmpty (ArrayList<ArrayList<Boolean>> mazeMap, Position one, Position two) {
+    public void setBetweenPositionAsEmpty(
+        ArrayList<ArrayList<Boolean>> mazeMap,
+        Position one,
+        Position two
+    ) {
         int x1 = one.getX();
         int y1 = one.getY();
         int x2 = two.getX();
         int y2 = two.getY();
         if (y1 == y2 - 2) {
-            mazeMap.get(y1+1).set(x1, true);
+            mazeMap.get(y1 + 1).set(x1, true);
         } else if (y1 == y2 + 2) {
-            mazeMap.get(y1-1).set(x1, true);
+            mazeMap.get(y1 - 1).set(x1, true);
         } else if (x1 == x2 - 2) {
-            mazeMap.get(y1).set(x1+1, true);
+            mazeMap.get(y1).set(x1 + 1, true);
         } else if (x1 == x2 + 2) {
-            mazeMap.get(y1).set(x1-1, true);
+            mazeMap.get(y1).set(x1 - 1, true);
         }
     }
 
     // find neighbours one move from current position
-    public List<Position> firstNeighbours (Position currPos) {
+    public List<Position> firstNeighbours(Position currPos) {
         int x = currPos.getX();
         int y = currPos.getY();
-        
+
         // find the positions that could be the possible first neighbours of  currPos
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(x, y + 1));
@@ -186,7 +193,7 @@ public class Maze {
     }
 
     // find neighbours two moves from current position
-    public List<Position> secondNeighbours (Position currPos) {
+    public List<Position> secondNeighbours(Position currPos) {
         int x = currPos.getX();
         int y = currPos.getY();
         List<Position> positions = new ArrayList<>();
@@ -210,37 +217,36 @@ public class Maze {
      * @param type type of entity
      * @return JSON object representing the entity
      */
-    public JSONObject makeJSONEntity (int x_position, int y_position,String type) {
-        JSONObject newEntity = new JSONObject ();
-        newEntity.put ("x", x_position);
-        newEntity.put ("y", y_position);
-        newEntity.put ("type", type);
+    public JSONObject makeJSONEntity(int x_position, int y_position, String type) {
+        JSONObject newEntity = new JSONObject();
+        newEntity.put("x", x_position);
+        newEntity.put("y", y_position);
+        newEntity.put("type", type);
         return newEntity;
     }
 
-
     // returns the json object representing the dungeon
-    public JSONObject toJSON () {
+    public JSONObject toJSON() {
         JSONObject mazeJSON = new JSONObject();
         JSONArray entities = new JSONArray();
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if (start.getX() == j && start.getY() == i) { // player starts here
-                    entities.put (makeJSONEntity (j,i,"player"));
-                } else if (end.getX() == j && end.getY() == i){ // exit is here
-                    entities.put (makeJSONEntity (j,i,"exit"));
+                    entities.put(makeJSONEntity(j, i, "player"));
+                } else if (end.getX() == j && end.getY() == i) { // exit is here
+                    entities.put(makeJSONEntity(j, i, "exit"));
                 } else if (!maze.get(i).get(j)) { // wall
-                    entities.put (makeJSONEntity (j,i,"wall"));
-                } 
+                    entities.put(makeJSONEntity(j, i, "wall"));
+                }
             }
-        } 
-        mazeJSON.put("entities", entities); 
+        }
+        mazeJSON.put("entities", entities);
 
         // adds the goal of the dungeon
         JSONObject goal = new JSONObject();
-        goal.put ("goal", "exit");
+        goal.put("goal", "exit");
         mazeJSON.put("goal-condition", goal);
-        return mazeJSON;     
+        return mazeJSON;
     }
 }

@@ -18,16 +18,18 @@ public class DestroyEnemies extends GoalLeaf {
         return (int) game
             .getEntities()
             .stream()
-            .filter(
-                e ->
-                    // Ignore character
-                    (e != character) &&
+            .filter(e ->
+                // Ignore character
+                (e != character) &&
+                (
+                    // ZombieToastSpawner counts
+                    e instanceof ZombieToastSpawner ||
+                    // Enemy which are enemies
                     (
-                        // ZombieToastSpawner counts
-                        e instanceof ZombieToastSpawner ||
-                        // Enemy which are enemies
-                        (e instanceof Enemy && !(e instanceof BribableEnemy && ((BribableEnemy) e).isBribed()))
+                        e instanceof Enemy &&
+                        !(e instanceof BribableEnemy && ((BribableEnemy) e).isBribed())
                     )
+                )
             )
             .count();
     }

@@ -335,50 +335,48 @@ public class CharacterTest {
 
         // load the game
         final DungeonManiaController innerController = controller;
-        assertDoesNotThrow(
-            () -> {
-                // move down
-                DungeonResponse loadedResponse = innerController.tick(null, Direction.DOWN);
+        assertDoesNotThrow(() -> {
+            // move down
+            DungeonResponse loadedResponse = innerController.tick(null, Direction.DOWN);
 
-                List<EntityResponse> loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
+            List<EntityResponse> loadedEntities = loadedResponse.getEntities();
+            assertTrue(loadedEntities.size() > 0);
 
-                Position loadedCharacterPos = getCharacterPosition(loadedEntities);
-                assertNotNull(loadedCharacterPos);
-                assertTrue(new Position(1, 2).equals(loadedCharacterPos));
+            Position loadedCharacterPos = getCharacterPosition(loadedEntities);
+            assertNotNull(loadedCharacterPos);
+            assertTrue(new Position(1, 2).equals(loadedCharacterPos));
 
-                // move right
-                loadedResponse = innerController.tick(null, Direction.RIGHT);
+            // move right
+            loadedResponse = innerController.tick(null, Direction.RIGHT);
 
-                loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
+            loadedEntities = loadedResponse.getEntities();
+            assertTrue(loadedEntities.size() > 0);
 
-                loadedCharacterPos = getCharacterPosition(loadedEntities);
-                assertNotNull(loadedCharacterPos);
-                assertTrue(new Position(2, 2).equals(loadedCharacterPos));
+            loadedCharacterPos = getCharacterPosition(loadedEntities);
+            assertNotNull(loadedCharacterPos);
+            assertTrue(new Position(2, 2).equals(loadedCharacterPos));
 
-                // move up
-                loadedResponse = innerController.tick(null, Direction.UP);
+            // move up
+            loadedResponse = innerController.tick(null, Direction.UP);
 
-                loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
+            loadedEntities = loadedResponse.getEntities();
+            assertTrue(loadedEntities.size() > 0);
 
-                loadedCharacterPos = getCharacterPosition(loadedEntities);
-                assertNotNull(loadedCharacterPos);
-                assertTrue(new Position(2, 1).equals(loadedCharacterPos));
+            loadedCharacterPos = getCharacterPosition(loadedEntities);
+            assertNotNull(loadedCharacterPos);
+            assertTrue(new Position(2, 1).equals(loadedCharacterPos));
 
-                // move left
-                // move up
-                loadedResponse = innerController.tick(null, Direction.LEFT);
+            // move left
+            // move up
+            loadedResponse = innerController.tick(null, Direction.LEFT);
 
-                loadedEntities = loadedResponse.getEntities();
-                assertTrue(loadedEntities.size() > 0);
+            loadedEntities = loadedResponse.getEntities();
+            assertTrue(loadedEntities.size() > 0);
 
-                loadedCharacterPos = getCharacterPosition(loadedEntities);
-                assertNotNull(loadedCharacterPos);
-                assertTrue(new Position(1, 1).equals(loadedCharacterPos));
-            }
-        );
+            loadedCharacterPos = getCharacterPosition(loadedEntities);
+            assertNotNull(loadedCharacterPos);
+            assertTrue(new Position(1, 1).equals(loadedCharacterPos));
+        });
     }
 
     @Test
@@ -506,7 +504,10 @@ public class CharacterTest {
         game.addEntity(sword);
 
         // The sword exists in the game, but the player does not have it in their inventory, so should throw exception
-        assertThrows(InvalidActionException.class, () -> player.move(game, Direction.RIGHT, sword.getId()));
+        assertThrows(
+            InvalidActionException.class,
+            () -> player.move(game, Direction.RIGHT, sword.getId())
+        );
     }
 
     @Test
@@ -611,7 +612,7 @@ public class CharacterTest {
             Position potionPos = new Position(2, 2);
             InvincibilityPotion potion = new InvincibilityPotion(potionPos);
             game.addEntity(potion);
-    
+
             // Player picks up potion and drinks it
             game.tick(null, Direction.RIGHT);
             game.tick(potion.getId(), Direction.NONE);
@@ -622,10 +623,10 @@ public class CharacterTest {
             // Since the player was near the enemy when the player drank the potion,
             // in the next move it should not be in the adjacent tile
             assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
-            
+
             // Enemy should not come near the player (until the effects of the potion have finished),
             // and so the player's health should not reduce
-            while(!(player.getState() instanceof PlayerInvincibleState)) {
+            while (!(player.getState() instanceof PlayerInvincibleState)) {
                 game.tick(null, Direction.NONE);
                 assertTrue(player.getHealth() == Player.MAX_CHARACTER_HEALTH);
                 assertTrue(game.getCardinallyAdjacentEntities(potionPos).size() == 0);
@@ -656,7 +657,7 @@ public class CharacterTest {
         // Player picks up potion
         game.tick(null, Direction.RIGHT);
         assertTrue(player.getState() instanceof PlayerDefaultState);
-        
+
         // Player drinks potion
         game.tick(potion.getId(), Direction.NONE);
         assertTrue(player.getState() instanceof PlayerDefaultState);
@@ -680,12 +681,10 @@ public class CharacterTest {
 
         assertTrue(player.getInventoryResponses().size() == 0);
 
-        assertDoesNotThrow(
-            () -> {
-                game.tick(null, Direction.RIGHT);
-                game.tick(null, Direction.RIGHT);
-            }
-        );
+        assertDoesNotThrow(() -> {
+            game.tick(null, Direction.RIGHT);
+            game.tick(null, Direction.RIGHT);
+        });
 
         assertTrue(player.getInventoryResponses().size() > 0);
     }
@@ -740,7 +739,7 @@ public class CharacterTest {
         // Fight an enemy mercenary while a player has an allied mercenary
         // Fight an enemy mercenary without any allies
         // Enemy health should be less (more negative) in the former case
-        
+
         Mode mode = new Hard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
 
@@ -749,9 +748,9 @@ public class CharacterTest {
 
         Mercenary mercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
         game.addEntity(mercenary);
-        
-        game.addEntity(new Treasure(new Position(2, 1)));        
-        
+
+        game.addEntity(new Treasure(new Position(2, 1)));
+
         // Player collects coin and bribes mercenary
         game.tick(null, Direction.RIGHT);
         assertEquals(new Position(3, 1), mercenary.getPosition());
@@ -759,7 +758,11 @@ public class CharacterTest {
         assertTrue(player.getAllies().size() == 1);
 
         // Spawn an enemy mercenary
-        Mercenary enemyMercenary = new Mercenary(new Position(4, 1), mode.damageMultiplier(), player);
+        Mercenary enemyMercenary = new Mercenary(
+            new Position(4, 1),
+            mode.damageMultiplier(),
+            player
+        );
         game.addEntity(enemyMercenary);
 
         int playerTotalAttackDmgWithAlly = player.getTotalAttackDamage(mercenary);
@@ -779,8 +782,8 @@ public class CharacterTest {
         enemyMercenary = new Mercenary(new Position(5, 1), mode.damageMultiplier(), player);
         game.addEntity(enemyMercenary);
 
-        game.addEntity(new Treasure(new Position(1, 2)));        
-        
+        game.addEntity(new Treasure(new Position(1, 2)));
+
         // Player moves to battle mercenary
         game.tick(null, Direction.RIGHT);
         assertEquals(new Position(4, 1), enemyMercenary.getPosition());

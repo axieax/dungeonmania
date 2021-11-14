@@ -57,6 +57,15 @@ import org.json.JSONObject;
 
 public class EntityFactory {
 
+    /**
+     * Creates a JSONObject for a dungeon file (JSON)
+     *
+     * @param dungeonName name of dungeon to be loaded (in resources/dungeon)
+     *
+     * @return JSONObject for the dungeon
+     *
+     * @throws IllegalArgumentException if dungeon cannot be found
+     */
     private static final JSONObject loadDungeon(String dungeonName)
         throws IllegalArgumentException {
         try {
@@ -71,13 +80,28 @@ public class EntityFactory {
         }
     }
 
+    /**
+     * Extracts the entities from a given dungeon
+     *
+     * @param dungeonName name of dungeon to be loaded (in resources/dungeon)
+     * @param mode game mode
+     *
+     * @return list of Entity objects in the dungeon
+     */
     public static final List<Entity> extractEntities(String dungeonName, Mode mode) {
         JSONObject json = loadDungeon(dungeonName);
         return extractEntities(json, mode);
     }
 
-    public static final List<Entity> extractEntities(JSONObject jsonInfo, Mode mode)
-        throws IllegalArgumentException {
+    /**
+     * Extracts the entities from a given dungeon
+     *
+     * @param jsonInfo JSONObject for dungeon to be extracted from
+     * @param mode game mode
+     *
+     * @return list of Entity objects in the dungeon
+     */
+    public static final List<Entity> extractEntities(JSONObject jsonInfo, Mode mode) {
         // Extract JSON
         JSONArray entitiesInfo = jsonInfo.getJSONArray("entities");
 
@@ -104,6 +128,15 @@ public class EntityFactory {
         return entities;
     }
 
+    /**
+     * Maps a JSONObject for an entity to its Entity object
+     *
+     * @param entityInfo entity to extract
+     * @param player game character
+     * @param mode game mode
+     *
+     * @return Entity object for given entity
+     */
     public static final Entity extractEntity(JSONObject entityInfo, Player player, Mode mode) {
         // Extract / generate basic parameters
         Position position = new Position(entityInfo.getInt("x"), entityInfo.getInt("y"));
@@ -205,6 +238,11 @@ public class EntityFactory {
         return null;
     }
 
+    /**
+     * Map for buildable entities
+     *
+     * @return Map of all buildable objects with item names as keys and dummy objects as values
+     */
     private static Map<String, Buildable> buildableMap() {
         // dummy objects
         Map<String, Buildable> map = new HashMap<>();
@@ -215,25 +253,60 @@ public class EntityFactory {
         return map;
     }
 
+    /**
+     * List of all Buildable objects
+     *
+     * @return returns a list of all buildable objects
+     */
     public static List<Buildable> allBuildables() {
         return new ArrayList<>(buildableMap().values());
     }
 
+    /**
+     * Gets a buildable object by name
+     *
+     * @param buildable name of buildable item
+     *
+     * @return Buildable item object
+     */
     public static Buildable getBuildable(String buildable) {
         Buildable item = buildableMap().get(buildable);
         return item.clone();
     }
 
+    /**
+     * Extracts the goal from a dungeon
+     *
+     * @param dungeonName name of dungeon to be extracted from
+     *
+     * @return goal of the dungeon
+     *
+     * @throws IllegalArgumentException if dungeon cannot be found
+     */
     public static final Goal extractGoal(String dungeonName) throws IllegalArgumentException {
         return extractGoal(loadDungeon(dungeonName));
     }
 
-    public static final Goal extractGoal(JSONObject dungeon) throws IllegalArgumentException {
+    /**
+     * Extracts the goal from a dungeon
+     *
+     * @param dungeon JSONObject for dungeon to be extracted from
+     *
+     * @return goal of the dungeon
+     */
+    public static final Goal extractGoal(JSONObject dungeon) {
         return (dungeon.has("goal-condition"))
             ? doExtractGoal(dungeon.getJSONObject("goal-condition"))
             : null;
     }
 
+    /**
+     * Helper method for extracting the goal from a dungeon
+     *
+     * @param json JSONObject of goal-condition
+     *
+     * @return Goal object
+     */
     public static final Goal doExtractGoal(JSONObject json) {
         switch (json.getString("goal")) {
             case "enemies":

@@ -1,18 +1,8 @@
 package dungeonmania.movings;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import dungeonmania.DungeonManiaController;
 import dungeonmania.model.Game;
@@ -35,10 +25,18 @@ import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 @TestInstance(value = Lifecycle.PER_CLASS)
 public class HydraTest {
+
     public static final String HYDRA = "hydra";
     public static final int HYDRA_TICK_RATE = 50;
     public static final String DUNGEON_ADVANCED = "advanced";
@@ -69,66 +67,69 @@ public class HydraTest {
         );
     }
 
-    
     @Test
     public void testHydraSpawnRate() {
         Mode mode = new Hard();
-        
+
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-        
+
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
         int numEntities = game.getEntities().size();
-        
+
         // Hydra should spawn
         for (int i = 0; i < HYDRA_TICK_RATE; i++) {
             game.tick(null, Direction.NONE);
         }
-        
+
         // Any other movingEntites that spawn will be removed
         List<Entity> toRemove = new ArrayList<>();
-        for(Entity e: game.getEntities()) {
-            if(e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
+        for (Entity e : game.getEntities()) {
+            if (e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
                 toRemove.add(e);
             }
         }
 
-        for(Entity e: toRemove) {
+        for (Entity e : toRemove) {
             game.removeEntity(e);
         }
 
         int numEntitesAfterFiftyTicks = game.getEntities().size();
         assertTrue(numEntitesAfterFiftyTicks == numEntities + 1);
     }
-    
+
     @Test
     public void testHydraOnlySpawnsHardMode() {
         List<Mode> modes = Arrays.asList(new Peaceful(), new Standard());
 
-        for(Mode m: modes) {
+        for (Mode m : modes) {
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), m);
-            
+
             Player player = new Player(new Position(1, 1), m.initialHealth());
             game.addEntity(player);
             int numEntities = game.getEntities().size();
-            
+
             // Hydra should not spawn after 50 ticks
             for (int i = 0; i < HYDRA_TICK_RATE; i++) {
                 game.tick(null, Direction.NONE);
             }
-            
+
             // Any other movingEntites that spawn will be removed (other than player)
             List<Entity> toRemove = new ArrayList<>();
-            for(Entity e: game.getEntities()) {
-                if(e instanceof MovingEntity && !e.getType().equals(HYDRA) && !(e instanceof Player)) {
+            for (Entity e : game.getEntities()) {
+                if (
+                    e instanceof MovingEntity &&
+                    !e.getType().equals(HYDRA) &&
+                    !(e instanceof Player)
+                ) {
                     toRemove.add(e);
                 }
             }
-    
-            for(Entity e: toRemove) {
+
+            for (Entity e : toRemove) {
                 game.removeEntity(e);
             }
-    
+
             int numEntitesAfterFiftyTicks = game.getEntities().size();
             assertTrue(numEntitesAfterFiftyTicks == numEntities);
         }
@@ -174,7 +175,6 @@ public class HydraTest {
         game.addEntity(new Wall(new Position(4, 5)));
         game.addEntity(new Wall(new Position(5, 4)));
 
-        
         // hydra should stay in the tile at all times
         for (int i = 0; i < 10; i++) {
             game.tick(null, Direction.NONE);
@@ -240,7 +240,7 @@ public class HydraTest {
         game.addEntity(new Wall(new Position(3, 5)));
         game.addEntity(new Wall(new Position(5, 4)));
         game.addEntity(new Wall(new Position(5, 5)));
-        
+
         Hydra hydra = new Hydra(new Position(4, 5), mode.damageMultiplier(), player);
         game.addEntity(hydra);
 
@@ -256,7 +256,7 @@ public class HydraTest {
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
-        
+
         Position hydraPos = new Position(5, 5);
         Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
         assertTrue(game.getEntities(hydraPos).size() == 0);
@@ -271,9 +271,9 @@ public class HydraTest {
         Position portalPos = new Position(5, 4);
         Portal portal = new Portal(portalPos, "blue");
         game.addEntity(portal);
-        
+
         game.tick(null, Direction.NONE);
-        
+
         // the only option for the hydra is to move to the portal which it cannot pass through
         assertTrue(hydra.getPosition().equals(hydraPos)); // portal has no effect
     }
@@ -285,14 +285,14 @@ public class HydraTest {
 
         Player player = new Player(new Position(1, 1), mode.initialHealth());
         game.addEntity(player);
-        
+
         Position hydraPos = new Position(5, 5);
         Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
 
         assertTrue(game.getEntities(hydraPos).size() == 0);
         game.addEntity(hydra);
         assertTrue(game.getEntities(hydraPos).size() > 0);
-        
+
         game.addEntity(new Wall(new Position(4, 3)));
         game.addEntity(new Wall(new Position(4, 4)));
         game.addEntity(new Wall(new Position(4, 5)));
@@ -302,7 +302,7 @@ public class HydraTest {
         game.addEntity(boulder);
 
         game.tick(null, Direction.NONE);
-        
+
         // zombie should stay in its position, as it cannot move a boulder
         assertTrue(hydra.getPosition().equals(hydraPos));
     }
@@ -318,14 +318,14 @@ public class HydraTest {
         // and will mean that the hydra is not regrowing its head randomly.
         Set<Integer> playerHealthAfterBattle = new HashSet<>();
 
-        for(int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1000; i++) {
             Mode mode = new Hard();
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+
             Position playerPos = new Position(1, 1);
             Player player = new Player(playerPos, mode.initialHealth());
             game.addEntity(player);
-            
+
             Position hydraPos = new Position(1, 2);
             Hydra hydra = new Hydra(hydraPos, mode.damageMultiplier(), player);
             game.addEntity(hydra);
@@ -353,14 +353,14 @@ public class HydraTest {
         // i.e. player health is the same after every battle
         Set<Integer> playerHealthAfterBattle = new HashSet<>();
 
-        for(int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1000; i++) {
             Mode mode = new Hard();
             Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+
             Position playerPos = new Position(1, 1);
             Player player = new Player(playerPos, mode.initialHealth());
             game.addEntity(player);
-            
+
             Position andurilPos = new Position(1, 2);
             Anduril anduril = new Anduril(andurilPos);
             game.addEntity(anduril);
@@ -393,27 +393,27 @@ public class HydraTest {
 
     private List<Entity> sevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
-        
+
         // left border
-        for(int i = 0; i < 7; i ++) {
+        for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(0, i));
             wallBorder.add(wall);
         }
-        
+
         // right border
-        for(int i = 0; i < 7; i ++) {
+        for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(6, i));
             wallBorder.add(wall);
         }
 
         // top border
-        for(int i = 1; i < 6; i ++) {
+        for (int i = 1; i < 6; i++) {
             Wall wall = new Wall(new Position(i, 0));
             wallBorder.add(wall);
         }
 
         // bottom border
-        for(int i = 1; i < 6; i ++) {
+        for (int i = 1; i < 6; i++) {
             Wall wall = new Wall(new Position(i, 6));
             wallBorder.add(wall);
         }

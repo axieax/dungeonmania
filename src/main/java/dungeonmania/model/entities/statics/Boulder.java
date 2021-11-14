@@ -18,8 +18,10 @@ public class Boulder extends Entity {
      */
     @Override
     public void interact(Game game, Entity character) {
-        if (character instanceof Player)
-            this.moveBoulder(game, ((Player) character).getDirection());
+        if (character instanceof Player) this.moveBoulder(
+                game,
+                ((Player) character).getDirection()
+            );
     }
 
     /**

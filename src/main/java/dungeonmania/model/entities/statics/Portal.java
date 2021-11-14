@@ -17,7 +17,7 @@ public class Portal extends Entity {
         super("portal", position, false, false);
         this.colour = colour;
     }
-    
+
     public String getColour() {
         return colour;
     }
@@ -36,8 +36,8 @@ public class Portal extends Entity {
         return game
             .getAllPortals()
             .stream()
-            .filter(
-                portal -> portal.getColour().equals(this.colour) && portal.getId() != this.getId()
+            .filter(portal ->
+                portal.getColour().equals(this.colour) && portal.getId() != this.getId()
             )
             .findFirst()
             .orElse(null);

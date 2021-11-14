@@ -4,7 +4,6 @@ import dungeonmania.model.Game;
 import dungeonmania.model.entities.movings.player.Inventory;
 
 public interface Buildable {
-    
     /**
      * Check if the equipment is buildable.
      * @param inventory

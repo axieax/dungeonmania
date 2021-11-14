@@ -1,7 +1,6 @@
 package dungeonmania.model.mode;
 
 public interface Mode {
-    
     /**
      * @return the damage multipler of the mode
      */
@@ -14,7 +13,6 @@ public interface Mode {
      */
     default int tickRate() {
         return 20;
-
     }
 
     /**

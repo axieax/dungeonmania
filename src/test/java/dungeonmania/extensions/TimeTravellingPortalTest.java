@@ -148,19 +148,17 @@ public class TimeTravellingPortalTest {
 
         DungeonResponse tickRes = resp;
         // now interact and bribe with mercenary - we are bribing mercenary with sunstone since we picked it up on the map
-        assertDoesNotThrow(
-            () -> {
-                DungeonResponse r = dmc.interact(
-                    TimeTravelUtil
-                        .getEntitiesAtPosition(tickRes.getEntities(), new Position(21, 13))
-                        .get(0)
-                        .getId()
-                );
-                // check if mercenary is an ally
-                for (int i = 0; i < 5; i++) r = dmc.tick(null, Direction.NONE);
-                assertTrue(r.getEntities().stream().anyMatch(e -> e.getType().startsWith("mercenary")));
-            }
-        );
+        assertDoesNotThrow(() -> {
+            DungeonResponse r = dmc.interact(
+                TimeTravelUtil
+                    .getEntitiesAtPosition(tickRes.getEntities(), new Position(21, 13))
+                    .get(0)
+                    .getId()
+            );
+            // check if mercenary is an ally
+            for (int i = 0; i < 5; i++) r = dmc.tick(null, Direction.NONE);
+            assertTrue(r.getEntities().stream().anyMatch(e -> e.getType().startsWith("mercenary")));
+        });
     }
 
     /**
@@ -232,7 +230,7 @@ public class TimeTravellingPortalTest {
     public void testMidRewindState() {
         DungeonManiaController dmc = new DungeonManiaController();
         DungeonResponse resp = dmc.newGame("hourglass", "hard");
-        
+
         for (int i = 0; i < 2; ++i) assertDoesNotThrow(() -> dmc.tick(null, Direction.DOWN));
         for (int i = 0; i < 2; ++i) assertDoesNotThrow(() -> dmc.tick(null, Direction.RIGHT));
         for (int i = 0; i < 2; ++i) assertDoesNotThrow(() -> dmc.tick(null, Direction.DOWN));

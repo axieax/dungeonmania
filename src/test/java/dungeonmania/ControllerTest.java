@@ -203,7 +203,7 @@ public class ControllerTest {
     @Test
     public void testItemIllegal() {
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse resp = controller.newGame ("advanced", "standard");
+        DungeonResponse resp = controller.newGame("advanced", "standard");
         for (int i = 0; i < 5; i++) {
             controller.tick(null, Direction.RIGHT);
         }
@@ -234,8 +234,11 @@ public class ControllerTest {
     @Test
     public void testItemNotValid() {
         DungeonManiaController controller = new DungeonManiaController();
-        assertDoesNotThrow(() -> controller.newGame ("advanced", "standard"));  
-        assertThrows (InvalidActionException.class, () ->controller.tick ("id-does-not-exist", Direction.NONE));    
+        assertDoesNotThrow(() -> controller.newGame("advanced", "standard"));
+        assertThrows(
+            InvalidActionException.class,
+            () -> controller.tick("id-does-not-exist", Direction.NONE)
+        );
     }
 
     /**

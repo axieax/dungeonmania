@@ -57,8 +57,9 @@ public class Door extends Entity {
         if (character instanceof Player) {
             Player player = (Player) character;
             Key key = player.getKey();
-            if (player.hasItemQuantity("sun_stone", 1)) this.unlockDoor();
-            else if (key != null && this.checkKey(key)) key.consume(game, player);
+            if (player.hasItemQuantity("sun_stone", 1)) this.unlockDoor(); else if (
+                key != null && this.checkKey(key)
+            ) key.consume(game, player);
         }
     }
 

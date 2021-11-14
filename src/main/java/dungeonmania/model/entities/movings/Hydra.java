@@ -1,11 +1,5 @@
 package dungeonmania.model.entities.movings;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-import org.json.JSONObject;
-
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
 import dungeonmania.model.entities.movings.movement.RandomMovementState;
@@ -15,12 +9,17 @@ import dungeonmania.model.entities.movings.player.PlayerInvincibleState;
 import dungeonmania.model.entities.statics.Portal;
 import dungeonmania.model.mode.Hard;
 import dungeonmania.util.Position;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import org.json.JSONObject;
 
 public class Hydra extends Enemy implements Boss {
+
     private static final int MAX_HYDRA_HEALTH = 50;
     private static final int MAX_HYDRA_ATTACK_DMG = 5;
     private static final int HYDRA_TICK_RATE = 50;
-    
+
     boolean preventHeadRespawn;
 
     public Hydra(Position position, int damageMultiplier, SubjectPlayer player) {
@@ -51,10 +50,10 @@ public class Hydra extends Enemy implements Boss {
 
         // If an anduril is going to be used in battle by a player against
         // the hydra, it will not be able to spawn another head
-        if(character.getInBattle()) {
+        if (character.getInBattle()) {
             MovingEntity opponent = character.getCurrentBattleOpponent();
             // character battling this hydra and has an anduril
-            if(opponent.equals(this) && character.hasItemQuantity("anduril", 1)) {
+            if (opponent.equals(this) && character.hasItemQuantity("anduril", 1)) {
                 this.preventHeadRespawn = true;
             }
         }
@@ -64,10 +63,10 @@ public class Hydra extends Enemy implements Boss {
     public void tick(Game game) {
         this.move(game);
     }
-    
+
     public static void spawnHydra(Game game, int damageMultiplier) {
         // Hydra only spawns in hard mode
-        if(!(game.getMode() instanceof Hard)) {
+        if (!(game.getMode() instanceof Hard)) {
             return;
         }
 
@@ -93,10 +92,9 @@ public class Hydra extends Enemy implements Boss {
                 game.addEntity(new Hydra(position, damageMultiplier, game.getCharacter()));
             }
         }
-
     }
 
-	private static boolean canHydraMoveOntoPosition(List<Entity> entitiesAtPos) {
+    private static boolean canHydraMoveOntoPosition(List<Entity> entitiesAtPos) {
         for (Entity e : entitiesAtPos) {
             if (!e.isPassable()) {
                 return false;
@@ -108,9 +106,7 @@ public class Hydra extends Enemy implements Boss {
 
     @Override
     public boolean collision(Entity entity) {
-        if(
-            entity instanceof Portal
-        ) return false;
+        if (entity instanceof Portal) return false;
         return !entity.isPassable();
     }
 
@@ -121,7 +117,7 @@ public class Hydra extends Enemy implements Boss {
     @Override
     public void reduceHealthFromBattle(int amount) {
         Random rand = new Random();
-        if(!preventHeadRespawn && rand.nextInt(100) % 2 == 0) {
+        if (!preventHeadRespawn && rand.nextInt(100) % 2 == 0) {
             super.reduceHealthFromBattle(-amount);
         } else {
             preventHeadRespawn = false;
@@ -132,7 +128,7 @@ public class Hydra extends Enemy implements Boss {
     @Override
     public JSONObject toJSON() {
         JSONObject info = super.toJSON();
-        info.put ("preventHeadRespawn", preventHeadRespawn);
+        info.put("preventHeadRespawn", preventHeadRespawn);
         return info;
     }
 }

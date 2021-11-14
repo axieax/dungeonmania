@@ -14,16 +14,23 @@ import org.junit.jupiter.api.Test;
 
 public class TimeTravelUtil {
 
-    public static DungeonResponse tickMovement(DungeonManiaController dmc, Direction direction, int times) {
+    public static DungeonResponse tickMovement(
+        DungeonManiaController dmc,
+        Direction direction,
+        int times
+    ) {
         DungeonResponse resp = null;
         for (int i = 0; i < times; i++) resp = dmc.tick(null, direction);
         return resp;
     }
 
     public static ItemResponse getItemFromInventory(List<ItemResponse> inventory, String prefix) {
-        return inventory.stream().filter(e -> e.getType().startsWith(prefix)).findFirst().orElse(null);
+        return inventory
+            .stream()
+            .filter(e -> e.getType().startsWith(prefix))
+            .findFirst()
+            .orElse(null);
     }
-
 
     /**
      * Helper method for checking whether a DungeonResponse contains a time_turner

@@ -1,18 +1,17 @@
-
 {
     "entities": [
-      {
-        "x": 0,
-        "y": 0,
-        "type": "player"
-      },
-      {
-        "x": 1,
-        "y": 0,
-        "type": "zombie_toast_spawner"
-      }
+        {
+            "x": 0,
+            "y": 0,
+            "type": "player"
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "zombie_toast_spawner"
+        }
     ],
     "goal-condition": {
-      "goal": "enemies"
+        "goal": "enemies"
     }
 }

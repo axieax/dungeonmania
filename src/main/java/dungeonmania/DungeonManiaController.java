@@ -31,24 +31,40 @@ public class DungeonManiaController {
     private List<GameWrapper> games = new ArrayList<>();
     private GameWrapper currentGame;
 
+    /**
+     * Get the name of the file for the frontend skin customisation
+     *
+     * @return name of skin
+     */
     public String getSkin() {
         return "default";
     }
 
+    /**
+     * Get the localization to be used for the frontend
+     *
+     * @return localization
+     */
     public String getLocalisation() {
         // return "zh_CN";
         return "en_US";
     }
 
+    /**
+     * Get the valid game modes for Dungeon Mania
+     *
+     * @return list of valid game modes (strings)
+     */
     public List<String> getGameModes() {
         return Arrays.asList("standard", "peaceful", "hard");
     }
 
     /**
      * Get the mode object given the mode string
-     * @param mode what mode it is
+     *
+     * @param mode to be returned
      * @return mode object
-     * @throws IllegalArgumentException if the mode does not exist
+     * @throws IllegalArgumentException if the mode does not exist (invalid)
      */
     private Mode getMode(String mode) throws IllegalArgumentException {
         mode = mode.toLowerCase();
@@ -66,9 +82,9 @@ public class DungeonManiaController {
     }
 
     /**
-     * /dungeons
+     * Get the list of valid dungeons for a Dungeon Mania game
      *
-     * Done for you.
+     * @return list of valid dungeons (strings)
      */
     public static List<String> dungeons() {
         try {
@@ -81,11 +97,11 @@ public class DungeonManiaController {
     /**
      * Creates a new game, where dungeonName is the name of the dungeon map
      * (corresponding to a JSON file stored in the model) and gameMode is one of
-     * "Standard", "Peaceful" or "Hard".
+     * "standard", "peaceful" or "hard".
      *
-     * @param dungeonName
-     * @param gameMode
-     * @return
+     * @param dungeonName name of the dungeon to be used
+     * @param gameMode mode of the game
+     * @return DungeonResponse for new game created
      * @throws IllegalArgumentException If gameMode is not a valid game mode. If
      *                                  dungeonName is not a dungeon that exists
      */
@@ -110,14 +126,14 @@ public class DungeonManiaController {
     }
 
     /**
-     * Saves the current game state with the given name.
+     * Saves the current game state with the given id.
      *
-     * @param name
-     * @return
-     * @throws IllegalArgumentException
+     * @param id to save the current game as
+     * @return DungeonResponse of the current game
+     * @throws IllegalArgumentException if id is empty
      */
-    public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        if (name.length() == 0) throw new IllegalArgumentException(name);
+    public DungeonResponse saveGame(String id) throws IllegalArgumentException {
+        if (id.length() == 0) throw new IllegalArgumentException("id cannot be empty");
 
         // convert game to JSONObject
         JSONObject currGame = GameLoader.gameToJSONObject(currentGame.getActiveGame());
@@ -134,7 +150,7 @@ public class DungeonManiaController {
                 pathAsFile.mkdir();
             }
 
-            String path = "./bin/savedGames/" + name + ".json";
+            String path = "./bin/savedGames/" + id + ".json";
             FileWriter myFileWriter = new FileWriter(path, false);
             myFileWriter.write(prettyString);
             myFileWriter.close();
@@ -148,18 +164,18 @@ public class DungeonManiaController {
     /**
      * Loads the game with the given id.
      *
-     * @param name
-     * @return
-     * @throws IllegalArgumentException - If id is not a valid game id
+     * @param id of game to be loaded
+     * @return DungeonResponse of the current game
+     * @throws IllegalArgumentException - if id is empty or id does not refer to a saved game
      */
-    public DungeonResponse loadGame(String name) throws IllegalArgumentException {
+    public DungeonResponse loadGame(String id) throws IllegalArgumentException {
         // name must not have length = 0 and not be contained already in saved games
-        if (name.length() == 0) throw new IllegalArgumentException(name);
-        if (!allGames().contains(name)) throw new IllegalArgumentException(name);
+        if (id.length() == 0) throw new IllegalArgumentException(id);
+        if (!allGames().contains(id)) throw new IllegalArgumentException(id);
 
-        // load dungeon
-        JSONObject dungeon = GameLoader.loadSavedDungeon(name);
-        GameWrapper newGame = new GameWrapper(GameLoader.JSONObjectToGame(dungeon));
+        // load game
+        JSONObject game = GameLoader.loadSavedGame(id);
+        GameWrapper newGame = new GameWrapper(GameLoader.JSONObjectToGame(game));
 
         games.add(newGame);
         currentGame = newGame;
@@ -169,11 +185,11 @@ public class DungeonManiaController {
     /**
      * Returns a list containing all the saved games that are currently stored.
      *
-     * @return
+     * @return list of game id's (strings)
      */
     public List<String> allGames() {
         try {
-            // the name of files in the savedGames directory
+            // find the name of files in the savedGames directory
             String directory = "./bin/savedGames/";
             return FileLoader.listFileNamesInDirectoryOutsideOfResources(directory);
         } catch (IOException e) {
@@ -186,13 +202,13 @@ public class DungeonManiaController {
      * direction one square - All enemies move respectively - Any items which are
      * used are 'actioned' and interact with the relevant entity
      *
-     * @param itemUsedId
-     * @param movementDirection
-     * @return
-     * @throws IllegalArgumentException If itemUsed is not a bomb, health_potion
-     *                                  invincibility_potion, or an
-     *                                  invisibility_potion
-     * @throws InvalidActionException   If itemUsed is not in the player's inventory
+     * @param itemUsedId id of item used
+     * @param movementDirection Direction to move the player
+     * @return DungeonResponse of current game
+     * @throws IllegalArgumentException if itemUsed is not a bomb, health_potion
+     *                                  invincibility_potion, or an invisibility_potion,
+     *                                  or null (if no item is being used)
+     * @throws InvalidActionException   if itemUsed is not in the player's inventory
      */
     public DungeonResponse tick(String itemUsedId, Direction movementDirection)
         throws IllegalArgumentException, InvalidActionException {
@@ -203,14 +219,14 @@ public class DungeonManiaController {
      * Interacts with a mercenary (where the character bribes the mercenary) or a
      * zombie spawner, where the character destroys the spawner.
      *
-     * @param entityId
-     * @return
-     * @throws IllegalArgumentException If entityId is not a valid entity ID
-     * @throws InvalidActionException   If the player is not cardinally adjacent to
-     *                                  the given entity If the player does not have
-     *                                  any gold and attempts to bribe a mercenary
-     *                                  If the player does not have a weapon and
-     *                                  attempts to destroy a spawner
+     * @param entityId of entity to interact with
+     * @return DungeonResponse of current game
+     * @throws IllegalArgumentException if entityId does not refer to a valid entity ID
+     * @throws InvalidActionException   if the player is not cardinally adjacent to
+     *                                  the given entity; if the player does not have
+     *                                  any gold/sun stones and attempts to bribe or
+     *                                  mind-control a mercenary; if the player does
+     *                                  not have a weapon and attempts to destroy a spawner
      */
     public DungeonResponse interact(String entityId)
         throws IllegalArgumentException, InvalidActionException {
@@ -218,11 +234,11 @@ public class DungeonManiaController {
     }
 
     /**
-     * Builds the given entity, where buildable is one of bow and shield.
+     * Builds the given entity
      *
-     * @param buildable
-     * @return
-     * @throws IllegalArgumentException If buildable is not one of bow, shield
+     * @param buildable name of entity to be built
+     * @return DungeonResponse of current game
+     * @throws IllegalArgumentException If buildable is not one of bow, shield, sceptre, midnight_armour
      * @throws InvalidActionException   If the player does not have sufficient items
      *                                  to craft the buildable
      */
@@ -237,12 +253,13 @@ public class DungeonManiaController {
 
     /**
      * Generate a random maze dungeon
+     *
      * @param xStart x coordinate of start position
-     * @param yStart y coordinate of starte position
+     * @param yStart y coordinate of start position
      * @param xEnd x coordinate of end position
      * @param yEnd y coordinate of end position
      * @param gameMode mode of game
-     * @return
+     * @return DungeonResponse of current game
      * @throws IllegalArgumentException if mode does not exist
      */
     public DungeonResponse generateDungeon(
@@ -251,8 +268,7 @@ public class DungeonManiaController {
         int xEnd,
         int yEnd,
         String gameMode
-    )
-        throws IllegalArgumentException {
+    ) throws IllegalArgumentException {
         // get game mode
         Mode mode = getMode(gameMode);
 
@@ -276,6 +292,13 @@ public class DungeonManiaController {
         return newGame.getDungeonResponse();
     }
 
+    /**
+     * Rewinds the active game by the specified number of ticks
+     *
+     * @param ticks number of ticks to go back
+     * @return DungeonResponse for the active game
+     * @throws IllegalArgumentException if ticks <= 0
+     */
     public DungeonResponse rewind(int ticks) throws IllegalArgumentException {
         if (ticks <= 0) throw new IllegalArgumentException(String.valueOf(ticks));
         return currentGame.rewind(ticks);

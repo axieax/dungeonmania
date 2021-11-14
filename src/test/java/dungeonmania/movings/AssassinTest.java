@@ -1,5 +1,8 @@
 package dungeonmania.movings;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.model.Game;
 import dungeonmania.model.entities.Entity;
@@ -18,13 +21,8 @@ import dungeonmania.model.mode.Mode;
 import dungeonmania.model.mode.Standard;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -45,7 +43,7 @@ public class AssassinTest {
         game.addEntity(player);
 
         int numEntities = game.getEntities().size();
-        for(int i = 0; i < 200; i++) {
+        for (int i = 0; i < 200; i++) {
             assertTrue(game.getEntities().size() == numEntities);
         }
     }
@@ -66,7 +64,7 @@ public class AssassinTest {
 
         // Assassin should move to the left or upwards
         assertTrue(
-            (assassin.getX() == 2 && assassin.getY() == 3) || 
+            (assassin.getX() == 2 && assassin.getY() == 3) ||
             (assassin.getX() == 3 && assassin.getY() == 2)
         );
     }
@@ -108,7 +106,6 @@ public class AssassinTest {
 
         // Assassin should battle player
         assertTrue(!game.getEntities().contains(assassin) || !game.getEntities().contains(player));
-
     }
 
     @Test
@@ -122,7 +119,7 @@ public class AssassinTest {
         game.addEntity(player);
 
         // Create horizontal wall with 1 gap near the right game border between the player and assassin
-        for(int i = 0; i < 4; i ++) {
+        for (int i = 0; i < 4; i++) {
             game.addEntity(new Wall(new Position(i + 1, 2)));
         }
 
@@ -149,7 +146,7 @@ public class AssassinTest {
         game.addEntity(player);
 
         game.addEntity(new Treasure(new Position(1, 2)));
-        
+
         // Player collects coin
         player.move(game, Direction.DOWN);
 
@@ -170,7 +167,7 @@ public class AssassinTest {
         game.addEntity(player);
 
         game.addEntity(new TheOneRing(new Position(1, 2)));
-        
+
         // Player collects TheOneRing
         player.move(game, Direction.DOWN);
 
@@ -188,7 +185,7 @@ public class AssassinTest {
         Mode mode = new Standard();
 
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
@@ -198,7 +195,7 @@ public class AssassinTest {
 
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
-        
+
         Position assassinPos = new Position(5, 5);
         Assassin assassin = new Assassin(assassinPos, mode.damageMultiplier(), player);
         game.addEntity(assassin);
@@ -221,20 +218,20 @@ public class AssassinTest {
         game.addEntity(new Treasure(new Position(1, 2)));
         game.addEntity(new Treasure(new Position(1, 3)));
         game.addEntity(new Treasure(new Position(1, 4)));
-        
+
         // Make player collect all 3 coins
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
         player.move(game, Direction.DOWN);
 
-        game.addEntity(new TheOneRing(new Position(2,4)));
+        game.addEntity(new TheOneRing(new Position(2, 4)));
 
         // Make player collect TheOneRing
         player.move(game, Direction.RIGHT);
 
         Position updatedPlayerPos = new Position(2, 4);
 
-        while(!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
+        while (!game.getCardinallyAdjacentEntities(player.getPosition()).contains(assassin)) {
             game.tick(null, Direction.NONE);
         }
 
@@ -244,7 +241,7 @@ public class AssassinTest {
         game.interact(assassin.getId());
         // Player still at tile
         assertTrue(game.getEntities(updatedPlayerPos).size() == 1);
-        
+
         game.tick(null, Direction.NONE);
         assertTrue(player.getHealth() == playerHealth);
         game.tick(null, Direction.NONE);
@@ -262,28 +259,28 @@ public class AssassinTest {
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
-        Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(),player);
+        Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(assassin);
 
         Position exitPos = new Position(1, 2);
         Exit exit = new Exit(exitPos);
         game.addEntity(exit);
-        
+
         assertTrue(game.getEntities(exitPos).size() == 1);
         assassin.moveTo(exitPos);
         assertTrue(game.getEntities(exitPos).size() == 2);
     }
-    
+
     @Test
     public void testCannotMoveThroughClosedDoor() {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+
         Position playerPos = new Position(5, 5);
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
 
-        Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(),player);
+        Assassin assassin = new Assassin(new Position(1, 1), mode.damageMultiplier(), player);
         game.addEntity(assassin);
 
         // Surround assassin and door with wall
@@ -291,16 +288,16 @@ public class AssassinTest {
         game.addEntity(new Wall(new Position(2, 2)));
         game.addEntity(new Wall(new Position(3, 2)));
         game.addEntity(new Wall(new Position(3, 1)));
-    
+
         Position doorPos = new Position(2, 1);
         Door door = new Door(doorPos, 0);
         game.addEntity(door);
-        
+
         assertTrue(game.getEntities(doorPos).size() == 1);
-        
+
         // Assassin should not be able to go in the door position
-        for(int i = 0; i < 100; i ++) {
-            game.tick(null, Direction.NONE);   
+        for (int i = 0; i < 100; i++) {
+            game.tick(null, Direction.NONE);
             assertTrue(!game.getEntity(assassin.getId()).getPosition().equals(doorPos));
         }
     }
@@ -309,15 +306,15 @@ public class AssassinTest {
     public void testSimpleFight() {
         Mode mode = new Standard();
         Game game = new Game("game", sevenBySevenWallBoundary(), new ExitCondition(), mode);
-    
+
         Position playerPos = new Position(1, 1);
         Player player = new Player(playerPos, mode.initialHealth());
         game.addEntity(player);
-        
+
         Position assassinPos = new Position(2, 1);
         Assassin assassin = new Assassin(assassinPos, mode.damageMultiplier(), player);
         game.addEntity(assassin);
-    
+
         assertTrue(game.getEntities(playerPos).size() == 1);
         assertTrue(game.getEntities(assassinPos).size() == 1);
         game.tick(null, Direction.NONE);
@@ -370,13 +367,13 @@ public class AssassinTest {
 
     private List<Entity> sevenBySevenWallBoundary() {
         ArrayList<Entity> wallBorder = new ArrayList<>();
-        
+
         // Left border
         for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(0, i));
             wallBorder.add(wall);
         }
-        
+
         // Right border
         for (int i = 0; i < 7; i++) {
             Wall wall = new Wall(new Position(6, i));

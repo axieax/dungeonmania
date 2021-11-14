@@ -86,7 +86,7 @@ public final class GameWrapper {
             .getEntities()
             .stream()
             .filter(e -> e instanceof Observer)
-            .forEach(e -> activePlayer.attach((Observer)e));
+            .forEach(e -> activePlayer.attach((Observer) e));
 
         // time travel
         activeGame = restoreGame;
