@@ -1,4 +1,4 @@
-Autotesting Result = 143.0/285, the final cap hasn't been defined yet but will be around 80-90
+Autotesting Result = 143.0/285, the final cap hasn't been defined yet but will be around 220
 Test 1-1
 SUCCESS DONE
 Test 1-2
